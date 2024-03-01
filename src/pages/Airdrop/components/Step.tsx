@@ -1,17 +1,22 @@
-import React, { useEffect } from 'react'
-import { Button, Card, CardBody } from '@nextui-org/react'
+import { useEffect, useState } from 'react'
+import { Button, Card, CardBody, Input } from '@nextui-org/react'
 import { useSearchParams } from 'react-router-dom'
 import qs from 'qs'
-import { postData, showAccount } from '@/utils'
-import { useSelector } from 'react-redux'
+import { postData } from '@/utils'
+import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
+import { AiOutlineCheck } from 'react-icons/ai'
+import { setInviteCode } from '@/store/modules/airdrop'
 
-const Step: React.FC = () => {
+export default function Step() {
+    const dispatch = useDispatch()
     const [searchParams, setSearchParams] = useSearchParams()
     const web3Modal = useWeb3Modal()
-    const { address, isConnected } = useAccount()
+    const { isConnected } = useAccount()
     const { inviteCode } = useSelector((store: any) => store.airdrop)
+
+    const [inviteCodeVal, setInviteCodeVal] = useState('')
 
     // const location = useLocation()
 
@@ -54,13 +59,12 @@ const Step: React.FC = () => {
         })
 
         let udpatedSearchParams = new URLSearchParams(searchParams.toString())
-        const remove = (key: string) => {
+        const removeSearchParams = (key: string) => {
             udpatedSearchParams.delete(key)
             setSearchParams(udpatedSearchParams.toString())
         }
-
-        remove('code')
-        remove('state')
+        removeSearchParams('code')
+        removeSearchParams('state')
 
         console.log(res)
 
@@ -109,16 +113,28 @@ const Step: React.FC = () => {
                                     <div className='ml-5'>
                                         <p className='text-base font-bold'>Enter Invite Code</p>
                                         <p className='text-sub-title text-sm'>
-                                            Please Notice your are also joining the Group: <span className='text-green-400'>1234</span>{' '}
+                                            Please Notice your are also joining the Group: <span className='text-green-400'>1234</span>
                                         </p>
                                     </div>
                                 </div>
                                 <div className='flex align-center'>
-                                    <Button
-                                        className='bg-emerald-900 font-bold'
-                                        radius='sm'>
-                                        {inviteCode}
-                                    </Button>
+                                    {inviteCode ? (
+                                        <Button
+                                            className='bg-emerald-900 font-bold'
+                                            radius='sm'>
+                                            {inviteCode}
+                                        </Button>
+                                    ) : (
+                                        <div className='flex items-center gap-2'>
+                                            <Input
+                                                size='sm'
+                                                className='w-20 h-12'
+                                                maxLength={6}
+                                                onChange={(e) => setInviteCodeVal(e.target.value)}
+                                            />
+                                            <Button className='bg-emerald-500 font-bold' onClick={() => dispatch(setInviteCode(inviteCodeVal))}>Enter Code</Button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </CardBody>
@@ -148,8 +164,8 @@ const Step: React.FC = () => {
 
                     <Card className='mt-6'>
                         <CardBody>
-                            <div className='flex justify-between align-center'>
-                                <div className='flex align-center'>
+                            <div className='flex justify-between items-center'>
+                                <div className='flex items-center'>
                                     <div className='text-4xl font-bold'>03</div>
 
                                     <div className='ml-5'>
@@ -157,13 +173,11 @@ const Step: React.FC = () => {
                                         <p className='text-sub-title text-sm'>Check how many zkLink Points you could earn </p>
                                     </div>
                                 </div>
-                                <div className='flex align-center'>
+                                <div>
                                     {isConnected ? (
-                                        <Button
-                                            className='bg-emerald-900 font-bold'
-                                            radius='sm'>
-                                            {showAccount(address)}
-                                        </Button>
+                                        <span className='text-green-500 text-3xl'>
+                                            <AiOutlineCheck />
+                                        </span>
                                     ) : (
                                         <Button
                                             className='bg-emerald-500 font-bold'
@@ -180,5 +194,3 @@ const Step: React.FC = () => {
         </div>
     )
 }
-
-export default Step

@@ -4,7 +4,8 @@ import OTPInput from 'react-otp-input'
 import { Button } from '@nextui-org/react'
 import '@/styles/otp-input.css'
 import { useDispatch } from 'react-redux'
-import { setCurrentStatus, setInviteCode } from '@/store/modules/airdrop'
+import { setInviteCode } from '@/store/modules/airdrop'
+import { useWeb3Modal } from '@web3modal/wagmi/react'
 
 const InviteBox = styled.div`
     .sub-title {
@@ -13,7 +14,9 @@ const InviteBox = styled.div`
 `
 
 const InviteCode: React.FC = () => {
+    const web3Modal = useWeb3Modal()
     const dispatch = useDispatch()
+
     const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] = useState({
         otp: '',
         numInputs: 6,
@@ -28,7 +31,6 @@ const InviteCode: React.FC = () => {
 
     const enterInviteCode = () => {
         dispatch(setInviteCode(otp))
-        dispatch(setCurrentStatus(1))
     }
 
     return (
@@ -38,15 +40,7 @@ const InviteCode: React.FC = () => {
                     <div className='text-center'>
                         <p className='text-base text-white'>Enter Your Invite Code</p>
                         <p className='text-sm sub-title mt-5'>Enter Your Invite Code to participate the campaign</p>
-                        {/* <div>
-                            <OtpInput
-                                value={otp}
-                                onChange={setOtp}
-                                numInputs={6}
-                                renderSeparator={<span>-</span>}
-                                renderInput={(props) => <input {...props} />}
-                            />
-                        </div> */}
+
                         <div className='mt-5'>
                             <OTPInput
                                 inputStyle='inputStyle'
@@ -68,7 +62,11 @@ const InviteCode: React.FC = () => {
                             </Button>
                         </div>
                         <p className='text-base text-white mt-5'>Already signed?</p>
-                        <p className='text-sm sub-title mt-5'>Connect Wallet</p>
+                        <p
+                            className='text-sm sub-title mt-5 cursor-pointer'
+                            onClick={() => web3Modal.open()}>
+                            Connect Wallet
+                        </p>
                     </div>
                 </div>
             </InviteBox>
