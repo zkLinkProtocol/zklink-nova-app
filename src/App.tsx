@@ -1,7 +1,9 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
 
+import Home from './pages/Home'
+// const Home = lazy(() => import('@/pages/Home'))
 const Airdrop = lazy(() => import('@/pages/Airdrop'))
 const Dashboard = lazy(() => import('@/pages/Airdrop/Dashboard'))
 const AirdropBridge = lazy(() => import('@/pages/Airdrop/Bridge'))
@@ -10,13 +12,15 @@ const Bridge = lazy(() => import('@/pages/Bridge'))
 
 export default function App() {
     return (
-        <main className='dark text-foreground bg-background'>
+        <main className='main dark text-foreground bg-background' >
             <BrowserRouter>
+                
                 <Header />
+                
                 <Routes>
                     <Route
                         path='/'
-                        element={<Navigate to='/airdrop' />}
+                        element={<Home />}
                     />
                     <Route
                         path='/airdrop'

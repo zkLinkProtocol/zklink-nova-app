@@ -1,10 +1,14 @@
 @import './reset.min.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import './tailwind.css';
 
 
 .text-sub-title {
     color: #999;
+}
+
+.main {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
 }

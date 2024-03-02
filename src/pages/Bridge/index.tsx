@@ -105,11 +105,15 @@ export default function Bridge() {
 
                         <CardBox className='flex justify-between items-center mt-6 p-8 rounded-xl'>
                             <div>
-                                <span>Your Invite Code</span>
+                                <span className='desc-text mr-4'>Your Invite Code</span>
                                 <span>https://zk.link/0x13214...4321</span>
                             </div>
 
-                            <Button className='bg-slate-300 text-black'>Copy invite</Button>
+                            <Button
+                                className='bg-slate-300 text-black'
+                                onClick={() => navigator.clipboard.writeText('https://zk.link/0x13214...4321')}>
+                                Copy invite
+                            </Button>
                         </CardBox>
                     </div>
                     <div>
