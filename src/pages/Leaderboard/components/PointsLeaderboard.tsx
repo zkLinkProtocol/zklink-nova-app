@@ -1,5 +1,4 @@
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from '@nextui-org/react'
-import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 
 export default function PointsLeaderboard() {
     const columns = [
@@ -54,14 +53,6 @@ export default function PointsLeaderboard() {
 
     return (
         <>
-            <div className='flex justify-between items-center py-4 px-2'>
-                <span className='text-xl'>Epoch 1</span>
-
-                <div className='flex items-center gap-2 text-xl'>
-                    <AiFillCaretLeft/>
-                    <AiFillCaretRight/>
-                </div>
-            </div>
             <Table aria-label='Example table with dynamic content'>
                 <TableHeader columns={columns}>{(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}</TableHeader>
                 <TableBody items={rows}>
