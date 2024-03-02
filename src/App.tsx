@@ -4,8 +4,9 @@ import Header from './components/Header'
 
 const Airdrop = lazy(() => import('@/pages/Airdrop'))
 const Dashboard = lazy(() => import('@/pages/Airdrop/Dashboard'))
-const Bridge = lazy(() => import('@/pages/Airdrop/Bridge'))
+const AirdropBridge = lazy(() => import('@/pages/Airdrop/Bridge'))
 const Leaderboard = lazy(() => import('@/pages/Leaderboard'))
+const Bridge = lazy(() => import('@/pages/Bridge'))
 
 export default function App() {
     return (
@@ -37,7 +38,7 @@ export default function App() {
                         path='/airdrop/bridge'
                         element={
                             <Suspense fallback=''>
-                                <Bridge />
+                                <AirdropBridge />
                             </Suspense>
                         }
                     />
@@ -46,6 +47,15 @@ export default function App() {
                         element={
                             <Suspense fallback=''>
                                 <Leaderboard />
+                            </Suspense>
+                        }
+                    />
+
+                    <Route
+                        path='/bridge'
+                        element={
+                            <Suspense fallback=''>
+                                <Bridge />
                             </Suspense>
                         }
                     />

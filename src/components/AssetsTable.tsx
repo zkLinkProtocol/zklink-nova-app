@@ -1,6 +1,6 @@
 import { Button, Skeleton, Tab, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tabs } from '@nextui-org/react'
 
-export default function AssetsList() {
+export default function AssetsTable() {
     return (
         <>
             <div className='bg-neutral-800 rounded'>

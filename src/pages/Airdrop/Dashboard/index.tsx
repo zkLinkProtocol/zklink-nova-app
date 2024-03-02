@@ -2,9 +2,9 @@ import { Tab, Tabs } from '@nextui-org/react'
 import styled from 'styled-components'
 import LeftSide from './components/LeftSide'
 import InvitesCard from './components/InvitesCard'
-import AssetsList from './components/AssetsList'
 import NFTCard from './components/NFTCard'
-import ReferralList from './components/ReferralList'
+import ReferralList from '@/components/ReferralList'
+import AssetsTable from '@/components/AssetsTable'
 
 const DashboardBox = styled.div`
     .left {
@@ -35,7 +35,7 @@ export default function Dashboard() {
                         <Tab
                             key='1'
                             title='Your Assets'>
-                            <AssetsList />
+                            <AssetsTable />
                         </Tab>
                         <Tab
                             key='2'
@@ -45,7 +45,9 @@ export default function Dashboard() {
                         <Tab
                             key='3'
                             title='Your Referral'>
-                            <ReferralList />
+                            <div className='mt-2 px-8 py-4 min-h-96 bg-stone-900 border border-white rounded-lg'>
+                                <ReferralList />
+                            </div>
                         </Tab>
                     </Tabs>
                 </div>

@@ -1,5 +1,5 @@
 import { Tab, Tabs } from '@nextui-org/react'
-import PointsLeaderboard from './components/PointsLeaderboard'
+import PointsLeaderboard from '@/components/PointsLeaderboard'
 import NFTLeaderboard from './components/NFTLeaderboard'
 import NFTLuckWinner from './components/NFTLuckWinner'
 
