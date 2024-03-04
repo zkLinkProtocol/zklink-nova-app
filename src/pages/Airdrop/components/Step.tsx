@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { setInviteCode } from '@/store/modules/airdrop'
 import styled from 'styled-components'
-import Performance from './Performance'
+import Performance from '../../../components/Performance'
 
 const BgBox = styled.div`
     position: relative;

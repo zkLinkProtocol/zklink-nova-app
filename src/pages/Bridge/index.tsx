@@ -41,7 +41,7 @@ const ProgressBar = styled.div`
 export default function Bridge() {
     return (
         <>
-            <BridgeBox className='flex py-8'>
+            <BridgeBox className='flex pt-[8rem] pb-8'>
                 <div className='left pl-16 pr-6'>
                     <CardBox className='px-4 py-6 rounded-xl text-center'>
                         <div className='main-value text-3xl'>123,456,789</div>

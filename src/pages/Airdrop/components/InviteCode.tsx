@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import OTPInput from 'react-otp-input'
-import Performance from './Performance'
+import Performance from '../../../components/Performance'
 import { useDispatch } from 'react-redux'
 import { setInviteCode } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
