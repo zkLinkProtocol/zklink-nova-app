@@ -108,6 +108,7 @@ const GradientButton = styled.span`
     font-weight: 900;
     line-height: 1.5rem; /* 150% */
     letter-spacing: -0.03125rem;
+    cursor: pointer;
 `
 
 export default function Step() {
@@ -200,102 +201,6 @@ export default function Step() {
 
     return (
         <BgBox>
-            {/* <div className='w-8/12'>
-                <p className='text-base'>YOU’RE ALMOST THERE</p>
-                <p className='text-2xl mt-2 font-bold'>To join the zkLink Nova Campaign</p>
-
-                <div>
-                    <Card className='mt-6'>
-                        <CardBody>
-                            <div className='flex justify-between align-center'>
-                                <div className='flex align-center'>
-                                    <div className='text-4xl font-bold'>01</div>
-
-                                    <div className='ml-5'>
-                                        <SubTitleText className='text-center'>Enter Invite Code</SubTitleText>
-                                        <TitleText className='text-center'>
-                                            Please Notice your are also joining the Group: <span className='text-green-400'>1234</span>
-                                        </TitleText>
-                                    </div>
-                                </div>
-                                <div className='flex align-center'>
-                                    {inviteCode ? (
-                                        <Button
-                                            className='bg-emerald-900 font-bold'
-                                            radius='sm'>
-                                            {inviteCode}
-                                        </Button>
-                                    ) : (
-                                        <div className='flex items-center gap-2'>
-                                            <Input
-                                                size='sm'
-                                                className='w-20 h-12'
-                                                maxLength={6}
-                                                onChange={(e) => setInviteCodeVal(e.target.value)}
-                                            />
-                                            <Button
-                                                className='bg-emerald-500 font-bold'
-                                                onClick={() => dispatch(setInviteCode(inviteCodeVal))}>
-                                                Enter Code
-                                            </Button>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </CardBody>
-                    </Card>
-
-                    <Card className='mt-6'>
-                        <CardBody>
-                            <div className='flex justify-between align-center'>
-                                <div className='flex align-center'>
-                                    <div className='text-4xl font-bold'>02</div>
-
-                                    <div className='ml-5'>
-                                        <p className='text-base font-bold'>Connect Twitter</p>
-                                        <p className='text-sub-title text-sm'>Check if you’re real person</p>
-                                    </div>
-                                </div>
-                                <div className='flex align-center'>
-                                    <Button
-                                        className='bg-emerald-500 font-bold'
-                                        onClick={handleConnectTwitter}>
-                                        Connect Twitter/X
-                                    </Button>
-                                </div>
-                            </div>
-                        </CardBody>
-                    </Card>
-
-                    <Card className='mt-6'>
-                        <CardBody>
-                            <div className='flex justify-between items-center'>
-                                <div className='flex items-center'>
-                                    <div className='text-4xl font-bold'>03</div>
-
-                                    <div className='ml-5'>
-                                        <p className='text-base font-bold'>Connect your wallet</p>
-                                        <p className='text-sub-title text-sm'>Check how many zkLink Points you could earn </p>
-                                    </div>
-                                </div>
-                                <div>
-                                    {isConnected ? (
-                                        <span className='text-green-500 text-3xl'>
-                                            <AiOutlineCheck />
-                                        </span>
-                                    ) : (
-                                        <Button
-                                            className='bg-emerald-500 font-bold'
-                                            onClick={() => web3Modal.open()}>
-                                            Connect Your Wallet
-                                        </Button>
-                                    )}
-                                </div>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </div>
-            </div> */}
             <ContentBg />
             <ContentBox>
                 <div className='mt-[8rem]'>
@@ -331,7 +236,7 @@ export default function Step() {
                                 <p className='step-sub-title mt-[0.25rem]'>Check if you’re real person</p>
                             </StepItem>
                             <div>
-                                <GradientButton className='px-[1rem] py-[0.5rem]'>Connect Twitter/X</GradientButton>
+                                <GradientButton className='px-[1rem] py-[0.5rem]' onClick={handleConnectTwitter}>Connect Twitter/X</GradientButton>
                             </div>
                         </StepCard>
                     </div>
