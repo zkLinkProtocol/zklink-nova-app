@@ -8,6 +8,107 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { setInviteCode } from '@/store/modules/airdrop'
+import styled from 'styled-components'
+import Performance from './Performance'
+
+const BgBox = styled.div`
+    position: relative;
+    padding-top: 7.5rem;
+    padding-bottom: 7.5rem;
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(0deg, rgba(0, 178, 255, 0.23) 0%, rgba(12, 14, 17, 0.23) 100%);
+`
+
+const TitleText = styled.h4`
+    color: #c2e2ff;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 2.5rem; /* 100% */
+    letter-spacing: -0.03125rem;
+`
+const SubTitleText = styled.p`
+    color: #c6d3dd;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 2.5rem; /* 250% */
+    letter-spacing: -0.03125rem;
+`
+const ContentBg = styled.div`
+    position: absolute;
+    top: 7.5rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 58.875rem;
+    height: calc(100vh - 7.5rem);
+    border-radius: 58.875rem;
+    background: rgba(0, 194, 255, 0.32);
+    filter: blur(500px);
+    z-index: 0;
+`
+
+const ContentBox = styled.div`
+    margin: 0 auto;
+    width: 58.875rem;
+`
+
+const StepCard = styled.div`
+    border-radius: 1rem;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15.800000190734863px);
+`
+
+const StepNum = styled.div`
+    width: 4.3125rem;
+    height: 6.25rem;
+    line-height: 6.25rem;
+    color: #fff;
+    font-family: Satoshi;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 900;
+    letter-spacing: -0.03125rem;
+    text-align: center;
+`
+
+const StepItem = styled.div`
+    .step-title {
+        color: #fff;
+        font-family: Satoshi;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 900;
+        line-height: 1.5rem; /* 150% */
+        letter-spacing: -0.03125rem;
+    }
+    .step-sub-title {
+        color: #c6d3dd;
+        font-family: Satoshi;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5rem; /* 150% */
+        letter-spacing: -0.03125rem;
+    }
+`
+
+const GradientButton = styled.span`
+    border-radius: 0.5rem;
+    background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
+    color: #fff;
+    font-family: Satoshi;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 1.5rem; /* 150% */
+    letter-spacing: -0.03125rem;
+`
 
 export default function Step() {
     const dispatch = useDispatch()
@@ -98,8 +199,8 @@ export default function Step() {
     }, [searchParams])
 
     return (
-        <div className='flex justify-center py-36'>
-            <div className='w-8/12'>
+        <BgBox>
+            {/* <div className='w-8/12'>
                 <p className='text-base'>YOU’RE ALMOST THERE</p>
                 <p className='text-2xl mt-2 font-bold'>To join the zkLink Nova Campaign</p>
 
@@ -111,10 +212,10 @@ export default function Step() {
                                     <div className='text-4xl font-bold'>01</div>
 
                                     <div className='ml-5'>
-                                        <p className='text-base font-bold'>Enter Invite Code</p>
-                                        <p className='text-sub-title text-sm'>
+                                        <SubTitleText className='text-center'>Enter Invite Code</SubTitleText>
+                                        <TitleText className='text-center'>
                                             Please Notice your are also joining the Group: <span className='text-green-400'>1234</span>
-                                        </p>
+                                        </TitleText>
                                     </div>
                                 </div>
                                 <div className='flex align-center'>
@@ -132,7 +233,11 @@ export default function Step() {
                                                 maxLength={6}
                                                 onChange={(e) => setInviteCodeVal(e.target.value)}
                                             />
-                                            <Button className='bg-emerald-500 font-bold' onClick={() => dispatch(setInviteCode(inviteCodeVal))}>Enter Code</Button>
+                                            <Button
+                                                className='bg-emerald-500 font-bold'
+                                                onClick={() => dispatch(setInviteCode(inviteCodeVal))}>
+                                                Enter Code
+                                            </Button>
                                         </div>
                                     )}
                                 </div>
@@ -190,7 +295,77 @@ export default function Step() {
                         </CardBody>
                     </Card>
                 </div>
+            </div> */}
+            <ContentBg />
+            <ContentBox>
+                <div className='mt-[8rem]'>
+                    <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
+                    <TitleText>To join the zkLink Nova Campaign</TitleText>
+                </div>
+                <div className='mt-[3.56rem]'>
+                    <div className='flex justify-center gap-[0.5rem]'>
+                        <StepCard>
+                            <StepNum>01</StepNum>
+                        </StepCard>
+                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                            <StepItem>
+                                <p className='step-title'>Enter Invite Code</p>
+                                <p className='step-sub-title mt-[0.25rem]'>You could modify it before bridge</p>
+                            </StepItem>
+                            <div>
+                                <img
+                                    src='/img/icon-right.svg'
+                                    className='w-[1.5rem] h-[1.5rem]'
+                                />
+                            </div>
+                        </StepCard>
+                    </div>
+
+                    <div className='flex justify-center gap-[0.5rem] mt-[1rem]'>
+                        <StepCard>
+                            <StepNum>02</StepNum>
+                        </StepCard>
+                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                            <StepItem>
+                                <p className='step-title'>Connect Twitter</p>
+                                <p className='step-sub-title mt-[0.25rem]'>Check if you’re real person</p>
+                            </StepItem>
+                            <div>
+                                <GradientButton className='px-[1rem] py-[0.5rem]'>Connect Twitter/X</GradientButton>
+                            </div>
+                        </StepCard>
+                    </div>
+
+                    <div className='flex justify-center gap-[0.5rem] mt-[1rem]'>
+                        <StepCard>
+                            <StepNum>03</StepNum>
+                        </StepCard>
+                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                            <StepItem>
+                                <p className='step-title'>Connect your wallet</p>
+                                <p className='step-sub-title mt-[0.25rem]'>Connect to continue the process</p>
+                            </StepItem>
+                            <div>
+                                {isConnected ? (
+                                    <img
+                                        src='/img/icon-right.svg'
+                                        className='w-[1.5rem] h-[1.5rem]'
+                                    />
+                                ) : (
+                                    <GradientButton
+                                        className='px-[1rem] py-[0.5rem]'
+                                        onClick={() => web3Modal.open()}>
+                                        Connect Your Wallet
+                                    </GradientButton>
+                                )}
+                            </div>
+                        </StepCard>
+                    </div>
+                </div>
+            </ContentBox>
+            <div className='absolute bottom-[4.5rem] w-full'>
+                <Performance />
             </div>
-        </div>
+        </BgBox>
     )
 }
