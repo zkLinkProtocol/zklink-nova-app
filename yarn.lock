@@ -7768,6 +7768,13 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
+zksync-web3@^0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.17.1.tgz#809c3b31295c29aae924ec2fe47f87701b539012"
+  integrity sha512-jMV4gfAQyehkIbNs81i4uvccHLe+XBu/tNPFb0Rm38pXccWY5VXzVE6XWS0dBiHlMfjdfUGn/sxwzJbWZDGYGQ==
+  dependencies:
+    ethers "~5.7.0"
+
 zod@3.22.4:
   version "3.22.4"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
@@ -7777,5 +7784,12 @@ zustand@4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.4.1.tgz#0cd3a3e4756f21811bd956418fdc686877e8b3b0"
   integrity sha512-QCPfstAS4EBiTQzlaGP1gmorkh/UL1Leaj2tdj+zZCZ/9bm0WS7sI2wnfD5lpOszFqWJ1DcPnGoY8RDL61uokw==
+  dependencies:
+    use-sync-external-store "1.2.0"
+
+zustand@^4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.5.2.tgz#fddbe7cac1e71d45413b3682cdb47b48034c3848"
+  integrity sha512-2cN1tPkDVkwCy5ickKrI7vijSjPksFRfqS6237NzT0vqSsztTNnQdHw9mmN7uBdk3gceVXU0a+21jFzFzAc9+g==
   dependencies:
     use-sync-external-store "1.2.0"

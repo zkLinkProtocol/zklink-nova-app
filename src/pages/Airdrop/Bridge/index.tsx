@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import OTPInput from "react-otp-input";
 import "@/styles/otp-input.css";
@@ -24,9 +24,14 @@ import lineaIcon from "@/assets/img/linea.svg";
 import ethereumIcon from "@/assets/img/ethereum.svg";
 import cionIcon from "@/assets/img/cion.png";
 import ethIcon from "@/assets/img/eth.svg";
+import mantleIcon from "@/assets/img/mantle.svg";
 import { goerli, lineaTestnet } from "wagmi/chains";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import { utils } from "ethers";
+import { useBridgeNetworkStore } from "@/hooks/useNetwork";
+import { PRIMARY_CHAIN_KEY } from "@/constants/networks";
+import { STORAGE_NETWORK_KEY } from "@/constants";
+
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -51,8 +56,20 @@ const fromList = [
     label: "Ethereum Goerli Testnet",
     icon: ethereumIcon,
     chainId: goerli.id,
+    networkKey: "goerli",
   },
-  { label: "Linea Goerli Testnet", icon: lineaIcon, chainId: lineaTestnet.id },
+  {
+    label: "Linea Goerli Testnet",
+    icon: lineaIcon,
+    chainId: lineaTestnet.id,
+    networkKey: PRIMARY_CHAIN_KEY,
+  },
+  {
+    label: "Mantle Goerli Testnet",
+    icon: mantleIcon,
+    chainId: lineaTestnet.id,
+    networkKey: "mantle",
+  },
 ];
 // const toList = [{ label: 'zkLink Nova Testnet', value: '1' }]
 const tokenList = [
@@ -62,6 +79,13 @@ const tokenList = [
     value: 0,
     icon: ethIcon,
     address: "0x0000000000000000000000000000000000000000",
+    isNative: true,
+  },
+  {
+    label: "MTK",
+    desc: "MTK",
+    address: "0xAbD167356cecaB549794A4a93a7E919b9B51f64E",
+    decimal: 18,
   },
 ];
 
@@ -84,6 +108,17 @@ export default function Bridge() {
     });
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
+  // const { setNetworkKey } = useNetworkStore();
+  const { setNetworkKey } = useBridgeNetworkStore();
+
+  useEffect(() => {
+    const network = localStorage.getItem(STORAGE_NETWORK_KEY);
+    if (network) {
+      setNetworkKey(network);
+    } else if (!network) {
+      setNetworkKey(fromList[0].networkKey);
+    }
+  }, [setNetworkKey]);
 
   const handleOTPChange = (otp: string) => {
     setConfig((prevConfig) => ({ ...prevConfig, otp }));
@@ -91,6 +126,7 @@ export default function Bridge() {
 
   const handleFrom = (index: number) => {
     setFromActive(index);
+    setNetworkKey(fromList[index].networkKey);
     fromModal.onClose();
   };
 
@@ -121,6 +157,7 @@ export default function Bridge() {
           },
         }
       );
+      return;
     }
     if (!amount) {
       return;

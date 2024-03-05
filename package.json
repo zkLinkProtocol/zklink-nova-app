@@ -28,7 +28,9 @@
     "redux-persist": "^6.0.0",
     "styled-components": "^6.1.8",
     "viem": "^2.7.15",
-    "wagmi": "^2.5.7"
+    "wagmi": "^2.5.7",
+    "zksync-web3": "^0.17.1",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/qs": "^6.9.12",

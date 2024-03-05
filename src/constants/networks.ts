@@ -73,6 +73,7 @@ export type ZkSyncNetwork = {
   blockExplorerApi?: string;
   withdrawalFinalizerApi?: string;
   logoUrl?: string;
+  isEthGasToken: boolean;
   displaySettings?: {
     showPartnerLinks?: boolean;
   };
@@ -96,6 +97,7 @@ export const nexusNode: ZkSyncNetwork[] = [
     erc20BridgeL1: "0xAd16eDCF7DEB7e90096A259c81269d811544B6B6",
     erc20BridgeL2: "0x36CaABbAbfB9C09B722d9C3697C3Cb4A93650ea7",
     l1Gateway: "0x83Bc7394738A7A084081aF22EEC0051908c0055c",
+    isEthGasToken: true,
     //TODO
     l1Network: l1Networks.mainnet,
   },
@@ -111,6 +113,7 @@ export const nexusNode: ZkSyncNetwork[] = [
     mainContract: "0x5Cb18b6e4e6F3b46Ce646b0f4704D53724C5Df05",
     erc20BridgeL1: "0x62cE247f34dc316f93D3830e4Bf10959FCe630f8",
     erc20BridgeL2: "0x01c3f51294494e350AD69B999Db6B382b3B510b9",
+    isEthGasToken: true,
     //TODO
     l1Network: l1Networks.linea,
   },
@@ -130,6 +133,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     erc20BridgeL1: "0xa403d1A5B552BC17132aAD864F90472794678712",
     erc20BridgeL2: "0x369181F0724D485c2F50E918b1beCEc078C7077C",
     l1Gateway: "0x00546F01728048Af108223C41C4FaD7b124a476f",
+    isEthGasToken: true,
     //TODO
     l1Network: l1Networks.goerli,
   },
@@ -145,6 +149,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     mainContract: "0xF51bdDCC3401572B193140B5326a9dEF03c56198",
     erc20BridgeL1: "0xF58Da74B65544C86F5E16A0c898Ff20718C1cb7d",
     erc20BridgeL2: "0x7cB4A4fCF09dfF32f7f6557b966a942e803C7FAD",
+    isEthGasToken: true,
     //TODO
     l1Network: l1Networks.lineaGoerliTestnet,
   },
@@ -161,6 +166,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     erc20BridgeL1: "0x0857FDf217E54954c0f4A77B62c04b246ef504CD",
     erc20BridgeL2: "0xD1b7DD1B30b218901d035C951852ae0D97834b68",
     l1Gateway: "0x7bf83D15C8f5a491B36506652A26d4bA0b6cC289",
+    isEthGasToken: false,
     //TODO
     l1Network: l1Networks.mantleGoerliTestnet,
   },
