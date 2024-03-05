@@ -6,6 +6,7 @@ import '@/styles/otp-input.css'
 import { useDispatch } from 'react-redux'
 import { setInviteCode } from '@/store/modules/airdrop'
 import { useNavigate } from 'react-router-dom'
+import { GradientButton } from '@/styles/common'
 
 const BgBox = styled.div`
     width: 100%;
@@ -73,12 +74,15 @@ export default function Home() {
     }
 
     const enterInviteCode = () => {
+        if (!otp || otp.length !== 5) return
+
         dispatch(setInviteCode(otp))
         navigate('/airdrop')
     }
 
     return (
         <BgBox className='relative pb-[13rem]'>
+            {/* <div className='absolute w-full h-full top-0 left-0 z-0 opacity-[0.16] bg-[#000]'></div> */}
             <div className='flex justify-between pt-[9.5rem] pl-[6.5rem] pr-[6.88rem]'>
                 <div>
                     <CardBox className='py-8 w-[30rem]'>
@@ -90,11 +94,17 @@ export default function Home() {
                         </SubTitleBox>
                     </CardBox>
                     <div className='mt-4'>
-                        <img
+                        {/* <img
                             src='/img/btn-join-early-access.png'
                             className='cursor-pointer'
                             onClick={() => navigate('/airdrop')}
-                        />
+                        /> */}
+
+                        <GradientButton
+                            className={`px-[2rem] h-[2.46875rem] text-center leading-[2.46875rem] cursor-pointer`}
+                            onClick={() => navigate('/airdrop')}>
+                            JOIN EARLY ACCESS
+                        </GradientButton>
                     </div>
                 </div>
                 <div>
@@ -119,11 +129,18 @@ export default function Home() {
                         </div>
 
                         <div>
-                            <img
+                            <GradientButton
+                                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center leading-[2.46875rem] ${
+                                    !otp || otp.length !== 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+                                }`}
+                                onClick={enterInviteCode}>
+                                ENTER INVITE CODE
+                            </GradientButton>
+                            {/* <img
                                 src='/img/btn-enter-invite-code.png'
                                 className='cursor-pointer'
                                 onClick={enterInviteCode}
-                            />
+                            /> */}
                         </div>
 
                         <div className='mt-4'>

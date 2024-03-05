@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import OTPInput from 'react-otp-input'
-import Performance from '../../../components/Performance'
+import Performance from '../../components/Performance'
 import { useDispatch } from 'react-redux'
 import { setInviteCode } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
+import toast, { Toaster } from 'react-hot-toast'
 import '@/styles/otp-input.css'
+import { GradientButton } from '@/styles/common'
 
 const BgBox = styled.div`
     position: relative;
@@ -75,21 +77,6 @@ const DescText = styled.p`
     letter-spacing: -0.03125rem;
 `
 
-const GradientButton = styled.span`
-    background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
-    color: #fff;
-    font-family: Satoshi;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 900;
-    letter-spacing: 0.125rem;
-    text-transform: uppercase;
-    border-radius: 0.5rem;
-    display: inline-block;
-    user-select: none;
-    cursor: pointer;
-`
-
 const GradientText = styled.span`
     background: linear-gradient(90deg, #48ecae 0%, #3a50ed 52.9%, #49cdd7 100%);
     background-clip: text;
@@ -115,7 +102,7 @@ const TeamItem = styled.div`
     letter-spacing: -0.03125rem;
 `
 
-const InviteCode: React.FC = () => {
+export default function Landing() {
     const web3Modal = useWeb3Modal()
     const dispatch = useDispatch()
     const [tabsActive, setTabsActive] = useState(0)
@@ -133,13 +120,48 @@ const InviteCode: React.FC = () => {
     }
 
     const enterInviteCode = () => {
+        if (!otp || otp.length !== 5) return
+        if (false) {
+            toast.error('Invalid invite code. Try another.')
+            return
+        }
         dispatch(setInviteCode(otp))
     }
 
     return (
         <BgBox>
             <CoverImgBox />
-
+            <Toaster
+                position='top-right'
+                containerClassName='my-toast'
+                toastOptions={{
+                    duration: 5000,
+                    icon: (
+                        <img
+                            src='/img/icon-error.svg'
+                            className='w-[1.12513rem] h-[1.12513rem]'
+                        />
+                    ),
+                    style: {
+                        maxWidth: '100%',
+                        whiteSpace: 'nowrap',
+                        padding: '1rem 2.5rem',
+                        color: '#E5351D',
+                        fontFamily: 'Satoshi',
+                        fontSize: '1rem',
+                        fontStyle: 'normal',
+                        fontWeight: 700,
+                        lineHeight: '1.5rem',
+                        borderRadius: '0.5rem',
+                        background: '#41231D',
+                        gap: '0.75rem',
+                    },
+                }}
+                containerStyle={{
+                    top: '8rem',
+                    right: '3rem',
+                }}
+            />
             <div className='relative mx-[auto] pl-[3.25rem] w-[41.5rem] z-[2]'>
                 <div className='flex justify-between gap-[1.5rem] mt-[8.5rem]'>
                     <TabsItem
@@ -177,8 +199,11 @@ const InviteCode: React.FC = () => {
                                     shouldAutoFocus
                                 />
                             </div>
+
                             <GradientButton
-                                className='mt-[2rem] px-[2rem] h-[2.46875rem] text-center leading-[2.46875rem]'
+                                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center leading-[2.46875rem] ${
+                                    !otp || otp.length !== 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+                                }`}
                                 onClick={enterInviteCode}>
                                 ENTER CODE
                             </GradientButton>
@@ -210,40 +235,6 @@ const InviteCode: React.FC = () => {
                         Connect Wallet
                     </GradientText>
                 </CardBox>
-
-                {/* <div className='flex justify-center items-center'>
-                    <div className='text-center'>
-                        <p className='text-base text-white'>Enter Your Invite Code</p>
-                        <p className='text-sm sub-title mt-5'>Enter Your Invite Code to participate the campaign</p>
-
-                        <div className='mt-5'>
-                            <OTPInput
-                                inputStyle='inputStyle'
-                                numInputs={numInputs}
-                                onChange={handleOTPChange}
-                                renderSeparator={<span>{separator}</span>}
-                                value={otp}
-                                placeholder={placeholder}
-                                inputType={inputType}
-                                renderInput={(props) => <input {...props} />}
-                                shouldAutoFocus
-                            />
-                        </div>
-                        <div className='mt-10'>
-                            <Button
-                                color='success'
-                                onClick={enterInviteCode}>
-                                Enter Invite Code
-                            </Button>
-                        </div>
-                        <p className='text-base text-white mt-5'>Already signed?</p>
-                        <p
-                            className='text-sm sub-title mt-5 cursor-pointer'
-                            onClick={() => web3Modal.open()}>
-                            Connect Wallet
-                        </p>
-                    </div>
-                </div> */}
             </div>
 
             <div className='absolute bottom-[4.5rem] w-full'>
@@ -252,5 +243,3 @@ const InviteCode: React.FC = () => {
         </BgBox>
     )
 }
-
-export default InviteCode

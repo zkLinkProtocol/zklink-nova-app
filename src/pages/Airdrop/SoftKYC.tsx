@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react'
-import { Button, Card, CardBody, Input } from '@nextui-org/react'
+import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import qs from 'qs'
 import { postData } from '@/utils'
-import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
-import { AiOutlineCheck } from 'react-icons/ai'
-import { setInviteCode } from '@/store/modules/airdrop'
 import styled from 'styled-components'
-import Performance from '../../../components/Performance'
+import Performance from '../../components/Performance'
 
 const BgBox = styled.div`
     position: relative;
@@ -111,14 +107,13 @@ const GradientButton = styled.span`
     cursor: pointer;
 `
 
-export default function Step() {
-    const dispatch = useDispatch()
+export default function SoftKYC() {
     const [searchParams, setSearchParams] = useSearchParams()
     const web3Modal = useWeb3Modal()
     const { isConnected } = useAccount()
-    const { inviteCode } = useSelector((store: any) => store.airdrop)
-
-    const [inviteCodeVal, setInviteCodeVal] = useState('')
+    // const dispatch = useDispatch()
+    // const { inviteCode } = useSelector((store: any) => store.airdrop)
+    // const [inviteCodeVal, setInviteCodeVal] = useState('')
 
     // const location = useLocation()
 
@@ -236,7 +231,11 @@ export default function Step() {
                                 <p className='step-sub-title mt-[0.25rem]'>Check if you’re real person</p>
                             </StepItem>
                             <div>
-                                <GradientButton className='px-[1rem] py-[0.5rem]' onClick={handleConnectTwitter}>Connect Twitter/X</GradientButton>
+                                <GradientButton
+                                    className='px-[1rem] py-[0.5rem]'
+                                    onClick={handleConnectTwitter}>
+                                    Connect Twitter/X
+                                </GradientButton>
                             </div>
                         </StepCard>
                     </div>
