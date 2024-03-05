@@ -12,4 +12,9 @@ export const GradientButton = styled.span`
     border-radius: 0.5rem;
     display: inline-block;
     user-select: none;
+    cursor: pointer;
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+    }
 `

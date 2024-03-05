@@ -6,6 +6,8 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import Performance from '../../components/Performance'
+import { useSelector } from 'react-redux'
+import { GradientButton } from '@/styles/common'
 
 const BgBox = styled.div`
     position: relative;
@@ -94,23 +96,12 @@ const StepItem = styled.div`
     }
 `
 
-const GradientButton = styled.span`
-    border-radius: 0.5rem;
-    background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
-    color: #fff;
-    font-family: Satoshi;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 900;
-    line-height: 1.5rem; /* 150% */
-    letter-spacing: -0.03125rem;
-    cursor: pointer;
-`
-
 export default function SoftKYC() {
     const [searchParams, setSearchParams] = useSearchParams()
     const web3Modal = useWeb3Modal()
-    const { isConnected } = useAccount()
+    const { isConnected, isConnecting } = useAccount()
+    const { signature } = useSelector((store: any) => store.airdrop)
+
     // const dispatch = useDispatch()
     // const { inviteCode } = useSelector((store: any) => store.airdrop)
     // const [inviteCodeVal, setInviteCodeVal] = useState('')
@@ -250,15 +241,15 @@ export default function SoftKYC() {
                                 <p className='step-sub-title mt-[0.25rem]'>Connect to continue the process</p>
                             </StepItem>
                             <div>
-                                {isConnected ? (
+                                {isConnected && signature ? (
                                     <img
                                         src='/img/icon-right.svg'
                                         className='w-[1.5rem] h-[1.5rem]'
                                     />
                                 ) : (
                                     <GradientButton
-                                        className='px-[1rem] py-[0.5rem]'
-                                        onClick={() => web3Modal.open()}>
+                                        className={`px-[1rem] py-[0.5rem] ${isConnecting || isConnected ? 'disabled' : ''}`}
+                                        onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>
                                         Connect Your Wallet
                                     </GradientButton>
                                 )}

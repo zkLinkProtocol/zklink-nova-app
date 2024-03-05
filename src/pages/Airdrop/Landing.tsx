@@ -5,9 +5,11 @@ import Performance from '../../components/Performance'
 import { useDispatch } from 'react-redux'
 import { setInviteCode } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
 import { GradientButton } from '@/styles/common'
+import { useAccount } from 'wagmi'
+import ErrorToast from '@/components/ErrorToast'
 
 const BgBox = styled.div`
     position: relative;
@@ -89,6 +91,7 @@ const GradientText = styled.span`
     font-weight: 500;
     line-height: 1.5rem; /* 150% */
     letter-spacing: -0.03125rem;
+    user-select: none;
 `
 
 const TeamItem = styled.div`
@@ -104,8 +107,8 @@ const TeamItem = styled.div`
 
 export default function Landing() {
     const web3Modal = useWeb3Modal()
-    const dispatch = useDispatch()
     const [tabsActive, setTabsActive] = useState(0)
+    const { isConnected } = useAccount()
 
     const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] = useState({
         otp: '',
@@ -114,6 +117,8 @@ export default function Landing() {
         placeholder: '',
         inputType: 'text' as const,
     })
+
+    const dispatch = useDispatch()
 
     const handleOTPChange = (otp: string) => {
         setConfig((prevConfig) => ({ ...prevConfig, otp }))
@@ -131,37 +136,7 @@ export default function Landing() {
     return (
         <BgBox>
             <CoverImgBox />
-            <Toaster
-                position='top-right'
-                containerClassName='my-toast'
-                toastOptions={{
-                    duration: 5000,
-                    icon: (
-                        <img
-                            src='/img/icon-error.svg'
-                            className='w-[1.12513rem] h-[1.12513rem]'
-                        />
-                    ),
-                    style: {
-                        maxWidth: '100%',
-                        whiteSpace: 'nowrap',
-                        padding: '1rem 2.5rem',
-                        color: '#E5351D',
-                        fontFamily: 'Satoshi',
-                        fontSize: '1rem',
-                        fontStyle: 'normal',
-                        fontWeight: 700,
-                        lineHeight: '1.5rem',
-                        borderRadius: '0.5rem',
-                        background: '#41231D',
-                        gap: '0.75rem',
-                    },
-                }}
-                containerStyle={{
-                    top: '8rem',
-                    right: '3rem',
-                }}
-            />
+            <ErrorToast />
             <div className='relative mx-[auto] pl-[3.25rem] w-[41.5rem] z-[2]'>
                 <div className='flex justify-between gap-[1.5rem] mt-[8.5rem]'>
                     <TabsItem
@@ -230,8 +205,8 @@ export default function Landing() {
 
                     <DescText className='mt-[1.03rem]'>Already signed?</DescText>
                     <GradientText
-                        className='mt-[1rem] cursor-pointer'
-                        onClick={() => web3Modal.open()}>
+                        className={`mt-[1rem] ${isConnected ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
+                        onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>
                         Connect Wallet
                     </GradientText>
                 </CardBox>

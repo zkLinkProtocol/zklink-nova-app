@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface airdropState {
-    inviteCode: string
+    inviteCode: string,
+    signature: string
 }
 
 const initialState: airdropState = {
-    inviteCode: ''
+    inviteCode: '',
+    signature: ''
 };
 
 export const airdrop = createSlice({
@@ -14,11 +16,13 @@ export const airdrop = createSlice({
     reducers: {
 
         setInviteCode(state, { payload }) {
-            console.log(payload);
             state.inviteCode = payload;
+        },
+        setSignature(state, { payload }) {
+            state.signature = payload;
         }
     },
 });
 
-export const {  setInviteCode } = airdrop.actions;
+export const { setInviteCode, setSignature } = airdrop.actions;
 export default airdrop.reducer;
