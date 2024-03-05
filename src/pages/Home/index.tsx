@@ -101,7 +101,7 @@ export default function Home() {
                         /> */}
 
                         <GradientButton
-                            className={`px-[2rem] h-[2.46875rem] text-center leading-[2.46875rem] cursor-pointer`}
+                            className={`px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] cursor-pointer`}
                             onClick={() => navigate('/airdrop')}>
                             JOIN EARLY ACCESS
                         </GradientButton>
@@ -130,7 +130,7 @@ export default function Home() {
 
                         <div>
                             <GradientButton
-                                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center leading-[2.46875rem] ${
+                                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
                                     !otp || otp.length !== 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
                                 }`}
                                 onClick={enterInviteCode}>

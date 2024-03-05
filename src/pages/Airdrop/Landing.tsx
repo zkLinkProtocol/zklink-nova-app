@@ -7,7 +7,7 @@ import { setInviteCode } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
-import { GradientButton } from '@/styles/common'
+import { GradientButton, CardBox } from '@/styles/common'
 import { useAccount } from 'wagmi'
 import ErrorToast from '@/components/ErrorToast'
 
@@ -59,13 +59,6 @@ const TabsItem = styled.span`
         color: #fff;
         background: rgba(0, 0, 0, 0.4);
     }
-`
-
-const CardBox = styled.div`
-    width: 38.125rem;
-    border-radius: 1rem;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15.800000190734863px);
 `
 
 const DescText = styled.p`
@@ -155,7 +148,7 @@ export default function Landing() {
                     </TabsItem>
                 </div>
 
-                <CardBox className='flex flex-col items-center mt-6 py-8'>
+                <CardBox className='flex flex-col items-center mt-6 py-8 w-[38.125rem]'>
                     <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>
                         By joining a existing team, your could share the team boost when team tvl meet specific milestone.
                     </DescText>
@@ -176,7 +169,7 @@ export default function Landing() {
                             </div>
 
                             <GradientButton
-                                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center leading-[2.46875rem] ${
+                                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
                                     !otp || otp.length !== 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
                                 }`}
                                 onClick={enterInviteCode}>
@@ -196,7 +189,7 @@ export default function Landing() {
                             </div>
 
                             <div>
-                                <GradientButton className='px-[2rem] h-[2.46875rem] leading-[2.46875rem] text-center'>
+                                <GradientButton className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center'>
                                     Create Your Team
                                 </GradientButton>
                             </div>

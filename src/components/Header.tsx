@@ -5,7 +5,7 @@ import { useAccount, useDisconnect } from 'wagmi'
 import styled from 'styled-components'
 import { showAccount } from '@/utils'
 import { useEffect } from 'react'
-import { setSignature } from '@/store/modules/airdrop'
+import { setSignature, setSignatureStatus } from '@/store/modules/airdrop'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import ErrorToast from './ErrorToast'
@@ -52,7 +52,7 @@ const ButtonText = styled.span`
 export default function Header() {
     const web3Modal = useWeb3Modal()
     const { address, isConnected } = useAccount()
-    const { signature } = useSelector((store: any) => store.airdrop)
+    const { signature, signatureStatus } = useSelector((store: any) => store.airdrop)
 
     const { signMessage } = useSignMessage()
     const dispatch = useDispatch()
@@ -70,6 +70,7 @@ export default function Header() {
                 onSuccess(data, variables, context) {
                     console.log(data, variables, context)
                     dispatch(setSignature(data))
+                    dispatch(setSignatureStatus(1))
                 },
                 onError(error, variables, context) {
                     console.log(error, variables, context)
@@ -88,10 +89,10 @@ export default function Header() {
             console.log('clear signature')
             dispatch(setSignature(''))
         }
-        if (isConnected && !signature) {
+        if (isConnected && signatureStatus !== 1) {
             handleSign()
         }
-    }, [isConnected, signature])
+    }, [isConnected])
 
     return (
         <>
@@ -108,7 +109,6 @@ export default function Header() {
                             <img
                                 className='w-[9rem] h-[2.41rem]'
                                 src='/img/logo-zklink.svg'
-                                alt='logo'
                             />
                             <span className='logo-text'>zk.Link</span>
                         </LogoBox>
@@ -153,7 +153,6 @@ export default function Header() {
                                 width={20}
                                 height={20}
                                 src='/img/icon-wallet.svg'
-                                alt='icon'
                             />
                             <ButtonText>{isConnected ? showAccount(address) : 'Connect wallet'}</ButtonText>
                         </Button>

@@ -7,16 +7,7 @@ import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import Performance from '../../components/Performance'
 import { useSelector } from 'react-redux'
-import { GradientButton } from '@/styles/common'
-
-const BgBox = styled.div`
-    position: relative;
-    padding-top: 7.5rem;
-    padding-bottom: 7.5rem;
-    width: 100%;
-    min-height: 100vh;
-    background: linear-gradient(0deg, rgba(0, 178, 255, 0.23) 0%, rgba(12, 14, 17, 0.23) 100%);
-`
+import { BgBox, BgCoverImg, GradientButton, CardBox } from '@/styles/common'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -38,28 +29,10 @@ const SubTitleText = styled.p`
     line-height: 2.5rem; /* 250% */
     letter-spacing: -0.03125rem;
 `
-const ContentBg = styled.div`
-    position: absolute;
-    top: 7.5rem;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 58.875rem;
-    height: calc(100vh - 7.5rem);
-    border-radius: 58.875rem;
-    background: rgba(0, 194, 255, 0.32);
-    filter: blur(500px);
-    z-index: 0;
-`
 
 const ContentBox = styled.div`
     margin: 0 auto;
     width: 58.875rem;
-`
-
-const StepCard = styled.div`
-    border-radius: 1rem;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15.800000190734863px);
 `
 
 const StepNum = styled.div`
@@ -187,7 +160,7 @@ export default function SoftKYC() {
 
     return (
         <BgBox>
-            <ContentBg />
+            <BgCoverImg />
             <ContentBox>
                 <div className='mt-[8rem]'>
                     <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
@@ -195,10 +168,10 @@ export default function SoftKYC() {
                 </div>
                 <div className='mt-[3.56rem]'>
                     <div className='flex justify-center gap-[0.5rem]'>
-                        <StepCard>
+                        <CardBox>
                             <StepNum>01</StepNum>
-                        </StepCard>
-                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                        </CardBox>
+                        <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Enter Invite Code</p>
                                 <p className='step-sub-title mt-[0.25rem]'>You could modify it before bridge</p>
@@ -209,33 +182,33 @@ export default function SoftKYC() {
                                     className='w-[1.5rem] h-[1.5rem]'
                                 />
                             </div>
-                        </StepCard>
+                        </CardBox>
                     </div>
 
                     <div className='flex justify-center gap-[0.5rem] mt-[1rem]'>
-                        <StepCard>
+                        <CardBox>
                             <StepNum>02</StepNum>
-                        </StepCard>
-                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                        </CardBox>
+                        <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect Twitter</p>
                                 <p className='step-sub-title mt-[0.25rem]'>Check if you’re real person</p>
                             </StepItem>
                             <div>
                                 <GradientButton
-                                    className='px-[1rem] py-[0.5rem]'
+                                    className='px-[1rem] py-[0.5rem] text-[1rem]'
                                     onClick={handleConnectTwitter}>
                                     Connect Twitter/X
                                 </GradientButton>
                             </div>
-                        </StepCard>
+                        </CardBox>
                     </div>
 
                     <div className='flex justify-center gap-[0.5rem] mt-[1rem]'>
-                        <StepCard>
+                        <CardBox>
                             <StepNum>03</StepNum>
-                        </StepCard>
-                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                        </CardBox>
+                        <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect your wallet</p>
                                 <p className='step-sub-title mt-[0.25rem]'>Connect to continue the process</p>
@@ -254,7 +227,7 @@ export default function SoftKYC() {
                                     </GradientButton>
                                 )}
                             </div>
-                        </StepCard>
+                        </CardBox>
                     </div>
                 </div>
             </ContentBox>

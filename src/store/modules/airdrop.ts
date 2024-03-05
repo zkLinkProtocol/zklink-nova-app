@@ -2,12 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface airdropState {
     inviteCode: string,
-    signature: string
+    signature: string,
+    signatureStatus: number
 }
 
 const initialState: airdropState = {
     inviteCode: '',
-    signature: ''
+    signature: '',
+    signatureStatus: 0
 };
 
 export const airdrop = createSlice({
@@ -20,9 +22,12 @@ export const airdrop = createSlice({
         },
         setSignature(state, { payload }) {
             state.signature = payload;
+        },
+        setSignatureStatus(state, { payload }) {
+            state.signatureStatus = payload;
         }
     },
 });
 
-export const { setInviteCode, setSignature } = airdrop.actions;
+export const { setInviteCode, setSignature, setSignatureStatus } = airdrop.actions;
 export default airdrop.reducer;
