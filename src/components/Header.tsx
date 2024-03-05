@@ -107,7 +107,7 @@ export default function Header() {
                     <Link to='/'>
                         <LogoBox className='relative'>
                             <img
-                                className='w-[9rem] h-[2.41rem]'
+                                className='w-[9rem] min-w-[140px] h-[2.41rem]'
                                 src='/img/logo-zklink.svg'
                             />
                             <span className='logo-text'>zk.Link</span>

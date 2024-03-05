@@ -26,6 +26,7 @@ export const BgBox = styled.div`
     width: 100%;
     min-height: 100vh;
     background: linear-gradient(0deg, rgba(0, 178, 255, 0.23) 0%, rgba(12, 14, 17, 0.23) 100%);
+    overflow: auto;
 `
 
 export const BgCoverImg = styled.div`
