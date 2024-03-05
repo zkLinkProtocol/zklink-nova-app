@@ -41,7 +41,7 @@ const ProgressBar = styled.div`
 export default function Bridge() {
     return (
         <>
-            <BridgeBox className='flex py-8'>
+            <BridgeBox className='flex pt-[8rem] pb-8'>
                 <div className='left pl-16 pr-6'>
                     <CardBox className='px-4 py-6 rounded-xl text-center'>
                         <div className='main-value text-3xl'>123,456,789</div>
@@ -105,11 +105,15 @@ export default function Bridge() {
 
                         <CardBox className='flex justify-between items-center mt-6 p-8 rounded-xl'>
                             <div>
-                                <span>Your Invite Code</span>
+                                <span className='desc-text mr-4'>Your Invite Code</span>
                                 <span>https://zk.link/0x13214...4321</span>
                             </div>
 
-                            <Button className='bg-slate-300 text-black'>Copy invite</Button>
+                            <Button
+                                className='bg-slate-300 text-black'
+                                onClick={() => navigator.clipboard.writeText('https://zk.link/0x13214...4321')}>
+                                Copy invite
+                            </Button>
                         </CardBox>
                     </div>
                     <div>

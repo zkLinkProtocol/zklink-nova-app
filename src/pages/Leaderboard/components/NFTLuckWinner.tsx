@@ -79,14 +79,17 @@ export default function NFTLuckWinner() {
     return (
         <>
             <div className='flex justify-between items-center py-4 px-2'>
-                <span className='text-xl'>Epoch 1</span>
+                <span className='text-[1.2rem]'>Epoch 1</span>
 
                 <div className='flex items-center gap-2 text-xl'>
-                    <AiFillCaretLeft />
-                    <AiFillCaretRight />
+                    <AiFillCaretLeft className='cursor-pointer' />
+                    <AiFillCaretRight className='cursor-pointer' />
                 </div>
             </div>
-            <Table aria-label='Example table with dynamic content'>
+            <Table
+                removeWrapper
+                className='table'
+                classNames={{ thead: 'table-header', tbody: 'table-tbody' }}>
                 <TableHeader columns={columns}>{(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}</TableHeader>
                 <TableBody items={rows}>
                     {(item) => <TableRow key={item.key}>{(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}</TableRow>}

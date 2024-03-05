@@ -77,7 +77,10 @@ export default function NFTLeaderboard() {
 
     return (
         <>
-            <Table aria-label='Example table with dynamic content'>
+            <Table
+                removeWrapper
+                className='table'
+                classNames={{ thead: 'table-header', tbody: 'table-tbody' }}>
                 <TableHeader columns={columns}>{(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}</TableHeader>
                 <TableBody items={rows}>
                     {(item) => <TableRow key={item.key}>{(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}</TableRow>}
