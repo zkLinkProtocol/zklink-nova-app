@@ -21,7 +21,7 @@ if (!projectId) {
 }
 
 // Create wagmiConfig
-const wagmiConfig = defaultWagmiConfig({
+export const wagmiConfig = defaultWagmiConfig({
   chains: [goerli, mainnet, arbitrum, lineaTestnet],
   projectId,
   metadata: {

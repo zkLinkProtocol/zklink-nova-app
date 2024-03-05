@@ -1,24 +1,13 @@
-import { useEffect, useState } from 'react'
-import { Button, Card, CardBody, Input } from '@nextui-org/react'
+import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import qs from 'qs'
 import { postData } from '@/utils'
-import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
-import { AiOutlineCheck } from 'react-icons/ai'
-import { setInviteCode } from '@/store/modules/airdrop'
 import styled from 'styled-components'
-import Performance from '../../../components/Performance'
-
-const BgBox = styled.div`
-    position: relative;
-    padding-top: 7.5rem;
-    padding-bottom: 7.5rem;
-    width: 100%;
-    min-height: 100vh;
-    background: linear-gradient(0deg, rgba(0, 178, 255, 0.23) 0%, rgba(12, 14, 17, 0.23) 100%);
-`
+import Performance from '../../components/Performance'
+import { useSelector } from 'react-redux'
+import { BgBox, BgCoverImg, GradientButton, CardBox } from '@/styles/common'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -40,28 +29,10 @@ const SubTitleText = styled.p`
     line-height: 2.5rem; /* 250% */
     letter-spacing: -0.03125rem;
 `
-const ContentBg = styled.div`
-    position: absolute;
-    top: 7.5rem;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 58.875rem;
-    height: calc(100vh - 7.5rem);
-    border-radius: 58.875rem;
-    background: rgba(0, 194, 255, 0.32);
-    filter: blur(500px);
-    z-index: 0;
-`
 
 const ContentBox = styled.div`
     margin: 0 auto;
     width: 58.875rem;
-`
-
-const StepCard = styled.div`
-    border-radius: 1rem;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15.800000190734863px);
 `
 
 const StepNum = styled.div`
@@ -98,27 +69,15 @@ const StepItem = styled.div`
     }
 `
 
-const GradientButton = styled.span`
-    border-radius: 0.5rem;
-    background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
-    color: #fff;
-    font-family: Satoshi;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 900;
-    line-height: 1.5rem; /* 150% */
-    letter-spacing: -0.03125rem;
-    cursor: pointer;
-`
-
-export default function Step() {
-    const dispatch = useDispatch()
+export default function SoftKYC() {
     const [searchParams, setSearchParams] = useSearchParams()
     const web3Modal = useWeb3Modal()
-    const { isConnected } = useAccount()
-    const { inviteCode } = useSelector((store: any) => store.airdrop)
+    const { isConnected, isConnecting } = useAccount()
+    const { signature } = useSelector((store: any) => store.airdrop)
 
-    const [inviteCodeVal, setInviteCodeVal] = useState('')
+    // const dispatch = useDispatch()
+    // const { inviteCode } = useSelector((store: any) => store.airdrop)
+    // const [inviteCodeVal, setInviteCodeVal] = useState('')
 
     // const location = useLocation()
 
@@ -201,7 +160,7 @@ export default function Step() {
 
     return (
         <BgBox>
-            <ContentBg />
+            <BgCoverImg />
             <ContentBox>
                 <div className='mt-[8rem]'>
                     <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
@@ -209,62 +168,68 @@ export default function Step() {
                 </div>
                 <div className='mt-[3.56rem]'>
                     <div className='flex justify-center gap-[0.5rem]'>
-                        <StepCard>
+                        <CardBox>
                             <StepNum>01</StepNum>
-                        </StepCard>
-                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                        </CardBox>
+                        <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Enter Invite Code</p>
                                 <p className='step-sub-title mt-[0.25rem]'>You could modify it before bridge</p>
                             </StepItem>
                             <div>
-                                <img
-                                    src='/img/icon-right.svg'
-                                    className='w-[1.5rem] h-[1.5rem]'
-                                />
+                                {
+                                    <img
+                                        src='/img/icon-right.svg'
+                                        className='w-[1.5rem] h-[1.5rem]'
+                                    />
+                                }
                             </div>
-                        </StepCard>
+                        </CardBox>
                     </div>
 
                     <div className='flex justify-center gap-[0.5rem] mt-[1rem]'>
-                        <StepCard>
+                        <CardBox>
                             <StepNum>02</StepNum>
-                        </StepCard>
-                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                        </CardBox>
+                        <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect Twitter</p>
                                 <p className='step-sub-title mt-[0.25rem]'>Check if you’re real person</p>
                             </StepItem>
                             <div>
-                                <GradientButton className='px-[1rem] py-[0.5rem]' onClick={handleConnectTwitter}>Connect Twitter/X</GradientButton>
+                                <GradientButton
+                                    className='px-[1rem] py-[0.5rem] text-[1rem]'
+                                    onClick={handleConnectTwitter}>
+                                    Connect Twitter/X
+                                </GradientButton>
                             </div>
-                        </StepCard>
+                        </CardBox>
                     </div>
 
                     <div className='flex justify-center gap-[0.5rem] mt-[1rem]'>
-                        <StepCard>
+                        <CardBox>
                             <StepNum>03</StepNum>
-                        </StepCard>
-                        <StepCard className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
+                        </CardBox>
+                        <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect your wallet</p>
                                 <p className='step-sub-title mt-[0.25rem]'>Connect to continue the process</p>
                             </StepItem>
                             <div>
-                                {isConnected ? (
+                                {isConnected && signature ? (
                                     <img
                                         src='/img/icon-right.svg'
                                         className='w-[1.5rem] h-[1.5rem]'
                                     />
                                 ) : (
                                     <GradientButton
-                                        className='px-[1rem] py-[0.5rem]'
-                                        onClick={() => web3Modal.open()}>
+                                        className={`px-[1rem] py-[0.5rem] ${isConnecting || isConnected ? 'disabled' : ''}`}
+                                        onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>
                                         Connect Your Wallet
                                     </GradientButton>
                                 )}
                             </div>
-                        </StepCard>
+                        </CardBox>
                     </div>
                 </div>
             </ContentBox>

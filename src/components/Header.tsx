@@ -1,9 +1,15 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from '@nextui-org/react'
 import { Link, NavLink } from 'react-router-dom'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
-import { useAccount } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 import styled from 'styled-components'
 import { showAccount } from '@/utils'
+import { useEffect } from 'react'
+import { setSignature, setSignatureStatus } from '@/store/modules/airdrop'
+import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
+import ErrorToast from './ErrorToast'
+import { useSignMessage } from 'wagmi'
 
 const NavBox = styled.nav`
     a {
@@ -46,9 +52,51 @@ const ButtonText = styled.span`
 export default function Header() {
     const web3Modal = useWeb3Modal()
     const { address, isConnected } = useAccount()
+    const { signature, signatureStatus } = useSelector((store: any) => store.airdrop)
+
+    const { signMessage } = useSignMessage()
+    const dispatch = useDispatch()
+    const { disconnect } = useDisconnect()
+
+    const handleSign = async () => {
+        await signMessage(
+            {
+                message: `Hello! \nPlease sign the message to confirm that you are the owner of this wallet \nNonce: ${new Buffer(
+                    'zklink:' + showAccount(address) + Math.round(Math.random() * 1000),
+                    'base64'
+                ).toString('hex')}`,
+            },
+            {
+                onSuccess(data, variables, context) {
+                    console.log(data, variables, context)
+                    dispatch(setSignature(data))
+                    dispatch(setSignatureStatus(1))
+                },
+                onError(error, variables, context) {
+                    console.log(error, variables, context)
+                    toast.error('Fail to connect')
+                    disconnect()
+                },
+            }
+        )
+    }
+
+    useEffect(() => {
+        console.log('isConnected', isConnected)
+        console.log('signature', signature)
+
+        if (!isConnected) {
+            console.log('clear signature')
+            dispatch(setSignature(''))
+        }
+        if (isConnected && signatureStatus !== 1) {
+            handleSign()
+        }
+    }, [isConnected])
 
     return (
         <>
+            <ErrorToast />
             <Navbar
                 className='fixed px-[1.5rem] py-[1.75rem] bg-transparent'
                 maxWidth='full'
@@ -59,9 +107,8 @@ export default function Header() {
                     <Link to='/'>
                         <LogoBox className='relative'>
                             <img
-                                className='w-[9rem] h-[2.41rem]'
+                                className='w-[9rem] min-w-[140px] h-[2.41rem]'
                                 src='/img/logo-zklink.svg'
-                                alt='logo'
                             />
                             <span className='logo-text'>zk.Link</span>
                         </LogoBox>
@@ -106,7 +153,6 @@ export default function Header() {
                                 width={20}
                                 height={20}
                                 src='/img/icon-wallet.svg'
-                                alt='icon'
                             />
                             <ButtonText>{isConnected ? showAccount(address) : 'Connect wallet'}</ButtonText>
                         </Button>

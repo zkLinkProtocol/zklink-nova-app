@@ -73,12 +73,12 @@ body {
   }
   
   @media only screen and (max-width: 470px) {
-    .margin-top--small .inputStyle {
-      /* width: 2rem !important;
+    /* .margin-top--small .inputStyle {
+      width: 2rem !important;
       height: 2rem;
       margin: 0 5px;
-      font-size: 1rem; */
-    }
+      font-size: 1rem;
+    } */
   
     .card > form > p {
       font-size: 1.2em !important;

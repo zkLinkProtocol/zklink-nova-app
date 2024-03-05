@@ -1,17 +1,14 @@
-import { useAccount } from 'wagmi'
-import InviteCode from './components/InviteCode'
-// import Performance from './components/Performance'
-import Step from './components/Step'
+// import { useAccount } from 'wagmi'
+import Landing from './Landing'
+import SoftKYC from './SoftKYC'
 import { useSelector } from 'react-redux'
 
 export default function Airdrop() {
-    const { isConnected } = useAccount()
-    const { inviteCode } = useSelector((store: any) => store.airdrop)
+    // const { isConnected } = useAccount()
+    // const { signature } = useSelector((store: any) => store.airdrop)
 
-    return (
-        <>
-            {inviteCode || isConnected ? <Step /> : <InviteCode />}
-            {/* <Performance /> */}
-        </>
-    )
+    const { inviteCode } = useSelector((store: any) => store.airdrop)
+    const { isTeamCreator } = useSelector((store: any) => store.airdrop)
+
+    return <>{inviteCode || isTeamCreator ? <SoftKYC /> : <Landing />}</>
 }
