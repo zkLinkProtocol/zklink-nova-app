@@ -215,6 +215,7 @@ export default function Dashboard() {
                                     <img
                                         src='/img/icon-copy.svg'
                                         className='w-[1.1875rem] h-[1.1875rem]'
+                                        onClick={() => navigator.clipboard.writeText('1QE2re')}
                                     />
                                 </p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Your Invite Code (0/10)</p>

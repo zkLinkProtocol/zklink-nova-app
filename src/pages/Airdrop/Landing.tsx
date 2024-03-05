@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import OTPInput from 'react-otp-input'
 import Performance from '../../components/Performance'
 import { useDispatch } from 'react-redux'
-import { setInviteCode } from '@/store/modules/airdrop'
+import { setInviteCode, setIsTeamCreator } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
@@ -182,14 +182,14 @@ export default function Landing() {
                         <>
                             <div className='py-[1rem]'>
                                 <TeamItem className='py-[0.5rem]'>1x Boost for 100 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1x Boost for 100 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1x Boost for 100 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1x Boost for 100 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1x Boost for 100 ETH equivalent TVL</TeamItem>
+                                <TeamItem className='py-[0.5rem]'>1.2x Boost for 50 ETH equivalent TVL</TeamItem>
+                                <TeamItem className='py-[0.5rem]'>1.4x Boost for 25 ETH equivalent TVL</TeamItem>
+                                <TeamItem className='py-[0.5rem]'>1.6x Boost for 25 ETH equivalent TVL</TeamItem>
+                                <TeamItem className='py-[0.5rem]'>1.8x Boost for 25 ETH equivalent TVL</TeamItem>
                             </div>
 
                             <div>
-                                <GradientButton className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center'>
+                                <GradientButton className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center' onClick={() => dispatch(setIsTeamCreator(true))}>
                                     Create Your Team
                                 </GradientButton>
                             </div>

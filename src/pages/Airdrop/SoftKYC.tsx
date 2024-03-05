@@ -177,10 +177,12 @@ export default function SoftKYC() {
                                 <p className='step-sub-title mt-[0.25rem]'>You could modify it before bridge</p>
                             </StepItem>
                             <div>
-                                <img
-                                    src='/img/icon-right.svg'
-                                    className='w-[1.5rem] h-[1.5rem]'
-                                />
+                                {
+                                    <img
+                                        src='/img/icon-right.svg'
+                                        className='w-[1.5rem] h-[1.5rem]'
+                                    />
+                                }
                             </div>
                         </CardBox>
                     </div>
