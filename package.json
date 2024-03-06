@@ -17,6 +17,7 @@
     "axios": "^1.6.7",
     "ethers": "~5.7.0",
     "framer-motion": "^11.0.6",
+    "lodash": "^4.17.21",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -34,6 +35,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/qs": "^6.9.12",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
