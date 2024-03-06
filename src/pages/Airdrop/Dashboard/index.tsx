@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalContent,
   useDisclosure,
-  Button,
 } from "@nextui-org/react";
 import BridgeComponent from "@/components/Bridge";
 import { BOOST_LIST } from "@/constants/boost";
