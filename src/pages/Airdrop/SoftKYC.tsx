@@ -6,8 +6,9 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import Performance from '../../components/Performance'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BgBox, BgCoverImg, GradientButton, CardBox } from '@/styles/common'
+import { setTwitter } from '@/store/modules/airdrop'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -77,8 +78,9 @@ export default function SoftKYC() {
     const web3Modal = useWeb3Modal()
     const { isConnected, isConnecting } = useAccount()
     const { signature } = useSelector((store: any) => store.airdrop)
+    const { twitter } = useSelector((store: any) => store.airdrop)
 
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
     // const { inviteCode } = useSelector((store: any) => store.airdrop)
     // const [inviteCodeVal, setInviteCodeVal] = useState('')
 
@@ -145,6 +147,8 @@ export default function SoftKYC() {
             }).then(async (res) => {
                 let { data } = await res.json()
                 console.log(data)
+
+                dispatch(setTwitter(data))
             })
 
             // console.log(res.json())
@@ -200,11 +204,18 @@ export default function SoftKYC() {
                                 <p className='step-sub-title mt-[0.25rem]'>Check if you are a real person.</p>
                             </StepItem>
                             <div>
-                                <GradientButton
-                                    className='px-[1rem] py-[0.5rem] text-[1rem]'
-                                    onClick={handleConnectTwitter}>
-                                    Connect Twitter/X
-                                </GradientButton>
+                                {twitter ? (
+                                    <img
+                                        src='/img/icon-right.svg'
+                                        className='w-[1.5rem] h-[1.5rem]'
+                                    />
+                                ) : (
+                                    <GradientButton
+                                        className='px-[1rem] py-[0.5rem] text-[1rem]'
+                                        onClick={handleConnectTwitter}>
+                                        Connect Twitter/X
+                                    </GradientButton>
+                                )}
                             </div>
                         </CardBox>
                     </div>

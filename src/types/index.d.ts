@@ -14,3 +14,9 @@ export type TableColumnItem = {
   label: string
   align?: 'start' | 'center' | 'end'
 }
+
+export type Twitter = {
+  id: string
+  name: string
+  username: string
+}

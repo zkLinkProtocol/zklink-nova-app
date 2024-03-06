@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import ErrorToast from './ErrorToast'
 import { useSignMessage } from 'wagmi'
+import { SIGN_MESSAGE } from '@/constants/sign'
 
 const NavBox = styled.nav`
     a {
@@ -61,10 +62,7 @@ export default function Header() {
     const handleSign = async () => {
         await signMessage(
             {
-                message: `Hello! \nPlease sign the message to confirm that you are the owner of this wallet \nNonce: ${new Buffer(
-                    'zklink:' + showAccount(address) + Math.round(Math.random() * 1000),
-                    'base64'
-                ).toString('hex')}`,
+                message: SIGN_MESSAGE,
             },
             {
                 onSuccess(data, variables, context) {
