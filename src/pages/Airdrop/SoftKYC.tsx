@@ -9,6 +9,7 @@ import Performance from '../../components/Performance'
 import { useDispatch, useSelector } from 'react-redux'
 import { BgBox, BgCoverImg, GradientButton, CardBox } from '@/styles/common'
 import { setTwitter } from '@/store/modules/airdrop'
+import toast from 'react-hot-toast'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -114,6 +115,10 @@ export default function SoftKYC() {
 
         //   console.log(client);
     }
+    // const removeSearchParams = (key: string) => {
+    //     let udpatedSearchParams = new URLSearchParams(searchParams.toString())
+    //     udpatedSearchParams.delete(key)
+    // }
 
     const getTwitterAccessToken = async (code: string) => {
         const res = await postData('/twitter/2/oauth2/token', {
@@ -124,13 +129,7 @@ export default function SoftKYC() {
             code_verifier: 'challenge',
         })
 
-        let udpatedSearchParams = new URLSearchParams(searchParams.toString())
-        const removeSearchParams = (key: string) => {
-            udpatedSearchParams.delete(key)
-            setSearchParams(udpatedSearchParams.toString())
-        }
-        removeSearchParams('code')
-        removeSearchParams('state')
+        setSearchParams('')
 
         console.log(res)
 
@@ -156,11 +155,20 @@ export default function SoftKYC() {
     }
 
     useEffect(() => {
-        const state = searchParams.get('state')
+        // const state = searchParams.get('state')
         const code = searchParams.get('code')
+        const error = searchParams.get('error')
 
-        if (state && code) {
-            console.log(state, code)
+        // console.log('searchParams', searchParams)
+        // console.log(error)
+        if (error) {
+            setSearchParams('')
+            toast.error('Could not connect to Twitter. Try again.')
+            return
+        }
+
+        if (code) {
+            console.log(code)
             getTwitterAccessToken(code)
         }
     }, [searchParams])

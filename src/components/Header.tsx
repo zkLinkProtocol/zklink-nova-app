@@ -72,7 +72,7 @@ export default function Header() {
                 },
                 onError(error, variables, context) {
                     console.log(error, variables, context)
-                    toast.error('Fail to connect')
+                    toast.error('User reject signature. Try again.')
                     disconnect()
                 },
             }
