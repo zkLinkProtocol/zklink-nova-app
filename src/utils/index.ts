@@ -2,6 +2,9 @@ import qs from "qs";
 import { IERC20MetadataFactory } from "@/constants/typechain";
 import { ethers, BigNumberish, utils, BigNumber } from "ethers";
 import { AbiCoder } from "ethers/lib/utils";
+import { formatUnits } from "viem";
+import bignumber from "bignumber.js";
+
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
 );
@@ -111,4 +114,14 @@ export function applyL1ToL2Alias(address: string): string {
       .add(L1_TO_L2_ALIAS_OFFSET)
       .mod(ADDRESS_MODULO)
   );
+}
+
+export function formatBalance(
+  balance: bigint,
+  decimals: number,
+  fixed: number = 8
+) {
+  return new bignumber(
+    new bignumber(formatUnits(balance ?? BigInt(0), decimals)).toFixed(fixed)
+  ).toFixed();
 }
