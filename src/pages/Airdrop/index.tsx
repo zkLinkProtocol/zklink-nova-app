@@ -8,7 +8,7 @@ export default function Airdrop() {
     // const { signature } = useSelector((store: any) => store.airdrop)
 
     const { inviteCode } = useSelector((store: any) => store.airdrop)
-    const { isTeamCreator } = useSelector((store: any) => store.airdrop)
+    const { isGroupLeader } = useSelector((store: any) => store.airdrop)
 
-    return <>{inviteCode || isTeamCreator ? <SoftKYC /> : <Landing />}</>
+    return <>{inviteCode || isGroupLeader ? <SoftKYC /> : <Landing />}</>
 }

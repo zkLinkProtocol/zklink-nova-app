@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import OTPInput from 'react-otp-input'
 import Performance from '../../components/Performance'
 import { useDispatch } from 'react-redux'
-import { setInviteCode, setIsTeamCreator } from '@/store/modules/airdrop'
+import { setInviteCode, setIsGroupLeader } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
@@ -192,7 +192,7 @@ export default function Landing() {
                             <div>
                                 <GradientButton
                                     className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center'
-                                    onClick={() => dispatch(setIsTeamCreator(true))}>
+                                    onClick={() => dispatch(setIsGroupLeader(true))}>
                                     Create Your Team
                                 </GradientButton>
                             </div>
