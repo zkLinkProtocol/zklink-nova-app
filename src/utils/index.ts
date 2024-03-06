@@ -2,6 +2,7 @@ import qs from "qs";
 import { IERC20MetadataFactory } from "@/constants/typechain";
 import { ethers, BigNumberish, utils, BigNumber } from "ethers";
 import { AbiCoder } from "ethers/lib/utils";
+import { BOOST_LIST } from "@/constants/boost";
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
 );
@@ -111,4 +112,21 @@ export function applyL1ToL2Alias(address: string): string {
       .add(L1_TO_L2_ALIAS_OFFSET)
       .mod(ADDRESS_MODULO)
   );
+}
+
+
+export function getBooster(value: number): string {
+  let booster = '0x'
+  if (value > BOOST_LIST[0].value) {
+    const arr = BOOST_LIST.filter((item) => value > item.value)
+    booster = arr[arr.length - 1].booster
+  }
+  return booster
+}
+
+
+export function getNextMilestone(value: number): number {
+  const arr = BOOST_LIST.filter((item) => value < item.value)
+  const nextValue = arr[0].value
+  return nextValue
 }

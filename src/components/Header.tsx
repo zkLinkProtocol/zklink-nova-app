@@ -1,4 +1,4 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from '@nextui-org/react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Avatar } from '@nextui-org/react'
 import { Link, NavLink } from 'react-router-dom'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount, useDisconnect } from 'wagmi'
@@ -52,7 +52,7 @@ const ButtonText = styled.span`
 export default function Header() {
     const web3Modal = useWeb3Modal()
     const { address, isConnected } = useAccount()
-    const { signature, signatureStatus } = useSelector((store: any) => store.airdrop)
+    const { signature } = useSelector((store: any) => store.airdrop)
 
     const { signMessage } = useSignMessage()
     const dispatch = useDispatch()
@@ -82,17 +82,17 @@ export default function Header() {
     }
 
     useEffect(() => {
-        console.log('isConnected', isConnected)
-        console.log('signature', signature)
+        // console.log('isConnected', isConnected)
+        // console.log('signature', signature)
 
         if (!isConnected) {
             console.log('clear signature')
             dispatch(setSignature(''))
         }
-        if (isConnected && signatureStatus !== 1) {
+        if (isConnected && (!signature || signature === '')) {
             handleSign()
         }
-    }, [isConnected])
+    }, [isConnected, signature])
 
     return (
         <>
@@ -143,12 +143,25 @@ export default function Header() {
                 </NavbarBrand>
 
                 <NavbarContent justify='end'>
-                    <NavbarItem className='hidden lg:flex'>
+                    <NavbarItem className='hidden flex items-center gap-[1rem]'>
+                        {/* if the user has completed the invitation */}
+                        {false && (
+                            <div className='flex items-center gap-[0.5rem]'>
+                                <div className='text-right'>
+                                    <div className='text-[1rem] text-[#7E7E7E]'>YOUR POINTS</div>
+                                    <div className='text-[1rem] text-[#fff]'>2000</div>
+                                </div>
+                                <Avatar
+                                    className='w-[2.5625rem] h-[2.5625rem]'
+                                    src='/img/icon-avatar.svg'
+                                />
+                            </div>
+                        )}
                         {/* <Button
-                        className='bg-blue-950'
-                        onClick={() => web3Modal.open({ view: 'Networks' })}>
-                        Network
-                    </Button> */}
+                            className='bg-blue-950'
+                            onClick={() => web3Modal.open({ view: 'Networks' })}>
+                            Network
+                        </Button> */}
                         <Button
                             className='bg-[#1D4138] text-[#03D498] px-4 flex justify-center items-center gap-[0.75rem]'
                             disableAnimation

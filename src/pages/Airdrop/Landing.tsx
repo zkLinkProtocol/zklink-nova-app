@@ -10,6 +10,7 @@ import '@/styles/otp-input.css'
 import { GradientButton, CardBox } from '@/styles/common'
 import { useAccount } from 'wagmi'
 import ErrorToast from '@/components/ErrorToast'
+import { BOOST_LIST } from '@/constants/boost'
 
 const BgBox = styled.div`
     position: relative;
@@ -179,11 +180,13 @@ export default function Landing() {
                     {tabsActive === 1 && (
                         <>
                             <div className='py-[1rem]'>
-                                <TeamItem className='py-[0.5rem]'>1x Boost for 100 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.2x Boost for 50 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.4x Boost for 25 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.6x Boost for 25 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.8x Boost for 25 ETH equivalent TVL</TeamItem>
+                                {BOOST_LIST.map((item, index) => (
+                                    <TeamItem
+                                        className='py-[0.5rem]'
+                                        key={index}>
+                                        {item.booster} Boost for {item.value} ETH equivalent TVL
+                                    </TeamItem>
+                                ))}
                             </div>
 
                             <div>
