@@ -1,7 +1,6 @@
-import { nexusGoerliNode, nexusNode, wagmiConfig } from "../constants/networks";
+import { nexusGoerliNode, nexusNode } from "../constants/networks";
 import { BigNumber, utils, BigNumberish, ethers } from "ethers";
 import { usePublicClient, useWalletClient } from "wagmi";
-import { readContract } from "@wagmi/core";
 import type { Address } from "viem";
 import IZkSync from "../constants/abi/IZkSync.json";
 import IL1Bridge from "../constants/abi/IL1Bridge.json";
@@ -78,16 +77,6 @@ export const useBridgeTx = () => {
     const zksyncContract = nodeConfig.find(
       (item) => item.key === networkKey
     )?.mainContract;
-    // const baseCost = await readContract(wagmiConfig, {
-    //   abi: IZkSync.abi,
-    //   address: zksyncContract as `0x${string}`,
-    //   functionName: "l2TransactionBaseCost",
-    //   args: [
-    //     gasPrice.toString(),
-    //     l2GasLimit,
-    //     REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
-    //   ],
-    // });
     const baseCost = await publicClient?.readContract({
       abi: IZkSync.abi,
       address: zksyncContract as `0x${string}`,

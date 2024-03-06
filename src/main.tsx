@@ -1,10 +1,9 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { NextUIProvider } from "@nextui-org/react";
-import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 import { WagmiProvider } from "wagmi";
-import { arbitrum, mainnet, goerli, lineaTestnet } from "wagmi/chains";
+import { wagmiConfig, projectId } from "./constants/networks.ts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/store";
@@ -13,24 +12,6 @@ import "./styles/global.css";
 
 // Setup queryClient for WAGMIv2
 const queryClient = new QueryClient();
-
-// Get WalletConnect projectId
-const projectId = import.meta.env.VITE_PROJECT_ID;
-if (!projectId) {
-  throw new Error("VITE_PROJECT_ID is not set");
-}
-
-// Create wagmiConfig
-export const wagmiConfig = defaultWagmiConfig({
-  chains: [goerli, mainnet, arbitrum, lineaTestnet],
-  projectId,
-  metadata: {
-    name: "Web3Modal React Example",
-    description: "Web3Modal React Example",
-    url: "",
-    icons: [],
-  },
-});
 
 // Create Web3Modal
 createWeb3Modal({

@@ -11,6 +11,7 @@ import {
   lineaTestnet,
   linea,
   mantleTestnet,
+  arbitrum,
 } from "@wagmi/core/chains";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
@@ -176,8 +177,10 @@ export const projectId = import.meta.env.VITE_PROJECT_ID;
 if (!projectId) {
   throw new Error("VITE_PROJECT_ID is not set");
 }
+
+// Create wagmiConfig
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [goerli, mainnet, lineaTestnet],
+  chains: [goerli, mainnet, arbitrum, lineaTestnet, mantleTestnet],
   projectId,
   metadata: {
     name: "Web3Modal React Example",
