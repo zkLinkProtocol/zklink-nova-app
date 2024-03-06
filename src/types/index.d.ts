@@ -18,5 +18,5 @@ export type TableColumnItem = {
 export type Twitter = {
   id: string
   name: string
-  username: string
+  username: string // twitter handle
 }

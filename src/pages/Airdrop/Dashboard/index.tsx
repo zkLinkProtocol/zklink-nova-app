@@ -4,6 +4,7 @@ import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
 import { useState } from 'react'
 import { BOOST_LIST } from '@/constants/boost'
 import { getBooster, getNextMilestone } from '@/utils'
+import ReferralList from '@/components/ReferralList'
 
 const GradientButton = styled.span`
     border-radius: 0.5rem;
@@ -172,7 +173,9 @@ export default function Dashboard() {
                 <div className='w-[27.125rem]'>
                     <CardBox className='flex flex-col gap-[1.5rem] items-center p-[1.5rem]'>
                         <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Your Nova Char</p>
-                        <div className='w-[24rem] h-[18.75rem] bg-[#65E7E5] rounded-[1rem]'></div>
+                        <div className='w-[24rem] h-[18.75rem] bg-[#65E7E5] rounded-[1rem]'>
+                            <img src="/img/icon-nft-blue.svg" className='text-center block mx-auto h-full' />
+                        </div>
                         <GradientButton className='w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] opacity-40'>
                             <span>Upgrade</span>
                             <img
@@ -282,31 +285,6 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ))}
-
-                                {/* <div className='progress-item w-1/5'>
-                                    <div className='progress-points'>
-                                        <div className='points-top'>0.2x</div>
-                                        <div className='points-bottom'>20 ETH</div>
-                                    </div>
-                                </div>
-                                <div className='progress-item w-1/5'>
-                                    <div className='progress-points'>
-                                        <div className='points-top'>0.3x</div>
-                                        <div className='points-bottom'>20 ETH</div>
-                                    </div>
-                                </div>
-                                <div className='progress-item w-1/5'>
-                                    <div className='progress-points'>
-                                        <div className='points-top'>0.4x</div>
-                                        <div className='points-bottom'>20 ETH</div>
-                                    </div>
-                                </div>
-                                <div className='progress-item w-1/5'>
-                                    <div className='progress-points'>
-                                        <div className='points-top'>0.5x</div>
-                                        <div className='points-bottom'>20 ETH</div>
-                                    </div>
-                                </div> */}
                             </ProgressBar>
                         </CardBox>
                     </div>
@@ -330,7 +308,21 @@ export default function Dashboard() {
                             </span>
                         </TabsBox>
 
-                        <AssetsTable />
+                        {tabsActive === 0 && <AssetsTable />}
+                        {tabsActive === 1 && (
+                            <CardBox className='flex flex-col justify-center items-center mt-[2rem] py-[10rem]'>
+                                <p className='text-[1rem] text-center mb-[1rem] font-[700]'>Rarible Market Coming Soon</p>
+                                <img
+                                    src='/img/icon-placeholder.svg'
+                                    className='w-[9.375rem] h-[9.375rem]'
+                                />
+                            </CardBox>
+                        )}
+                        {tabsActive === 2 && (
+                            <CardBox className='mt-[2rem] min-h-[30rem]'>
+                                <ReferralList />
+                            </CardBox>
+                        )}
                     </div>
                 </div>
             </div>

@@ -1,7 +1,8 @@
 import { Twitter } from '@/types';
 import { createSlice } from '@reduxjs/toolkit';
+
 export interface airdropState {
-    inviteCode: string,
+    inviteCode: string | null,
     isGroupLeader: boolean,
     signature: string,
     twitter: Twitter | null,
@@ -9,7 +10,7 @@ export interface airdropState {
 }
 
 const initialState: airdropState = {
-    inviteCode: '',
+    inviteCode: null,
     isGroupLeader: false,
     signature: '',
     twitter: null,

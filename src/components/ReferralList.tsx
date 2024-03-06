@@ -1,21 +1,51 @@
+import styled from 'styled-components'
+
+const ListItem = styled.div`
+    border-top: 0.0625rem solid #292a2a;
+`
+
 export default function ReferralList() {
+    const referralData = [
+        {
+            address: '0x3125523...41323',
+            value: 10,
+        },
+        {
+            address: '0x3125523...41323',
+            value: 10,
+        },
+        {
+            address: '0x3125523...41323',
+            value: 10,
+        },
+        {
+            address: '0x3125523...41323',
+            value: 10,
+        },
+        {
+            address: '0x3125523...41323',
+            value: 10,
+        },
+        {
+            address: '0x3125523...41323',
+            value: 10,
+        },
+    ]
+
     return (
         <>
-            <div className='flex justify-between py-6 text-sm'>
+            <div className='px-[1.5rem] py-[0.5rem] flex justify-between text-[#7E7E7E] text-[1rem] leading-[1.5rem]'>
                 <span>Name</span>
                 <span>Staking Value</span>
             </div>
-            <div className='flex justify-between py-1 text-lg'>
-                <span>0x3125523...41323</span>
-                <span>$1000</span>
-            </div>
-            {new Array(6).fill('').map((_, index) => (
-                <div
-                    className='flex justify-between py-1 text-lg'
+
+            {referralData.map((item, index) => (
+                <ListItem
+                    className='px-[1.5rem] py-[1.5rem] flex justify-between text-[0.875rem] font-[700]'
                     key={index}>
-                    <span>0x3125523...41323</span>
-                    <span>1 ETH</span>
-                </div>
+                    <span>{item.address}</span>
+                    <span>{item.value} ETH</span>
+                </ListItem>
             ))}
         </>
     )
