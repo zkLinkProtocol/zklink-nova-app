@@ -17,10 +17,8 @@ const BgBox = styled.div`
     padding-bottom: 7.5rem;
     width: 100%;
     min-height: 100vh;
-    background-image: image-set('/img/bg-airdrop.png' 0.5x, '/img/bg-airdrop.png' 1x, '/img/bg-airdrop.png' 2x);
-    background-repeat: no-repeat;
-    background-size: cover;
-    /* background-position: 50%; */
+    /* background-image: image-set('/img/bg-airdrop.png' 0.5x, '/img/bg-airdrop.png' 1x, '/img/bg-airdrop.png' 2x); */
+    background: url('/img/bg-airdrop.png') top/cover no-repeat;
 `
 
 const CoverImgBox = styled.div`
@@ -144,13 +142,13 @@ export default function Landing() {
                         onClick={() => {
                             setTabsActive(1)
                         }}>
-                        Create Your Team
+                        Create Your Group
                     </TabsItem>
                 </div>
 
                 <CardBox className='flex flex-col items-center mt-6 py-8 w-[38.125rem]'>
                     <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>
-                        By joining a existing team, your could share the team boost when team tvl meet specific milestone.
+                        By joining an existing team, your could share the team boost when team tvl meet specific milestone.
                     </DescText>
                     {tabsActive === 0 && (
                         <>
@@ -189,14 +187,16 @@ export default function Landing() {
                             </div>
 
                             <div>
-                                <GradientButton className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center' onClick={() => dispatch(setIsTeamCreator(true))}>
+                                <GradientButton
+                                    className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center'
+                                    onClick={() => dispatch(setIsTeamCreator(true))}>
                                     Create Your Team
                                 </GradientButton>
                             </div>
                         </>
                     )}
 
-                    <DescText className='mt-[1.03rem]'>Already signed?</DescText>
+                    <DescText className='mt-[1.03rem]'>Already signed up?</DescText>
                     <GradientText
                         className={`mt-[1rem] ${isConnected ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
                         onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>

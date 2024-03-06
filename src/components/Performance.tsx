@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const PerformanceBox = styled.div`
@@ -12,10 +12,15 @@ const PerformanceBox = styled.div`
     }
 `
 const Performance: React.FC = () => {
+    const [performanceData] = useState({
+        currentTvl: 0,
+        activeUsers: 0,
+    })
+
     return (
         <PerformanceBox className='performance-box flex justify-center align-center gap-[4rem]'>
-            <span className='performance-item'>Current TVL: 193,321,432</span>
-            <span className='ml-5 performance-item'>Activtive Users: 193,000</span>
+            <span className='performance-item'>Current TVL: {performanceData.currentTvl}</span>
+            <span className='ml-5 performance-item'>Active Users: {performanceData.activeUsers}</span>
         </PerformanceBox>
     )
 }

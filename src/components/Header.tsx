@@ -96,9 +96,9 @@ export default function Header() {
 
     return (
         <>
-            <ErrorToast />
             <Navbar
-                className='fixed px-[1.5rem] py-[1.75rem] bg-transparent'
+                shouldHideOnScroll
+                className='fixed px-[1.5rem] py-[0.75rem] bg-transparent'
                 maxWidth='full'
                 isBlurred={false}>
                 <NavbarBrand className='flex items-end'>
@@ -107,10 +107,10 @@ export default function Header() {
                     <Link to='/'>
                         <LogoBox className='relative'>
                             <img
-                                className='w-[9rem] min-w-[140px] h-[2.41rem]'
-                                src='/img/logo-zklink.svg'
+                                className='max-w-[145.431px] h-auto'
+                                src='/img/logo-nova.svg'
                             />
-                            <span className='logo-text'>zk.Link</span>
+                            {/* <span className='logo-text'>zk.Link</span> */}
                         </LogoBox>
                     </Link>
 
@@ -132,7 +132,11 @@ export default function Header() {
                                 <NavLink to='/about'>About</NavLink>
                             </NavbarItem>
                             <NavbarItem>
-                                <NavLink to='/bridge'>Bridge</NavLink>
+                                <a
+                                    href='https://goerli.portal.zklink.io/bridge/'
+                                    target='_blank'>
+                                    Bridge
+                                </a>
                             </NavbarItem>
                         </NavbarContent>
                     </NavBox>
@@ -159,6 +163,7 @@ export default function Header() {
                     </NavbarItem>
                 </NavbarContent>
             </Navbar>
+            <ErrorToast />
         </>
     )
 }

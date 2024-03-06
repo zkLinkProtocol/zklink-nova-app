@@ -153,7 +153,7 @@ export default function Dashboard() {
                         <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Your Nova Char</p>
                         <div className='w-[24rem] h-[18.75rem] bg-[#65E7E5] rounded-[1rem]'></div>
                         <GradientButton className='w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] opacity-40'>
-                            <span>UpGrade</span>
+                            <span>Upgrade</span>
                             <img
                                 src='/img/icon-info.svg'
                                 className='w-[0.875rem] h-[0.875rem]'
@@ -167,7 +167,7 @@ export default function Dashboard() {
                             <span className='text-[2.5rem] font-[700]'>12344,075</span>
                             <GreenTag className='py-[0.375rem] w-[5.625rem] text-[1rem]'>0.1x</GreenTag>
                         </div>
-                        <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>100</p>
+                        <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>+100</p>
                         <p className='text-[1rem] text-[#919192] font-[400]'>Your Nova Char</p>
 
                         <p className='flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]'>

@@ -31,8 +31,11 @@ const SubTitleText = styled.p`
 `
 
 const ContentBox = styled.div`
+    position: relative;
     margin: 0 auto;
     width: 58.875rem;
+    min-height: 36rem;
+    z-index: 10;
 `
 
 const StepNum = styled.div`
@@ -164,7 +167,7 @@ export default function SoftKYC() {
             <ContentBox>
                 <div className='mt-[8rem]'>
                     <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
-                    <TitleText>To join the zkLink Nova Campaign</TitleText>
+                    <TitleText>To join the zkLink Aggregation Parade</TitleText>
                 </div>
                 <div className='mt-[3.56rem]'>
                     <div className='flex justify-center gap-[0.5rem]'>
@@ -194,7 +197,7 @@ export default function SoftKYC() {
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect Twitter</p>
-                                <p className='step-sub-title mt-[0.25rem]'>Check if you’re real person</p>
+                                <p className='step-sub-title mt-[0.25rem]'>Check if you are a real person.</p>
                             </StepItem>
                             <div>
                                 <GradientButton
@@ -213,7 +216,7 @@ export default function SoftKYC() {
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect your wallet</p>
-                                <p className='step-sub-title mt-[0.25rem]'>Connect to continue the process</p>
+                                <p className='step-sub-title mt-[0.25rem]'>Connect your Web3 wallet to continue</p>
                             </StepItem>
                             <div>
                                 {isConnected && signature ? (
