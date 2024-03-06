@@ -8,8 +8,10 @@ import styled from 'styled-components'
 import Performance from '../../components/Performance'
 import { useDispatch, useSelector } from 'react-redux'
 import { BgBox, BgCoverImg, GradientButton, CardBox } from '@/styles/common'
-import { setTwitter } from '@/store/modules/airdrop'
+import { setSignature, setTwitter } from '@/store/modules/airdrop'
 import toast from 'react-hot-toast'
+import { useSignMessage } from 'wagmi'
+import { SIGN_MESSAGE } from '@/constants/sign'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -82,6 +84,7 @@ export default function SoftKYC() {
     const { twitter } = useSelector((store: any) => store.airdrop)
 
     const dispatch = useDispatch()
+    const { signMessage } = useSignMessage()
     // const { inviteCode } = useSelector((store: any) => store.airdrop)
     // const [inviteCodeVal, setInviteCodeVal] = useState('')
 
@@ -151,6 +154,34 @@ export default function SoftKYC() {
             })
 
             // console.log(res.json())
+        }
+    }
+
+    const handleSign = async () => {
+        await signMessage(
+            {
+                message: SIGN_MESSAGE,
+            },
+            {
+                onSuccess(data, variables, context) {
+                    console.log(data, variables, context)
+                    dispatch(setSignature(data))
+                },
+                onError(error, variables, context) {
+                    console.log(error, variables, context)
+                    toast.error('User reject signature. Try again.')
+                    // disconnect()
+                },
+            }
+        )
+    }
+
+    const handleConnectWallet = () => {
+        if (isConnected && signature) return
+        if (isConnected) {
+            handleSign()
+        } else {
+            web3Modal.open({ view: 'Connect' })
         }
     }
 
@@ -245,8 +276,8 @@ export default function SoftKYC() {
                                     />
                                 ) : (
                                     <GradientButton
-                                        className={`px-[1rem] py-[0.5rem] ${isConnecting || isConnected ? 'disabled' : ''}`}
-                                        onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>
+                                        className={`px-[1rem] py-[0.5rem] ${isConnecting ? 'disabled' : ''}`}
+                                        onClick={() => handleConnectWallet()}>
                                         Connect Your Wallet
                                     </GradientButton>
                                 )}

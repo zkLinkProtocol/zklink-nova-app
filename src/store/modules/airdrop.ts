@@ -4,16 +4,16 @@ export interface airdropState {
     inviteCode: string,
     isGroupLeader: boolean,
     signature: string,
-    signatureStatus: number,
-    twitter: Twitter | null
+    twitter: Twitter | null,
+    isInvitedUser: boolean,
 }
 
 const initialState: airdropState = {
     inviteCode: '',
     isGroupLeader: false,
     signature: '',
-    signatureStatus: 0,
-    twitter: null
+    twitter: null,
+    isInvitedUser: false,
 };
 
 export const airdrop = createSlice({
@@ -29,8 +29,8 @@ export const airdrop = createSlice({
         setSignature(state, { payload }) {
             state.signature = payload;
         },
-        setSignatureStatus(state, { payload }) {
-            state.signatureStatus = payload;
+        setInvitedUser(state, { payload }) {
+            state.isInvitedUser = payload;
         },
         setTwitter(state, { payload }) {
             state.twitter = payload;
@@ -38,5 +38,5 @@ export const airdrop = createSlice({
     },
 });
 
-export const { setInviteCode, setSignature, setSignatureStatus, setIsGroupLeader, setTwitter } = airdrop.actions;
+export const { setInviteCode, setSignature, setInvitedUser, setIsGroupLeader, setTwitter } = airdrop.actions;
 export default airdrop.reducer;

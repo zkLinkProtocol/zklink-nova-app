@@ -1,11 +1,11 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Avatar } from '@nextui-org/react'
 import { Link, NavLink } from 'react-router-dom'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
-import { useAccount, useDisconnect } from 'wagmi'
+import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import { showAccount } from '@/utils'
 import { useEffect } from 'react'
-import { setSignature, setSignatureStatus } from '@/store/modules/airdrop'
+import { setSignature } from '@/store/modules/airdrop'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import ErrorToast from './ErrorToast'
@@ -57,7 +57,6 @@ export default function Header() {
 
     const { signMessage } = useSignMessage()
     const dispatch = useDispatch()
-    const { disconnect } = useDisconnect()
 
     const handleSign = async () => {
         await signMessage(
@@ -68,12 +67,12 @@ export default function Header() {
                 onSuccess(data, variables, context) {
                     console.log(data, variables, context)
                     dispatch(setSignature(data))
-                    dispatch(setSignatureStatus(1))
                 },
                 onError(error, variables, context) {
                     console.log(error, variables, context)
+                    // handleSign()
                     toast.error('User reject signature. Try again.')
-                    disconnect()
+                    // disconnect()
                 },
             }
         )
