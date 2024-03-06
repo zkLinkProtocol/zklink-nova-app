@@ -25,7 +25,6 @@ export default function Bridge() {
           <h2 className="text-3xl">
             Bridge to Earn Yield and token rewards on zkLink Nova.
           </h2>
-          <Button onClick={handleBridgeMore}>Bridge more</Button>
           <div className="text-base mt-10">
             <p>
               You will earn one of the four Nova SBT once you bridge any amount

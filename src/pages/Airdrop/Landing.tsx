@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import OTPInput from 'react-otp-input'
 import Performance from '../../components/Performance'
 import { useDispatch } from 'react-redux'
-import { setInviteCode, setIsTeamCreator } from '@/store/modules/airdrop'
+import { setInviteCode, setIsGroupLeader } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
 import { GradientButton, CardBox } from '@/styles/common'
 import { useAccount } from 'wagmi'
 import ErrorToast from '@/components/ErrorToast'
+import { BOOST_LIST } from '@/constants/boost'
 
 const BgBox = styled.div`
     position: relative;
@@ -17,10 +18,8 @@ const BgBox = styled.div`
     padding-bottom: 7.5rem;
     width: 100%;
     min-height: 100vh;
-    background-image: image-set('/img/bg-airdrop.png' 0.5x, '/img/bg-airdrop.png' 1x, '/img/bg-airdrop.png' 2x);
-    background-repeat: no-repeat;
-    background-size: cover;
-    /* background-position: 50%; */
+    /* background-image: image-set('/img/bg-airdrop.png' 0.5x, '/img/bg-airdrop.png' 1x, '/img/bg-airdrop.png' 2x); */
+    background: url('/img/bg-airdrop.png') top/cover no-repeat;
 `
 
 const CoverImgBox = styled.div`
@@ -144,13 +143,13 @@ export default function Landing() {
                         onClick={() => {
                             setTabsActive(1)
                         }}>
-                        Create Your Team
+                        Create Your Group
                     </TabsItem>
                 </div>
 
                 <CardBox className='flex flex-col items-center mt-6 py-8 w-[38.125rem]'>
                     <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>
-                        By joining a existing team, your could share the team boost when team tvl meet specific milestone.
+                        By joining an existing team, your could share the team boost when team tvl meet specific milestone.
                     </DescText>
                     {tabsActive === 0 && (
                         <>
@@ -181,22 +180,26 @@ export default function Landing() {
                     {tabsActive === 1 && (
                         <>
                             <div className='py-[1rem]'>
-                                <TeamItem className='py-[0.5rem]'>1x Boost for 100 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.2x Boost for 50 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.4x Boost for 25 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.6x Boost for 25 ETH equivalent TVL</TeamItem>
-                                <TeamItem className='py-[0.5rem]'>1.8x Boost for 25 ETH equivalent TVL</TeamItem>
+                                {BOOST_LIST.map((item, index) => (
+                                    <TeamItem
+                                        className='py-[0.5rem]'
+                                        key={index}>
+                                        {item.booster} Boost for {item.value} ETH equivalent TVL
+                                    </TeamItem>
+                                ))}
                             </div>
 
                             <div>
-                                <GradientButton className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center' onClick={() => dispatch(setIsTeamCreator(true))}>
+                                <GradientButton
+                                    className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center'
+                                    onClick={() => dispatch(setIsGroupLeader(true))}>
                                     Create Your Team
                                 </GradientButton>
                             </div>
                         </>
                     )}
 
-                    <DescText className='mt-[1.03rem]'>Already signed?</DescText>
+                    <DescText className='mt-[1.03rem]'>Already signed up?</DescText>
                     <GradientText
                         className={`mt-[1rem] ${isConnected ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
                         onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>

@@ -5,6 +5,7 @@ import { AbiCoder } from "ethers/lib/utils";
 import { formatUnits } from "viem";
 import bignumber from "bignumber.js";
 
+import { BOOST_LIST } from "@/constants/boost";
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
 );
@@ -124,4 +125,19 @@ export function formatBalance(
   return new bignumber(
     new bignumber(formatUnits(balance ?? BigInt(0), decimals)).toFixed(fixed)
   ).toFixed();
+}
+
+export function getBooster(value: number): string {
+  let booster = "0x";
+  if (value > BOOST_LIST[0].value) {
+    const arr = BOOST_LIST.filter((item) => value > item.value);
+    booster = arr[arr.length - 1].booster;
+  }
+  return booster;
+}
+
+export function getNextMilestone(value: number): number {
+  const arr = BOOST_LIST.filter((item) => value < item.value);
+  const nextValue = arr[0].value;
+  return nextValue;
 }

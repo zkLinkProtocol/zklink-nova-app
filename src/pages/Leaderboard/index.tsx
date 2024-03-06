@@ -32,7 +32,7 @@ export default function Leaderboard() {
         <>
             <BgBox>
                 <BgCoverImg />
-                <div className='px-[10.44rem] mt-[3rem]'>
+                <div className='px-[10.44rem] mt-[3rem] min-h-[40rem]'>
                     <div className='flex items-center gap-[2rem]'>
                         <TabItem
                             className={`px-[2rem] py-[1rem] ${tabsActive === 0 ? 'active' : ''}`}
@@ -47,7 +47,7 @@ export default function Leaderboard() {
                         <TabItem
                             className={`px-[2rem] py-[1rem] ${tabsActive === 2 ? 'active' : ''}`}
                             onClick={() => setTabsActive(2)}>
-                            NFT Luck Winner
+                            Mystery Box Winners
                         </TabItem>
                     </div>
 

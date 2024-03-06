@@ -1,22 +1,27 @@
+import { TableColumnItem } from '@/types'
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from '@nextui-org/react'
 
 export default function PointsLeaderboard() {
-    const columns = [
+    const columns: TableColumnItem[] = [
         {
             key: 'rank',
             label: 'Rank',
+            align: 'start',
         },
         {
             key: 'name',
             label: 'Name',
+            align: 'start',
         },
         {
             key: 'invitedBy',
             label: 'Invited by',
+            align: 'start',
         },
         {
             key: 'stakingPts',
             label: 'Staking Pts',
+            align: 'end',
         },
     ]
 

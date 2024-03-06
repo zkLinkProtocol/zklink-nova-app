@@ -18,8 +18,13 @@ export default defineConfig({
     proxy: {
       '/twitter': {
         target: "https://api.twitter.com",
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/twitter/, '')
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/twitter/, '')
+      },
+      '/api': {
+        target: "http://13.114.13.100:3055",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

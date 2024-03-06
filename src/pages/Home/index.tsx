@@ -2,11 +2,11 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useState } from 'react'
 import OTPInput from 'react-otp-input'
 import styled from 'styled-components'
-import '@/styles/otp-input.css'
 import { useDispatch } from 'react-redux'
 import { setInviteCode } from '@/store/modules/airdrop'
 import { useNavigate } from 'react-router-dom'
 import { GradientButton } from '@/styles/common'
+import '@/styles/otp-input.css'
 
 const BgBox = styled.div`
     width: 100%;
@@ -22,19 +22,21 @@ const CardBox = styled.div`
     background: rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(15.800000190734863px);
 `
-const TitleBox = styled.h4`
-    color: #c2e2ff;
-    font-family: Satoshi;
-    font-style: normal;
-    font-weight: 900;
-    letter-spacing: -0.03125rem;
-`
-const SubTitleBox = styled.p`
-    color: #c6d3dd;
-    font-family: Satoshi;
-    font-style: normal;
-    line-height: 2rem; /* 133.333% */
-    letter-spacing: -0.03125rem;
+const TitleBox = styled.div`
+    .title {
+        color: #c2e2ff;
+        font-family: Satoshi;
+        font-style: normal;
+        font-weight: 900;
+        letter-spacing: -0.03125rem;
+    }
+    .sub-title {
+        color: #c6d3dd;
+        font-family: Satoshi;
+        font-style: normal;
+        line-height: 2rem; /* 133.333% */
+        letter-spacing: -0.03125rem;
+    }
 `
 
 const ConnectWalletText = styled.span`
@@ -68,6 +70,10 @@ export default function Home() {
         placeholder: '',
         inputType: 'text' as const,
     })
+    const [performanceData] = useState({
+        tvl: 0,
+        totalUsers: 0
+    })
 
     const handleOTPChange = (otp: string) => {
         setConfig((prevConfig) => ({ ...prevConfig, otp }))
@@ -83,15 +89,17 @@ export default function Home() {
     return (
         <BgBox className='relative pb-[13rem]'>
             {/* <div className='absolute w-full h-full top-0 left-0 z-0 opacity-[0.16] bg-[#000]'></div> */}
-            <div className='flex justify-between pt-[9.5rem] pl-[6.5rem] pr-[6.88rem]'>
+            <div className='flex justify-between pt-[8.5rem] pl-[6.5rem] pr-[6.88rem]'>
                 <div>
                     <CardBox className='py-8 w-[30rem]'>
-                        <TitleBox className='pl-[1.56rem] text-[2.5rem] leading-[3.5rem]'>
-                            Bridge to Earn Yield and token rewards on zkLink Nova.
+                        <TitleBox>
+                            <h2 className='title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]'>
+                                Bridge to Earn Yield and token rewards on zkLink Nova.
+                            </h2>
+                            <p className='sub-title mt-4 px-6 text-[1.5rem] leading-8'>
+                                The only Ethereum l3 with native yield for Eth and Stablecoins. The Aggregation Parade is now live.
+                            </p>
                         </TitleBox>
-                        <SubTitleBox className='mt-4 px-6 text-[1.5rem] leading-8'>
-                            The only Ethereum L2 with native yield for ETH and stablecoins. Airdrop now live.
-                        </SubTitleBox>
                     </CardBox>
                     <div className='mt-4'>
                         {/* <img
@@ -109,10 +117,10 @@ export default function Home() {
                 </div>
                 <div>
                     <CardBox className='py-8 w-[21.625rem] flex flex-col items-center text-center'>
-                        <TitleBox className='text-[1.5rem] leading-[2rem]'>Enter Your Invite Code</TitleBox>
-                        <SubTitleBox className='mt-[0.75rem] text-[1rem] leading-[1.5rem]'>
-                            Enter Your Invite Code to participate the campaign
-                        </SubTitleBox>
+                        <TitleBox>
+                            <h4 className='title text-[1.5rem] leading-[2rem]'>Enter Your Invite Code</h4>
+                            <p className='sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]'>Enter Your Invite Code to participate the campaign</p>
+                        </TitleBox>
 
                         <div className='my-8'>
                             <OTPInput
@@ -156,8 +164,8 @@ export default function Home() {
 
             <div className='absolute bottom-0 py-[4.5rem] flex justify-between items-end pl-[6.5rem] pr-[8.94rem]  w-full'>
                 <div>
-                    <FooterText>TVL/$2,306,521,248</FooterText>
-                    <FooterText className='mt-4'>TOTAL USERS / 173,933</FooterText>
+                    <FooterText>TVL / {performanceData.tvl}</FooterText>
+                    <FooterText className='mt-4'>TOTAL USERS / {performanceData.totalUsers}</FooterText>
                 </div>
                 <div className='flex items-center gap-[1.25rem]'>
                     <a href=''>

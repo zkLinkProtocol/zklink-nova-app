@@ -6,8 +6,12 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import Performance from '../../components/Performance'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BgBox, BgCoverImg, GradientButton, CardBox } from '@/styles/common'
+import { setSignature, setTwitter } from '@/store/modules/airdrop'
+import toast from 'react-hot-toast'
+import { useSignMessage } from 'wagmi'
+import { SIGN_MESSAGE } from '@/constants/sign'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -31,8 +35,11 @@ const SubTitleText = styled.p`
 `
 
 const ContentBox = styled.div`
+    position: relative;
     margin: 0 auto;
     width: 58.875rem;
+    min-height: 36rem;
+    z-index: 10;
 `
 
 const StepNum = styled.div`
@@ -74,8 +81,10 @@ export default function SoftKYC() {
     const web3Modal = useWeb3Modal()
     const { isConnected, isConnecting } = useAccount()
     const { signature } = useSelector((store: any) => store.airdrop)
+    const { twitter } = useSelector((store: any) => store.airdrop)
 
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
+    const { signMessage } = useSignMessage()
     // const { inviteCode } = useSelector((store: any) => store.airdrop)
     // const [inviteCodeVal, setInviteCodeVal] = useState('')
 
@@ -109,6 +118,10 @@ export default function SoftKYC() {
 
         //   console.log(client);
     }
+    // const removeSearchParams = (key: string) => {
+    //     let udpatedSearchParams = new URLSearchParams(searchParams.toString())
+    //     udpatedSearchParams.delete(key)
+    // }
 
     const getTwitterAccessToken = async (code: string) => {
         const res = await postData('/twitter/2/oauth2/token', {
@@ -119,13 +132,7 @@ export default function SoftKYC() {
             code_verifier: 'challenge',
         })
 
-        let udpatedSearchParams = new URLSearchParams(searchParams.toString())
-        const removeSearchParams = (key: string) => {
-            udpatedSearchParams.delete(key)
-            setSearchParams(udpatedSearchParams.toString())
-        }
-        removeSearchParams('code')
-        removeSearchParams('state')
+        setSearchParams('')
 
         console.log(res)
 
@@ -142,18 +149,57 @@ export default function SoftKYC() {
             }).then(async (res) => {
                 let { data } = await res.json()
                 console.log(data)
+
+                dispatch(setTwitter(data))
             })
 
             // console.log(res.json())
         }
     }
 
-    useEffect(() => {
-        const state = searchParams.get('state')
-        const code = searchParams.get('code')
+    const handleSign = async () => {
+        await signMessage(
+            {
+                message: SIGN_MESSAGE,
+            },
+            {
+                onSuccess(data, variables, context) {
+                    console.log(data, variables, context)
+                    dispatch(setSignature(data))
+                },
+                onError(error, variables, context) {
+                    console.log(error, variables, context)
+                    toast.error('User reject signature. Try again.')
+                    // disconnect()
+                },
+            }
+        )
+    }
 
-        if (state && code) {
-            console.log(state, code)
+    const handleConnectWallet = () => {
+        if (isConnected && signature) return
+        if (isConnected) {
+            handleSign()
+        } else {
+            web3Modal.open({ view: 'Connect' })
+        }
+    }
+
+    useEffect(() => {
+        // const state = searchParams.get('state')
+        const code = searchParams.get('code')
+        const error = searchParams.get('error')
+
+        // console.log('searchParams', searchParams)
+        // console.log(error)
+        if (error) {
+            setSearchParams('')
+            toast.error('Could not connect to Twitter. Try again.')
+            return
+        }
+
+        if (code) {
+            console.log(code)
             getTwitterAccessToken(code)
         }
     }, [searchParams])
@@ -164,7 +210,7 @@ export default function SoftKYC() {
             <ContentBox>
                 <div className='mt-[8rem]'>
                     <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
-                    <TitleText>To join the zkLink Nova Campaign</TitleText>
+                    <TitleText>To join the zkLink Aggregation Parade</TitleText>
                 </div>
                 <div className='mt-[3.56rem]'>
                     <div className='flex justify-center gap-[0.5rem]'>
@@ -194,14 +240,21 @@ export default function SoftKYC() {
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect Twitter</p>
-                                <p className='step-sub-title mt-[0.25rem]'>Check if you’re real person</p>
+                                <p className='step-sub-title mt-[0.25rem]'>Check if you are a real person.</p>
                             </StepItem>
                             <div>
-                                <GradientButton
-                                    className='px-[1rem] py-[0.5rem] text-[1rem]'
-                                    onClick={handleConnectTwitter}>
-                                    Connect Twitter/X
-                                </GradientButton>
+                                {twitter ? (
+                                    <img
+                                        src='/img/icon-right.svg'
+                                        className='w-[1.5rem] h-[1.5rem]'
+                                    />
+                                ) : (
+                                    <GradientButton
+                                        className='px-[1rem] py-[0.5rem] text-[1rem]'
+                                        onClick={handleConnectTwitter}>
+                                        Connect Twitter/X
+                                    </GradientButton>
+                                )}
                             </div>
                         </CardBox>
                     </div>
@@ -213,7 +266,7 @@ export default function SoftKYC() {
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Connect your wallet</p>
-                                <p className='step-sub-title mt-[0.25rem]'>Connect to continue the process</p>
+                                <p className='step-sub-title mt-[0.25rem]'>Connect your Web3 wallet to continue</p>
                             </StepItem>
                             <div>
                                 {isConnected && signature ? (
@@ -223,8 +276,8 @@ export default function SoftKYC() {
                                     />
                                 ) : (
                                     <GradientButton
-                                        className={`px-[1rem] py-[0.5rem] ${isConnecting || isConnected ? 'disabled' : ''}`}
-                                        onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>
+                                        className={`px-[1rem] py-[0.5rem] ${isConnecting ? 'disabled' : ''}`}
+                                        onClick={() => handleConnectWallet()}>
                                         Connect Your Wallet
                                     </GradientButton>
                                 )}

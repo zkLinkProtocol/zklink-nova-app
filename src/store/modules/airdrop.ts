@@ -1,17 +1,20 @@
+import { Twitter } from '@/types';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface airdropState {
-    inviteCode: string,
-    isTeamCreator: boolean,
+    inviteCode: string | null,
+    isGroupLeader: boolean,
     signature: string,
-    signatureStatus: number,
+    twitter: Twitter | null,
+    isInvitedUser: boolean,
 }
 
 const initialState: airdropState = {
-    inviteCode: '',
-    isTeamCreator: false,
+    inviteCode: null,
+    isGroupLeader: false,
     signature: '',
-    signatureStatus: 0
+    twitter: null,
+    isInvitedUser: false,
 };
 
 export const airdrop = createSlice({
@@ -21,17 +24,20 @@ export const airdrop = createSlice({
         setInviteCode(state, { payload }) {
             state.inviteCode = payload;
         },
-        setIsTeamCreator(state, { payload }) {
-            state.isTeamCreator = payload;
+        setIsGroupLeader(state, { payload }) {
+            state.isGroupLeader = payload;
         },
         setSignature(state, { payload }) {
             state.signature = payload;
         },
-        setSignatureStatus(state, { payload }) {
-            state.signatureStatus = payload;
+        setInvitedUser(state, { payload }) {
+            state.isInvitedUser = payload;
+        },
+        setTwitter(state, { payload }) {
+            state.twitter = payload;
         }
     },
 });
 
-export const { setInviteCode, setSignature, setSignatureStatus, setIsTeamCreator } = airdrop.actions;
+export const { setInviteCode, setSignature, setInvitedUser, setIsGroupLeader, setTwitter } = airdrop.actions;
 export default airdrop.reducer;
