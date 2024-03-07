@@ -44,7 +44,7 @@ export default function Airdrop() {
     useEffect(() => {
         let _status = STATUS_CODE.landing
 
-        if (invite && invite.code) {
+        if (isConnected && invite?.code) {
             _status = STATUS_CODE.dashboard
         } else if ((inviteCode || isGroupLeader) && twitter && isConnected && signature) {
             _status = STATUS_CODE.deposit

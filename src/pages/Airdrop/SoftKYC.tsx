@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import qs from 'qs'
 import { postData } from '@/utils'
@@ -12,6 +12,7 @@ import { setSignature, setTwitter } from '@/store/modules/airdrop'
 import toast from 'react-hot-toast'
 import { useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/constants/sign'
+import { Button } from '@nextui-org/react'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -82,6 +83,7 @@ export default function SoftKYC() {
     const { isConnected, isConnecting } = useAccount()
     const { signature } = useSelector((store: any) => store.airdrop)
     const { twitter } = useSelector((store: any) => store.airdrop)
+    const [twitterLoading, setTwitterLoading] = useState(false)
 
     const dispatch = useDispatch()
     const { signMessage } = useSignMessage()
@@ -92,6 +94,7 @@ export default function SoftKYC() {
 
     const handleConnectTwitter = () => {
         // const url = 'https://twitter.com/i/oauth2/authorize?response_type=code&client_id=RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ&redirect_uri=http://localhost:3000/airdrop&scope=tweet.read%20users.read%20follows.read%20follows.write&state=state&code_challenge=challenge&code_challenge_method=plain'
+        setTwitterLoading(true)
 
         const params = {
             response_type: 'code',
@@ -124,6 +127,8 @@ export default function SoftKYC() {
     // }
 
     const getTwitterAccessToken = async (code: string) => {
+        setTwitterLoading(true)
+
         const res = await postData('/twitter/2/oauth2/token', {
             code,
             grant_type: 'authorization_code',
@@ -146,15 +151,20 @@ export default function SoftKYC() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${access_token}`,
                 },
-            }).then(async (res) => {
-                let { data } = await res.json()
-                console.log(data)
-
-                dispatch(setTwitter(data))
             })
+                .then(async (res) => {
+                    let { data } = await res.json()
+                    console.log(data)
 
+                    dispatch(setTwitter(data))
+                })
+                .catch((e) => {
+                    console.log(e)
+                    toast.error('Could not connect to Twitter. Try again.')
+                })
             // console.log(res.json())
         }
+        setTwitterLoading(false)
     }
 
     const handleSign = async () => {
@@ -249,11 +259,12 @@ export default function SoftKYC() {
                                         className='w-[1.5rem] h-[1.5rem]'
                                     />
                                 ) : (
-                                    <GradientButton
-                                        className='px-[1rem] py-[0.5rem] text-[1rem]'
+                                    <Button
+                                        className='gradient-btn px-[1rem] py-[0.5rem] text-[1rem]'
+                                        isLoading={twitterLoading}
                                         onClick={handleConnectTwitter}>
                                         Connect Twitter/X
-                                    </GradientButton>
+                                    </Button>
                                 )}
                             </div>
                         </CardBox>
@@ -275,11 +286,12 @@ export default function SoftKYC() {
                                         className='w-[1.5rem] h-[1.5rem]'
                                     />
                                 ) : (
-                                    <GradientButton
-                                        className={`px-[1rem] py-[0.5rem] ${isConnecting ? 'disabled' : ''}`}
-                                        onClick={() => handleConnectWallet()}>
+                                    <Button
+                                        className='gradient-btn px-[1rem] py-[0.5rem] text-[1rem]'
+                                        isLoading={isConnecting}
+                                        onClick={handleConnectWallet}>
                                         Connect Your Wallet
-                                    </GradientButton>
+                                    </Button>
                                 )}
                             </div>
                         </CardBox>

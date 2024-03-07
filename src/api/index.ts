@@ -17,3 +17,5 @@ export const getAccounTvl = (address: string): Promise<Response> => http.get(`/p
 export const getAccountPoint = (address: string): Promise<Response> => http.get(`/points/addressTokenTvl/getAccountPoint`, {
     params: { address }
 })
+
+export const getTotalTvl = () => http.get('/points/addressTokenTvl/getTotalTvl')
