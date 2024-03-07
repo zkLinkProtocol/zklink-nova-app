@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
 
 import Home from './pages/Home'
+import Toast from './components/Toast'
 // const Home = lazy(() => import('@/pages/Home'))
 const Airdrop = lazy(() => import('@/pages/Airdrop'))
 const Dashboard = lazy(() => import('@/pages/Airdrop/Dashboard'))
@@ -12,11 +13,10 @@ const Leaderboard = lazy(() => import('@/pages/Leaderboard'))
 
 export default function App() {
     return (
-        <main className='main dark text-foreground bg-background' >
+        <main className='main dark text-foreground bg-background'>
             <BrowserRouter>
-                
                 <Header />
-                
+
                 <Routes>
                     <Route
                         path='/'
@@ -64,6 +64,7 @@ export default function App() {
                         }
                     /> */}
                 </Routes>
+                <Toast />
             </BrowserRouter>
         </main>
     )

@@ -20,3 +20,13 @@ export type Twitter = {
   name: string
   username: string // twitter handle
 }
+
+export type Invite = {
+  address: string,
+  code: string | null,
+  canInviteNumber: number,
+  isLeader: boolean,
+  twitterName: string | null,
+  twitterHandler: string | null,
+  beInvited: boolean
+} 

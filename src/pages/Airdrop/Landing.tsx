@@ -9,7 +9,6 @@ import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
 import { GradientButton, CardBox } from '@/styles/common'
 import { useAccount } from 'wagmi'
-import ErrorToast from '@/components/ErrorToast'
 import { BOOST_LIST } from '@/constants/boost'
 
 const BgBox = styled.div`
@@ -128,7 +127,6 @@ export default function Landing() {
     return (
         <BgBox>
             <CoverImgBox />
-            <ErrorToast />
             <div className='relative mx-[auto] pl-[3.25rem] w-[41.5rem] z-[2]'>
                 <div className='flex justify-between gap-[1.5rem] mt-[8.5rem]'>
                     <TabsItem

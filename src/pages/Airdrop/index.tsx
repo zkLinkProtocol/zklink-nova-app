@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useAccount } from 'wagmi'
 import Bridge from './Bridge'
 import Dashboard from './Dashboard'
-import axios from 'axios'
-import { setInvitedUser } from '@/store/modules/airdrop'
+import { setInvite } from '@/store/modules/airdrop'
+import { getInviteByAddress } from '@/api'
+import { RootState } from '@/store'
 
 const STATUS_CODE = {
     landing: 0,
@@ -19,26 +20,31 @@ const STATUS_CODE = {
 export default function Airdrop() {
     const { address, isConnected } = useAccount()
     const dispatch = useDispatch()
-    const { inviteCode, isGroupLeader, signature, twitter, isInvitedUser } = useSelector((store: any) => store.airdrop)
+    const { inviteCode, isGroupLeader, signature, twitter, invite } = useSelector((store: RootState) => store.airdrop)
     const [status, setStatus] = useState(STATUS_CODE.landing)
 
     const getInvite = async () => {
-        const res = await axios.get(`/api/invite/${address}`)
-        console.log(res)
-        if (res.data && +res.data?.status === 0) {
-            const { beInvited } = res.data?.result
-            dispatch(setInvitedUser(beInvited))
+        if (!address) return
+        try {
+            const res = await getInviteByAddress(address)
+            console.log(res)
+            if (+res.status === 0 && res.result) {
+                dispatch(setInvite(res.result))
+            }
+        } catch (error) {
+            console.log(error)
+            getInvite()
         }
     }
 
     useEffect(() => {
-        isConnected && getInvite()
-    }, [isConnected])
+        getInvite()
+    }, [address])
 
     useEffect(() => {
         let _status = STATUS_CODE.landing
 
-        if (isInvitedUser) {
+        if (invite && invite.beInvited) {
             _status = STATUS_CODE.dashboard
         } else if ((inviteCode || isGroupLeader) && twitter && isConnected && signature) {
             _status = STATUS_CODE.deposit
