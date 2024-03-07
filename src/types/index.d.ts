@@ -29,3 +29,12 @@ export interface FullDepositFee {
   l1GasLimit: BigNumber;
   l2GasLimit: BigNumber;
 }
+export type Invite = {
+  address: string,
+  code: string | null,
+  canInviteNumber: number,
+  isLeader: boolean,
+  twitterName: string | null,
+  twitterHandler: string | null,
+  beInvited: boolean
+} 

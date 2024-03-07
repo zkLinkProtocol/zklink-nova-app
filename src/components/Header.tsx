@@ -8,7 +8,6 @@ import { useEffect } from 'react'
 import { setSignature } from '@/store/modules/airdrop'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
-import ErrorToast from './ErrorToast'
 import { useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/constants/sign'
 
@@ -173,7 +172,6 @@ export default function Header() {
                     </NavbarItem>
                 </NavbarContent>
             </Navbar>
-            <ErrorToast />
         </>
     )
 }
