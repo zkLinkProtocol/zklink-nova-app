@@ -148,6 +148,17 @@ export default function Bridge(props: IBridgeComponentProps) {
     return chainId !== fromList[fromActive].chainId;
   }, [chainId, fromActive]);
 
+  const actionBtnDisabled = useMemo(() => {
+    if (
+      !invalidChain &&
+      tokenList[fromActive] &&
+      (!tokenList[fromActive].balance || tokenList[fromActive].balance! < 0)
+    ) {
+      return true;
+    }
+    return false;
+  }, [tokenList, fromActive, invalidChain]);
+
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
@@ -301,6 +312,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               size="lg"
               onClick={handleAction}
               isLoading={loading}
+              disabled={actionBtnDisabled}
             >
               {btnText}
             </Button>
