@@ -25,3 +25,131 @@ const Tokens = [
   },
 ];
 export default Tokens;
+
+export const TokensProd = [
+  {
+    address: '',
+    symbol: "wBTC",
+    type: "Native",
+    yieldType: ["NOVA Points"],
+    multiplier: "2x",
+    networkKey: "Ethereum",
+    networkName: 'Ethereum',
+    decimals: 18,
+    icon: "",
+  },
+  {
+    symbol: "ETH",
+    type: "Native",
+    yieldType: ["NOVA Points"],
+    multiplier: "2x",
+  },
+  {
+    symbol: "USDT",
+    type: "Stablecoin",
+    yieldType: ["NOVA Points"],
+    multiplier: "2x",
+  },
+  {
+    symbol: "USDC",
+    type: "Stablecoin",
+    yieldType: ["NOVA Points"],
+    multiplier: "2x",
+  },
+  {
+    symbol: "USDe",
+    type: "Synthetic",
+    yieldType: ["NOVA Points", "Shard"],
+    multiplier: "2x",
+  },
+  {
+    symbol: "sUSDe",
+    type: "Synthetic",
+    yieldType: ["NOVA Points", "Shard"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "ARB",
+    type: "Native",
+    yieldType: ["NOVA Points"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "MNT",
+    type: "Native",
+    yieldType: ["NOVA Points"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "MANTA",
+    type: "Native",
+    yieldType: ["NOVA Points"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "wUSDm",
+    type: "RWA",
+    yieldType: ["NOVA Points", "Native Yield"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "Stone",
+    type: "LST",
+    yieldType: ["NOVA Points", "Native Yield"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "swETH",
+    type: "LST",
+    yieldType: ["NOVA Points", "Native Yield", "Pearls"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "mETH",
+    type: "LST",
+    yieldType: ["NOVA Points", "Native Yield"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "wstETH",
+    type: "LST",
+    yieldType: ["NOVA Points", "Native Yield"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "nETH",
+    type: "LST",
+    yieldType: ["NOVA Points", "Native Yield"],
+    multiplier: "1.5x",
+  },
+  {
+    symbol: "weETH",
+    type: "LRT",
+    yieldType: ["NOVA Points", "Native Yield", "EL Points", "Loyalty Points"],
+    multiplier: "1x",
+  },
+  {
+    symbol: "rsETH",
+    type: "LRT",
+    yieldType: ["NOVA Points", "Native Yield", "EL Points", "Kelp Miles"],
+    multiplier: "1x",
+  },
+  {
+    symbol: "ezETH",
+    type: "LRT",
+    yieldType: ["NOVA Points", "Native Yield", "EL Points", "ezPoints"],
+    multiplier: "1x",
+  },
+  {
+    symbol: "pufETH",
+    type: "LRT",
+    yieldType: ["NOVA Points", "Native Yield", "EL Points", "Puffer Points"],
+    multiplier: "1x",
+  },
+  {
+    symbol: "rswETH",
+    type: "LRT",
+    yieldType: ["NOVA Points", "Native Yield", "Swell Points", "Pearls"],
+    multiplier: "1x",
+  },
+];

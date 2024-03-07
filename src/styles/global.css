@@ -28,3 +28,11 @@
     user-select: none;
     cursor: pointer;
 }
+.gradient-secondary-btn {
+    border: 1px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #222, #222), linear-gradient(90deg, #8F41E9, #578AEF);
+
+}

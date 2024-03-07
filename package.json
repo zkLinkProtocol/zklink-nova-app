@@ -17,6 +17,7 @@
     "@web3modal/wagmi": "^4.0.10",
     "axios": "^1.6.7",
     "bignumber.js": "^9.1.2",
+    "classnames": "^2.5.1",
     "ethers": "~5.7.0",
     "framer-motion": "^11.0.6",
     "lodash": "^4.17.21",

@@ -42,10 +42,11 @@ const ModalSelectItem = styled.div`
 
 const SelectBox = styled.div`
   & {
-    background-color: rgb(38 43 51);
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
   }
   .selector {
-    background-color: rgb(61 66 77);
+    background-color: rgba(33, 34, 38, 0.72);
     &:hover {
       background-color: rgb(85 90 102);
     }
@@ -232,7 +233,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     <>
       <div className="">
         <h2 className="text-3xl">Bridge</h2>
-        <SelectBox className="mt-8 px-8 py-8 bg-gray-700 rounded-3xl">
+        <SelectBox className="mt-8 px-4 py-4 ">
           <div className="flex items-center gap-4">
             <span className="font-bold">From</span>
             <div
@@ -264,14 +265,8 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
           </div>
         </SelectBox>
-        <SelectBox className="flex items-center gap-4 mt-8 px-8 py-8 bg-gray-700 rounded-3xl">
-          <span className="font-bold">To</span>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer">
-            <Avatar src={cionIcon} size="sm" />
-            <span>zkLink Nova Testnet</span>
-          </div>
-        </SelectBox>
-        <div className="mt-8 px-8 py-8 bg-gray-700 rounded-3xl">
+
+        <div className="mt-4 px-4 py-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               <span>Nova Points</span>
@@ -334,7 +329,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         <div className="mt-8">
           {isConnected ? (
             <Button
-              className="w-full rounded-full"
+              className="gradient-btn w-full rounded-full"
               disableAnimation
               size="lg"
               onClick={handleAction}

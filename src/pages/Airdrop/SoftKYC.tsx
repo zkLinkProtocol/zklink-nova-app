@@ -161,6 +161,7 @@ export default function SoftKYC() {
                 .catch((e) => {
                     console.log(e)
                     toast.error('Could not connect to Twitter. Try again.')
+                    setTwitterLoading(false)
                 })
             // console.log(res.json())
         }
