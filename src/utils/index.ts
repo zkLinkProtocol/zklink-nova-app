@@ -4,7 +4,7 @@ import { ethers, BigNumberish, utils, BigNumber } from "ethers";
 import { AbiCoder } from "ethers/lib/utils";
 import { formatUnits } from "viem";
 import bignumber from "bignumber.js";
-
+import { ETH_ADDRESS, L2_ETH_TOKEN_ADDRESS } from "@/constants";
 import { BOOST_LIST } from "@/constants/boost";
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -140,4 +140,19 @@ export function getNextMilestone(value: number): number {
   const arr = BOOST_LIST.filter((item) => value < item.value);
   const nextValue = arr[0].value;
   return nextValue;
+}
+
+export function isETH(token: string) {
+  return (
+    token.toLowerCase() == ETH_ADDRESS ||
+    token.toLowerCase() == L2_ETH_TOKEN_ADDRESS
+  );
+}
+
+export const L1_FEE_ESTIMATION_COEF_NUMERATOR = BigNumber.from(12);
+export const L1_FEE_ESTIMATION_COEF_DENOMINATOR = BigNumber.from(10);
+export function scaleGasLimit(gasLimit: BigNumber): BigNumber {
+  return gasLimit
+    .mul(L1_FEE_ESTIMATION_COEF_NUMERATOR)
+    .div(L1_FEE_ESTIMATION_COEF_DENOMINATOR);
 }

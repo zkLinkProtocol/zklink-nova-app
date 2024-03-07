@@ -20,3 +20,12 @@ export type Twitter = {
   name: string
   username: string // twitter handle
 }
+
+export interface FullDepositFee {
+  maxFeePerGas?: BigNumber;
+  maxPriorityFeePerGas?: BigNumber;
+  gasPrice?: BigNumber;
+  baseCost: BigNumber;
+  l1GasLimit: BigNumber;
+  l2GasLimit: BigNumber;
+}

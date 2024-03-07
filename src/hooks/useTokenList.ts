@@ -21,8 +21,8 @@ import { wagmiConfig } from "@/constants/networks";
 
 const nativeToken = {
   address: "0x0000000000000000000000000000000000000000",
-  //   networkKey: network!,
   symbol: "ETH",
+  //   networkKey: network!,
   //   networkName: from!.chainName,
   decimals: 18,
   icon: ethIcon,
@@ -74,27 +74,35 @@ export const useTokenBalanceList = () => {
     contracts: erc20Contracts,
     query: {
       queryClient,
-      select: (data) => data.map((item) => item.result),
+      // select: (data) => data.map((item) => item.result),
     },
   });
 
   console.log("data: ", selectedChainId, erc20Balances);
 
   const tokenList = useMemo(() => {
+    const erc20BalancesValue = erc20Balances?.map(
+      (item) => item.result as bigint
+    );
     const tokenList = [...tokens].map((token, index) => ({
       ...token,
-      balance: erc20Balances?.[index],
-      formatedBalance: formatBalance(erc20Balances?.[index], token.decimals),
+      balance: erc20BalancesValue?.[index],
+      formatedBalance: formatBalance(
+        erc20BalancesValue?.[index] ?? 0n,
+        token.decimals
+      ),
     }));
     if (from?.isEthGasToken) {
       tokenList.unshift({
         ...nativeToken,
+        networkKey: networkKey!,
+        networkName: from!.chainName,
         balance: nativeTokenBalance?.value ?? 0n,
         formatedBalance: formatBalance(nativeTokenBalance?.value ?? 0n, 18),
       });
     }
     return tokenList;
-  }, [nativeTokenBalance, erc20Balances, from, tokens]);
+  }, [nativeTokenBalance, erc20Balances, from, tokens, networkKey]);
 
   const refreshTokenBalanceList = () => {
     queryClient.invalidateQueries();
