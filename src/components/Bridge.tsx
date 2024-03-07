@@ -31,6 +31,8 @@ import { STORAGE_NETWORK_KEY } from "@/constants";
 import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { bindInviteCodeWithAddress } from "@/api";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -62,7 +64,7 @@ const InviteCodeTypes = [
 export default function Bridge(props: IBridgeComponentProps) {
   const { isFirstDeposit, onClose, bridgeToken } = props;
   const web3Modal = useWeb3Modal();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
   const tokenModal = useDisclosure();
   const chainId = useChainId();
@@ -72,7 +74,11 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [inviteCodeType, setInviteCodeType] = useState(
     InviteCodeTypes[0].value
   );
-  const [inviteCode, setInviteCode] = useState("");
+  const { inviteCode, isGroupLeader, signature, twitter, invite } = useSelector(
+    (store: RootState) => store.airdrop
+  );
+
+  const [inputInviteCode, setInputInviteCode] = useState("");
 
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
@@ -83,6 +89,12 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [points, setPoints] = useState(0);
   const [showNoPointsTip, setShowNoPointsTip] = useState(false);
   const [minDepositValue, setMinDepositValue] = useState(0.1);
+
+  useEffect(() => {
+    if (inviteCode) {
+      setInputInviteCode(inviteCode);
+    }
+  }, [inviteCode, setInputInviteCode]);
 
   useEffect(() => {
     if (isFirstDeposit) {
@@ -168,6 +180,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [invalidChain]);
 
   const handleAction = useCallback(async () => {
+    if (!address) return;
     if (invalidChain) {
       switchChain(
         { chainId: fromList[fromActive].chainId },
@@ -187,18 +200,32 @@ export default function Bridge(props: IBridgeComponentProps) {
       utils.parseEther(String(amount))
     );
     refreshTokenBalanceList();
+    if (isFirstDeposit) {
+      await bindInviteCodeWithAddress({
+        address,
+        code: inputInviteCode,
+        signature,
+        twitterHandler: twitter.username,
+        twitterName: twitter.name,
+      });
+    }
     //TODO call api to save referel data
     onClose?.();
   }, [
     invalidChain,
-    fromActive,
-    switchChain,
     amount,
     sendDepositTx,
-    tokenActive,
     tokenList,
+    tokenActive,
     refreshTokenBalanceList,
+    address,
+    inputInviteCode,
+    signature,
     onClose,
+    switchChain,
+    fromActive,
+    twitter,
+    isFirstDeposit,
   ]);
 
   return (
@@ -276,8 +303,8 @@ export default function Bridge(props: IBridgeComponentProps) {
                   <Input
                     className="w-[120px] mr-2"
                     size="sm"
-                    value={inviteCode}
-                    onValueChange={setInviteCode}
+                    value={inputInviteCode}
+                    onValueChange={setInputInviteCode}
                     placeholder="Invite code"
                   />
                 )}
