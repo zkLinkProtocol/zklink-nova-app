@@ -1,4 +1,3 @@
-import { bindInviteCodeWithAddress } from "./index";
 import http from "@/utils/http";
 
 type Response = {
@@ -22,3 +21,16 @@ export const bindInviteCodeWithAddress = (
 ) => {
   return http.post("/invite/bind/twitter", data);
 };
+export const getInvite = (address: string): Promise<Response> => http.get(`/api/invite/${address}`)
+
+export const getReferrer = (address: string): Promise<Response> => http.get(`/api/referrer/${address}`)
+
+export const getAccounTvl = (address: string): Promise<Response> => http.get(`/points/addressTokenTvl/getAccounTvl`, {
+    params: { address }
+})
+
+export const getAccountPoint = (address: string): Promise<Response> => http.get(`/points/addressTokenTvl/getAccountPoint`, {
+    params: { address }
+})
+
+export const getTotalTvl = () => http.get('/points/addressTokenTvl/getTotalTvl')
