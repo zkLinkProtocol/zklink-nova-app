@@ -95,7 +95,7 @@ export default function SoftKYC() {
 
         const params = {
             response_type: 'code',
-            client_id: 'RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ',
+            client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
             redirect_uri: 'http://localhost:3000/airdrop',
             scope: 'tweet.read%20users.read%20follows.read%20follows.write',
             state: 'state',
@@ -127,7 +127,7 @@ export default function SoftKYC() {
         const res = await postData('/twitter/2/oauth2/token', {
             code,
             grant_type: 'authorization_code',
-            client_id: 'RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ',
+            client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
             redirect_uri: 'http://localhost:3000/airdrop',
             code_verifier: 'challenge',
         })

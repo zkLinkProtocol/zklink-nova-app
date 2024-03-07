@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import { showAccount } from '@/utils'
 import { useEffect } from 'react'
-import { setSignature } from '@/store/modules/airdrop'
+import { setInvite, setSignature, setTwitter } from '@/store/modules/airdrop'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useSignMessage } from 'wagmi'
@@ -82,8 +82,9 @@ export default function Header() {
         // console.log('signature', signature)
 
         if (!isConnected) {
-            console.log('clear signature')
+            console.log('disconnect')
             dispatch(setSignature(''))
+            dispatch(setInvite(null))
         }
         if (isConnected && (!signature || signature === '')) {
             handleSign()

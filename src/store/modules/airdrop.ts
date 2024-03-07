@@ -1,5 +1,5 @@
 import { Invite, Twitter } from '@/types';
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface airdropState {
     inviteCode: string | null,
@@ -21,20 +21,20 @@ export const airdrop = createSlice({
     name: 'airdrop',
     initialState,
     reducers: {
-        setInviteCode(state, { payload }) {
-            state.inviteCode = payload;
+        setInviteCode(state, action: PayloadAction<string>) {
+            state.inviteCode = action.payload
         },
-        setIsGroupLeader(state, { payload }) {
-            state.isGroupLeader = payload;
+        setIsGroupLeader(state, action: PayloadAction<boolean>) {
+            state.isGroupLeader = action.payload
         },
-        setSignature(state, { payload }) {
-            state.signature = payload;
+        setSignature(state, action: PayloadAction<string>) {
+            state.signature = action.payload
         },
-        setTwitter(state, { payload }) {
-            state.twitter = payload;
+        setTwitter(state, action: PayloadAction<Twitter | null>) {
+            state.twitter = action.payload
         },
-        setInvite(state, { payload }) {
-            state.invite = payload;
+        setInvite(state, action: PayloadAction<Invite | null>) {
+            state.invite = action.payload;
         },
     },
 });

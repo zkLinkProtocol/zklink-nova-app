@@ -7,7 +7,7 @@ import { useAccount } from 'wagmi'
 import Bridge from './Bridge'
 import Dashboard from './Dashboard'
 import { setInvite } from '@/store/modules/airdrop'
-import { getInviteByAddress } from '@/api'
+import { getInvite } from '@/api'
 import { RootState } from '@/store'
 
 const STATUS_CODE = {
@@ -19,32 +19,32 @@ const STATUS_CODE = {
 
 export default function Airdrop() {
     const { address, isConnected } = useAccount()
-    const dispatch = useDispatch()
     const { inviteCode, isGroupLeader, signature, twitter, invite } = useSelector((store: RootState) => store.airdrop)
     const [status, setStatus] = useState(STATUS_CODE.landing)
+    const dispatch = useDispatch()
 
-    const getInvite = async () => {
+    const getInviteFunc = async () => {
         if (!address) return
         try {
-            const res = await getInviteByAddress(address)
+            const res = await getInvite(address)
             console.log(res)
-            if (+res.status === 0 && res.result) {
+            if (res.result) {
                 dispatch(setInvite(res.result))
             }
         } catch (error) {
             console.log(error)
-            getInvite()
+            // getInviteFunc()
         }
     }
 
     useEffect(() => {
-        getInvite()
+        getInviteFunc()
     }, [address])
 
     useEffect(() => {
         let _status = STATUS_CODE.landing
 
-        if (invite && invite.beInvited) {
+        if (invite && invite.code) {
             _status = STATUS_CODE.dashboard
         } else if ((inviteCode || isGroupLeader) && twitter && isConnected && signature) {
             _status = STATUS_CODE.deposit

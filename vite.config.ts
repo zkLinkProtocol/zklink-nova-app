@@ -22,12 +22,12 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/twitter/, '')
       },
       '/api': {
-        target: "http://13.114.13.100:3055",
+        target: "http://13.114.13.100:8097",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
       '/points': {
-        target: "http://13.114.13.100:3055",
+        target: "http://13.114.13.100:8096",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/points/, '')
       }

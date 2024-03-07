@@ -1,12 +1,16 @@
 import styled from 'styled-components'
 import AssetsTable from '@/components/AssetsTable'
 import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Modal, ModalBody, ModalContent, useDisclosure } from '@nextui-org/react'
 import BridgeComponent from '@/components/Bridge'
 import { BOOST_LIST } from '@/constants/boost'
 import { getBooster, getNextMilestone } from '@/utils'
 import ReferralList from '@/components/ReferralList'
+import { RootState } from '@/store'
+import { useSelector } from 'react-redux'
+import { getAccounTvl, getAccountPoint, getReferrer } from '@/api'
+import { useAccount } from 'wagmi'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
@@ -149,26 +153,22 @@ const TabsBox = styled.div`
 `
 
 export default function Dashboard() {
+    const { invite } = useSelector((store: RootState) => store.airdrop)
+    const { address } = useAccount()
+
     const [tabsActive, setTabsActive] = useState(0)
     const [groupTvl] = useState(0)
     const [referralTvl] = useState(0)
     const [stakingValue] = useState(0)
-
     const [earnValue] = useState({
         earnByDeposit: 0,
         earnByReferring: 0,
     })
-
-    const [inviteInfo] = useState({
-        code: 'xxxxx',
-        canInviteNumber: 10,
-        isLeader: false,
-    })
-
-    const [accountPoint] = useState({
+    const [accountPoint, setAccountPoint] = useState({
         novaPoint: 0,
         referPoint: 0,
     })
+    const [referrerData, setReferrerData] = useState([])
 
     const [bridgeToken, setBridgeToken] = useState('')
     const bridgeModal = useDisclosure()
@@ -177,6 +177,37 @@ export default function Dashboard() {
         setBridgeToken(token)
         bridgeModal.onOpen()
     }
+
+    const getAccountPointFunc = async () => {
+        if (!address) return
+        const res = await getAccountPoint(address)
+        console.log('account point', res)
+        if (res.result) {
+            setAccountPoint(res.result)
+        }
+    }
+
+    const getReferrerFunc = async () => {
+        if (!address) return
+        const res = await getReferrer(address)
+        console.log('referrer', res)
+        if (res.result) {
+            setReferrerData(res.result)
+        }
+    }
+
+    const getAccounTvlFunc = async () => {
+        if (!address) return
+        const res = await getAccounTvl(address)
+
+        console.log('account tvl', res)
+    }
+
+    useEffect(() => {
+        getAccountPointFunc()
+        getReferrerFunc()
+        getAccounTvlFunc()
+    }, [])
 
     return (
         <BgBox>
@@ -255,15 +286,15 @@ export default function Dashboard() {
                             <div>
                                 <p
                                     className='text-[1.5rem] leading-[2rem] text-center flex items-center gap-[0.38rem] cursor-pointer'
-                                    onClick={() => navigator.clipboard.writeText(inviteInfo.code)}>
-                                    <span>{inviteInfo.code}</span>
+                                    onClick={() => invite?.code && navigator.clipboard.writeText(invite?.code)}>
+                                    <span>{invite?.code || '-'}</span>
                                     <img
                                         src='/img/icon-copy.svg'
                                         className='w-[1.1875rem] h-[1.1875rem]'
                                     />
                                 </p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>
-                                    Your Invite Code ({inviteInfo.canInviteNumber}/10)
+                                    Your Invite Code ({invite?.canInviteNumber || 0}/10)
                                 </p>
                             </div>
                         </CardBox>
@@ -347,7 +378,7 @@ export default function Dashboard() {
                         )}
                         {tabsActive === 2 && (
                             <CardBox className='mt-[2rem] min-h-[30rem]'>
-                                <ReferralList />
+                                <ReferralList data={referrerData} />
                             </CardBox>
                         )}
                     </div>
