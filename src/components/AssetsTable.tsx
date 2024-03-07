@@ -1,7 +1,8 @@
 import { CardBox } from '@/styles/common'
-import { Button, Checkbox, Skeleton, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
+import { Button, Checkbox, Modal, ModalBody, ModalContent, Skeleton, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from '@nextui-org/react'
 import { useState } from 'react'
 import styled from 'styled-components'
+import BridgeComponent from '@/components/Bridge'
 
 const TabsBar = styled.div`
     .tab-item {
@@ -114,10 +115,28 @@ export const TableBox = styled.div`
     }
 `
 
-export default function AssetsTable() {
+interface IAssetsTableProps {
+    data: any[]
+    totalTvlList: any[]
+}
+
+export default function AssetsTable(props: IAssetsTableProps) {
+    const { data, totalTvlList } = props
     const [assetsTabsActive, setAssetsTabsActive] = useState(0)
     const [isSelected, setIsSelected] = useState(false)
     const assetList = [{ name: 'All' }, { name: 'Native' }, { name: 'Stablecoin' }, { name: 'RWA' }, { name: 'LST' }, { name: 'LRT' }]
+    console.log('totalTvlList', totalTvlList)
+    const [bridgeToken, setBridgeToken] = useState('')
+    const bridgeModal = useDisclosure()
+
+    const getTotalTvl = (symbol: string) => {
+        return totalTvlList.find((item: any) => item.symbol === symbol)
+    }
+
+    const handleBridgeMore = (token: string) => {
+        setBridgeToken(token)
+        bridgeModal.onOpen()
+    }
 
     return (
         <>
@@ -153,7 +172,7 @@ export default function AssetsTable() {
                         <TableColumn children={undefined}></TableColumn>
                     </TableHeader>
                     <TableBody>
-                        {new Array(5).fill('').map((_, index) => {
+                        {data.map((item, index) => {
                             return (
                                 <TableRow
                                     key={index}
@@ -161,14 +180,16 @@ export default function AssetsTable() {
                                     <TableCell>
                                         <TableItem className='flex items-center'>
                                             <Skeleton className='flex rounded-full w-[2.125rem] h-[2.125rem]' />
-                                            <p className='value ml-[0.5rem]'>awstETH</p>
+                                            <p className='value ml-[0.5rem]'>{item?.symbol}</p>
                                             <span className='tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem]'>2x boost</span>
                                         </TableItem>
                                     </TableCell>
                                     <TableCell>
                                         <TableItem>
-                                            <div className='value'>200 awstETH</div>
-                                            <div className='sub-value mt-[0.12rem]'>$1,000,000</div>
+                                            <div className='value'>
+                                                {getTotalTvl(item?.symbol)?.amount} {item?.symbol}
+                                            </div>
+                                            <div className='sub-value mt-[0.12rem]'>${getTotalTvl(item?.symbol)?.tvl}</div>
                                         </TableItem>
                                     </TableCell>
                                     <TableCell>
@@ -180,12 +201,18 @@ export default function AssetsTable() {
                                     </TableCell>
                                     <TableCell>
                                         <TableItem>
-                                            <div className='value'>200 awstETH</div>
-                                            <div className='sub-value mt-[0.12rem]'>$1,000,000</div>
+                                            <div className='value'>
+                                                {item.amount} {item?.symbol}
+                                            </div>
+                                            <div className='sub-value mt-[0.12rem]'>${item.tvl}</div>
                                         </TableItem>
                                     </TableCell>
                                     <TableCell>
-                                        <Button className='bg-[#0BC48F] text-[#000] text-[1rem]'>Bridge More</Button>
+                                        <Button
+                                            className='bg-[#0BC48F] text-[#000] text-[1rem]'
+                                            onClick={() => handleBridgeMore('0x1ac10940cc7f8b063731609AF1a55F2fa440dFD2')}>
+                                            Bridge More
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             )
@@ -193,6 +220,24 @@ export default function AssetsTable() {
                     </TableBody>
                 </Table>
             </TableBox>
+
+            <Modal
+                style={{ minHeight: '600px' }}
+                size='2xl'
+                isOpen={bridgeModal.isOpen}
+                onOpenChange={bridgeModal.onOpenChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <ModalBody className='pb-8'>
+                            <BridgeComponent
+                                isFirstDeposit={false}
+                                bridgeToken={bridgeToken}
+                                onClose={onClose}
+                            />
+                        </ModalBody>
+                    )}
+                </ModalContent>
+            </Modal>
         </>
     )
 }

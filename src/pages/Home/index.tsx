@@ -1,5 +1,5 @@
 import { useWeb3Modal } from '@web3modal/wagmi/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import OTPInput from 'react-otp-input'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
@@ -7,6 +7,7 @@ import { setInviteCode } from '@/store/modules/airdrop'
 import { useNavigate } from 'react-router-dom'
 import { GradientButton } from '@/styles/common'
 import '@/styles/otp-input.css'
+import { getActiveAccounts, getTotalTvl } from '@/api'
 
 const BgBox = styled.div`
     width: 100%;
@@ -63,16 +64,15 @@ export default function Home() {
     const web3Modal = useWeb3Modal()
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const [totalTvl, setTotalTvl] = useState(0)
+    const [activeUsers, setActiveUsers] = useState(0)
+
     const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] = useState({
         otp: '',
         numInputs: 5,
         separator: '',
         placeholder: '',
         inputType: 'text' as const,
-    })
-    const [performanceData] = useState({
-        tvl: 0,
-        totalUsers: 0
     })
 
     const handleOTPChange = (otp: string) => {
@@ -85,6 +85,27 @@ export default function Home() {
         dispatch(setInviteCode(otp))
         navigate('/airdrop')
     }
+
+    const getTotalTvlFunc = async() => {
+        const res = await getTotalTvl()
+        console.log('total tvl', res)
+
+        setTotalTvl(res?.result || 0)
+        
+    }
+    const getActiveAccountsFunc = async() => {
+        const res = await getActiveAccounts()
+        console.log('active accounts', res)
+
+        setActiveUsers(res?.result || 0)
+        
+    }
+    
+
+    useEffect(() => {
+        getActiveAccountsFunc()
+        getTotalTvlFunc()
+    }, [])
 
     return (
         <BgBox className='relative pb-[13rem]'>
@@ -164,8 +185,8 @@ export default function Home() {
 
             <div className='absolute bottom-0 py-[4.5rem] flex justify-between items-end pl-[6.5rem] pr-[8.94rem]  w-full'>
                 <div>
-                    <FooterText>TVL / {performanceData.tvl}</FooterText>
-                    <FooterText className='mt-4'>TOTAL USERS / {performanceData.totalUsers}</FooterText>
+                    <FooterText>TVL / {totalTvl}</FooterText>
+                    <FooterText className='mt-4'>TOTAL USERS / {activeUsers}</FooterText>
                 </div>
                 <div className='flex items-center gap-[1.25rem]'>
                     <a href=''>

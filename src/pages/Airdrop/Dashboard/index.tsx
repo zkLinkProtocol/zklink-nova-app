@@ -9,7 +9,7 @@ import { getBooster, getNextMilestone } from '@/utils'
 import ReferralList from '@/components/ReferralList'
 import { RootState } from '@/store'
 import { useSelector } from 'react-redux'
-import { getAccounTvl, getAccountPoint, getReferrer } from '@/api'
+import { getAccounTvl, getAccountPoint, getAccountTvl, getGroupTvl, getReferralTvl, getReferrer, getTotalTvlByToken } from '@/api'
 import { useAccount } from 'wagmi'
 import toast from 'react-hot-toast'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
@@ -157,10 +157,10 @@ export default function Dashboard() {
     const { invite } = useSelector((store: RootState) => store.airdrop)
     const { address } = useAccount()
 
+    const [totalTvlList, setTotalTvlList] = useState([])
+
     const [tabsActive, setTabsActive] = useState(0)
-    const [groupTvl] = useState(0)
-    const [referralTvl] = useState(0)
-    const [stakingValue] = useState(0)
+    const [stakingValue, setStakingValue] = useState(0)
     const [earnValue] = useState({
         earnByDeposit: 0,
         earnByReferring: 0,
@@ -173,11 +173,14 @@ export default function Dashboard() {
 
     const [bridgeToken, setBridgeToken] = useState('')
     const bridgeModal = useDisclosure()
+    const [accountTvlData, setAccountTvlData] = useState([])
+    const [groupTvl, setGroupTvl] = useState(0)
+    const [referralTvl, setReferralTvl] = useState(0)
 
     const handleCopy = () => {
         if (!invite?.code) return
         navigator.clipboard.writeText(invite?.code)
-        toast.success('Copied', { duration: 2000})
+        toast.success('Copied', { duration: 2000 })
     }
 
     const handleBridgeMore = (token: string) => {
@@ -210,10 +213,51 @@ export default function Dashboard() {
         console.log('account tvl', res)
     }
 
+    const getAccountTvlFunc = async () => {
+        if (!address) return
+
+        const res = await getAccountTvl(address)
+        console.log('account tvl', res)
+        setAccountTvlData(res?.result || [])
+
+        if (res?.result?.length && Array.isArray(res.result)) {
+            let val = 0
+            res.result.forEach((item) => {
+                val += +item?.tvl
+            })
+
+            setStakingValue(val)
+        }
+    }
+
+    const getTotalTvlByTokenFunc = async () => {
+        const res = await getTotalTvlByToken()
+
+        console.log('total tvl', res)
+
+        setTotalTvlList(res?.result || [])
+    }
+
+    const getGroupTvlFunc = async () => {
+        if (!address) return
+        const res = await getGroupTvl(address)
+        setGroupTvl(res?.result || 0)
+    }
+
+    const getReferralTvlFunc = async () => {
+        if (!address) return
+        const res = await getReferralTvl(address)
+        setReferralTvl(res?.result || 0)
+    }
+
     useEffect(() => {
+        getTotalTvlByTokenFunc()
         getAccountPointFunc()
         getReferrerFunc()
         getAccounTvlFunc()
+        getAccountTvlFunc()
+        getGroupTvlFunc()
+        getReferralTvlFunc()
     }, [])
 
     return (
@@ -275,7 +319,7 @@ export default function Dashboard() {
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Group TVL</p>
                             </div>
                             <div>
-                                <p className='text-[1.5rem] leading-[2rem] text-center'>2x</p>
+                                <p className='text-[1.5rem] leading-[2rem] text-center'>{getBooster(groupTvl)}</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.25rem]'>
                                     <span>Group 24h Growth/Boost Rate</span>
                                     <img
@@ -373,7 +417,12 @@ export default function Dashboard() {
                             </div>
                         </TabsBox>
 
-                        {tabsActive === 0 && <AssetsTable />}
+                        {tabsActive === 0 && (
+                            <AssetsTable
+                                totalTvlList={totalTvlList}
+                                data={accountTvlData}
+                            />
+                        )}
                         {tabsActive === 1 && (
                             <CardBox className='flex flex-col justify-center items-center mt-[2rem] py-[10rem]'>
                                 <p className='text-[1rem] text-center mb-[1rem] font-[700]'>Rarible Market Coming Soon</p>

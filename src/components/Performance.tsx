@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import { getActiveAccounts, getTotalTvl } from '@/api'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const PerformanceBox = styled.div`
@@ -12,15 +13,32 @@ const PerformanceBox = styled.div`
     }
 `
 const Performance: React.FC = () => {
-    const [performanceData] = useState({
-        currentTvl: 0,
-        activeUsers: 0,
-    })
+    const [totalTvl, setTotalTvl] = useState(0)
+    const [activeUsers, setActiveUsers] = useState(0)
+
+    const getTotalTvlFunc = async () => {
+        const res = await getTotalTvl()
+        console.log('total tvl', res)
+
+        setTotalTvl(res?.result || 0)
+    }
+
+    const getActiveAccountsFunc = async () => {
+        const res = await getActiveAccounts()
+        console.log('active accounts', res)
+
+        setActiveUsers(res?.result || 0)
+    }
+
+    useEffect(() => {
+        getTotalTvlFunc()
+        getActiveAccountsFunc()
+    }, [])
 
     return (
         <PerformanceBox className='performance-box flex justify-center align-center gap-[4rem]'>
-            <span className='performance-item'>Current TVL: {performanceData.currentTvl}</span>
-            <span className='ml-5 performance-item'>Active Users: {performanceData.activeUsers}</span>
+            <span className='performance-item'>Current TVL: {totalTvl}</span>
+            <span className='ml-5 performance-item'>Active Users: {activeUsers}</span>
         </PerformanceBox>
     )
 }

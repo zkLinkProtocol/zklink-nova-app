@@ -32,7 +32,9 @@ import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { bindInviteCodeWithAddress } from "@/api";
+import { bindInviteCodeWithAddress, getInvite } from "@/api";
+import { RootState } from "@/store";
+import { setInvite } from "@/store/modules/airdrop";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -75,7 +77,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [inviteCodeType, setInviteCodeType] = useState(
     InviteCodeTypes[0].value
   );
-  const { inviteCode, isGroupLeader, signature, twitter, invite } = useSelector(
+  const { inviteCode, signature, twitter, invite } = useSelector(
     (store: RootState) => store.airdrop
   );
 
@@ -90,6 +92,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [points, setPoints] = useState(0);
   const [showNoPointsTip, setShowNoPointsTip] = useState(false);
   const [minDepositValue, setMinDepositValue] = useState(0.1);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (inviteCode) {
@@ -206,9 +209,14 @@ export default function Bridge(props: IBridgeComponentProps) {
         address,
         code: inputInviteCode,
         signature,
-        twitterHandler: twitter.username,
-        twitterName: twitter.name,
+        twitterHandler: twitter?.username || '',
+        twitterName: twitter?.name || '',
       });
+
+      const res = await getInvite(address)
+      if(res?.result) {
+        dispatch(setInvite(res?.result))
+      }
     }
     //TODO call api to save referel data
     onClose?.();
