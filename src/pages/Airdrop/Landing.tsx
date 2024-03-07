@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
 import { GradientButton, CardBox } from '@/styles/common'
 import { useAccount } from 'wagmi'
-import { BOOST_LIST } from '@/constants/boost'
+// import { BOOST_LIST } from '@/constants/boost'
 
 const BgBox = styled.div`
     position: relative;
@@ -85,7 +85,7 @@ const GradientText = styled.span`
     user-select: none;
 `
 
-const TeamItem = styled.div`
+export const TeamItem = styled.div`
     color: #fff;
     text-align: center;
     font-family: Satoshi;
@@ -103,7 +103,7 @@ export default function Landing() {
 
     const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] = useState({
         otp: '',
-        numInputs: 5,
+        numInputs: 6,
         separator: '',
         placeholder: '',
         inputType: 'text' as const,
@@ -146,9 +146,7 @@ export default function Landing() {
                 </div>
 
                 <CardBox className='flex flex-col items-center mt-6 py-8 w-[38.125rem]'>
-                    <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>
-                        By joining an existing team, your could share the team boost when team tvl meet specific milestone.
-                    </DescText>
+                    <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>You can create your own team</DescText>
                     {tabsActive === 0 && (
                         <>
                             <div className='mt-[1.94rem]'>
@@ -177,7 +175,7 @@ export default function Landing() {
 
                     {tabsActive === 1 && (
                         <>
-                            <div className='py-[1rem]'>
+                            {/* <div className='mt-[1.5rem]'>
                                 {BOOST_LIST.map((item, index) => (
                                     <TeamItem
                                         className='py-[0.5rem]'
@@ -185,9 +183,9 @@ export default function Landing() {
                                         {item.booster} Boost for {item.value} ETH equivalent TVL
                                     </TeamItem>
                                 ))}
-                            </div>
+                            </div> */}
 
-                            <div>
+                            <div className='mt-[1.5rem]'>
                                 <GradientButton
                                     className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center'
                                     onClick={() => dispatch(setIsGroupLeader(true))}>

@@ -239,7 +239,7 @@ export default function SoftKYC() {
                         </CardBox>
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
-                                <p className='step-title'>Connect Twitter</p>
+                                <p className='step-title'>Connect Twitter or Create Your Team</p>
                                 <p className='step-sub-title mt-[0.25rem]'>Check if you are a real person.</p>
                             </StepItem>
                             <div>

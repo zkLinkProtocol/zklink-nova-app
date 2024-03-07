@@ -6,4 +6,8 @@ type Response = {
     messag: string
 }
 
-export const getInviteByAddress = (account: string): Promise<Response> => http.get(`/invite/${account}`)
+export const getInviteByAddress = (account: string): Promise<Response> => http.get(`/api/invite/${account}`)
+
+export const getAccounTvl = (address: string) => http.get(`/points/addressTokenTvl/getAccounTvl`, {
+    params: { address }
+})

@@ -25,6 +25,11 @@ export default defineConfig({
         target: "http://13.114.13.100:3055",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/points': {
+        target: "http://13.114.13.100:3055",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/points/, '')
       }
     }
   }

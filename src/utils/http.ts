@@ -1,13 +1,13 @@
 import axios from "axios";
-import qs from 'qs';
-import _ from 'lodash';
+// import _ from 'lodash';
+// import qs from 'qs';
 // import toast from "react-hot-toast";
 
 const http = axios.create({
-    baseURL: '/api'
+    baseURL: ''
 });
 http.defaults.transformRequest = data => {
-    if (_.isPlainObject(data)) data = qs.stringify(data);
+    // if (_.isPlainObject(data)) data = qs.stringify(data);
     return data;
 };
 http.interceptors.response.use(response => {
