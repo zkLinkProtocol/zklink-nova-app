@@ -18,4 +18,24 @@ export const getAccountPoint = (address: string): Promise<Response> => http.get(
     params: { address }
 })
 
-export const getTotalTvl = () => http.get('/points/addressTokenTvl/getTotalTvl')
+export const getTotalTvl = (): Promise<Response> => http.get('/points/addressTokenTvl/getTotalTvl')
+export const getActiveAccounts = (): Promise<Response> => http.get('/api/invite/getActiveAccounts')
+
+export const getAccountTvl = (address: string): Promise<Response> => http.get('/points/addressTokenTvl/getAccounTvl', {
+    params: {
+        address
+    }
+})
+
+export const getGroupTvl = (address: string): Promise<Response> => http.get('/points/addressTokenTvl/getGroupTvl', {
+    params: {
+        address
+    }
+})
+
+export const getTotalTvlByToken = (): Promise<Response> => http.get('/points/addressTokenTvl/getTotalTvlByToken')
+
+export const getReferralTvl = (address: string): Promise<Response> => http.get('/addressTokenTvl/getReferralTvl', {
+    params: {address}
+})
+
