@@ -11,6 +11,7 @@ import { RootState } from '@/store'
 import { useSelector } from 'react-redux'
 import { getAccounTvl, getAccountPoint, getReferrer } from '@/api'
 import { useAccount } from 'wagmi'
+import toast from 'react-hot-toast'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
@@ -173,6 +174,12 @@ export default function Dashboard() {
     const [bridgeToken, setBridgeToken] = useState('')
     const bridgeModal = useDisclosure()
 
+    const handleCopy = () => {
+        if (!invite?.code) return
+        navigator.clipboard.writeText(invite?.code)
+        toast.success('Copied', { duration: 2000})
+    }
+
     const handleBridgeMore = (token: string) => {
         setBridgeToken(token)
         bridgeModal.onOpen()
@@ -286,7 +293,7 @@ export default function Dashboard() {
                             <div>
                                 <p
                                     className='text-[1.5rem] leading-[2rem] text-center flex items-center gap-[0.38rem] cursor-pointer'
-                                    onClick={() => invite?.code && navigator.clipboard.writeText(invite?.code)}>
+                                    onClick={() => handleCopy()}>
                                     <span>{invite?.code || '-'}</span>
                                     <img
                                         src='/img/icon-copy.svg'
