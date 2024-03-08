@@ -76,3 +76,7 @@ export const getReferralTvl = (address: string): Promise<Response> => http.get(`
 export const getAccountTwitter = (code: string): Promise<Response> => http.post(`${BASE_URL_API}/invite/account/twitter`, {
   code
 })
+
+export const getAccountRefferalsTVL = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRefferalsTVL`, {
+  params: { address }
+})

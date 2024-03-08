@@ -1,5 +1,4 @@
-// import { useAccount } from 'wagmi'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Landing from './Landing'
 import SoftKYC from './SoftKYC'
 import { useDispatch, useSelector } from 'react-redux'

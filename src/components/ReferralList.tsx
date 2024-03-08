@@ -6,7 +6,8 @@ const ListItem = styled.div`
 `
 
 type ReferralItem = {
-    address: string
+    address: string,
+    tvl: string | number
 }
 interface IReferralListProps {
     data: ReferralItem[]
@@ -54,7 +55,7 @@ export default function ReferralList(props: IReferralListProps) {
                     className='px-[1.5rem] py-[1.5rem] flex justify-between text-[0.875rem] font-[700]'
                     key={index}>
                     <span>{showAccount(item.address)}</span>
-                    <span>0 ETH</span>
+                    <span>{item.tvl} ETH</span>
                 </ListItem>
             ))}
         </>

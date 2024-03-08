@@ -9,7 +9,7 @@ import { getBooster, getNextMilestone } from '@/utils'
 import ReferralList from '@/components/ReferralList'
 import { RootState } from '@/store'
 import { useSelector } from 'react-redux'
-import { getAccounTvl, getAccountPoint, getAccountTvl, getGroupTvl, getReferralTvl, getReferrer, getTotalTvlByToken } from '@/api'
+import { getAccounTvl, getAccountPoint, getAccountRefferalsTVL, getAccountTvl, getGroupTvl, getReferralTvl, getReferrer, getTotalTvlByToken } from '@/api'
 import { useAccount } from 'wagmi'
 import toast from 'react-hot-toast'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
@@ -164,7 +164,7 @@ export default function Dashboard() {
         novaPoint: 0,
         referPoint: 0,
     })
-    const [referrerData, setReferrerData] = useState([])
+    const [referrersTvlList, setReferrersTvl] = useState([])
     const [bridgeToken, setBridgeToken] = useState('')
     const bridgeModal = useDisclosure()
     const [accountTvlData, setAccountTvlData] = useState([])
@@ -191,12 +191,12 @@ export default function Dashboard() {
         }
     }
 
-    const getReferrerFunc = async () => {
+    const getAccountRefferalsTVLFunc = async () => {
         if (!address) return
-        const res = await getReferrer(address)
+        const res = await getAccountRefferalsTVL(address)
         console.log('referrer', res)
         if (res.result) {
-            setReferrerData(res.result)
+            setReferrersTvl(res.result)
         }
     }
 
@@ -247,7 +247,7 @@ export default function Dashboard() {
     useEffect(() => {
         getTotalTvlByTokenFunc()
         getAccountPointFunc()
-        getReferrerFunc()
+        getAccountRefferalsTVLFunc()
         getAccounTvlFunc()
         getAccountTvlFunc()
         getGroupTvlFunc()
@@ -468,7 +468,7 @@ export default function Dashboard() {
                         )}
                         {tabsActive === 2 && (
                             <CardBox className='mt-[2rem] min-h-[30rem]'>
-                                <ReferralList data={referrerData} />
+                                <ReferralList data={referrersTvlList} />
                             </CardBox>
                         )}
                     </div>
