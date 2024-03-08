@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import { showAccount } from '@/utils'
 import { useEffect } from 'react'
-import { setInvite, setSignature, setTwitter } from '@/store/modules/airdrop'
+import { setInvite, setSignature } from '@/store/modules/airdrop'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useSignMessage } from 'wagmi'
@@ -101,15 +101,15 @@ export default function Header() {
                 <NavbarBrand className='flex items-end'>
                     {/* <Logo /> */}
 
-                    <Link to='/'>
+                    <a href='https://zklink.io/'>
                         <LogoBox className='relative'>
                             <img
                                 className='max-w-[145.431px] h-auto'
-                                src='/img/logo-nova.svg'
+                                src='/img/NOVA.svg'
                             />
                             {/* <span className='logo-text'>zk.Link</span> */}
                         </LogoBox>
-                    </Link>
+                    </a>
 
                     <NavBox className='ml-[3.5rem]'>
                         <NavbarContent
@@ -117,13 +117,13 @@ export default function Header() {
                             justify='center'>
                             <NavbarItem>
                                 <NavLink
-                                    to='/airdrop'
+                                    to='/aagregation-parade'
                                     className='nav-link'>
-                                    Airdrop
+                                    Aagregation Parade
                                 </NavLink>
                             </NavbarItem>
                             <NavbarItem>
-                                <NavLink to='/leaderboard'>Leaderboard</NavLink>
+                                <NavLink to='/leaderboard' aria-disabled>Leaderboard</NavLink>
                             </NavbarItem>
                             <NavbarItem>
                                 <NavLink to='/about'>About</NavLink>

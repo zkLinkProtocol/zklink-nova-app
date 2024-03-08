@@ -6,21 +6,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useAccount } from 'wagmi'
 import Bridge from './Bridge'
 import Dashboard from './Dashboard'
-import { setInvite } from '@/store/modules/airdrop'
+import { setInvite, setViewStatus } from '@/store/modules/airdrop'
 import { getInvite } from '@/api'
 import { RootState } from '@/store'
+import Home from './Home'
 
-const STATUS_CODE = {
-    landing: 0,
-    softKYC: 1,
-    deposit: 2,
-    dashboard: 3,
+export const STATUS_CODE = {
+    home: 0,
+    landing: 1,
+    softKYC: 2,
+    deposit: 3,
+    dashboard: 4,
 }
 
 export default function Airdrop() {
     const { address, isConnected } = useAccount()
-    const { inviteCode, isGroupLeader, signature, twitter, invite } = useSelector((store: RootState) => store.airdrop)
-    const [status, setStatus] = useState(STATUS_CODE.landing)
+    const { viewStatus, inviteCode, isGroupLeader, signature, twitter, invite } = useSelector((store: RootState) => store.airdrop)
+    // const [status, setStatus] = useState(STATUS_CODE.landing)
     const dispatch = useDispatch()
 
     const getInviteFunc = async () => {
@@ -43,10 +45,7 @@ export default function Airdrop() {
     }, [address, isConnected])
 
     useEffect(() => {
-        let _status = STATUS_CODE.landing
-
-        console.log('airdrop', isConnected, invite, invite?.code)
-
+        let _status = STATUS_CODE.home
         if (isConnected && invite?.code) {
             _status = STATUS_CODE.dashboard
         } else if ((inviteCode || isGroupLeader) && twitter && isConnected && signature) {
@@ -55,15 +54,16 @@ export default function Airdrop() {
             _status = STATUS_CODE.softKYC
         }
         console.log('_status', _status)
-        setStatus(_status)
+        dispatch(setViewStatus(_status))
     }, [inviteCode, isGroupLeader, twitter, isConnected, address, signature, invite])
 
     return (
         <>
-            {status === STATUS_CODE.landing && <Landing />}
-            {status === STATUS_CODE.softKYC && <SoftKYC />}
-            {status === STATUS_CODE.deposit && <Bridge />}
-            {status === STATUS_CODE.dashboard && <Dashboard />}
+            {viewStatus === STATUS_CODE.home && <Home />}
+            {viewStatus === STATUS_CODE.landing && <Landing />}
+            {viewStatus === STATUS_CODE.softKYC && <SoftKYC />}
+            {viewStatus === STATUS_CODE.deposit && <Bridge />}
+            {viewStatus === STATUS_CODE.dashboard && <Dashboard />}
         </>
     )
 }
