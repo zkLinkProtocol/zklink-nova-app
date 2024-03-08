@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useAccount, useBalance, useReadContracts } from "wagmi";
 import Tokens from "@/constants/tokens";
 import { useBridgeNetworkStore } from "./useNetwork";
@@ -18,7 +18,7 @@ export type Token = {
 import { useQueryClient } from "@tanstack/react-query";
 import { formatBalance } from "@/utils";
 import { wagmiConfig } from "@/constants/networks";
-
+import { getSupportedTokens } from "@/api";
 const nativeToken = {
   address: "0x0000000000000000000000000000000000000000",
   symbol: "ETH",
@@ -28,9 +28,16 @@ const nativeToken = {
   icon: ethIcon,
 };
 export const useTokenBalanceList = () => {
-  //   const [tokenList, setTokenList] = useState<Token[]>([]);
+  const [tokenSource, setTokenSource] = useState<Token[]>([]);
   const { networkKey } = useBridgeNetworkStore();
   const { address: walletAddress } = useAccount();
+
+  useEffect(() => {
+    (async () => {
+      const supportedTokens = await getSupportedTokens();
+      console.log("supportedTokens: ", supportedTokens);
+    })();
+  }, []);
 
   const queryClient = useQueryClient();
 
