@@ -9,6 +9,7 @@ const Airdrop = lazy(() => import('@/pages/Airdrop'))
 const Dashboard = lazy(() => import('@/pages/Airdrop/Dashboard'))
 const AirdropBridge = lazy(() => import('@/pages/Airdrop/Bridge'))
 const Leaderboard = lazy(() => import('@/pages/Leaderboard'))
+const About = lazy(() => import('@/pages/About'))
 // const Bridge = lazy(() => import('@/pages/Bridge'))
 
 export default function App() {
@@ -55,14 +56,14 @@ export default function App() {
                         }
                     />
 
-                    {/* <Route
-                        path='/bridge'
+                    <Route
+                        path='/about'
                         element={
                             <Suspense fallback=''>
-                                <Bridge />
+                                <About />
                             </Suspense>
                         }
-                    /> */}
+                    />
                 </Routes>
                 <Toast />
             </BrowserRouter>
