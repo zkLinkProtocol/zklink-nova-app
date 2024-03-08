@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
 import { GradientButton, CardBox } from '@/styles/common'
 import { useAccount } from 'wagmi'
+import { checkInviteCode } from '@/api'
 // import { BOOST_LIST } from '@/constants/boost'
 
 const BgBox = styled.div`
@@ -115,10 +116,13 @@ export default function Landing() {
         setConfig((prevConfig) => ({ ...prevConfig, otp }))
     }
 
-    const enterInviteCode = () => {
+    const enterInviteCode = async () => {
         if (!otp || otp.length !== 6) return
-        if (false) {
+
+        const res = await checkInviteCode(otp)
+        if (!res?.result) {
             toast.error('Invalid invite code. Try another.')
+            return
         }
         dispatch(setInviteCode(otp))
     }

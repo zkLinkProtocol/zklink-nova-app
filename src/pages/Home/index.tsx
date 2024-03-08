@@ -7,7 +7,8 @@ import { setInviteCode } from '@/store/modules/airdrop'
 import { useNavigate } from 'react-router-dom'
 import { GradientButton } from '@/styles/common'
 import '@/styles/otp-input.css'
-import { getActiveAccounts, getTotalTvl } from '@/api'
+import { checkInviteCode, getActiveAccounts, getTotalTvl } from '@/api'
+import toast from 'react-hot-toast'
 
 const BgBox = styled.div`
     width: 100%;
@@ -79,28 +80,29 @@ export default function Home() {
         setConfig((prevConfig) => ({ ...prevConfig, otp }))
     }
 
-    const enterInviteCode = () => {
-        if (!otp || otp.length !== 5) return
-
+    const enterInviteCode = async () => {
+        if (!otp || otp.length !== 6) return
+        const res = await checkInviteCode(otp)
+        if (!res?.result) {
+            toast.error('Invalid invite code. Try another.')
+            return
+        }
         dispatch(setInviteCode(otp))
         navigate('/airdrop')
     }
 
-    const getTotalTvlFunc = async() => {
+    const getTotalTvlFunc = async () => {
         const res = await getTotalTvl()
         console.log('total tvl', res)
 
         setTotalTvl(res?.result || 0)
-        
     }
-    const getActiveAccountsFunc = async() => {
+    const getActiveAccountsFunc = async () => {
         const res = await getActiveAccounts()
         console.log('active accounts', res)
 
         setActiveUsers(res?.result || 0)
-        
     }
-    
 
     useEffect(() => {
         getActiveAccountsFunc()
