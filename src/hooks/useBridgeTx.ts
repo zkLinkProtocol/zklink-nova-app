@@ -461,6 +461,7 @@ export const useBridgeTx = () => {
       console.log(res);
     } catch (e) {
       console.log(e);
+      return Promise.reject(e);
     } finally {
       setLoading(false);
     }

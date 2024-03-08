@@ -218,10 +218,15 @@ export default function Bridge(props: IBridgeComponentProps) {
     if (!amount) {
       return;
     }
-    await sendDepositTx(
-      tokenList[tokenActive]?.address as `0x${string}`,
-      utils.parseEther(String(amount))
-    );
+    try {
+      await sendDepositTx(
+        tokenList[tokenActive]?.address as `0x${string}`,
+        utils.parseEther(String(amount))
+      );
+    } catch (e) {
+      return;
+    }
+
     refreshTokenBalanceList();
     if (isFirstDeposit) {
       try {
