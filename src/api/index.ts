@@ -6,9 +6,6 @@ type Response = {
   messag: string;
 };
 
-export const getInviteByAddress = (account: string): Promise<Response> =>
-  http.get(`/invite/${account}`);
-
 export const BASE_URL_API = '/api'
 export const BASE_URL_POINTS = '/points'
 
@@ -26,13 +23,13 @@ export const bindInviteCodeWithAddress = (
   if (!data.code) {
     delete data.code;
   }
-  return http.post("/api/invite/bind/twitter", {
+  return http.post(`${BASE_URL_API}/invite/bind/twitter`, {
     ...data,
   });
 };
 
 export const checkInviteCode = (code: string): Promise<Response> => {
-  return http.get(`/api/invite/validCode`, {
+  return http.get(`${BASE_URL_API}/invite/validCode`, {
     params: {
       code,
     },
