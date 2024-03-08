@@ -156,21 +156,15 @@ const TabsBox = styled.div`
 export default function Dashboard() {
     const { invite } = useSelector((store: RootState) => store.airdrop)
     const { address } = useAccount()
+    const [tabsActive, setTabsActive] = useState(0)
 
     const [totalTvlList, setTotalTvlList] = useState([])
-
-    const [tabsActive, setTabsActive] = useState(0)
     const [stakingValue, setStakingValue] = useState(0)
-    const [earnValue] = useState({
-        earnByDeposit: 0,
-        earnByReferring: 0,
-    })
     const [accountPoint, setAccountPoint] = useState({
         novaPoint: 0,
         referPoint: 0,
     })
     const [referrerData, setReferrerData] = useState([])
-
     const [bridgeToken, setBridgeToken] = useState('')
     const bridgeModal = useDisclosure()
     const [accountTvlData, setAccountTvlData] = useState([])
@@ -273,7 +267,7 @@ export default function Dashboard() {
                                 className='text-center block mx-auto h-full'
                             />
                         </div>
-                        <GradientButton className='w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] opacity-40'>
+                        <GradientButton className='w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] opacity-40 cursor-not-arrowed'>
                             <span>Upgrade</span>
                             <img
                                 src='/img/icon-info.svg'
@@ -293,17 +287,17 @@ export default function Dashboard() {
 
                         <p className='flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]'>
                             <span>Earn By Your Deposit</span>
-                            <span>{earnValue.earnByDeposit}</span>
+                            <span>{accountPoint.novaPoint}</span>
                         </p>
                         <p className='flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]'>
                             <span>Earn By Referring Friends</span>
-                            <span>{earnValue.earnByReferring}</span>
+                            <span>{accountPoint.referPoint}</span>
                         </p>
                     </CardBox>
 
                     <CardBox className='flex flex-col items-center mt-[1.5rem] p-[1.5rem]'>
                         <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Your Staking Value</p>
-                        <p className='w-full text-[2.5rem] font-[700]'>{stakingValue}</p>
+                        <p className='w-full text-[2.5rem] font-[700]'>${stakingValue}</p>
                         <GradientButton
                             className='w-full mt-[1.5rem] py-[1rem] text-[1.25rem]'
                             onClick={() => handleBridgeMore('0x1ac10940cc7f8b063731609AF1a55F2fa440dFD2')}>
@@ -315,7 +309,7 @@ export default function Dashboard() {
                     <div className='flex gap-[1.5rem]'>
                         <CardBox className='flex justify-around  py-[3rem] w-1/2'>
                             <div>
-                                <p className='text-[1.5rem] leading-[2rem] text-center'>{groupTvl}</p>
+                                <p className='text-[1.5rem] leading-[2rem] text-center'>${groupTvl}</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Group TVL</p>
                             </div>
                             <div>
@@ -331,7 +325,7 @@ export default function Dashboard() {
                         </CardBox>
                         <CardBox className='flex justify-around py-[3rem] w-1/2'>
                             <div>
-                                <p className='text-[1.5rem] leading-[2rem] text-center'>{referralTvl}</p>
+                                <p className='text-[1.5rem] leading-[2rem] text-center'>${referralTvl}</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Referral TVL</p>
                             </div>
                             <div>
