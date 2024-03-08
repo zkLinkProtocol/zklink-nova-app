@@ -19,7 +19,10 @@ const BgBox = styled.div`
     width: 100%;
     min-height: 100vh;
     /* background-image: image-set('/img/bg-airdrop.png' 0.5x, '/img/bg-airdrop.png' 1x, '/img/bg-airdrop.png' 2x); */
-    background: url('/img/bg-airdrop.png') top/cover no-repeat;
+    background-image: image-set('/img/bg-mega-yield@1x.png' 1x, '/img/bg-mega-yield@2x.png' 2x);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
 `
 
 const CoverImgBox = styled.div`

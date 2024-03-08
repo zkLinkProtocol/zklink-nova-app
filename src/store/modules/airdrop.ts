@@ -2,6 +2,7 @@ import { Invite, Twitter } from '@/types';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface airdropState {
+    viewStatus: number,
     inviteCode: string | null,
     isGroupLeader: boolean,
     signature: string,
@@ -11,6 +12,7 @@ export interface airdropState {
 }
 
 const initialState: airdropState = {
+    viewStatus: 0,
     inviteCode: null,
     isGroupLeader: false,
     signature: '',
@@ -23,6 +25,9 @@ export const airdrop = createSlice({
     name: 'airdrop',
     initialState,
     reducers: {
+        setViewStatus(state, action: PayloadAction<number>) {
+            state.viewStatus = action.payload
+        },
         setInviteCode(state, action: PayloadAction<string>) {
             state.inviteCode = action.payload
         },
@@ -44,5 +49,5 @@ export const airdrop = createSlice({
     },
 });
 
-export const { setInviteCode, setIsGroupLeader, setSignature, setTwitterAuthCode, setTwitter, setInvite, } = airdrop.actions;
+export const { setViewStatus, setInviteCode, setIsGroupLeader, setSignature, setTwitterAuthCode, setTwitter, setInvite, } = airdrop.actions;
 export default airdrop.reducer;

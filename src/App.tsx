@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
 
-import Home from './pages/Home'
+// import Home from './pages/Home'
 import Toast from './components/Toast'
 // const Home = lazy(() => import('@/pages/Home'))
 const Airdrop = lazy(() => import('@/pages/Airdrop'))
@@ -20,10 +20,10 @@ export default function App() {
                 <Routes>
                     <Route
                         path='/'
-                        element={<Home />}
+                        element={<Navigate to='/aagregation-parade' />}
                     />
                     <Route
-                        path='/airdrop'
+                        path='/aagregation-parade'
                         element={
                             <Suspense fallback=''>
                                 <Airdrop />
@@ -31,7 +31,7 @@ export default function App() {
                         }
                     />
                     <Route
-                        path='/airdrop/dashboard'
+                        path='/aagregation-parade/dashboard'
                         element={
                             <Suspense fallback=''>
                                 <Dashboard />
@@ -39,7 +39,7 @@ export default function App() {
                         }
                     />
                     <Route
-                        path='/airdrop/bridge'
+                        path='/aagregation-parade/bridge'
                         element={
                             <Suspense fallback=''>
                                 <AirdropBridge />
