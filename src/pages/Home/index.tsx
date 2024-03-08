@@ -70,7 +70,7 @@ export default function Home() {
 
     const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] = useState({
         otp: '',
-        numInputs: 5,
+        numInputs: 6,
         separator: '',
         placeholder: '',
         inputType: 'text' as const,
@@ -81,7 +81,10 @@ export default function Home() {
     }
 
     const enterInviteCode = async () => {
+        console.log('onClick enter invite code', otp)
         if (!otp || otp.length !== 6) return
+        console.log('onClick enter invite code 111')
+
         const res = await checkInviteCode(otp)
         if (!res?.result) {
             toast.error('Invalid invite code. Try another.')
@@ -162,7 +165,7 @@ export default function Home() {
                         <div>
                             <GradientButton
                                 className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
-                                    !otp || otp.length !== 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+                                    !otp || otp.length !== 6 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
                                 }`}
                                 onClick={enterInviteCode}>
                                 ENTER INVITE CODE
