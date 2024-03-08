@@ -300,7 +300,7 @@ export default function Dashboard() {
                         <p className='w-full text-[2.5rem] font-[700]'>${stakingValue}</p>
                         <GradientButton
                             className='w-full mt-[1.5rem] py-[1rem] text-[1.25rem]'
-                            onClick={() => handleBridgeMore('0x1ac10940cc7f8b063731609AF1a55F2fa440dFD2')}>
+                            onClick={() => handleBridgeMore()}>
                             Bridge More
                         </GradientButton>
                     </CardBox>
