@@ -32,5 +32,8 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/points/, '')
       }
     }
+  },
+  build: {
+    target: ['esnext']
   }
 })
