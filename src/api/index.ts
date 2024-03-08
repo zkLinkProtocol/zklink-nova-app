@@ -1,5 +1,8 @@
 import http from "@/utils/http";
 
+export const BASE_URL_API = '/api'
+export const BASE_URL_POINTS = '/points'
+
 export type Response = {
     result: any;
     status: string;
@@ -16,38 +19,38 @@ export type BindInviteCodeWithAddressParams = {
 export const bindInviteCodeWithAddress = (
     data: BindInviteCodeWithAddressParams
 ) => {
-    return http.post("/api/invite/bind/twitter", data);
+    return http.post(`${BASE_URL_API}/invite/bind/twitter`, data);
 };
-export const getInvite = (address: string): Promise<Response> => http.get(`/api/invite/${address}`)
+export const getInvite = (address: string): Promise<Response> => http.get(`${BASE_URL_API}/invite/${address}`)
 
-export const getReferrer = (address: string): Promise<Response> => http.get(`/api/referrer/${address}`)
+export const getReferrer = (address: string): Promise<Response> => http.get(`${BASE_URL_API}/referrer/${address}`)
 
-export const getAccounTvl = (address: string): Promise<Response> => http.get(`/points/addressTokenTvl/getAccounTvl`, {
+export const getAccounTvl = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccounTvl`, {
     params: { address }
 })
 
-export const getAccountPoint = (address: string): Promise<Response> => http.get(`/points/addressTokenTvl/getAccountPoint`, {
+export const getAccountPoint = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountPoint`, {
     params: { address }
 })
 
-export const getTotalTvl = (): Promise<Response> => http.get('/points/addressTokenTvl/getTotalTvl')
-export const getActiveAccounts = (): Promise<Response> => http.get('/api/invite/getActiveAccounts')
+export const getTotalTvl = (): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getTotalTvl`)
+export const getActiveAccounts = (): Promise<Response> => http.get(`${BASE_URL_API}/invite/getActiveAccounts`)
 
-export const getAccountTvl = (address: string): Promise<Response> => http.get('/points/addressTokenTvl/getAccounTvl', {
+export const getAccountTvl = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccounTvl`, {
     params: {
         address
     }
 })
 
-export const getGroupTvl = (address: string): Promise<Response> => http.get('/points/addressTokenTvl/getGroupTvl', {
+export const getGroupTvl = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getGroupTvl`, {
     params: {
         address
     }
 })
 
-export const getTotalTvlByToken = (): Promise<Response> => http.get('/points/addressTokenTvl/getTotalTvlByToken')
+export const getTotalTvlByToken = (): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getTotalTvlByToken`)
 
-export const getReferralTvl = (address: string): Promise<Response> => http.get('/points/addressTokenTvl/getReferralTvl', {
+export const getReferralTvl = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getReferralTvl`, {
     params: { address }
 })
 
