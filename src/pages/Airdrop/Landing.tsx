@@ -116,10 +116,9 @@ export default function Landing() {
     }
 
     const enterInviteCode = () => {
-        if (!otp || otp.length !== 5) return
+        if (!otp || otp.length !== 6) return
         if (false) {
             toast.error('Invalid invite code. Try another.')
-            return
         }
         dispatch(setInviteCode(otp))
     }
@@ -165,7 +164,7 @@ export default function Landing() {
 
                             <GradientButton
                                 className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
-                                    !otp || otp.length !== 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+                                    !otp || otp.length !== 6 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
                                 }`}
                                 onClick={enterInviteCode}>
                                 ENTER CODE

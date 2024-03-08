@@ -177,8 +177,8 @@ export default function Dashboard() {
         toast.success('Copied', { duration: 2000 })
     }
 
-    const handleBridgeMore = (token: string) => {
-        setBridgeToken(token)
+    const handleBridgeMore = (token?: string) => {
+        token && setBridgeToken(token)
         bridgeModal.onOpen()
     }
 

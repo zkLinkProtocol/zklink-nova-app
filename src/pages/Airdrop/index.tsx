@@ -45,7 +45,7 @@ export default function Airdrop() {
     useEffect(() => {
         let _status = STATUS_CODE.landing
 
-        console.log('airdrop', isConnected, invite)
+        console.log('airdrop', isConnected, invite, invite?.code)
 
         if (isConnected && invite?.code) {
             _status = STATUS_CODE.dashboard
