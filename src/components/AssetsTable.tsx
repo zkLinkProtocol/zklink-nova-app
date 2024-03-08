@@ -15,9 +15,10 @@ import {
     Tooltip,
     useDisclosure,
 } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BridgeComponent from '@/components/Bridge'
+import { symbol } from 'prop-types'
 
 const TabsBar = styled.div`
     .tab-item {
@@ -133,15 +134,16 @@ export const TableBox = styled.div`
 interface IAssetsTableProps {
     data: any[]
     totalTvlList: any[]
+    supportTokens: any[]
 }
 
 export default function AssetsTable(props: IAssetsTableProps) {
-    const { data, totalTvlList } = props
+    const { data, totalTvlList, supportTokens } = props
     const [assetsTabsActive, setAssetsTabsActive] = useState(0)
-    const [isSelected, setIsSelected] = useState(false)
-    const assetList = [{ name: 'All' }, { name: 'Native' }, { name: 'Stablecoin' }, { name: 'RWA' }, { name: 'LST' }, { name: 'LRT' }]
-    console.log('totalTvlList', totalTvlList)
+    const [assetList, setAssetList] = useState([{ name: 'All' }])
+    const [tableList, setTableList] = useState<any[]>([])
     const [bridgeToken, setBridgeToken] = useState('')
+    const [isMyHolding, setIsMyHolding] = useState(false)
     const bridgeModal = useDisclosure()
 
     const getTotalTvl = (symbol: string) => {
@@ -152,6 +154,46 @@ export default function AssetsTable(props: IAssetsTableProps) {
         setBridgeToken(token)
         bridgeModal.onOpen()
     }
+
+    const getToken = (symbol: string) => {
+        const obj = supportTokens.find((item) => item.symbol === symbol)
+        return obj
+    }
+    useEffect(() => {
+        let arr = [{ name: 'All' }]
+        supportTokens.forEach((item) => {
+            if (item?.type) {
+                arr.push({ name: item?.type })
+            }
+        })
+
+        console.log('assets list', arr)
+
+        setAssetList(arr)
+    }, [supportTokens])
+
+    useEffect(() => {
+        const filterType = assetList[assetsTabsActive].name
+
+        let arr = data.map((item) => {
+            let obj = { ...item }
+            const token = getToken(item?.symbol)
+            obj.multiplier = token?.multiplier || 0
+            obj.type = token?.multiplier || null
+            return obj
+        })
+
+        if (assetsTabsActive !== 0) {
+            arr = arr.filter((item) => item?.type === filterType)
+        }
+        if (isMyHolding) {
+            arr = arr.filter((item) => +item.tvl !== 0)
+        }
+
+        setTableList(arr)
+        // // const arr = data.filter(item => item.)
+        // setTableList()
+    }, [isMyHolding, assetsTabsActive])
 
     return (
         <>
@@ -168,8 +210,8 @@ export default function AssetsTable(props: IAssetsTableProps) {
                 </TabsBar>
                 <Checkbox
                     className='mr-[1.5rem] flex-row-reverse items-center gap-[0.5rem]'
-                    isSelected={isSelected}
-                    onValueChange={setIsSelected}>
+                    isSelected={isMyHolding}
+                    onValueChange={setIsMyHolding}>
                     My Holding
                 </Checkbox>
             </CardBox>
@@ -199,7 +241,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         <TableColumn children={undefined}></TableColumn>
                     </TableHeader>
                     <TableBody>
-                        {data.map((item, index) => {
+                        {tableList.map((item, index) => {
                             return (
                                 <TableRow
                                     key={index}
@@ -208,7 +250,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                                         <TableItem className='flex items-center'>
                                             <Skeleton className='flex rounded-full w-[2.125rem] h-[2.125rem]' />
                                             <p className='value ml-[0.5rem]'>{item?.symbol}</p>
-                                            <span className='tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem]'>2x boost</span>
+                                            <span className='tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem]'>{item?.multiplier}x boost</span>
                                         </TableItem>
                                     </TableCell>
                                     <TableCell>

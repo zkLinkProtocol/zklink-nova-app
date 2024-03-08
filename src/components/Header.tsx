@@ -95,7 +95,7 @@ export default function Header() {
         <>
             <Navbar
                 shouldHideOnScroll
-                className='fixed px-[1.5rem] py-[0.75rem] bg-transparent'
+                className='fixed px-[1.5rem] py-[0.75rem] bg-[transparent]'
                 maxWidth='full'
                 isBlurred={false}>
                 <NavbarBrand className='flex items-end'>

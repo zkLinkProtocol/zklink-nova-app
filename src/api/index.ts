@@ -80,3 +80,5 @@ export const getAccountTwitter = (code: string): Promise<Response> => http.post(
 export const getAccountRefferalsTVL = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRefferalsTVL`, {
   params: { address }
 })
+
+export const getSupportTokens = (): Promise<any[]> => http.get(`${BASE_URL_POINTS}/tokens/getSupportTokens`)

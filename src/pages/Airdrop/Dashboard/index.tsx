@@ -9,7 +9,17 @@ import { getBooster, getNextMilestone } from '@/utils'
 import ReferralList from '@/components/ReferralList'
 import { RootState } from '@/store'
 import { useSelector } from 'react-redux'
-import { getAccounTvl, getAccountPoint, getAccountRefferalsTVL, getAccountTvl, getGroupTvl, getReferralTvl, getReferrer, getTotalTvlByToken } from '@/api'
+import {
+    getAccounTvl,
+    getAccountPoint,
+    getAccountRefferalsTVL,
+    getAccountTvl,
+    getGroupTvl,
+    getReferralTvl,
+    getReferrer,
+    getSupportTokens,
+    getTotalTvlByToken,
+} from '@/api'
 import { useAccount } from 'wagmi'
 import toast from 'react-hot-toast'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
@@ -170,6 +180,7 @@ export default function Dashboard() {
     const [accountTvlData, setAccountTvlData] = useState([])
     const [groupTvl, setGroupTvl] = useState(0)
     const [referralTvl, setReferralTvl] = useState(0)
+    const [supportTokens, setSupportTokens] = useState<any[]>([])
 
     const handleCopy = () => {
         if (!invite?.code) return
@@ -244,7 +255,16 @@ export default function Dashboard() {
         setReferralTvl(res?.result || 0)
     }
 
+    const getSupportTokensFunc = async () => {
+        const res = await getSupportTokens()
+        console.log('support tokens', res)
+        if (res && Array.isArray(res)) {
+            setSupportTokens(res)
+        }
+    }
+
     useEffect(() => {
+        getSupportTokensFunc()
         getTotalTvlByTokenFunc()
         getAccountPointFunc()
         getAccountRefferalsTVLFunc()
@@ -289,7 +309,9 @@ export default function Dashboard() {
                                         <br />
                                         <a
                                             href=''
-                                            className='text-[#0bc48f]'>Learn More</a>
+                                            className='text-[#0bc48f]'>
+                                            Learn More
+                                        </a>
                                     </p>
                                 }>
                                 <GreenTag className='py-[0.375rem] w-[5.625rem] text-[1rem]'>0x</GreenTag>
@@ -399,10 +421,10 @@ export default function Dashboard() {
                                 <span className='text-[1rem]'>Next Milestone</span>
                                 <GradientText className='ml-[0.5rem] text-[1rem]'>{getNextMilestone(groupTvl)} ETH</GradientText>
 
-                                <img
+                                {/* <img
                                     src='/img/icon-info.svg'
                                     className='ml-[0.38rem] w-[0.875rem] h-[0.875rem]'
-                                />
+                                /> */}
                             </div>
                         </div>
 
@@ -453,6 +475,7 @@ export default function Dashboard() {
 
                         {tabsActive === 0 && (
                             <AssetsTable
+                                supportTokens={supportTokens}
                                 totalTvlList={totalTvlList}
                                 data={accountTvlData}
                             />
