@@ -156,21 +156,15 @@ const TabsBox = styled.div`
 export default function Dashboard() {
     const { invite } = useSelector((store: RootState) => store.airdrop)
     const { address } = useAccount()
+    const [tabsActive, setTabsActive] = useState(0)
 
     const [totalTvlList, setTotalTvlList] = useState([])
-
-    const [tabsActive, setTabsActive] = useState(0)
     const [stakingValue, setStakingValue] = useState(0)
-    const [earnValue] = useState({
-        earnByDeposit: 0,
-        earnByReferring: 0,
-    })
     const [accountPoint, setAccountPoint] = useState({
         novaPoint: 0,
         referPoint: 0,
     })
     const [referrerData, setReferrerData] = useState([])
-
     const [bridgeToken, setBridgeToken] = useState('')
     const bridgeModal = useDisclosure()
     const [accountTvlData, setAccountTvlData] = useState([])

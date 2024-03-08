@@ -27,7 +27,7 @@ export default function Airdrop() {
         if (!address) return
         try {
             const res = await getInvite(address)
-            console.log(res)
+            console.log('invite', res)
             if (res.result) {
                 dispatch(setInvite(res.result))
             }
@@ -39,10 +39,12 @@ export default function Airdrop() {
 
     useEffect(() => {
         getInviteFunc()
-    }, [address])
+    }, [address, isConnected])
 
     useEffect(() => {
         let _status = STATUS_CODE.landing
+
+        console.log('airdrop', isConnected, invite)
 
         if (isConnected && invite?.code) {
             _status = STATUS_CODE.dashboard
@@ -53,7 +55,7 @@ export default function Airdrop() {
         }
         console.log('_status', _status)
         setStatus(_status)
-    }, [inviteCode, isGroupLeader, twitter, isConnected, signature])
+    }, [inviteCode, isGroupLeader, twitter, isConnected, address, signature])
 
     return (
         <>

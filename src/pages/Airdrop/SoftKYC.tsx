@@ -7,8 +7,8 @@ import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import Performance from '../../components/Performance'
 import { useDispatch, useSelector } from 'react-redux'
-import { BgBox, BgCoverImg, GradientButton, CardBox } from '@/styles/common'
-import { setSignature, setTwitter } from '@/store/modules/airdrop'
+import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
+import { setSignature, setTwitter, setTwitterAuthCode } from '@/store/modules/airdrop'
 import toast from 'react-hot-toast'
 import { useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/constants/sign'
@@ -211,6 +211,7 @@ export default function SoftKYC() {
 
         if (code) {
             console.log(code)
+            dispatch(setTwitterAuthCode(code))
             getTwitterAccessToken(code)
         }
     }, [searchParams])
