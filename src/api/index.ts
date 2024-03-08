@@ -5,6 +5,7 @@ type Response = {
   message: string;
   result?: any;
   error?: any;
+  data?: any
 };
 
 export const BASE_URL_API = '/api'
@@ -69,4 +70,9 @@ export const getTotalTvlByToken = (): Promise<Response> => http.get(`${BASE_URL_
 
 export const getReferralTvl = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getReferralTvl`, {
   params: { address }
+})
+
+
+export const getAccountTwitter = (code: string): Promise<Response> => http.post(`${BASE_URL_API}/invite/account/twitter`, {
+  code
 })
