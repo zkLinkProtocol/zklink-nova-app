@@ -106,7 +106,6 @@ export default function SoftKYC() {
             code_challenge_method: 'plain',
         }
         const url = new URL(`https://twitter.com/i/oauth2/authorize`)
-        // url.search = new URLSearchParams(params).toString()
         url.search = qs.stringify(params, { encode: false })
 
         window.location.href = url.href

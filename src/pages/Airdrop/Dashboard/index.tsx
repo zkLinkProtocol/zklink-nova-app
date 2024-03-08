@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import AssetsTable from '@/components/AssetsTable'
 import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
 import { useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalContent, useDisclosure } from '@nextui-org/react'
+import { Modal, ModalBody, ModalContent, Tooltip, useDisclosure } from '@nextui-org/react'
 import BridgeComponent from '@/components/Bridge'
 import { BOOST_LIST } from '@/constants/boost'
 import { getBooster, getNextMilestone } from '@/utils'
@@ -349,10 +349,14 @@ export default function Dashboard() {
                         <div className='flex justify-between items-center leading-[2rem] font-[700]'>
                             <div className='flex items-center gap-[0.37rem]'>
                                 <span className='text-[1.5rem]'>Group Mile Stone</span>
-                                <img
-                                    src='/img/icon-info.svg'
-                                    className='w-[0.875rem] h-[0.875rem]'
-                                />
+                                <Tooltip
+                                    className='px-[1rem] py-[1rem]'
+                                    content={<p>You will get a higher group booster if your group unlocks higher TVL milestones. <a href='' className='text-[#0bc48f]'>Learn more.</a></p>}>
+                                    <img
+                                        src='/img/icon-info.svg'
+                                        className='w-[0.875rem] h-[0.875rem]'
+                                    />
+                                </Tooltip>
                             </div>
 
                             <div className='flex items-center'>
