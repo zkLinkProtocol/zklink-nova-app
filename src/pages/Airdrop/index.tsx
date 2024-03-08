@@ -30,6 +30,7 @@ export default function Airdrop() {
             console.log('invite', res)
             if (res.result) {
                 dispatch(setInvite(res.result))
+                console.log('invite store', invite)
             }
         } catch (error) {
             console.log(error)
@@ -55,7 +56,7 @@ export default function Airdrop() {
         }
         console.log('_status', _status)
         setStatus(_status)
-    }, [inviteCode, isGroupLeader, twitter, isConnected, address, signature])
+    }, [inviteCode, isGroupLeader, twitter, isConnected, address, signature, invite])
 
     return (
         <>
