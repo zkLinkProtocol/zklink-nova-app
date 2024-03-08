@@ -192,7 +192,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
       <TableBox>
         <Table
           removeWrapper
-          className="table mt-[1.5rem]"
+          className="table mt-[1.5rem] min-h-[30rem]"
           classNames={{ thead: "table-header", tbody: "table-tbody" }}
         >
           <TableHeader>
