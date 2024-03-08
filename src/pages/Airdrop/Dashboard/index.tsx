@@ -293,11 +293,11 @@ export default function Dashboard() {
 
                         <p className='flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]'>
                             <span>Earn By Your Deposit</span>
-                            <span>{earnValue.earnByDeposit}</span>
+                            <span>{accountPoint.novaPoint}</span>
                         </p>
                         <p className='flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]'>
                             <span>Earn By Referring Friends</span>
-                            <span>{earnValue.earnByReferring}</span>
+                            <span>{accountPoint.referPoint}</span>
                         </p>
                     </CardBox>
 
