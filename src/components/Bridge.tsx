@@ -22,6 +22,7 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import cionIcon from "@/assets/img/cion.png";
+import toast from "react-hot-toast";
 
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import { utils } from "ethers";
@@ -32,7 +33,7 @@ import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { bindInviteCodeWithAddress, getInvite } from "@/api";
+import { bindInviteCodeWithAddress, getInvite, checkInviteCode } from "@/api";
 import { RootState } from "@/store";
 import { setInvite } from "@/store/modules/airdrop";
 const ModalSelectItem = styled.div`
@@ -92,13 +93,17 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [points, setPoints] = useState(0);
   const [showNoPointsTip, setShowNoPointsTip] = useState(false);
   const [minDepositValue, setMinDepositValue] = useState(0.1);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (inviteCode) {
       setInputInviteCode(inviteCode);
     }
   }, [inviteCode, setInputInviteCode]);
+
+  useEffect(() => {
+    //TODO compute eth value, if less than minDepositValue, show 0 points
+  }, [tokenActive, tokenList, amount, minDepositValue]);
 
   useEffect(() => {
     if (isFirstDeposit) {
@@ -184,6 +189,20 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [invalidChain]);
 
   const handleAction = useCallback(async () => {
+    if (isFirstDeposit && inviteCodeType === "join") {
+      if (!inputInviteCode) {
+        toast.error("Please enter invite code to join group.");
+        return;
+      } else {
+        //TODO check invite code
+        const result = await checkInviteCode(inputInviteCode);
+        console.log("check code result: ", result);
+        if (!result || !result.result) {
+          toast.error("Invalid invite code");
+          return;
+        }
+      }
+    }
     if (!address) return;
     if (invalidChain) {
       switchChain(
@@ -205,36 +224,49 @@ export default function Bridge(props: IBridgeComponentProps) {
     );
     refreshTokenBalanceList();
     if (isFirstDeposit) {
-      await bindInviteCodeWithAddress({
-        address,
-        code: inputInviteCode,
-        signature,
-        twitterHandler: twitter?.username || '',
-        twitterName: twitter?.name || '',
-      });
+      try {
+        await bindInviteCodeWithAddress({
+          address,
+          code: inviteCodeType === "join" ? inputInviteCode : "",
+          siganture: signature,
+          twitterHandler: twitter?.username || "mickeywang",
+          twitterName: twitter?.name || "mickey",
+        });
 
-      const res = await getInvite(address)
-      if(res?.result) {
-        dispatch(setInvite(res?.result))
+        const res = await getInvite(address);
+        if (res?.result) {
+          dispatch(setInvite(res?.result));
+        }
+      } catch (e) {
+        console.log(e);
+        if (e.message === "Invalid code") {
+          toast.error("Invalid invite code");
+        } else if (e.message === "The invitation limit has been reached") {
+          //TODO can not invite more
+          toast.error("The invitation limit has been reached");
+        }
       }
     }
     //TODO call api to save referel data
     onClose?.();
   }, [
+    isFirstDeposit,
+    inviteCodeType,
+    address,
     invalidChain,
     amount,
     sendDepositTx,
     tokenList,
     tokenActive,
     refreshTokenBalanceList,
-    address,
-    inputInviteCode,
-    signature,
     onClose,
+    inputInviteCode,
     switchChain,
     fromActive,
-    twitter,
-    isFirstDeposit,
+    signature,
+    twitter?.username,
+    twitter?.name,
+    dispatch,
   ]);
 
   return (

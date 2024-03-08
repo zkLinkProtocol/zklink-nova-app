@@ -4,16 +4,22 @@ import axios from "axios";
 // import toast from "react-hot-toast";
 
 const http = axios.create({
-    baseURL: ''
+  baseURL: "",
 });
-http.defaults.transformRequest = data => {
-    // if (_.isPlainObject(data)) data = qs.stringify(data);
-    return data;
-};
-http.interceptors.response.use(response => {
+// http.defaults.transformRequest = data => {
+//     // if (_.isPlainObject(data)) data = qs.stringify(data);
+//     return data;
+// };
+http.interceptors.response.use(
+  (response) => {
     return response.data;
-}, reason => {
+  },
+  (reason) => {
     // toast.error(reason.message);
+    if (reason.response && reason.response.data) {
+      return Promise.reject(reason.response.data);
+    }
     return Promise.reject(reason);
-});
+  }
+);
 export default http;
