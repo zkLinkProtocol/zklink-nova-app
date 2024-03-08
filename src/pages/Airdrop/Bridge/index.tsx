@@ -32,8 +32,108 @@ const UtilityList = [
   "zkLinkers event access",
   "GAS rebates",
 ];
+const Link = styled.div`
+  color: #03d498;
+`;
 export default function Bridge() {
   const [activeType, setActiveType] = useState(ActiveTypes[0].value);
+
+  const NovaPoints = () => (
+    <div className="text-base mt-10">
+      <p>
+        You could see the detail and formula of how we calculate Nova points{" "}
+        <Link>here</Link>
+      </p>
+      <p className="mt-6">Minimal Entry: </p>
+      <ul className="list mb-8">
+        <li>1. First & days 0.1 ETH</li>
+        <li>2. After Day 7th 0.25 ETH</li>
+      </ul>
+      <p className="mt-6">
+        <span>Deposit / Bridge Assets to Nova</span>
+        Bridging any supported assets to Nova can instantly earn Nova points.
+      </p>
+      <p className="mt-6">
+        <span> Holding assets on Nova: </span>
+        Holding any supported assets on Nova allows you to accrue Nova points
+        every 8 hours.
+      </p>
+      <p className="mt-6">
+        <span> Referral Rewards: </span>
+        By inviting friends, you can earn 10% of the Nova points they earn
+        throughout the duration of the Aggregation Parade.
+      </p>
+      <p className="mt-6">
+        <span>Multiplier: </span>
+        Multiplier Early Bird Multiplier: During Phase 1 of the Nova Campaign,
+        you can earn additional Nova Points, though withdrawals are temporarily
+      </p>
+      <p className="mt-6">
+        <span>Token Multiplier: </span>
+        Tokens are categorized into three tiers, with higher liquidity tokens
+        receiving more Nova Points.
+      </p>
+      <p className="mt-6">
+        <span> Deposit Multiplier: </span>
+        You will receive 10 times Nova points for EACH deposit/ bridging action
+        that occurs.
+      </p>
+      <p className="mt-6">
+        <span> Group Multiplier: </span>
+        This group has the potential to unlock Group Booster by achieving the
+        following Milestones.
+      </p>
+    </div>
+  );
+
+  const NovaNFT = () => (
+    <>
+      <div className="text-base mt-10">
+        <p>
+          You will earn one of the four Nova SBT once you bridge any amount of
+          supported token into zkLink Nova.
+        </p>
+        <div className="flex items-center mt-12 mb-12">
+          {new Array(4).fill("").map((_, index) => (
+            <img
+              className="w-20 h-20 mr-6"
+              src={"/img/sbt-nft.png"}
+              alt=""
+              key={index}
+            />
+          ))}
+        </div>
+        <p>
+          Upon collecting your SBT, you can upgrade it into an ERC7221 NFT
+          through collecting 4 different types of trademark NFT through our
+          referral program.
+        </p>
+        <p>
+          You will get a trademark NFT airdrop for each 3 referrals <br />
+          Top 50 on the referral leader-board will be airdrop a Mystery Box.
+        </p>
+        <p className="mt-8">
+          Once you upgrade your SBT into , here are the Utility
+        </p>
+      </div>
+      <div
+        className="p-6 rounded-[18px] mt-4"
+        style={{ background: "rgba(0, 0, 0, 0.4)" }}
+      >
+        {UtilityList.map((item, index) => (
+          <p
+            className={classnames(
+              "font-semibold text-lg",
+              index === UtilityList.length - 1 ? "mb-0" : "mb-4"
+            )}
+            key={item}
+          >
+            {item}
+          </p>
+        ))}
+      </div>
+    </>
+  );
 
   return (
     <BgBox>
@@ -57,63 +157,7 @@ export default function Bridge() {
               </Button>
             ))}
           </div>
-          <div className="text-base mt-10">
-            <p>
-              You will earn one of the four Nova SBT once you bridge any amount
-              of supported token into zkLink Nova.
-            </p>
-            <div className="flex items-center mt-12 mb-12">
-              {new Array(4).fill("").map((_, index) => (
-                <img
-                  className="w-20 h-20 mr-6"
-                  src={"/img/sbt-nft.png"}
-                  alt=""
-                  key={index}
-                />
-              ))}
-            </div>
-            {/* <div className="py-4">
-              <OTPInput
-                inputStyle="inputStyle"
-                numInputs={numInputs}
-                onChange={handleOTPChange}
-                renderSeparator={<span>{separator}</span>}
-                value={otp}
-                placeholder={placeholder}
-                inputType={inputType}
-                renderInput={(props) => <input {...props} />}
-                shouldAutoFocus
-              />
-            </div> */}
-            <p>
-              Upon collecting your SBT, you can upgrade it into an ERC7221 NFT
-              through collecting 4 different types of trademark NFT through our
-              referral program.
-            </p>
-            <p>
-              You will get a trademark NFT airdrop for each 3 referrals <br />
-              Top 50 on the referral leader-board will be airdrop a Mystery Box.
-            </p>
-            <p className="mt-8">
-              Once you upgrade your SBT into , here are the Utility
-            </p>
-          </div>
-          <div
-            className="p-6 rounded-[18px] mt-4"
-            style={{ background: "rgba(0, 0, 0, 0.4)" }}
-          >
-            {UtilityList.map((item, index) => (
-              <p
-                className={classnames(
-                  "font-semibold text-lg",
-                  index === UtilityList.length - 1 ? "mb-0" : "mb-4"
-                )}
-                key={item}
-              >
-                {item}
-              </p>
-            ))}
-          </div>
+          {activeType === "nft" ? <NovaNFT /> : <NovaPoints />}
         </div>
         <div className="px-8 md:px-16 lg:px-32 lg:w-1/2">
           <BridgeComponent isFirstDeposit={true} />
