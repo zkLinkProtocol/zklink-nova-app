@@ -266,13 +266,17 @@ export default function Bridge(props: IBridgeComponentProps) {
     refreshTokenBalanceList();
     if (isFirstDeposit) {
       try {
-        await bindInviteCodeWithAddress({
+        const resBind = await bindInviteCodeWithAddress({
           address,
           code: inviteCodeType === "join" ? inputInviteCode : "",
           siganture: signature,
           twitterHandler: twitter?.username || "mickeywang",
           twitterName: twitter?.name || "mickey",
         });
+
+        if (resBind?.error) {
+          toast.error(resBind.message)
+        }
 
         const res = await getInvite(address);
         if (res?.result) {

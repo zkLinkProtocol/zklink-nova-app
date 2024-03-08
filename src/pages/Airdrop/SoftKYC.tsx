@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import qs from 'qs'
-import { postData } from '@/utils'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import styled from 'styled-components'
@@ -13,6 +12,7 @@ import toast from 'react-hot-toast'
 import { useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/constants/sign'
 import { Button } from '@nextui-org/react'
+import { getAccountTwitter } from '@/api'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -87,15 +87,9 @@ export default function SoftKYC() {
 
     const dispatch = useDispatch()
     const { signMessage } = useSignMessage()
-    // const { inviteCode } = useSelector((store: any) => store.airdrop)
-    // const [inviteCodeVal, setInviteCodeVal] = useState('')
-
-    // const location = useLocation()
 
     const handleConnectTwitter = () => {
-        // const url = 'https://twitter.com/i/oauth2/authorize?response_type=code&client_id=RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ&redirect_uri=http://localhost:3000/airdrop&scope=tweet.read%20users.read%20follows.read%20follows.write&state=state&code_challenge=challenge&code_challenge_method=plain'
         setTwitterLoading(true)
-
         const params = {
             response_type: 'code',
             client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
@@ -106,65 +100,24 @@ export default function SoftKYC() {
             code_challenge_method: 'plain',
         }
         const url = new URL(`https://twitter.com/i/oauth2/authorize`)
-        // url.search = new URLSearchParams(params).toString()
         url.search = qs.stringify(params, { encode: false })
 
         window.location.href = url.href
-
-        // const authClient = new auth.OAuth2User({
-        //     client_id: 'RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ',
-        //     callback: "http://localhost:3000/airdrop",
-        //     scopes: ["tweet.read", "users.read", "offline.access"],
-        //   });
-
-        //   const client = new Client(authClient);
-
-        //   console.log(client);
     }
-    // const removeSearchParams = (key: string) => {
-    //     let udpatedSearchParams = new URLSearchParams(searchParams.toString())
-    //     udpatedSearchParams.delete(key)
-    // }
 
-    const getTwitterAccessToken = async (code: string) => {
-        setTwitterLoading(true)
-
-        const res = await postData('/twitter/2/oauth2/token', {
-            code,
-            grant_type: 'authorization_code',
-            client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-            redirect_uri: 'http://localhost:3000/airdrop',
-            code_verifier: 'challenge',
-        })
-
+    const getTwitterByCode = async (code: string) => {
         setSearchParams('')
+        setTwitterLoading(true)
+        const res = await getAccountTwitter(code)
 
-        console.log(res)
-
-        const { access_token } = res
-
-        console.log(access_token)
-        if (access_token && access_token !== '') {
-            fetch('/twitter/2/users/me', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
-            })
-                .then(async (res) => {
-                    let { data } = await res.json()
-                    console.log(data)
-
-                    dispatch(setTwitter(data))
-                })
-                .catch((e) => {
-                    console.log(e)
-                    toast.error('Could not connect to Twitter. Try again.')
-                    setTwitterLoading(false)
-                })
-            // console.log(res.json())
+        const { data } = res
+        if (data) {
+            dispatch(setTwitterAuthCode(code))
+            dispatch(setTwitter(data))
+        } else {
+            toast.error('Could not connect to Twitter. Try again.')
         }
+
         setTwitterLoading(false)
     }
 
@@ -181,7 +134,6 @@ export default function SoftKYC() {
                 onError(error, variables, context) {
                     console.log(error, variables, context)
                     toast.error('User reject signature. Try again.')
-                    // disconnect()
                 },
             }
         )
@@ -197,12 +149,9 @@ export default function SoftKYC() {
     }
 
     useEffect(() => {
-        // const state = searchParams.get('state')
         const code = searchParams.get('code')
         const error = searchParams.get('error')
 
-        // console.log('searchParams', searchParams)
-        // console.log(error)
         if (error) {
             setSearchParams('')
             toast.error('Could not connect to Twitter. Try again.')
@@ -212,7 +161,7 @@ export default function SoftKYC() {
         if (code) {
             console.log(code)
             dispatch(setTwitterAuthCode(code))
-            getTwitterAccessToken(code)
+            getTwitterByCode(code)
         }
     }, [searchParams])
 

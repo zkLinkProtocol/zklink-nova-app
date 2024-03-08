@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import AssetsTable from '@/components/AssetsTable'
 import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
 import { useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalContent, useDisclosure } from '@nextui-org/react'
+import { Modal, ModalBody, ModalContent, Tooltip, useDisclosure } from '@nextui-org/react'
 import BridgeComponent from '@/components/Bridge'
 import { BOOST_LIST } from '@/constants/boost'
 import { getBooster, getNextMilestone } from '@/utils'
@@ -279,8 +279,21 @@ export default function Dashboard() {
                     <CardBox className='mt-[1.5rem] p-[1.5rem]'>
                         <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Nova Points</p>
                         <div className='flex items-center gap-[1rem]'>
-                            <span className='text-[2.5rem] font-[700]'>{accountPoint.novaPoint}</span>
-                            <GreenTag className='py-[0.375rem] w-[5.625rem] text-[1rem]'>{getBooster(accountPoint.novaPoint)}</GreenTag>
+                            <span className='text-[2.5rem] font-[700]'>{0}</span>
+                            <Tooltip
+                                className='p-[1rem]'
+                                content={
+                                    <p className='text-[1rem]'>
+                                        Group Booster: 0.1x Early Bird Booster: <br />
+                                        Early Bird Booster: 2x <br />
+                                        <br />
+                                        <a
+                                            href=''
+                                            className='text-[#0bc48f]'>Learn More</a>
+                                    </p>
+                                }>
+                                <GreenTag className='py-[0.375rem] w-[5.625rem] text-[1rem]'>0x</GreenTag>
+                            </Tooltip>
                         </div>
                         <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>+{accountPoint.referPoint}</p>
                         <p className='text-[1rem] text-[#919192] font-[400]'>Your Nova Char</p>
@@ -316,10 +329,24 @@ export default function Dashboard() {
                                 <p className='text-[1.5rem] leading-[2rem] text-center'>{getBooster(groupTvl)}</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.25rem]'>
                                     <span>Group 24h Growth/Boost Rate</span>
-                                    <img
-                                        src='/img/icon-info.svg'
-                                        className='w-[0.875rem] h-[0.875rem] opacity-40'
-                                    />
+                                    <Tooltip
+                                        className='p-[1rem]'
+                                        content={
+                                            <p className='text-[1rem]'>
+                                                Your group’s Growth Booster is dependent on your group’s cumulative TVL growth rate over the past 24
+                                                hours.{' '}
+                                                <a
+                                                    href=''
+                                                    className='text-[#0bc48f]'>
+                                                    Learn more.
+                                                </a>
+                                            </p>
+                                        }>
+                                        <img
+                                            src='/img/icon-info.svg'
+                                            className='w-[0.875rem] h-[0.875rem] opacity-40'
+                                        />
+                                    </Tooltip>
                                 </p>
                             </div>
                         </CardBox>
@@ -349,10 +376,23 @@ export default function Dashboard() {
                         <div className='flex justify-between items-center leading-[2rem] font-[700]'>
                             <div className='flex items-center gap-[0.37rem]'>
                                 <span className='text-[1.5rem]'>Group Mile Stone</span>
-                                <img
-                                    src='/img/icon-info.svg'
-                                    className='w-[0.875rem] h-[0.875rem]'
-                                />
+                                <Tooltip
+                                    className='px-[1rem] py-[1rem]'
+                                    content={
+                                        <p className='text-[1rem]'>
+                                            You will get a higher group booster if your group unlocks higher TVL milestones.{' '}
+                                            <a
+                                                href=''
+                                                className='text-[#0bc48f]'>
+                                                Learn more.
+                                            </a>
+                                        </p>
+                                    }>
+                                    <img
+                                        src='/img/icon-info.svg'
+                                        className='w-[0.875rem] h-[0.875rem]'
+                                    />
+                                </Tooltip>
                             </div>
 
                             <div className='flex items-center'>

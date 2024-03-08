@@ -7,7 +7,8 @@ import { setInviteCode } from '@/store/modules/airdrop'
 import { useNavigate } from 'react-router-dom'
 import { GradientButton } from '@/styles/common'
 import '@/styles/otp-input.css'
-import { getActiveAccounts, getTotalTvl } from '@/api'
+import { checkInviteCode, getActiveAccounts, getTotalTvl } from '@/api'
+import toast from 'react-hot-toast'
 
 const BgBox = styled.div`
     width: 100%;
@@ -69,7 +70,7 @@ export default function Home() {
 
     const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] = useState({
         otp: '',
-        numInputs: 5,
+        numInputs: 6,
         separator: '',
         placeholder: '',
         inputType: 'text' as const,
@@ -79,28 +80,32 @@ export default function Home() {
         setConfig((prevConfig) => ({ ...prevConfig, otp }))
     }
 
-    const enterInviteCode = () => {
-        if (!otp || otp.length !== 5) return
+    const enterInviteCode = async () => {
+        console.log('onClick enter invite code', otp)
+        if (!otp || otp.length !== 6) return
+        console.log('onClick enter invite code 111')
 
+        const res = await checkInviteCode(otp)
+        if (!res?.result) {
+            toast.error('Invalid invite code. Try another.')
+            return
+        }
         dispatch(setInviteCode(otp))
         navigate('/airdrop')
     }
 
-    const getTotalTvlFunc = async() => {
+    const getTotalTvlFunc = async () => {
         const res = await getTotalTvl()
         console.log('total tvl', res)
 
         setTotalTvl(res?.result || 0)
-        
     }
-    const getActiveAccountsFunc = async() => {
+    const getActiveAccountsFunc = async () => {
         const res = await getActiveAccounts()
         console.log('active accounts', res)
 
         setActiveUsers(res?.result || 0)
-        
     }
-    
 
     useEffect(() => {
         getActiveAccountsFunc()
@@ -160,7 +165,7 @@ export default function Home() {
                         <div>
                             <GradientButton
                                 className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
-                                    !otp || otp.length !== 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+                                    !otp || otp.length !== 6 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
                                 }`}
                                 onClick={enterInviteCode}>
                                 ENTER INVITE CODE
