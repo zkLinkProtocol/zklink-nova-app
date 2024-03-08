@@ -1,13 +1,10 @@
 import http from "@/utils/http";
 
-type Response = {
+export type Response = {
     result: any;
     status: string;
     messag: string;
 };
-
-export const getInviteByAddress = (account: string): Promise<Response> =>
-    http.get(`/invite/${account}`);
 
 export type BindInviteCodeWithAddressParams = {
     address: string;
@@ -19,7 +16,7 @@ export type BindInviteCodeWithAddressParams = {
 export const bindInviteCodeWithAddress = (
     data: BindInviteCodeWithAddressParams
 ) => {
-    return http.post("/invite/bind/twitter", data);
+    return http.post("/api/invite/bind/twitter", data);
 };
 export const getInvite = (address: string): Promise<Response> => http.get(`/api/invite/${address}`)
 
@@ -50,7 +47,7 @@ export const getGroupTvl = (address: string): Promise<Response> => http.get('/po
 
 export const getTotalTvlByToken = (): Promise<Response> => http.get('/points/addressTokenTvl/getTotalTvlByToken')
 
-export const getReferralTvl = (address: string): Promise<Response> => http.get('/addressTokenTvl/getReferralTvl', {
+export const getReferralTvl = (address: string): Promise<Response> => http.get('/points/addressTokenTvl/getReferralTvl', {
     params: { address }
 })
 
