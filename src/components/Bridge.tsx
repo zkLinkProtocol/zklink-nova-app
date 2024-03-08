@@ -12,6 +12,8 @@ import {
   Select,
   SelectItem,
   Tooltip,
+  Tabs,
+  Tab,
 } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
@@ -42,20 +44,54 @@ const ModalSelectItem = styled.div`
     border-radius: 8px;
   }
 `;
-
+const Container = styled.div`
+  background: #313841;
+  padding: 32px;
+  border-radius: 12px;
+`;
 const SelectBox = styled.div`
   & {
-    background: rgba(0, 0, 0, 0.4);
+    background: #23262d;
     border-radius: 16px;
   }
   .selector {
-    background-color: rgba(33, 34, 38, 0.72);
+    background-color: #313841;
+    height: 40px;
     &:hover {
       background-color: rgb(85 90 102);
     }
   }
+  .points-box {
+    color: #a0a5ad;
+    font-size: 16px;
+    font-weight: 400;
+    .input-wrapper {
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 38px;
+    }
+  }
 `;
 
+const AssetTypes = [
+  { label: "ALL", value: "ALL" },
+  {
+    label: "Native",
+    value: "NATIVE",
+  },
+  {
+    label: "Stable",
+    value: "STABLE",
+  },
+  {
+    label: "LST",
+    value: "LST",
+  },
+  {
+    label: "LRT",
+    value: "LRT",
+  },
+];
 export interface IBridgeComponentProps {
   isFirstDeposit: boolean;
   onClose?: () => void;
@@ -276,21 +312,23 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   return (
     <>
-      <div className="">
-        <h2 className="text-3xl">Bridge</h2>
-        <SelectBox className="mt-8 px-4 py-4 ">
+      <Container className="">
+        <SelectBox className="px-6 py-6 ">
           <div className="flex items-center gap-4">
             <span className="font-bold">From</span>
             <div
               className="selector flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer"
               onClick={() => fromModal.onOpen()}
             >
-              <Avatar src={fromList[fromActive].icon} size="sm" />
+              <Avatar
+                src={fromList[fromActive].icon}
+                style={{ width: 24, height: 24 }}
+              />
               <span>{fromList[fromActive].label}</span>
               {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
           </div>
-          <div className="flex items-center gap-4 mt-10">
+          <div className="flex items-center gap-4 mt-2">
             <Input
               classNames={{ input: "text-4xl" }}
               size="lg"
@@ -305,14 +343,18 @@ export default function Bridge(props: IBridgeComponentProps) {
               className="selector flex items-center gap-2 px-4 py-4 rounded-3xl cursor-pointer"
               onClick={() => tokenModal.onOpen()}
             >
-              <Avatar src={tokenList[tokenActive]?.icon} size="sm" />
+              <Avatar
+                src={tokenList[tokenActive]?.icon}
+                style={{ width: 24, height: 24 }}
+              />
               <span>{tokenList[tokenActive]?.symbol}</span>
+              {tokenModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
           </div>
         </SelectBox>
 
-        <div className="mt-4 px-4 py-4">
-          <div className="flex items-center justify-between mb-2">
+        <SelectBox className="mt-4 px-6 py-6">
+          <div className="flex items-center justify-between mb-2 points-box">
             <div className="flex items-center">
               <span>Nova Points</span>
               <span>10x Boost</span>
@@ -336,12 +378,14 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
           </div>
           {isFirstDeposit && (
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-2 points-box">
               <span>Invite Code</span>
               <div className="flex items-center">
                 {inviteCodeType === "join" && (
                   <Input
-                    className="w-[120px] mr-2"
+                    classNames={{
+                      inputWrapper: "w-[120px] h-[38px] bg-[#313841] mr-2",
+                    }}
                     size="sm"
                     value={inputInviteCode}
                     onValueChange={setInputInviteCode}
@@ -349,7 +393,8 @@ export default function Bridge(props: IBridgeComponentProps) {
                   />
                 )}
                 <Select
-                  className="max-w-xs w-[140px]"
+                  classNames={{ trigger: "min-h-[38px] bg-[#313841]" }}
+                  className="max-w-xs w-[140px] h-[38px]"
                   value={inviteCodeType}
                   onChange={(e) => {
                     setInviteCodeType(e.target.value);
@@ -366,11 +411,11 @@ export default function Bridge(props: IBridgeComponentProps) {
               </div>
             </div>
           )}
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-2 points-box">
             <span>Est.fee</span>
             <span>0.002 ETH</span>
           </div>
-        </div>
+        </SelectBox>
         <div className="mt-8">
           {isConnected ? (
             <Button
@@ -385,7 +430,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </Button>
           ) : (
             <Button
-              className="w-full rounded-full"
+              className="gradient-btn  w-full rounded-full"
               size="lg"
               color="primary"
               disableAnimation
@@ -395,7 +440,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </Button>
           )}
         </div>
-      </div>
+      </Container>
       <Modal
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
@@ -418,7 +463,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                   <span className="text-xl ml-4">{item.label}</span>
                 </div>
 
-                {index === fromActive && <AiOutlineCheck />}
+                {index === fromActive && <AiOutlineCheck size={14} />}
               </ModalSelectItem>
             ))}
           </ModalBody>
@@ -436,7 +481,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             Choose Token
           </ModalHeader>
           <ModalBody className="pb-8">
-            <div>
+            {/* <div>
               <Input
                 classNames={{ input: "text-xl" }}
                 variant="bordered"
@@ -447,8 +492,16 @@ export default function Bridge(props: IBridgeComponentProps) {
                   <AiOutlineSearch className="text-2xl text-gray-400" />
                 }
               />
-            </div>
-
+            </div> */}
+            <p>Category</p>
+            <Tabs
+              aria-label="Options"
+              classNames={{ tabList: "w-full", tab: "w-auto" }}
+            >
+              {AssetTypes.map((item) => (
+                <Tab key={item.value} title={item.label}></Tab>
+              ))}
+            </Tabs>
             {tokenList.map((item, index) => (
               <ModalSelectItem
                 className="flex items-center justify-between p-4 cursor-pointer"
@@ -460,7 +513,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                   <span className="text-xl ml-4">{item?.symbol}</span>
                 </div>
 
-                <span>{item?.formatedBalance}</span>
+                <span className="text-base">{item?.formatedBalance}</span>
               </ModalSelectItem>
             ))}
           </ModalBody>
