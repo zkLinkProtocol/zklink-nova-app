@@ -275,7 +275,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         });
 
         if (resBind?.error) {
-          toast.error(resBind.message)
+          toast.error(resBind.message);
         }
 
         const res = await getInvite(address);
@@ -361,29 +361,44 @@ export default function Bridge(props: IBridgeComponentProps) {
           <div className="flex items-center justify-between mb-2 points-box">
             <div className="flex items-center">
               <span>Nova Points</span>
-              <span>10x Boost</span>
-              <Tooltip content="some tip about nova points">
+
+              <Tooltip
+                showArrow={true}
+                classNames={{
+                  content: "max-w-[300px] p-4",
+                }}
+                content="You would receive Nova Points once your deposit is verified. "
+              >
                 <img
-                  src={"/img/icon-help.png"}
-                  className="w-[16px] cursor-pointer ml-1"
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
                 />
               </Tooltip>
+              <div className="flex items-center justify-center bg-green-800 h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
+                10x Boost
+              </div>
             </div>
             <div className="flex items-center">
               <span>{points}</span>
-              {showNoPointsTip && (
-                <Tooltip content="some tip about 0 nova points">
-                  <img
-                    src={"/img/icon-help.png"}
-                    className="w-[16px] cursor-pointer ml-1"
-                  />
-                </Tooltip>
-              )}
             </div>
           </div>
           {isFirstDeposit && (
             <div className="flex items-center justify-between mb-2 points-box">
-              <span>Invite Code</span>
+              <div className="flex items-center">
+                <span>Invite Code</span>
+                <Tooltip
+                  showArrow={true}
+                  classNames={{
+                    content: "max-w-[300px] p-4",
+                  }}
+                  content="Each wallet user can only join one team, you can either choose to join an existing team or you can choose to create your own team."
+                >
+                  <img
+                    src={"/img/icon-tooltip.png"}
+                    className="w-[14px] cursor-pointer ml-1"
+                  />
+                </Tooltip>
+              </div>
               <div className="flex items-center">
                 {inviteCodeType === "join" && (
                   <Input
@@ -397,7 +412,9 @@ export default function Bridge(props: IBridgeComponentProps) {
                   />
                 )}
                 <Select
-                  classNames={{ trigger: "min-h-[38px] bg-[#313841]" }}
+                  classNames={{
+                    trigger: "w-[140px] min-h-[38px] h-[38px] bg-[#313841]",
+                  }}
                   className="max-w-xs w-[140px] h-[38px]"
                   value={inviteCodeType}
                   onChange={(e) => {

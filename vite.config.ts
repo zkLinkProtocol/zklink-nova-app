@@ -30,6 +30,11 @@ export default defineConfig({
         target: "http://13.114.13.100:8096",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/points/, '')
+      },
+      '/tokens': {
+        target: "http://13.114.13.100:8096",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/points/, '')
       }
     }
   },
