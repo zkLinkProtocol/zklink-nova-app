@@ -182,31 +182,31 @@ export default function Home() {
                     {/* <FooterText className='mt-4'>TOTAL USERS / {activeUsers}</FooterText> */}
                 </div>
                 <div className='flex items-center gap-[1.25rem]'>
-                    <a href=''>
+                    <a href='https://blog.zk.link/'>
                         <img
                             src='/img/icon-medium.svg'
                             className='w-[1.5rem] h-[1.5rem]'
                         />
                     </a>
-                    <a href=''>
+                    <a href='https://discord.com/invite/zklink'>
                         <img
                             src='/img/icon-dc.svg'
                             className='w-[1.5rem] h-[1.5rem]'
                         />
                     </a>
-                    <a href=''>
+                    <a href='https://t.me/zkLinkorg'>
                         <img
                             src='/img/icon-tg.svg'
                             className='w-[1.5rem] h-[1.5rem]'
                         />
                     </a>
-                    <a href=''>
+                    <a href='https://twitter.com/zkLink_Official'>
                         <img
                             src='/img/icon-twitter.svg'
                             className='w-[1.25rem] h-[1.25rem]'
                         />
                     </a>
-                    <a href=''>
+                    <a href='https://github.com/zkLinkProtocol'>
                         <img
                             src='/img/icon-github.svg'
                             className='w-[1.5rem] h-[1.5rem]'

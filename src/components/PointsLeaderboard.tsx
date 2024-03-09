@@ -101,7 +101,7 @@ export default function PointsLeaderboard() {
                             <TableCell>{item.rank}</TableCell>
                             <TableCell>{item.address}</TableCell>
                             <TableCell>{item.inviteBy}</TableCell>
-                            <TableCell>{item.novaPoint}</TableCell>
+                            <TableCell>{(+item?.novaPoint || 0) + (+item?.referPoint|| 0)}</TableCell>
                         </TableRow>
                     )
                 })}

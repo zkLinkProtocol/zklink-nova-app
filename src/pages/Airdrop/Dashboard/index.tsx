@@ -315,7 +315,7 @@ export default function Dashboard() {
                                 className='p-[1rem]'
                                 content={
                                     <p className='text-[1rem]'>
-                                        Group Booster: 0.1x Early Bird Booster: <br />
+                                        {getBooster(groupTvl)!== '0x' && `Group Booster: ${getBooster(groupTvl)}`}  <br />
                                         Early Bird Booster: 2x <br />
                                         <br />
                                         <a
@@ -329,7 +329,7 @@ export default function Dashboard() {
                             </Tooltip>
                         </div>
                         <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>+{accountPoint.referPoint}</p>
-                        <p className='text-[1rem] text-[#919192] font-[400]'>Your Nova Char</p>
+                        <p className='text-[1rem] text-[#919192] font-[400]'>Est. in next epoch</p>
 
                         <p className='flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]'>
                             <span>Earn By Your Deposit</span>
@@ -356,7 +356,7 @@ export default function Dashboard() {
                         <CardBox className='flex justify-around  py-[3rem] w-1/2'>
                         <div>
                                 <p className='text-[1.5rem] leading-[2rem] text-center'>${totalTvl}</p>
-                                <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Total TVL</p>
+                                <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Nova Network TVL</p>
                             </div>
                             <div>
                                 <p className='text-[1.5rem] leading-[2rem] text-center'>${groupTvl}</p>
@@ -402,8 +402,17 @@ export default function Dashboard() {
                                         className='w-[1.1875rem] h-[1.1875rem]'
                                     />
                                 </p>
-                                <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>
-                                    Your Invite Code ({invite?.canInviteNumber || 0}/10)
+                                <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.5rem]'>
+                                Your Invite Code (Remaining {invite?.canInviteNumber || 0})
+
+                                <Tooltip
+                                    className='p-[1rem]'
+                                    content={<p className='text-[1rem] max-w-[25rem]'>In the later phase, we might consider raising the spots to the referral code; it is crucial to have the cap here at the start to allow all participants an equal chance of of growing their group's size.</p>}>
+                                    <img
+                                        src='/img/icon-info.svg'
+                                        className='w-[0.875rem] h-[0.875rem] opacity-40'
+                                    />
+                                </Tooltip>
                                 </p>
                             </div>
                         </CardBox>

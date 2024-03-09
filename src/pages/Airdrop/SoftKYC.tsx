@@ -224,7 +224,7 @@ export default function SoftKYC() {
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
                                 <p className='step-title'>Enter Invite Code or Create Your Team</p>
-                                <p className='step-sub-title mt-[0.25rem]'>Before Bridging</p>
+                                <p className='step-sub-title mt-[0.25rem]'>You could modify it before bridge</p>
                             </StepItem>
                             <div>
                                 {

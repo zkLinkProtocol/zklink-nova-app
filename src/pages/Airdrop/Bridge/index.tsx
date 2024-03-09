@@ -27,14 +27,12 @@ const ActiveTypes = [
   { label: "NOVA NFT", value: "nft" },
 ];
 const UtilityList = [
-  "ZKL Airdrop",
-  "IDO whitelist",
-  "ZKL swags",
+  "ZKL token",
+  "ZKL Swags (Merchandise)",
   "Future NFT whitelist",
-  "zkLinkers event access",
-  "GAS rebates",
+  "On-site Event Access",
 ];
-const Link = styled.div`
+const Link = styled.span`
   color: #03d498;
 `;
 export default function Bridge() {
@@ -46,42 +44,45 @@ export default function Bridge() {
         You could see the detail and formula of how we calculate Nova points{" "}
         <Link>here</Link>
       </p>
-      <p className="mt-6">Minimal Entry: </p>
+      <p className="mt-6 font-bold">Minimal Entry: </p>
       <ul className="list mb-8">
-        <li>1. First & days 0.1 ETH</li>
-        <li>2. After Day 7th 0.25 ETH</li>
+        <li>1. First 7 days 0.1 ETH</li>
+        <li>2. After the 7th day 0.25 ETH</li>
       </ul>
       <p className="mt-6">
-        <span>Deposit / Bridge Assets to Nova</span>
-        Bridging any supported assets to Nova can instantly earn Nova points.
+        <span className="font-bold">Deposit / Bridge Assets to Nova: </span>
+        Bridging any <Link>supported assets</Link> to Nova can instantly earn Nova points.
       </p>
       <p className="mt-6">
-        <span> Holding assets on Nova: </span>
+        <span className="font-bold"> Holding assets on Nova: </span>
         Holding any supported assets on Nova allows you to accrue Nova points
         every 8 hours.
       </p>
       <p className="mt-6">
-        <span> Referral Rewards: </span>
+        <span className="font-bold"> Referral Rewards: </span>
         By inviting friends, you can earn 10% of the Nova points they earn
         throughout the duration of the Aggregation Parade.
       </p>
+
+
       <p className="mt-6">
-        <span>Multiplier: </span>
-        Multiplier Early Bird Multiplier: During Phase 1 of the Nova Campaign,
+      <span className="font-bold">Multiplier: </span><br />
+        <span className="font-bold">Early Bird Multiplier: </span>
+        During Phase 1 of the Nova Campaign,
         you can earn additional Nova Points, though withdrawals are temporarily
       </p>
       <p className="mt-6">
-        <span>Token Multiplier: </span>
+        <span className="font-bold">Token Multiplier: </span>
         Tokens are categorized into three tiers, with higher liquidity tokens
         receiving more Nova Points.
       </p>
       <p className="mt-6">
-        <span> Deposit Multiplier: </span>
+        <span className="font-bold"> Deposit Multiplier: </span>
         You will receive 10 times Nova points for EACH deposit/ bridging action
         that occurs.
       </p>
       <p className="mt-6">
-        <span> Group Multiplier: </span>
+        <span className="font-bold"> Group Multiplier: </span>
         This group has the potential to unlock Group Booster by achieving the
         following Milestones.
       </p>
@@ -92,30 +93,41 @@ export default function Bridge() {
     <>
       <div className="text-base mt-10">
         <p>
-          You will earn one of the four Nova SBT once you bridge any amount of
-          supported token into zkLink Nova.
+          You will be able to mint one of the four Nova SBT once you bridge a minimal worth of 0.1 ETH.
         </p>
         <div className="flex items-center mt-12 mb-12">
-          {new Array(4).fill("").map((_, index) => (
+          <img
+              className="w-20 h-20 mr-6"
+              src={"/img/nft-1.svg"}
+              alt=""
+            />
             <img
               className="w-20 h-20 mr-6"
-              src={"/img/sbt-nft.png"}
+              src={"/img/nft-2.svg"}
               alt=""
-              key={index}
             />
-          ))}
+            <img
+              className="w-20 h-20 mr-6"
+              src={"/img/nft-3.svg"}
+              alt=""
+            />
+            <img
+              className="w-20 h-20 mr-6"
+              src={"/img/nft-4.svg"}
+              alt=""
+            />
         </div>
         <p>
-          Upon collecting your SBT, you can upgrade it into an ERC7221 NFT
-          through collecting 4 different types of trademark NFT through our
+          Upon collecting your SBT, you can upgrade it into an ERC721 NFT
+          through collecting 4 different types of trademark NFT with our
           referral program.
         </p>
         <p>
           You will get a trademark NFT airdrop for each 3 referrals <br />
-          Top 50 on the referral leader-board will be airdrop a Mystery Box.
+          Top 50 on the referral leader-board and 50 randon users are eligible to mint a Mystery Box every day.
         </p>
         <p className="mt-8">
-          Once you upgrade your SBT into , here are the Utility
+          Once you upgrade your Nova Lynks NFT , here are the Utility
         </p>
       </div>
       <div
@@ -133,7 +145,9 @@ export default function Bridge() {
             {item}
           </p>
         ))}
+
       </div>
+
     </>
   );
 

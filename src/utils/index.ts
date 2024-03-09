@@ -156,3 +156,7 @@ export function scaleGasLimit(gasLimit: BigNumber): BigNumber {
     .mul(L1_FEE_ESTIMATION_COEF_NUMERATOR)
     .div(L1_FEE_ESTIMATION_COEF_DENOMINATOR);
 }
+
+export function random(min:number, max:number) {
+  return Math.round(Math.random() * (max - min)) + min;
+}
