@@ -21,10 +21,10 @@ export default function App() {
                 <Routes>
                     <Route
                         path='/'
-                        element={<Navigate to='/aagregation-parade' />}
+                        element={<Navigate to='/aggregation-parade' />}
                     />
                     <Route
-                        path='/aagregation-parade'
+                        path='/aggregation-parade'
                         element={
                             <Suspense fallback=''>
                                 <Airdrop />
@@ -32,7 +32,7 @@ export default function App() {
                         }
                     />
                     <Route
-                        path='/aagregation-parade/dashboard'
+                        path='/aggregation-parade/dashboard'
                         element={
                             <Suspense fallback=''>
                                 <Dashboard />
@@ -40,7 +40,7 @@ export default function App() {
                         }
                     />
                     <Route
-                        path='/aagregation-parade/bridge'
+                        path='/aggregation-parade/bridge'
                         element={
                             <Suspense fallback=''>
                                 <AirdropBridge />

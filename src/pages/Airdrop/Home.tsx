@@ -80,7 +80,7 @@ export default function Home() {
 
         const res = await checkInviteCode(otp)
         if (!res?.result) {
-            toast.error('Invalid invite code. Try another.')
+            toast.error('Invalid invite code. Try another.', {duration: 3000})
             return
         }
         dispatch(setInviteCode(otp))

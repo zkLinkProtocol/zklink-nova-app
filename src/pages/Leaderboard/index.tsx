@@ -17,7 +17,6 @@ const TabItem = styled.div`
     font-weight: 700;
     line-height: 2rem; /* 200% */
     letter-spacing: -0.03125rem;
-    cursor: pointer;
     &.active,
     &:hover {
         color: #fff;
@@ -35,19 +34,19 @@ export default function Leaderboard() {
                 <div className='px-[10.44rem] mt-[3rem] min-h-[50rem] overflow-auto z-[10]'>
                     <div className='flex items-center gap-[2rem]'>
                         <TabItem
-                            className={`px-[2rem] py-[1rem] ${tabsActive === 0 ? 'active' : ''}`}
+                            className={`px-[2rem] py-[1rem] cursor-pointer ${tabsActive === 0 ? 'active' : ''}`}
                             onClick={() => setTabsActive(0)}>
                             Points Leaderboard
                         </TabItem>
                         <TabItem
-                            className={`px-[2rem] py-[1rem] ${tabsActive === 1 ? 'active' : ''}`}
-                            onClick={() => setTabsActive(1)}>
-                            NFT Leaderboard(daily)
+                            className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed ${tabsActive === 1 ? 'active' : ''}`}
+                        >
+                            Referral Leaderboard
                         </TabItem>
                         <TabItem
-                            className={`px-[2rem] py-[1rem] ${tabsActive === 2 ? 'active' : ''}`}
-                            onClick={() => setTabsActive(2)}>
-                            Mystery Box Winners
+                            className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed ${tabsActive === 2 ? 'active' : ''}`}
+                        >
+                            Referral Leaderboard
                         </TabItem>
                     </div>
 

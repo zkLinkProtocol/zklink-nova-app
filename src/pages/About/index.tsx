@@ -45,7 +45,6 @@ const BgBox = styled.div`
     }
     .tr{
         width: 80%;
-        margin-left: 10%;
         display: flex;
         justify-content: space-around;
         height: 60px;
@@ -106,8 +105,11 @@ export default function About() {
                 <div className='paragraph'>
                 You could see the detail and formula of how we calculate Nova points <span className='jump'>here</span>.
                 </div>
+                <div>
+                    <img src="/img/img-about-rules.svg" className="w-full" />
+                </div>
                 <div className='paragraph'>
-                    <div className='title'>Minimal Entry::</div>
+                    <div className='title mt-4'>Minimal Entry:</div>
                     <div>1. First 7 days 0.1 ETH</div>
                     <div>2. After Day 7th 0.25 ETH</div>
                 </div>
@@ -139,15 +141,16 @@ export default function About() {
                 <div className='paragraph'>
                     <div><span className='title'>Token Multiplier:</span> Tokens are categorized into three tiers, with higher liquidity tokens receiving more Nova Points.</div>
                 </div>
-                <div className='paragraph3'>
+                <div className='paragraph'>
                     <div><span className='title'>Group Multiplier:</span> You, along with the users you've referred and their subsequent referrals, will be placed into the same group. This group has the potential to unlock Group Booster by achieving the following Milestones.</div>
                     <div>Group Booster = Group Holding Value Booster (In the Early Phase)</div>
                 </div>
                 <div className='paragraph'>
                     <div className='tr th'>
-                        <div className='td'>Group Tier</div>
-                        <div className='td'>Group Holding Value （ETH）</div>
-                        <div className='td'>Holding Value Booster</div>
+                        <div className='td whitespace-nowrap'>Group Tier</div>
+                        <div className='td whitespace-nowrap'>Group Holding Value （ETH）</div>
+                        <div className='td whitespace-nowrap'>Group Holding Value （ETH）</div>
+                        <div className='td whitespace-nowrap'>Holding Value Booster</div>
                     </div>
                     <div className='tr'>
                         <div className='td'>1</div>
@@ -178,15 +181,15 @@ export default function About() {
                 <div className='paragraph'>
                     <div><span className='title'>Deposit Multiplier:</span> You will receive 10 times Nova points for EACH deposit/ bridging action that occurs.</div>
                 </div>
-                <div className='paragraph3'>
+                <div className='paragraph'>
                     <div><span className='title'>Group Multiplier:</span> You, along with the users you've referred and their subsequent referrals, will be placed into the same group. This group has the potential to unlock Group Booster by achieving the following Milestones.</div>
                     <div>Group Booster = Group Holding Value Booster (In the Early Phase)</div>
                 </div>
                 <div className='paragraph'>
                     <div className='tr th'>
-                        <div className='td'>Group Tier</div>
-                        <div className='td'>Group Holding Value （ETH）</div>
-                        <div className='td'>Group Holding Value Booster</div>
+                        <div className='td whitespace-nowrap'>Group Tier</div>
+                        <div className='td whitespace-nowrap'>Group Holding Value （ETH）</div>
+                        <div className='td whitespace-nowrap'>Group Holding Value Booster</div>
                     </div>
                     <div className='tr'>
                         <div className='td'>1</div>
@@ -222,11 +225,15 @@ export default function About() {
                     <div className='before'>0.1ETH (In the first 7 days) OR</div>
                     <div className='before'>0.25 ETH (After day 7th) into zkLink Nova</div>
                 </div>
-                <div className='flex paragraph'>
+                
+                {/* <div className='flex paragraph'>
                     <img src="/img/4.png" alt="" className='person'/>
                     <img src="/img/3.png" alt="" className='person'/>
                     <img src="/img/2.png" alt="" className='person'/>
                     <img src="/img/1.png" alt="" className='person'/>
+                </div> */}
+                <div className='mb-[1rem]'>
+                    <img src="/img/img-about-info.svg" className='w-full'/>
                 </div>
                 <div className='paragraph'>
                     <div>After obtaining your SBT, you can upgrade it into an ERC721 NFT through collecting ONE OF EACH of the four different types of trademark NFT through our referral program.</div>

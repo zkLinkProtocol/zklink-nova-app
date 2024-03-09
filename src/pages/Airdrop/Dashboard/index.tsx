@@ -281,7 +281,7 @@ export default function Dashboard() {
             <div className='relative flex gap-[1.5rem] px-[4.75rem] z-[1]'>
                 <div className='w-[27.125rem]'>
                     <CardBox className='flex flex-col gap-[1.5rem] items-center p-[1.5rem]'>
-                        <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Your Nova Char</p>
+                        <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Your Nova Character</p>
                         <div className='w-[24rem] h-[18.75rem] bg-[#65E7E5] rounded-[1rem]'>
                             <img
                                 src='/img/icon-nft-blue.svg'
@@ -289,7 +289,7 @@ export default function Dashboard() {
                             />
                         </div>
                         <GradientButton className='w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] opacity-40 cursor-not-arrowed'>
-                            <span>Upgrade</span>
+                            <span>Mint</span>
                             <img
                                 src='/img/icon-info.svg'
                                 className='w-[0.875rem] h-[0.875rem]'

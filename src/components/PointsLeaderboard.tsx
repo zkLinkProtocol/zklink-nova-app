@@ -23,7 +23,7 @@ export default function PointsLeaderboard() {
         },
         {
             key: 'stakingPts',
-            label: 'Staking Pts',
+            label: 'Nova Points',
             align: 'end',
         },
     ]

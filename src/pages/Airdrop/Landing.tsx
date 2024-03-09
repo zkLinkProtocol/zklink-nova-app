@@ -6,7 +6,7 @@ import { setInviteCode, setIsGroupLeader } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
-import { GradientButton, CardBox, FooterTvlText } from '@/styles/common'
+import { GradientButton, CardBox, FooterTvlText, GradientBorder } from '@/styles/common'
 import { useAccount } from 'wagmi'
 import { checkInviteCode } from '@/api'
 import TotalTvlCard from '@/components/TotalTvlCard'
@@ -152,9 +152,10 @@ export default function Landing() {
                 </div>
 
                 <CardBox className='flex flex-col items-center mt-6 py-8 w-[38.125rem]'>
-                    <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>You can create your own team</DescText>
                     {tabsActive === 0 && (
                         <>
+                    <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>By joining an existing team, your could share the team boost when team tvl meet specific milestone.</DescText>
+
                             <div className='mt-[1.94rem]'>
                                 <OTPInput
                                     inputStyle='inputStyle'
@@ -191,6 +192,8 @@ export default function Landing() {
                                 ))}
                             </div> */}
 
+                            <DescText className='mx-auto pl-[6.75rem] pr-[6.25rem] text-center'>You can create your own team</DescText>
+
                             <div className='mt-[1.5rem]'>
                                 <GradientButton
                                     className='px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center'
@@ -201,12 +204,16 @@ export default function Landing() {
                         </>
                     )}
 
-                    <DescText className='mt-[1.03rem]'>Already signed up?</DescText>
-                    <GradientText
-                        className={`mt-[1rem] ${isConnected ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
-                        onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>
-                        Connect Wallet
-                    </GradientText>
+                    {!isConnected && <>
+                        <DescText className='mt-[1.03rem]'>Already signed up?</DescText>
+                        <GradientBorder className='mt-[1rem] py-[0.375rem] px-[1rem]'>
+                            <GradientText
+                                className={`${isConnected ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
+                                onClick={() => !isConnected && web3Modal.open({ view: 'Connect' })}>
+                                Connect Wallet
+                            </GradientText>
+                        </GradientBorder>
+                    </>}
                 </CardBox>
             </div>
 

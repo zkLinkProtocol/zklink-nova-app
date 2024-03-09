@@ -49,7 +49,7 @@ export default function Airdrop() {
             _status = STATUS_CODE.dashboard
         } else if ((inviteCode || isGroupLeader) && twitter && isConnected && signature) {
             _status = STATUS_CODE.deposit
-        } else if (inviteCode || isGroupLeader) {
+        } else if (inviteCode || isGroupLeader || isConnected) {
             _status = STATUS_CODE.softKYC
         }
         console.log('_status', _status)

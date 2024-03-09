@@ -6,7 +6,6 @@ export default function Toast() {
             position='top-right'
             containerClassName='my-toast'
             toastOptions={{
-                duration: 5000,
                 error: {
                     icon: (
                         <img

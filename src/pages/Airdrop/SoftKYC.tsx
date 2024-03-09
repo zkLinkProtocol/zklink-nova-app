@@ -94,7 +94,7 @@ export default function SoftKYC() {
         const params = {
             response_type: 'code',
             client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-            redirect_uri: 'https://goerli.app.zklink.io/aagregation-parade',
+            redirect_uri: 'https://goerli.app.zklink.io/aggregation-parade',
             scope: 'tweet.read%20users.read%20follows.read%20follows.write',
             state: 'state',
             code_challenge: 'challenge',
@@ -112,7 +112,7 @@ export default function SoftKYC() {
         const res = await getAccountTwitter({
             code,
             client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-            redirect_uri: 'https://goerli.app.zklink.io/aagregation-parade',
+            redirect_uri: 'https://goerli.app.zklink.io/aggregation-parade',
         })
 
         const { data } = res
@@ -132,7 +132,7 @@ export default function SoftKYC() {
                 code,
                 grant_type: 'authorization_code',
                 client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-                redirect_uri: 'https://goerli.app.zklink.io/aagregation-parade',
+                redirect_uri: 'https://goerli.app.zklink.io/aggregation-parade',
                 code_verifier: 'challenge',
             })
 
@@ -223,8 +223,8 @@ export default function SoftKYC() {
                         </CardBox>
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
-                                <p className='step-title'>Enter Invite Code</p>
-                                <p className='step-sub-title mt-[0.25rem]'>You could modify it before bridge</p>
+                                <p className='step-title'>Enter Invite Code or Create Your Team</p>
+                                <p className='step-sub-title mt-[0.25rem]'>Before Bridging</p>
                             </StepItem>
                             <div>
                                 {
@@ -243,7 +243,7 @@ export default function SoftKYC() {
                         </CardBox>
                         <CardBox className='flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]'>
                             <StepItem>
-                                <p className='step-title'>Connect Twitter or Create Your Team</p>
+                                <p className='step-title'>Connect Twitter</p>
                                 <p className='step-sub-title mt-[0.25rem]'>Check if you are a real person.</p>
                             </StepItem>
                             <div>
@@ -254,7 +254,7 @@ export default function SoftKYC() {
                                     />
                                 ) : (
                                     <Button
-                                        className='gradient-btn px-[1rem] py-[0.5rem] text-[1rem]'
+                                        className='gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]'
                                         isLoading={twitterLoading}
                                         onClick={handleConnectTwitter}>
                                         Connect Twitter/X

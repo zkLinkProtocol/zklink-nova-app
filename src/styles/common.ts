@@ -92,3 +92,38 @@ export const FooterTvlText = styled.p`
     font-weight: 700;
     line-height: normal;
 `
+
+export const GradientText = styled.span`
+    background: linear-gradient(90deg, #48ecae 0%, #3a50ed 52.9%, #49cdd7 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.5rem; /* 150% */
+    letter-spacing: -0.03125rem;
+    user-select: none;
+`
+
+export const GradientBorder = styled.div`
+border: 1px solid transparent;
+border-radius: 8px;
+position: relative;
+background-color: rgba(0,0,0,.8);
+background-clip: padding-box; /*important*/
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: -1;
+        margin: -4px;
+        border-radius: inherit; /*important*/
+        background: linear-gradient(90deg, #48ecae 0%, #3a50ed 52.9%, #49cdd7 100%);
+      }
+`

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/constants/sign'
+import { MdArrowOutward } from "react-icons/md";
 
 const NavBox = styled.nav`
     a {
@@ -142,9 +143,9 @@ export default function Header() {
                             justify='center'>
                             <NavbarItem>
                                 <NavLink
-                                    to='/aagregation-parade'
+                                    to='/aggregation-parade'
                                     className='nav-link'>
-                                    Aagregation Parade
+                                    Aggregation Parade
                                 </NavLink>
                             </NavbarItem>
                             <NavbarItem>
@@ -160,8 +161,9 @@ export default function Header() {
                             <NavbarItem>
                                 <a
                                     href='https://goerli.portal.zklink.io/bridge/'
-                                    target='_blank'>
-                                    Bridge
+                                    target='_blank' className='flex items-center'>
+                                    <span>Bridge</span>
+                                    <MdArrowOutward className='size-[1.75rem]' />
                                 </a>
                             </NavbarItem>
                         </NavbarContent>
