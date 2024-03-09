@@ -110,3 +110,10 @@ export const getAccountRefferalsTVL = (address: string): Promise<Response> => ht
 
 export const getSupportTokens = (): Promise<SupportToken[]> => http.get(`${BASE_URL_POINTS}/tokens/getSupportTokens`)
 export const getSupportedTokens = (): Promise<SupportToken[]> => http.get(`${BASE_URL_TOKENS}/getSupportTokens`);
+
+
+export const getAccountsRank = (): Promise<Response> =>
+  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountsRank`);
+
+export const getAccountRank = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRank`, { params: { address } });

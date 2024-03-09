@@ -32,7 +32,7 @@ export default function Leaderboard() {
         <>
             <BgBox>
                 <BgCoverImg />
-                <div className='px-[10.44rem] mt-[3rem] min-h-[40rem]'>
+                <div className='px-[10.44rem] mt-[3rem] min-h-[50rem] overflow-auto'>
                     <div className='flex items-center gap-[2rem]'>
                         <TabItem
                             className={`px-[2rem] py-[1rem] ${tabsActive === 0 ? 'active' : ''}`}
@@ -57,9 +57,9 @@ export default function Leaderboard() {
                         {tabsActive === 2 && <NFTLuckWinner />}
                     </TableBox>
                 </div>
-                <div className='absolute bottom-[4.5rem] w-full'>
+                {/* <div className='absolute bottom-[4.5rem] w-full'>
                     <Performance />
-                </div>
+                </div> */}
             </BgBox>
         </>
     )

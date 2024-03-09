@@ -1,5 +1,8 @@
+import { getAccountRank, getAccountsRank } from '@/api'
 import { TableColumnItem } from '@/types'
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from '@nextui-org/react'
+import { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 export default function PointsLeaderboard() {
     const columns: TableColumnItem[] = [
@@ -56,14 +59,52 @@ export default function PointsLeaderboard() {
         },
     ]
 
+    const [data, setData] = useState<any[]>([])
+
+    const getAccountsRankFunc = async () => {
+        const res = await getAccountsRank()
+        if (res?.result) {
+            setData(res?.result)
+        }
+    }
+
+    const { address } = useAccount()
+
+    const getAccountRankFunc = async () => {
+        if (!address) return
+        const res = await getAccountRank(address)
+        if (res?.result) {
+            // setData(res?.result)
+            let arr = [res?.result, ...data]
+
+            setData(arr)
+        }
+    }
+
+    useEffect(() => {
+        getAccountsRankFunc()
+        // getAccountRankFunc()
+    }, [])
+
     return (
         <Table
             removeWrapper
-            className='table'
+            className='table min-h-[30rem]'
             classNames={{ thead: 'table-header', tbody: 'table-tbody' }}>
             <TableHeader columns={columns}>{(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}</TableHeader>
-            <TableBody items={rows}>
-                {(item) => <TableRow key={item.key}>{(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}</TableRow>}
+            <TableBody items={data}>
+                {data.map((item: any, index: number) => {
+                    return (
+                        <TableRow
+                            key={index}
+                            className='py-5'>
+                            <TableCell>{item.rank}</TableCell>
+                            <TableCell>{item.address}</TableCell>
+                            <TableCell>{item.inviteBy}</TableCell>
+                            <TableCell>{item.novaPoint}</TableCell>
+                        </TableRow>
+                    )
+                })}
             </TableBody>
         </Table>
     )
