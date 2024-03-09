@@ -5,6 +5,8 @@ import "@/styles/otp-input.css";
 import BridgeComponent from "@/components/Bridge";
 import { Button } from "@nextui-org/react";
 import styled from "styled-components";
+import { FooterTvlText } from "@/styles/common";
+import TotalTvlCard from "@/components/TotalTvlCard";
 
 const BgBox = styled.div`
   position: relative;
@@ -159,8 +161,12 @@ export default function Bridge() {
           </div>
           {activeType === "nft" ? <NovaNFT /> : <NovaPoints />}
         </div>
-        <div className="px-8 md:px-16 lg:px-32 lg:w-1/2">
+        <div className="relative px-8 md:px-16 lg:px-32 lg:w-1/2">
           <BridgeComponent isFirstDeposit={true} />
+          <div className='absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32'>
+            <FooterTvlText className='mb-[0.5rem] text-right'>TVL</FooterTvlText>
+              <TotalTvlCard />
+          </div>   
         </div>
       </div>
     </BgBox>

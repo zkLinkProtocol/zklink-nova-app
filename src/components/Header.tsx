@@ -4,7 +4,7 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import styled from 'styled-components'
 import { showAccount } from '@/utils'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { setInvite, setSignature } from '@/store/modules/airdrop'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
@@ -82,7 +82,7 @@ export default function Header() {
         // console.log('signature', signature)
 
         if (!isConnected) {
-            console.log('disconnect')
+            // console.log('disconnect')
             dispatch(setSignature(''))
             dispatch(setInvite(null))
         }
@@ -91,11 +91,36 @@ export default function Header() {
         }
     }, [isConnected, signature])
 
+    const [isHeaderTop, setIsHeaderTop] = useState(true)
+    const handleScroll = () => {
+        if (window.scrollY > 0) {
+            setIsHeaderTop(false)
+        } else {
+            setIsHeaderTop(true)
+        }
+    }
+
+    useEffect(() => {
+        // const handleScroll = (event: any) => {
+        //     console.log('hello scroll listener', event)
+        // }
+
+        window.addEventListener('scroll', handleScroll)
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    }, [])
+
     return (
         <>
             <Navbar
-                shouldHideOnScroll
-                className='fixed px-[1.5rem] py-[0.75rem] bg-[transparent]'
+                // shouldHideOnScroll
+                className={`px-[1.5rem] py-[0.75rem] fixed`}
+                style={{
+                    // position: isHeaderTop ? 'fixed' : 'sticky',
+                    background: isHeaderTop ? 'transparent' : 'hsla(0,0%,9%,.88)',
+                }}
                 maxWidth='full'
                 isBlurred={false}>
                 <NavbarBrand className='flex items-end'>
@@ -123,7 +148,11 @@ export default function Header() {
                                 </NavLink>
                             </NavbarItem>
                             <NavbarItem>
-                                <NavLink to='/leaderboard' aria-disabled>Leaderboard</NavLink>
+                                <NavLink
+                                    to='/leaderboard'
+                                    aria-disabled>
+                                    Leaderboard
+                                </NavLink>
                             </NavbarItem>
                             <NavbarItem>
                                 <NavLink to='/about'>About</NavLink>

@@ -14,7 +14,7 @@ const About = lazy(() => import('@/pages/About'))
 
 export default function App() {
     return (
-        <main className='main dark text-foreground bg-background'>
+        <main className='main dark text-foreground bg-background header'>
             <BrowserRouter>
                 <Header />
 

@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import '@/styles/otp-input.css'
 const BgBox = styled.div`
     width: 100%;
-    min-height: 100%;
+    min-height: 100vh;
     color: #A0A5AD;
     font-family: Satoshi;
     font-size: 16px;

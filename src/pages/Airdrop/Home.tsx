@@ -14,7 +14,7 @@ import TotalTvlCard from '@/components/TotalTvlCard'
 
 const BgBox = styled.div`
     width: 100%;
-    min-height: 100%;
+    min-height: 100vh;
     background-image: image-set('/img/bg-home@0.5x.png' 0.5x, '/img/bg-home@1x.png' 1x, '/img/bg-home@2x.png' 2x);
     background-repeat: no-repeat;
     background-size: cover;
