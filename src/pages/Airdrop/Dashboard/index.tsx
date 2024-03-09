@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import AssetsTable from '@/components/AssetsTable'
 import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
 import { useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalContent, Tooltip, useDisclosure } from '@nextui-org/react'
+import { Modal, ModalBody, ModalContent, ModalHeader, Tooltip, useDisclosure } from '@nextui-org/react'
 import BridgeComponent from '@/components/Bridge'
 import { BOOST_LIST } from '@/constants/boost'
 import { getBooster, getNextMilestone } from '@/utils'
@@ -502,15 +502,18 @@ export default function Dashboard() {
                 size='2xl'
                 isOpen={bridgeModal.isOpen}
                 onOpenChange={bridgeModal.onOpenChange}>
-                <ModalContent>
+                <ModalContent className='mt-[2rem]'>
                     {(onClose) => (
-                        <ModalBody className='pb-8'>
-                            <BridgeComponent
-                                isFirstDeposit={false}
-                                bridgeToken={bridgeToken}
-                                onClose={onClose}
-                            />
-                        </ModalBody>
+                        <>
+                            <ModalHeader>Bridge</ModalHeader>
+                            <ModalBody className='pb-8'>
+                                <BridgeComponent
+                                    isFirstDeposit={false}
+                                    bridgeToken={bridgeToken}
+                                    onClose={onClose}
+                                />
+                            </ModalBody>
+                        </>
                     )}
                 </ModalContent>
             </Modal>

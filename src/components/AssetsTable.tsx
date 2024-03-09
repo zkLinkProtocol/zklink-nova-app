@@ -5,6 +5,7 @@ import {
     Modal,
     ModalBody,
     ModalContent,
+    ModalHeader,
     Skeleton,
     Table,
     TableBody,
@@ -300,13 +301,16 @@ export default function AssetsTable(props: IAssetsTableProps) {
                 onOpenChange={bridgeModal.onOpenChange}>
                 <ModalContent>
                     {(onClose) => (
-                        <ModalBody className='pb-8'>
-                            <BridgeComponent
-                                isFirstDeposit={false}
-                                bridgeToken={bridgeToken}
-                                onClose={onClose}
-                            />
-                        </ModalBody>
+                        <>
+                            <ModalHeader>Bridge</ModalHeader>
+                            <ModalBody className='pb-8'>
+                                <BridgeComponent
+                                    isFirstDeposit={false}
+                                    bridgeToken={bridgeToken}
+                                    onClose={onClose}
+                                />
+                            </ModalBody>
+                        </>
                     )}
                 </ModalContent>
             </Modal>
