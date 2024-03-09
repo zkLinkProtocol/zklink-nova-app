@@ -32,7 +32,7 @@ export default function Leaderboard() {
         <>
             <BgBox>
                 <BgCoverImg />
-                <div className='px-[10.44rem] mt-[3rem] min-h-[50rem] overflow-auto'>
+                <div className='px-[10.44rem] mt-[3rem] min-h-[50rem] overflow-auto z-[10]'>
                     <div className='flex items-center gap-[2rem]'>
                         <TabItem
                             className={`px-[2rem] py-[1rem] ${tabsActive === 0 ? 'active' : ''}`}

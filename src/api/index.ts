@@ -82,10 +82,8 @@ export const getReferralTvl = (address: string): Promise<Response> =>
     params: { address },
   });
 
-export const getAccountTwitter = (code: string): Promise<Response> =>
-  http.post(`${BASE_URL_API}/invite/account/twitter`, {
-    code,
-  });
+export const getAccountTwitter = (params: any): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/account/twitter`, params);
 
 
 

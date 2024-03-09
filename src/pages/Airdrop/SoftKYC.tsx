@@ -109,7 +109,11 @@ export default function SoftKYC() {
     const getTwitterByCode = async (code: string) => {
         setSearchParams('')
         setTwitterLoading(true)
-        const res = await getAccountTwitter(code)
+        const res = await getAccountTwitter({
+            code,
+            client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
+            redirect_uri: 'https://goerli.app.zklink.io/aagregation-parade',
+        })
 
         const { data } = res
         if (data) {
