@@ -13,6 +13,7 @@ import { SIGN_MESSAGE } from '@/constants/sign'
 import { Button } from '@nextui-org/react'
 import { getAccountTwitter } from '@/api'
 import TotalTvlCard from '@/components/TotalTvlCard'
+import { postData } from '@/utils'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -93,7 +94,7 @@ export default function SoftKYC() {
         const params = {
             response_type: 'code',
             client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-            redirect_uri: 'http://localhost:3000/airdrop',
+            redirect_uri: 'https://goerli.app.zklink.io/aagregation-parade',
             scope: 'tweet.read%20users.read%20follows.read%20follows.write',
             state: 'state',
             code_challenge: 'challenge',
@@ -119,6 +120,46 @@ export default function SoftKYC() {
         }
 
         setTwitterLoading(false)
+    }
+
+    const getTwitterAPI = async (code: string) => {
+        try {
+            const res = await postData('/twitter/2/oauth2/token', {
+                code,
+                grant_type: 'authorization_code',
+                client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
+                redirect_uri: 'https://goerli.app.zklink.io/aagregation-parade',
+                code_verifier: 'challenge',
+            })
+
+            setSearchParams('')
+
+            console.log(res)
+
+            const { access_token } = res
+
+            console.log(access_token)
+            if (access_token && access_token !== '') {
+                fetch('/twitter/2/users/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${access_token}`,
+                    },
+                })
+                    .then(async (res) => {
+                        let { data } = await res.json()
+                        console.log(data)
+
+                        dispatch(setTwitter(data))
+                    })
+                    .catch(() => toast.error('Could not connect to Twitter. Try again.'))
+
+                // console.log(res.json())
+            }
+        } catch (error) {
+            toast.error('Could not connect to Twitter. Try again.')
+        }
     }
 
     const handleSign = async () => {
@@ -161,7 +202,8 @@ export default function SoftKYC() {
         if (code) {
             console.log(code)
             dispatch(setTwitterAuthCode(code))
-            getTwitterByCode(code)
+            // getTwitterByCode(code)
+            getTwitterAPI(code)
         }
     }, [searchParams])
 
