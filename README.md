@@ -28,3 +28,11 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+
+> mint sbt NFT with allowlist and generated signature
+> 1. Frontend send signing request to backend API (TODO: backend needs to offer api)
+> 2. If the wallet is in allowlist, backend generate messageHash and Signature (backend needs to check allowlist)
+> 3. Frontend call mint function using messageHash and signature (frontend call contract to mint)
+> 4. Using ECDSA Recover, check if the signer is same as the owner of Smart Contract
+> 5. If YES, Mint a new NFT

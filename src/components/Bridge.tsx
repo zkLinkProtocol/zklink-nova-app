@@ -226,7 +226,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
     return false;
   }, [tokenList, fromActive, invalidChain]);
-
+  console.log("actionBtnDisabled: ", actionBtnDisabled, tokenList[fromActive]);
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
