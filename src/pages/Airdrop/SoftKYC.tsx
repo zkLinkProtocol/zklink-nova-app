@@ -257,7 +257,10 @@ export default function SoftKYC() {
                                         className='gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]'
                                         isLoading={twitterLoading}
                                         onClick={handleConnectTwitter}>
-                                        Connect Twitter/X
+                                            <span className='ml-4'>
+                                                Connect Twitter/X
+
+                                            </span>
                                     </Button>
                                 )}
                             </div>

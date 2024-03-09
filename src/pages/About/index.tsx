@@ -111,7 +111,7 @@ export default function About() {
                 <div className='paragraph'>
                     <div className='title mt-4'>Minimal Entry:</div>
                     <div>1. First 7 days 0.1 ETH</div>
-                    <div>2. After Day 7th 0.25 ETH</div>
+                    <div>2. After the 7th day 0.25 ETH</div>
                 </div>
                 <div className='paragraph2'>
                     <div className='title'>Deposit / Bridge Assets to Nova</div>
@@ -136,7 +136,7 @@ export default function About() {
                     <div className='marginLeft'>a. First week: 2x Nova Points</div>
                     <div className='marginLeft'>b. 2nd week: 1.5x Nova Points</div>
                     <div className='marginLeft'>c. 3rd & 4th week: 1.2x Nova Points</div>
-                    <div className='title'>The Early Bird Multiplier concludes immediately in the event where zkLink Nova removes the withdrawal restriction.</div>
+                    <div className='title'>The Early Bird Multiplier <span className='text-[#03D498]'>concludes immediately</span> in the event where zkLink Nova removes the withdrawal restriction.</div>
                 </div>
                 <div className='paragraph'>
                     <div><span className='title'>Token Multiplier:</span> Tokens are categorized into three tiers, with higher liquidity tokens receiving more Nova Points.</div>
@@ -182,7 +182,7 @@ export default function About() {
                     <div><span className='title'>Deposit Multiplier:</span> You will receive 10 times Nova points for EACH deposit/ bridging action that occurs.</div>
                 </div>
                 <div className='paragraph'>
-                    <div><span className='title'>Group Multiplier:</span> You, along with the users you've referred and their subsequent referrals, will be placed into the same group. This group has the potential to unlock Group Booster by achieving the following Milestones.</div>
+                    <div><span className='title'>Group Booster:</span> You, along with the users you've referred and their subsequent referrals, will be placed into the same group. This group has the potential to unlock Group Booster by achieving the following Milestones.</div>
                     <div>Group Booster = Group Holding Value Booster (In the Early Phase)</div>
                 </div>
                 <div className='paragraph'>
@@ -236,13 +236,13 @@ export default function About() {
                     <img src="/img/img-about-info.svg" className='w-full'/>
                 </div>
                 <div className='paragraph'>
-                    <div>After obtaining your SBT, you can upgrade it into an ERC721 NFT through collecting ONE OF EACH of the four different types of trademark NFT through our referral program.</div>
+                    <div>After obtaining your SBT, you can upgrade it into an ERC721 NFT through collecting ONE OF EACH of the FOUR different types of trademark NFT with our referral program.</div>
                     <div className='before'>You will get a trademark NFT airdrop for each 3 referral.</div>
                     <div className='before'>Top 100 referrer on the referral leader-board will be airdrop a Mystery Box.</div>
                 </div>
                 <div className='paragraph'>
                     <div>Upon Upgrading your Nova Lynks NFT, you will unlock the following utilities:</div>
-                    <div className='before'>10,000,000 ZKL Airdrop</div>
+                    <div className='before'><span className='text-[#03D498]'>10,000,000 ZKL</span> Airdrop</div>
                     <div className='before'>ZKL swags</div>
                     <div className='before'>Future NFT whitelist</div>
                     <div className='before'>zkLink on-site event access</div>

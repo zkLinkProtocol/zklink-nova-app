@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { useState } from 'react'
 import Performance from '@/components/Performance'
 import { BgBox, BgCoverImg, TableBox } from '@/styles/common'
+import { Tooltip } from '@nextui-org/react'
 
 const TabItem = styled.div`
     border-radius: 1rem;
@@ -17,7 +18,7 @@ const TabItem = styled.div`
     font-weight: 700;
     line-height: 2rem; /* 200% */
     letter-spacing: -0.03125rem;
-    &.active,
+d    &.active,
     &:hover {
         color: #fff;
         background: rgba(0, 0, 0, 0.4);
@@ -38,16 +39,24 @@ export default function Leaderboard() {
                             onClick={() => setTabsActive(0)}>
                             Points Leaderboard
                         </TabItem>
+
+                        <Tooltip content='coming soon'>
+
                         <TabItem
                             className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed ${tabsActive === 1 ? 'active' : ''}`}
                         >
                             Referral Leaderboard
                         </TabItem>
+                        </Tooltip>
+                        <Tooltip content='coming soon'>
+                        
                         <TabItem
                             className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed ${tabsActive === 2 ? 'active' : ''}`}
                         >
+
                             Referral Leaderboard
                         </TabItem>
+                        </Tooltip>
                     </div>
 
                     <TableBox className='mt-[2rem]'>
