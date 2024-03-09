@@ -8,6 +8,7 @@ import { usePublicClient, useWalletClient } from "wagmi";
 import type { Abi, Address, WriteContractParameters } from "viem";
 import IZkSync from "../constants/abi/IZkSync.json";
 import IL1Bridge from "../constants/abi/IL1Bridge.json";
+import WrappedMNTAbi from "../constants/abi/WrappedMNT.json";
 import IERC20 from "../constants/abi/IERC20.json";
 import { useAccount } from "wagmi";
 import { useState } from "react";
@@ -24,6 +25,7 @@ import { WalletClient } from "viem";
 import { useBridgeNetworkStore } from "./useNetwork";
 import { FullDepositFee } from "@/types";
 import { suggestMaxPriorityFee } from "@rainbow-me/fee-suggestions";
+import { WRAPPED_MNT } from "@/constants";
 
 // const networkKey: string = "goerli"; //TODO get from store
 const nodeType = import.meta.env.VITE_NODE_TYPE;
@@ -201,6 +203,17 @@ export const useBridgeTx = () => {
       abi: IERC20.abi,
       functionName: "approve",
       args: [spender, amount],
+    };
+    const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+    await publicClient?.waitForTransactionReceipt({ hash });
+  };
+
+  const depositMNT = async (amount: BigNumberish) => {
+    const tx = {
+      address: WRAPPED_MNT,
+      abi: WrappedMNTAbi,
+      functionName: "deposit",
+      value: amount,
     };
     const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
     await publicClient?.waitForTransactionReceipt({ hash });
@@ -408,25 +421,50 @@ export const useBridgeTx = () => {
       // const l1GasLimit = await getDepositEstimateGasForUseFee();
       let tx: WriteContractParameters;
       if (token === ETH_ADDRESS) {
-        tx = {
-          address: network.mainContract!,
-          abi: IZkSync.abi as Abi,
-          functionName: "requestL2Transaction",
-          args: [
-            address,
-            amount,
-            "",
-            l2GasLimit,
-            REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
-            [],
-            address,
-          ],
-        };
-        tx.value = BigNumber.from(baseCost).add(amount).toBigInt();
+        if (networkKey === "mantle") {
+          await depositMNT(amount);
+          const bridgeContract = network.erc20BridgeL1;
+          tx = {
+            address: bridgeContract!,
+            abi: IL1Bridge.abi as Abi,
+            functionName: "deposit",
+            args: [
+              address,
+              WRAPPED_MNT,
+              amount,
+              l2GasLimit,
+              REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
+            ],
+          };
+          tx.value = baseCost.toBigInt();
+          // tx.gasLimit = l1GasLimit;
+          const allowance = await getErc20Allowance(
+            WRAPPED_MNT,
+            address!,
+            bridgeContract!
+          );
+          if (allowance.lt(amount)) {
+            await sendApproveErc20Tx(WRAPPED_MNT, amount, bridgeContract!);
+          }
+        } else {
+          tx = {
+            address: network.mainContract!,
+            abi: IZkSync.abi as Abi,
+            functionName: "requestL2Transaction",
+            args: [
+              address,
+              amount,
+              "",
+              l2GasLimit,
+              REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
+              [],
+              address,
+            ],
+          };
+          tx.value = BigNumber.from(baseCost).add(amount).toBigInt();
+        }
       } else {
-        const bridgeContract = nodeConfig.find(
-          (item) => item.key === networkKey
-        )?.erc20BridgeL1;
+        const bridgeContract = network.erc20BridgeL1;
         tx = {
           address: bridgeContract!,
           abi: IL1Bridge.abi as Abi,

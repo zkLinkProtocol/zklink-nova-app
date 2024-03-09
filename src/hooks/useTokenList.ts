@@ -5,6 +5,7 @@ import { useBridgeNetworkStore } from "./useNetwork";
 import FromList from "@/constants/fromChainList";
 import IERC20 from "@/constants/abi/IERC20.json";
 import ethIcon from "@/assets/img/eth.svg";
+import mantleIcon from "@/assets/img/mantle.svg";
 export type Token = {
   address: string;
   networkKey: string;
@@ -22,8 +23,6 @@ import { getSupportedTokens } from "@/api";
 const nativeToken = {
   address: "0x0000000000000000000000000000000000000000",
   symbol: "ETH",
-  //   networkKey: network!,
-  //   networkName: from!.chainName,
   decimals: 18,
   icon: ethIcon,
 };
@@ -99,15 +98,19 @@ export const useTokenBalanceList = () => {
         token.decimals
       ),
     }));
-    if (from?.isEthGasToken) {
-      tokenList.unshift({
-        ...nativeToken,
-        networkKey: networkKey!,
-        networkName: from!.chainName,
-        balance: nativeTokenBalance?.value ?? 0n,
-        formatedBalance: formatBalance(nativeTokenBalance?.value ?? 0n, 18),
-      });
+    const native = {
+      ...nativeToken,
+      networkKey: networkKey!,
+      networkName: from!.chainName,
+      balance: nativeTokenBalance?.value ?? 0n,
+      formatedBalance: formatBalance(nativeTokenBalance?.value ?? 0n, 18),
+    };
+    if (networkKey === "mantle") {
+      //for mantle
+      native.symbol = "MNT";
+      native.icon = mantleIcon;
     }
+    tokenList.unshift(native);
     return tokenList;
   }, [nativeTokenBalance, erc20Balances, from, tokens, networkKey]);
 
