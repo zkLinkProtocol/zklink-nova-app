@@ -1,15 +1,16 @@
 import { useWeb3Modal } from '@web3modal/wagmi/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import OTPInput from 'react-otp-input'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { setInviteCode, setViewStatus } from '@/store/modules/airdrop'
 // import { useNavigate } from 'react-router-dom'
-import { GradientButton } from '@/styles/common'
+import { FooterTvlText, GradientButton } from '@/styles/common'
 import '@/styles/otp-input.css'
-import { checkInviteCode, getTotalTvl } from '@/api'
+import { checkInviteCode } from '@/api'
 import toast from 'react-hot-toast'
 import { STATUS_CODE } from '.'
+import TotalTvlCard from '@/components/TotalTvlCard'
 
 const BgBox = styled.div`
     width: 100%;
@@ -53,20 +54,11 @@ const ConnectWalletText = styled.span`
     letter-spacing: -0.03125rem;
 `
 
-const FooterText = styled.p`
-    color: #c2e2ff;
-    font-family: Satoshi;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-`
 
 export default function Home() {
     const web3Modal = useWeb3Modal()
     const dispatch = useDispatch()
     // const navigate = useNavigate()
-    const [totalTvl, setTotalTvl] = useState(0)
     // const [activeUsers, setActiveUsers] = useState(0)
 
     const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] = useState({
@@ -94,15 +86,8 @@ export default function Home() {
         dispatch(setInviteCode(otp))
         // dispatch(set(otp))
         // navigate('/airdrop')
-        
     }
 
-    const getTotalTvlFunc = async () => {
-        const res = await getTotalTvl()
-        console.log('total tvl', res)
-
-        setTotalTvl(res?.result || 0)
-    }
     // const getActiveAccountsFunc = async () => {
     //     const res = await getActiveAccounts()
     //     console.log('active accounts', res)
@@ -113,11 +98,6 @@ export default function Home() {
     const goInviteCode = () => {
         dispatch(setViewStatus(STATUS_CODE.landing))
     }
-
-    useEffect(() => {
-        // getActiveAccountsFunc()
-        getTotalTvlFunc()
-    }, [])
 
     return (
         <BgBox className='relative pb-[13rem]'>
@@ -197,8 +177,8 @@ export default function Home() {
 
             <div className='absolute bottom-0 py-[4.5rem] flex justify-between items-end pl-[6.5rem] pr-[8.94rem]  w-full'>
                 <div>
-                    {/* TODO: new tvl styles */}
-                    <FooterText>TVL / {totalTvl}</FooterText>
+                    <FooterTvlText className='mb-[0.5rem]'>TVL</FooterTvlText>
+                    <TotalTvlCard />
                     {/* <FooterText className='mt-4'>TOTAL USERS / {activeUsers}</FooterText> */}
                 </div>
                 <div className='flex items-center gap-[1.25rem]'>

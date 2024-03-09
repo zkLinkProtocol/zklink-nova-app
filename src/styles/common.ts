@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 export const GradientButton = styled.span`
@@ -83,4 +82,13 @@ export const TableBox = styled.div`
             padding: 0.75rem 0;
         }
     }
+`
+
+export const FooterTvlText = styled.p`
+    color: #fff;
+    font-family: Satoshi;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 `

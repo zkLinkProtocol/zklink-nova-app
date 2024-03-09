@@ -4,15 +4,15 @@ import qs from 'qs'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import styled from 'styled-components'
-import Performance from '../../components/Performance'
 import { useDispatch, useSelector } from 'react-redux'
-import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
+import { BgBox, BgCoverImg, CardBox, FooterTvlText } from '@/styles/common'
 import { setSignature, setTwitter, setTwitterAuthCode } from '@/store/modules/airdrop'
 import toast from 'react-hot-toast'
 import { useSignMessage } from 'wagmi'
 import { SIGN_MESSAGE } from '@/constants/sign'
 import { Button } from '@nextui-org/react'
 import { getAccountTwitter } from '@/api'
+import TotalTvlCard from '@/components/TotalTvlCard'
 
 const TitleText = styled.h4`
     color: #c2e2ff;
@@ -39,7 +39,7 @@ const ContentBox = styled.div`
     position: relative;
     margin: 0 auto;
     width: 58.875rem;
-    min-height: 36rem;
+    min-height: 40rem;
     z-index: 10;
 `
 
@@ -249,8 +249,9 @@ export default function SoftKYC() {
                     </div>
                 </div>
             </ContentBox>
-            <div className='absolute bottom-[4.5rem] w-full'>
-                <Performance />
+            <div className='absolute bottom-[4.5rem] w-full flex flex-col items-center'>
+                <FooterTvlText className='mb-[0.5rem] text-center'>TVL</FooterTvlText>
+                <TotalTvlCard />
             </div>
         </BgBox>
     )

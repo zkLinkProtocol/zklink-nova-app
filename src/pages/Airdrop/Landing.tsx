@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import OTPInput from 'react-otp-input'
-import Performance from '../../components/Performance'
 import { useDispatch } from 'react-redux'
 import { setInviteCode, setIsGroupLeader } from '@/store/modules/airdrop'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import toast from 'react-hot-toast'
 import '@/styles/otp-input.css'
-import { GradientButton, CardBox } from '@/styles/common'
+import { GradientButton, CardBox, FooterTvlText } from '@/styles/common'
 import { useAccount } from 'wagmi'
 import { checkInviteCode } from '@/api'
+import TotalTvlCard from '@/components/TotalTvlCard'
 // import { BOOST_LIST } from '@/constants/boost'
 
 const BgBox = styled.div`
@@ -133,7 +133,7 @@ export default function Landing() {
     return (
         <BgBox>
             <CoverImgBox />
-            <div className='relative mx-[auto] pl-[3.25rem] w-[41.5rem] z-[2]'>
+            <div className='relative mx-[auto] pl-[3.25rem] w-[41.5rem] min-h-[32rem] z-[2]'>
                 <div className='flex justify-between gap-[1.5rem] mt-[8.5rem]'>
                     <TabsItem
                         className={`w-1/2 ${tabsActive === 0 ? 'active' : ''}`}
@@ -210,8 +210,10 @@ export default function Landing() {
                 </CardBox>
             </div>
 
-            <div className='absolute bottom-[4.5rem] w-full'>
-                <Performance />
+            <div className='absolute bottom-[4.5rem] w-full flex flex-col items-center'>
+                {/* <Performance /> */}
+                <FooterTvlText className='mb-[0.5rem] text-center'>TVL</FooterTvlText>
+                <TotalTvlCard />
             </div>
         </BgBox>
     )
