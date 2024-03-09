@@ -15,16 +15,35 @@ export type Token = {
   icon: string;
   balance?: number | bigint;
   formatedBalance?: number | string;
+  type: string;
+  yieldType: string[];
+  multiplier: number;
 };
 import { useQueryClient } from "@tanstack/react-query";
 import { formatBalance } from "@/utils";
-import { wagmiConfig } from "@/constants/networks";
+import { PRIMARY_CHAIN_KEY, wagmiConfig } from "@/constants/networks";
 import { getSupportedTokens } from "@/api";
 const nativeToken = {
   address: "0x0000000000000000000000000000000000000000",
   symbol: "ETH",
   decimals: 18,
   icon: ethIcon,
+};
+const nodeType = import.meta.env.VITE_NODE_TYPE;
+const isSameNetwork = (networkKey: string, chain: string) => {
+  if (
+    nodeType === "nexus-goerli" &&
+    networkKey === "goerli" &&
+    chain === "Ethereum"
+  ) {
+    return true;
+  } else if (networkKey === PRIMARY_CHAIN_KEY && chain === "Linear") {
+    return true;
+  } else if (networkKey.toLowerCase() === chain.toLowerCase()) {
+    return true;
+  } else {
+    return false;
+  }
 };
 export const useTokenBalanceList = () => {
   const [tokenSource, setTokenSource] = useState<Token[]>([]);
@@ -33,10 +52,22 @@ export const useTokenBalanceList = () => {
 
   useEffect(() => {
     (async () => {
+      if (!networkKey) return;
       const supportedTokens = await getSupportedTokens();
       console.log("supportedTokens: ", supportedTokens);
+      const tokens = [];
+      for (const token of supportedTokens) {
+        const index = token.address.find((item) =>
+          isSameNetwork(networkKey, item.chain)
+        );
+        if(index > -1) {
+          tokens.push({
+            
+          })
+        }
+      }
     })();
-  }, []);
+  }, [networkKey]);
 
   const queryClient = useQueryClient();
 
