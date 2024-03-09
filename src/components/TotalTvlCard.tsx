@@ -7,6 +7,7 @@ const TvlBox = styled.div`
         padding: 0 0.5rem;
         width: 3.125rem;
         height: 3.875rem;
+        line-height: 3.875rem;
         border-radius: 1rem;
         background: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(15.800000190734863px);
@@ -15,7 +16,6 @@ const TvlBox = styled.div`
         font-size: 3rem;
         font-style: normal;
         font-weight: 700;
-        line-height: normal;
         text-align: center;
     }
 `
