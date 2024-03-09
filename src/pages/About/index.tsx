@@ -85,7 +85,7 @@ export default function About() {
     return (
         <BgBox className='relative pb-[3rem]'>
             <div className='pt-[8.5rem] pl-[6.5rem] pr-[6.88rem]'>
-                <img src="/img/Mask group.svg" alt="" className='banner'/>
+                <img src="/img/about-banner.svg" alt="" className='banner'/>
                 <div className='paragraph'>
                 zkLink Nova is the first aggregated Layer 3 ZK-Rollup network with EVM-compatibility, built on top of Ethereum and multiple Layer 2 rollup networks (L2s).
                 </div>
