@@ -204,10 +204,7 @@ export default function SoftKYC() {
         }
 
         if (code) {
-            console.log(code)
-            dispatch(setTwitterAuthCode(code))
-            // getTwitterByCode(code)
-            getTwitterAPI(code)
+            getTwitterByCode(code)
         }
     }, [searchParams])
 
