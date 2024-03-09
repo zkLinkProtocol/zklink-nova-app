@@ -219,14 +219,14 @@ export default function Bridge(props: IBridgeComponentProps) {
   const actionBtnDisabled = useMemo(() => {
     if (
       !invalidChain &&
-      tokenList[fromActive] &&
-      (!tokenList[fromActive].balance || tokenList[fromActive].balance! < 0)
+      tokenList[tokenActive] &&
+      (!tokenList[tokenActive].balance || tokenList[tokenActive].balance! < 0)
     ) {
       return true;
     }
     return false;
-  }, [tokenList, fromActive, invalidChain]);
-  console.log("actionBtnDisabled: ", actionBtnDisabled, tokenList[fromActive]);
+  }, [tokenList, tokenActive, invalidChain]);
+  console.log("actionBtnDisabled: ", actionBtnDisabled, tokenList[tokenActive]);
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
@@ -342,6 +342,9 @@ export default function Bridge(props: IBridgeComponentProps) {
               />
               <span>{fromList[fromActive].label}</span>
               {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
+            </div>
+            <div>
+              Balance: <span>{tokenList[tokenActive]?.formatedBalance}</span>
             </div>
           </div>
           <div className="flex items-center gap-4 mt-2">
