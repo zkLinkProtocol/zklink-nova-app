@@ -27,7 +27,7 @@ import cionIcon from "@/assets/img/cion.png";
 import toast from "react-hot-toast";
 
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { useBridgeNetworkStore } from "@/hooks/useNetwork";
 import Tokens from "@/constants/tokens";
 import { STORAGE_NETWORK_KEY } from "@/constants";
@@ -35,7 +35,13 @@ import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { bindInviteCodeWithAddress, getInvite, checkInviteCode } from "@/api";
+import {
+  bindInviteCodeWithAddress,
+  getInvite,
+  checkInviteCode,
+  getTokenPrice,
+  getDepositETHThreshold,
+} from "@/api";
 import { RootState } from "@/store";
 import { setInvite } from "@/store/modules/airdrop";
 import { parseUnits } from "viem";
@@ -140,7 +146,44 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [inviteCode, setInputInviteCode]);
 
   useEffect(() => {
+    (async () => {
+      const minDeposit = await getDepositETHThreshold();
+      console.log("minDeposit: ", minDeposit);
+      setMinDepositValue(minDeposit.ethAmount || 0.1);
+    })();
+  }, []);
+
+  useEffect(() => {
     //TODO compute eth value, if less than minDepositValue, show 0 points
+    (async () => {
+      if (!amount) {
+        setShowNoPointsTip(false);
+        return;
+      }
+      if (tokenList[tokenActive].address === ETH_ADDRESS) {
+        if (Number(amount) < minDepositValue) {
+          setShowNoPointsTip(true);
+        } else {
+          setShowNoPointsTip(false);
+        }
+      } else {
+        const [priceInfo, ethPriceInfo] = await Promise.all([
+          getTokenPrice(tokenList[tokenActive].address),
+          getTokenPrice(ETH_ADDRESS),
+        ]);
+        if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
+          const ethValue = BigNumber.from(priceInfo.usdPrice)
+            .mul(amount)
+            .div(ethPriceInfo.usdPrice)
+            .toNumber();
+          if (ethValue < minDepositValue) {
+            setShowNoPointsTip(true);
+          } else {
+            setShowNoPointsTip(false);
+          }
+        }
+      }
+    })();
   }, [tokenActive, tokenList, amount, minDepositValue]);
 
   useEffect(() => {
@@ -181,7 +224,15 @@ export default function Bridge(props: IBridgeComponentProps) {
         }
         setFromActive(fromIndex);
         setNetworkKey(from.networkKey);
+      } else {
+        setFromActive(0);
+        setTokenActive(0);
+        setNetworkKey(fromList[0].networkKey);
       }
+    } else {
+      setFromActive(0);
+      setTokenActive(0);
+      setNetworkKey(fromList[0].networkKey);
     }
   }, [setNetworkKey, isFirstDeposit, bridgeToken]);
 
@@ -277,13 +328,16 @@ export default function Bridge(props: IBridgeComponentProps) {
 
     refreshTokenBalanceList();
     if (isFirstDeposit) {
+      const data = {
+        address,
+        code: inviteCodeType === "join" ? inputInviteCode : "",
+        siganture: signature,
+        twitterHandler: twitter?.username ?? "",
+        twitterName: twitter?.name ?? "",
+      };
       try {
         const resBind = await bindInviteCodeWithAddress({
-          address,
-          code: inviteCodeType === "join" ? inputInviteCode : "",
-          siganture: signature,
-          twitterHandler: twitter?.username || "mickeywang",
-          twitterName: twitter?.name || "mickey",
+          ...data,
         });
 
         if (resBind?.error) {
@@ -301,6 +355,22 @@ export default function Bridge(props: IBridgeComponentProps) {
         } else if (e.message === "The invitation limit has been reached") {
           //TODO can not invite more
           toast.error("The invitation limit has been reached");
+          data.code &&
+            dispatch(
+              setInvite({
+                ...data,
+              })
+            );
+        } else if (
+          e.message === "Has been invited, can not repeat the association"
+        ) {
+          toast.error(e.message);
+          data.code &&
+            dispatch(
+              setInvite({
+                ...data,
+              })
+            );
         }
       }
     }
@@ -484,6 +554,19 @@ export default function Bridge(props: IBridgeComponentProps) {
             </Button>
           )}
         </div>
+        {showNoPointsTip && (
+          <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
+            <img
+              src="/img/icon-no-points.png"
+              alt=""
+              className="w-[21px] h-[21px] mr-3"
+            />
+            <p className="text-[#C57D10] ">
+              Should you wish to participate in the Aggregation Parade, the
+              minimum deposit value should be {minDepositValue} ETH.
+            </p>
+          </div>
+        )}
       </Container>
       <Modal
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}

@@ -45,6 +45,9 @@ export const getInvite = (address: string): Promise<Response> =>
 export const getReferrer = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/${address}`);
 
+export const getDepositETHThreshold = (): Promise<{ethAmount:number}> =>
+  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getDepositEthThreshold`);
+
 export const getAccounTvl = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccounTvl`, {
     params: { address },
@@ -85,8 +88,6 @@ export const getReferralTvl = (address: string): Promise<Response> =>
 export const getAccountTwitter = (params: any): Promise<Response> =>
   http.post(`${BASE_URL_API}/invite/account/twitter`, params);
 
-
-
 export type SupportToken = {
   address: {
     chain: string;
@@ -101,17 +102,33 @@ export type SupportToken = {
   multiplier: number;
 };
 
+export type TokenPriceInfo = {
+  l2Address: string
+  l1Address: string
+  symbol: string
+  name: string
+  decimals: number;
+  usdPrice: number;
+  liquidity: number;
+  iconURL: string;
+};
 
-export const getAccountRefferalsTVL = (address: string): Promise<Response> => http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRefferalsTVL`, {
-  params: { address }
-})
+export const getAccountRefferalsTVL = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRefferalsTVL`, {
+    params: { address },
+  });
 
-export const getSupportTokens = (): Promise<SupportToken[]> => http.get(`${BASE_URL_POINTS}/tokens/getSupportTokens`)
-export const getSupportedTokens = (): Promise<SupportToken[]> => http.get(`${BASE_URL_TOKENS}/getSupportTokens`);
-
+export const getSupportTokens = (): Promise<SupportToken[]> =>
+  http.get(`${BASE_URL_POINTS}/tokens/getSupportTokens`);
+export const getSupportedTokens = (): Promise<SupportToken[]> =>
+  http.get(`${BASE_URL_TOKENS}/getSupportTokens`);
+export const getTokenPrice = (address: string): Promise<TokenPriceInfo> =>
+  http.get(`${BASE_URL_TOKENS}/${address}`);
 
 export const getAccountsRank = (): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountsRank`);
 
 export const getAccountRank = (address: string): Promise<Response> =>
-  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRank`, { params: { address } });
+  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRank`, {
+    params: { address },
+  });

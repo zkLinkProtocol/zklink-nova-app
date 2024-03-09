@@ -10,16 +10,16 @@ export type Token = {
 };
 
 export type TableColumnItem = {
-  key: string
-  label: string
-  align?: 'start' | 'center' | 'end'
-}
+  key: string;
+  label: string;
+  align?: "start" | "center" | "end";
+};
 
 export type Twitter = {
-  id: string
-  name: string
-  username: string // twitter handle
-}
+  id: string;
+  name: string;
+  username: string; // twitter handle
+};
 
 export interface FullDepositFee {
   maxFeePerGas?: BigNumber;
@@ -30,11 +30,11 @@ export interface FullDepositFee {
   l2GasLimit: BigNumber;
 }
 export type Invite = {
-  address: string,
-  code: string | null,
-  canInviteNumber: number,
-  isLeader: boolean,
-  twitterName: string | null,
-  twitterHandler: string | null,
-  beInvited: boolean
-} 
+  address: string;
+  code: string | null;
+  canInviteNumber?: number;
+  isLeader?: boolean;
+  twitterName: string | null;
+  twitterHandler: string | null;
+  beInvited?: boolean;
+};

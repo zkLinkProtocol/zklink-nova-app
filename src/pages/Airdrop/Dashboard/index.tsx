@@ -22,6 +22,7 @@ import {
 } from '@/api'
 import { useAccount } from 'wagmi'
 import toast from 'react-hot-toast'
+import { ETH_ADDRESS } from '@/constants'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
