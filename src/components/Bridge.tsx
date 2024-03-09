@@ -38,6 +38,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { bindInviteCodeWithAddress, getInvite, checkInviteCode } from "@/api";
 import { RootState } from "@/store";
 import { setInvite } from "@/store/modules/airdrop";
+import { parseUnits } from "viem";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -101,6 +102,8 @@ const InviteCodeTypes = [
   { label: "Join Group", value: "join" },
   { label: "Create Group", value: "create" },
 ];
+const ContentForMNTDeposit =
+  "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
   const { isFirstDeposit, onClose, bridgeToken } = props;
   const web3Modal = useWeb3Modal();
@@ -122,8 +125,7 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
-  // const { setNetworkKey } = useNetworkStore();
-  const { setNetworkKey } = useBridgeNetworkStore();
+  const { setNetworkKey, networkKey } = useBridgeNetworkStore();
   const { tokenList, refreshTokenBalanceList } = useTokenBalanceList();
 
   const [points, setPoints] = useState(0);
@@ -189,6 +191,15 @@ export default function Bridge(props: IBridgeComponentProps) {
     //TODO set if show no points tip
     setPoints(200);
   }, [amount, tokenActive]);
+  const actionBtnTooltipForMantleDisabeld = useMemo(() => {
+    if (
+      networkKey === "mantle" &&
+      tokenList[tokenActive].address === ETH_ADDRESS
+    ) {
+      return false;
+    }
+    return true;
+  }, [networkKey, tokenActive, tokenList]);
 
   const handleFrom = (index: number) => {
     setFromActive(index);
@@ -257,7 +268,8 @@ export default function Bridge(props: IBridgeComponentProps) {
     try {
       await sendDepositTx(
         tokenList[tokenActive]?.address as `0x${string}`,
-        utils.parseEther(String(amount))
+        // utils.parseEther(String(amount))
+        parseUnits(String(amount), tokenList[tokenActive]?.decimals)
       );
     } catch (e) {
       return;
@@ -439,16 +451,24 @@ export default function Bridge(props: IBridgeComponentProps) {
         </SelectBox>
         <div className="mt-8">
           {isConnected ? (
-            <Button
-              className="gradient-btn w-full rounded-full"
-              disableAnimation
-              size="lg"
-              onClick={handleAction}
-              isLoading={loading}
-              disabled={actionBtnDisabled}
+            <Tooltip
+              classNames={{
+                content: "max-w-[300px] p-4",
+              }}
+              content={ContentForMNTDeposit}
+              isDisabled={actionBtnTooltipForMantleDisabeld}
             >
-              {btnText}
-            </Button>
+              <Button
+                className="gradient-btn w-full rounded-full"
+                disableAnimation
+                size="lg"
+                onClick={handleAction}
+                isLoading={loading}
+                disabled={actionBtnDisabled}
+              >
+                {btnText}
+              </Button>
+            </Tooltip>
           ) : (
             <Button
               className="gradient-btn  w-full rounded-full"
