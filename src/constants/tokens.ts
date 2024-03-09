@@ -34,29 +34,12 @@ const Tokens = [
     decimals: 6,
     icon: "",
   },
-
-  {
-    address: "0x285923c58af7a0e8EFfD02e18901Fa37318ccC56",
-    networkKey: "goerli",
-    symbol: "NOVA",
-    networkName: "Goerli",
-    decimals: 18,
-    icon: "",
-  },
   {
     address: "0x36504cf172bfd4e84e52f2a857467a84f89b8475",
     networkKey: PRIMARY_CHAIN_KEY,
     symbol: "USDT",
     networkName: "Linear",
     decimals: 6,
-    icon: "",
-  },
-  {
-    address: "0xAC71eC1796e0D98B541A96f95c03b7F3149dC6Aa",
-    networkKey: PRIMARY_CHAIN_KEY,
-    symbol: "NOVA",
-    networkName: "Linear",
-    decimals: 18,
     icon: "",
   },
 ];
