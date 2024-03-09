@@ -18,6 +18,7 @@ import {
     getReferralTvl,
     getReferrer,
     getSupportTokens,
+    getTotalTvl,
     getTotalTvlByToken,
 } from '@/api'
 import { useAccount } from 'wagmi'
@@ -180,6 +181,7 @@ export default function Dashboard() {
     const bridgeModal = useDisclosure()
     const [accountTvlData, setAccountTvlData] = useState([])
     const [groupTvl, setGroupTvl] = useState(0)
+    const [totalTvl, setTotalTvl] = useState(0)
     const [referralTvl, setReferralTvl] = useState(0)
     const [supportTokens, setSupportTokens] = useState<any[]>([])
 
@@ -264,6 +266,13 @@ export default function Dashboard() {
         }
     }
 
+    const getTotalTvlFunc = async () => {
+        const res = await getTotalTvl()
+        console.log('total tvl', res)
+
+        setTotalTvl(res?.result || 0)
+    }
+
     useEffect(() => {
         getSupportTokensFunc()
         getTotalTvlByTokenFunc()
@@ -273,6 +282,7 @@ export default function Dashboard() {
         getAccountTvlFunc()
         getGroupTvlFunc()
         getReferralTvlFunc()
+        getTotalTvlFunc()
     }, [])
 
     return (
@@ -344,11 +354,15 @@ export default function Dashboard() {
                 <div className='w-full'>
                     <div className='flex gap-[1.5rem]'>
                         <CardBox className='flex justify-around  py-[3rem] w-1/2'>
+                        <div>
+                                <p className='text-[1.5rem] leading-[2rem] text-center'>${totalTvl}</p>
+                                <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Total TVL</p>
+                            </div>
                             <div>
                                 <p className='text-[1.5rem] leading-[2rem] text-center'>${groupTvl}</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Group TVL</p>
                             </div>
-                            <div>
+                            {/* <div>
                                 <p className='text-[1.5rem] leading-[2rem] text-center'>{getBooster(groupTvl)}</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.25rem]'>
                                     <span>Group 24h Growth/Boost Rate</span>
@@ -371,7 +385,7 @@ export default function Dashboard() {
                                         />
                                     </Tooltip>
                                 </p>
-                            </div>
+                            </div> */}
                         </CardBox>
                         <CardBox className='flex justify-around py-[3rem] w-1/2'>
                             <div>
