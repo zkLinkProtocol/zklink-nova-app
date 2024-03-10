@@ -172,7 +172,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     (async () => {
       if (address) {
         //TODO call api to get loyal points
-        setLoyalPoints(300);
+        // setLoyalPoints(300);
       }
     })();
   }, [address]);
@@ -506,7 +506,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               <div className="flex items-center justify-center bg-green-800 h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
                 10x Boost
               </div>
-              {loyalPoints && (
+              {loyalPoints > 0 && (
                 <Tooltip
                   showArrow={true}
                   classNames={{
@@ -532,7 +532,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
             <div className="flex items-center">
               <span>{points}</span>
-              {loyalPoints && (
+              {loyalPoints > 0 && (
                 <div className="ml-1">
                   + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
                 </div>
