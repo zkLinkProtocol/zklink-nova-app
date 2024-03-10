@@ -457,12 +457,12 @@ export default function Dashboard() {
                 </GreenTag>
               </Tooltip>
             </div>
-            <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+            {/* <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
               +{accountPoint.referPoint}
             </p>
             <p className="text-[1rem] text-[#919192] font-[400]">
               Est. in next epoch
-            </p>
+            </p> */}
 
             <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
               <span>Earn By Your Deposit</span>

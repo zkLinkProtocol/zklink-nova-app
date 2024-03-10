@@ -206,7 +206,32 @@ export default function AssetsTable(props: IAssetsTableProps) {
     const [isMyHolding, setIsMyHolding] = useState(false)
     const bridgeModal = useDisclosure()
 
-    const yieldsTypeList = ['NOVA Points', 'Native Yield', 'EL Pts', 'Kelp Miles', 'Puffer Pts', 'ezPoints', 'Loyalty Pts', 'Pearls', 'Shard']
+    const yieldsTypeList = [
+        {name:'NOVA Points', label: 'NOVA Pts'},
+        {name: 'Native Yield', label: 'Native Yield'},
+        {name: 'EL Points', label: 'EL Pts'},
+        {name: 'Kelp Miles', label: 'Kelp Miles'},
+        {name: 'Puffer Points', label: 'Puffer Pts'},
+        {name: 'ezPoints', label: 'ezPoints'},
+        {name: 'Loyalty', label: 'Loyalty Pts'},
+        {name: 'Pearls', label: 'Pearls'},
+        {name: 'Shard', label: 'Shard'}
+    ]
+
+    const getYieldsType = (name: string) => {
+        let obj = {
+            label: '',
+            index: 0
+        }
+        yieldsTypeList.forEach((item, index) => {
+            if (item.name === name) {
+                obj.label = item.label
+                obj.index = index
+            }
+        })
+
+        return obj
+    }
 
     const getTotalTvl = (symbol: string) => {
         return totalTvlList.find((item: any) => item.symbol == symbol)
@@ -236,8 +261,8 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
     useEffect(() => {
 
-        let arr:AssetsListItem[] = []
-        
+        let arr: AssetsListItem[] = []
+
         if (isMyHolding) {
             arr = data.map((item: any) => {
                 const tokenObj = getToken(item?.symbol)
@@ -263,12 +288,12 @@ export default function AssetsTable(props: IAssetsTableProps) {
                 }
                 return obj
             })
-    
-           
+
+
             // if (isMyHolding) {
             //     arr = arr.filter((item) => +item.tvl !== 0)
             // }
-    
+
         } else {
             arr = supportTokens.map(item => {
                 const accountTvlObj = data.find(obj => obj?.symbol == item?.symbol)
@@ -296,11 +321,11 @@ export default function AssetsTable(props: IAssetsTableProps) {
             })
         }
 
-         if (assetsTabsActive !== 0) {
+        if (assetsTabsActive !== 0) {
             const filterType = assetTabList[assetsTabsActive].name
             arr = arr.filter((item) => item?.type === filterType)
         }
-      
+
         console.log('assets list--------', arr)
         setTableList(arr)
         // // const arr = data.filter(item => item.)
@@ -378,8 +403,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                                         <TableItem className='flex items-center gap-[0.44rem]'>
                                             {
                                                 item?.yieldType && Array.isArray(item?.yieldType) && item?.yieldType.map((type, index) => (
-                                                    <span key={index} className={`tag px-[1rem] py-[0.12rem] tag-gradient-${yieldsTypeList.indexOf(type) + 1}`}>{type}</span>
-
+                                                    <span key={index} className={`tag px-[0.5rem] py-[0.12rem] tag-gradient-${getYieldsType(type).index + 1}`}>{getYieldsType(type).label}</span>
                                                 ))
                                             }
                                             {/* <span className='tag tag-gradient-purple px-[1rem] py-[0.12rem]'>Kelp Miles</span> */}
