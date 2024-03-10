@@ -57,6 +57,7 @@ export const useTokenBalanceList = () => {
       console.log("supportedTokens: ", supportedTokens);
       const tokens = [];
       for (const token of supportedTokens) {
+        if (token.symbol === "ETH") continue;
         const item = token.address.find((item) =>
           isSameNetwork(networkKey, item.chain)
         );
