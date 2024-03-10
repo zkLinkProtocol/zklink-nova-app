@@ -159,6 +159,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [showNoPointsTip, setShowNoPointsTip] = useState(false);
   const [minDepositValue, setMinDepositValue] = useState(0.1);
   const [loyalPoints, setLoyalPoints] = useState(0);
+  const [priceApiFailed, setPriceApiFailed] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -198,29 +199,35 @@ export default function Bridge(props: IBridgeComponentProps) {
           setShowNoPointsTip(false);
         }
       } else {
-        const [priceInfo, ethPriceInfo] = await Promise.all([
-          getTokenPrice(tokenList[tokenActive].address),
-          getTokenPrice(ETH_ADDRESS),
-        ]);
-        if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
-          const ethValue = BigNumber.from(priceInfo.usdPrice)
-            .mul(amount)
-            .div(ethPriceInfo.usdPrice)
-            .toNumber();
-          if (ethValue < minDepositValue) {
-            setShowNoPointsTip(true);
-          } else {
-            setShowNoPointsTip(false);
+        try {
+          const [priceInfo, ethPriceInfo] = await Promise.all([
+            getTokenPrice(tokenList[tokenActive].address),
+            getTokenPrice(ETH_ADDRESS),
+          ]);
+          if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
+            const ethValue = BigNumber.from(priceInfo.usdPrice)
+              .mul(amount)
+              .div(ethPriceInfo.usdPrice)
+              .toNumber();
+            if (ethValue < minDepositValue) {
+              setShowNoPointsTip(true);
+            } else {
+              setShowNoPointsTip(false);
+            }
+            // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
+            const points = BigNumber.from(priceInfo.usdPrice)
+              .mul(10)
+              .mul(tokenList[tokenActive].multiplier)
+              .mul(amount)
+              .div(ethPriceInfo.usdPrice)
+              .toNumber();
+            setPoints(points);
           }
-          // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
-          const points = BigNumber.from(priceInfo.usdPrice)
-            .mul(10)
-            .mul(tokenList[tokenActive].multiplier)
-            .mul(amount)
-            .div(ethPriceInfo.usdPrice)
-            .toNumber();
-          setPoints(points);
+        } catch (e) {
+          console.log(e);
+          setPriceApiFailed(true);
         }
+        setPriceApiFailed(false);
       }
     })();
   }, [tokenActive, tokenList, amount, minDepositValue]);
@@ -378,7 +385,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         }
 
         const res = await getInvite(address);
-        if (res?.result && !showNoPointsTip) {
+        if (res?.result && !showNoPointsTip && !priceApiFailed) {
           dispatch(setInvite(res?.result));
         }
       } catch (e) {
@@ -388,7 +395,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         } else if (e.message === "The invitation limit has been reached") {
           //TODO can not invite more
           toast.error("The invitation limit has been reached");
-          if (data.code && !showNoPointsTip) {
+          if (data.code && !showNoPointsTip && !priceApiFailed) {
             dispatch(
               setInvite({
                 ...data,
@@ -399,7 +406,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           e.message === "Has been invited, can not repeat the association"
         ) {
           toast.error(e.message);
-          if (data.code && !showNoPointsTip) {
+          if (data.code && !showNoPointsTip && !priceApiFailed) {
             dispatch(
               setInvite({
                 ...data,
@@ -429,6 +436,8 @@ export default function Bridge(props: IBridgeComponentProps) {
     twitter?.username,
     twitter?.name,
     dispatch,
+    showNoPointsTip,
+    priceApiFailed,
   ]);
 
   return (
