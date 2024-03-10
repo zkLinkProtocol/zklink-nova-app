@@ -92,7 +92,10 @@ const useNovaNFT = () => {
       setLoading(true);
       const response = await getMintSignature(address);
       const signature = response.result?.signature;
-      if (!signature) return Promise.reject("No signature");
+      if (!signature)
+        return Promise.reject(
+          new Error("You are not authorized, please contact us for help.")
+        );
       const tx = {
         address: NOVA_NFT_CONTRACT,
         abi: NovaNFT.abi,
