@@ -704,20 +704,22 @@ export default function Bridge(props: IBridgeComponentProps) {
                 <Tab key={item.value} title={item.label}></Tab>
               ))}
             </Tabs>
-            {tokenList.map((item, index) => (
-              <ModalSelectItem
-                className="flex items-center justify-between p-4 cursor-pointer"
-                key={index}
-                onClick={() => handeToken(index)}
-              >
-                <div className="flex items-center">
-                  <Avatar src={item?.icon} className="w-12 h-12" />
-                  <span className="text-xl ml-4">{item?.symbol}</span>
-                </div>
+            <div className="h-[500px] overflow-scroll">
+              {tokenList.map((item, index) => (
+                <ModalSelectItem
+                  className="flex items-center justify-between p-4 cursor-pointer"
+                  key={index}
+                  onClick={() => handeToken(index)}
+                >
+                  <div className="flex items-center">
+                    <Avatar src={item?.icon} className="w-12 h-12" />
+                    <span className="text-xl ml-4">{item?.symbol}</span>
+                  </div>
 
-                <span className="text-base">{item?.formatedBalance}</span>
-              </ModalSelectItem>
-            ))}
+                  <span className="text-base">{item?.formatedBalance}</span>
+                </ModalSelectItem>
+              ))}
+            </div>
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -408,8 +408,8 @@ export default function Dashboard() {
             </p>
             <div className="w-[24rem] h-[18.75rem] bg-[#65E7E5] rounded-[1rem]">
               <img
-                src={nft?.image ?? "/img/icon-nft-blue.svg"}
-                className="text-center block mx-auto h-full"
+                src={nft?.image ?? "/img/img-mint-example.png"}
+                className="text-center block mx-auto h-full rounded-[1rem]"
               />
             </div>
             <GradientButton
