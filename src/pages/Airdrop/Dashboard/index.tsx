@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import AssetsTable from '@/components/AssetsTable'
 import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Modal, ModalBody, ModalContent, ModalHeader, Tooltip, useDisclosure } from '@nextui-org/react'
 import BridgeComponent from '@/components/Bridge'
 import { BOOST_LIST } from '@/constants/boost'
@@ -21,9 +21,9 @@ import {
     getTotalTvl,
     getTotalTvlByToken,
 } from '@/api'
-import { useAccount } from 'wagmi'
+import { useAccount,useChainId } from 'wagmi'
 import toast from 'react-hot-toast'
-import { ETH_ADDRESS } from '@/constants'
+import { ETH_ADDRESS, NOVA_CHAIN_ID } from '@/constants'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
@@ -184,7 +184,11 @@ export default function Dashboard() {
     const [totalTvl, setTotalTvl] = useState(0)
     const [referralTvl, setReferralTvl] = useState(0)
     const [supportTokens, setSupportTokens] = useState<any[]>([])
+    const {chainId} = useChainId()
 
+    const nftBtnText = useMemo(() => {
+
+    },[])
     const handleCopy = () => {
         if (!invite?.code) return
         navigator.clipboard.writeText(invite?.code)
@@ -285,6 +289,10 @@ export default function Dashboard() {
         getTotalTvlFunc()
     }, [])
 
+    const handleMint = async()=>{
+
+    }
+
     return (
         <BgBox>
             <BgCoverImg />
@@ -298,7 +306,7 @@ export default function Dashboard() {
                                 className='text-center block mx-auto h-full'
                             />
                         </div>
-                        <GradientButton className='w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] opacity-40 cursor-not-arrowed'>
+                        <GradientButton onClick={handleMint} className='w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] opacity-40 '>
                             <span>Mint</span>
                             <img
                                 src='/img/icon-info.svg'
