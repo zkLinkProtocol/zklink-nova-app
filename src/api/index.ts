@@ -137,3 +137,30 @@ export const getAccountRank = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRank`, {
     params: { address },
   });
+
+
+  
+export type TotalSupply = {
+  type: string,
+  hex: string
+}
+
+export type ExplorerTvlItem = {
+      "l2Address": string,
+      "l1Address": string,
+      "networkKey": string,
+      "symbol": string,
+      "name": string,
+      "decimals": number,
+      "usdPrice": number,
+      "liquidity": number,
+      "iconURL": string,
+      "totalSupply": TotalSupply,
+      "tvl": string
+}
+
+
+export const getExplorerTvl = (isall: boolean): Promise<ExplorerTvlItem[]> => http.get(`https://explorer-api.zklink.io/tokens/tvl`, {
+  params: { isall }
+})
+

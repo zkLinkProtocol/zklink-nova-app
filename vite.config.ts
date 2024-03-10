@@ -22,14 +22,14 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/twitter/, ""),
       },
       "/api": {
-        target: "http://13.114.13.100:8097",
+        target: "https://app.zklink.io",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
       },
       "/points": {
-        target: "http://13.114.13.100:8096",
+        target: "https://app.zklink.io",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/points/, ""),
+        rewrite: (path) => path.replace(/^\/points/, "/points"),
       },
     },
   },

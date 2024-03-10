@@ -23,6 +23,7 @@ import BridgeComponent from '@/components/Bridge'
 import { symbol } from 'prop-types'
 import { formatNumberWithUnit } from '@/utils'
 import _ from 'lodash'
+import { ExplorerTvlItem, getExplorerTvl } from '@/api'
 
 const TabsBar = styled.div`
     .tab-item {
@@ -192,11 +193,19 @@ export type AssetsListItem = {
     multiplier: string,
 }
 
+export type TokenAddress = {
+    chain:string,
+    l1Address: string,
+    l2Address: string
+}
+
+
 interface IAssetsTableProps {
     data: any[]
     totalTvlList: any[]
     supportTokens: any[]
 }
+
 
 export default function AssetsTable(props: IAssetsTableProps) {
     const { data, totalTvlList, supportTokens } = props
@@ -247,6 +256,18 @@ export default function AssetsTable(props: IAssetsTableProps) {
         const obj = supportTokens.find((item) => item.symbol == symbol)
         return obj
     }
+
+    const [explorerTvl, setExplorerTvl] = useState<ExplorerTvlItem[]>([])
+    const getExplorerTvlFunc = async() => {
+        const res = await getExplorerTvl(true)
+        console.log(res)
+        setExplorerTvl(res)
+    }
+
+    useEffect(() => {
+        getExplorerTvlFunc()
+    }, [])
+
     useEffect(() => {
         let arr = [
             { name: 'All' },
@@ -264,6 +285,27 @@ export default function AssetsTable(props: IAssetsTableProps) {
         setAssetTabList(list)
     }, [supportTokens])
 
+    const getIconUrlByL2Address = (tokenAddress: TokenAddress[]) => {
+        let imgURL = ''
+        // tokenAddress
+        
+        // explorerTvl.forEach(item => { 
+        //     if (item.l2Address !== l2Address) return
+        //     console.log('========', item, item.l2Address, l2Address, item.l2Address == l2Address)
+        // })
+
+        tokenAddress.forEach(addressItem => {
+            const obj = explorerTvl.find(item => item.l2Address.toLowerCase() == addressItem.l2Address.toLowerCase())
+            console.log('l2Address', addressItem, obj, explorerTvl)
+            if (obj?.iconURL && obj.iconURL !=='') {
+                imgURL = obj.iconURL
+            }
+        })
+
+        
+        return imgURL
+    } 
+
     useEffect(() => {
 
         let arr: AssetsListItem[] = []
@@ -278,7 +320,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                     tvl: formatNumberWithUnit(+item?.tvl),
                     amount: formatNumberWithUnit(+item?.amount),
                     tokenAddress: item?.tokenAddress,
-                    iconURL: item?.iconURL,
+                    iconURL: getIconUrlByL2Address(tokenObj?.address),
                     // total tvl by token
                     groupAmount: formatNumberWithUnit(+totalTvlObj?.tvl),
                     groupTvl: formatNumberWithUnit(+totalTvlObj?.amount),
@@ -309,7 +351,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                     tvl: formatNumberWithUnit(+accountTvlObj?.tvl),
                     amount: formatNumberWithUnit(+accountTvlObj?.amount),
                     tokenAddress: accountTvlObj?.tokenAddress,
-                    iconURL: accountTvlObj?.iconURL,
+                    iconURL: getIconUrlByL2Address(item?.address),
                     // total tvl by token
                     groupAmount: formatNumberWithUnit(+totalTvlObj?.tvl),
                     groupTvl: formatNumberWithUnit(+totalTvlObj?.amount),
@@ -335,7 +377,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         setTableList(arr)
         // // const arr = data.filter(item => item.)
         // setTableList()
-    }, [isMyHolding, assetsTabsActive, data, supportTokens])
+    }, [isMyHolding, assetsTabsActive, data, supportTokens, explorerTvl])
 
 
     return (
