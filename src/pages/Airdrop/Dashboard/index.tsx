@@ -393,7 +393,11 @@ export default function Dashboard() {
       toast.success("Successfully minted SBT!");
     } catch (e) {
       console.log(e);
-      toast.error("Mint SBT failed");
+      if (e.message) {
+        toast.error(e.message);
+      } else {
+        toast.error("Mint SBT failed");
+      }
     }
   }, [address, isInvaidChain, switchChain, sendMintTx, mintType, mintModal]);
 
@@ -498,7 +502,7 @@ export default function Dashboard() {
             </GradientButton>
           </CardBox>
         </div>
-        <div className="w-full" style={{maxWidth: 'calc(100% - 30rem)'}}>
+        <div className="w-full" style={{ maxWidth: "calc(100% - 30rem)" }}>
           <div className="flex gap-[1.5rem]">
             <CardBox className="flex justify-around  py-[3rem] w-1/2">
               <div>
