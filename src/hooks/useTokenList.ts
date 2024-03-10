@@ -12,7 +12,7 @@ export type Token = {
   symbol: string;
   networkName: string;
   decimals: number;
-  icon: string;
+  icon?: string;
   balance?: number | bigint;
   formatedBalance?: number | string;
   type: string;
@@ -37,7 +37,7 @@ const isSameNetwork = (networkKey: string, chain: string) => {
     chain === "Ethereum"
   ) {
     return true;
-  } else if (networkKey === PRIMARY_CHAIN_KEY && chain === "Linear") {
+  } else if (networkKey === PRIMARY_CHAIN_KEY && chain === "Linea") {
     return true;
   } else if (networkKey.toLowerCase() === chain.toLowerCase()) {
     return true;
@@ -57,15 +57,19 @@ export const useTokenBalanceList = () => {
       console.log("supportedTokens: ", supportedTokens);
       const tokens = [];
       for (const token of supportedTokens) {
-        const index = token.address.find((item) =>
+        const item = token.address.find((item) =>
           isSameNetwork(networkKey, item.chain)
         );
-        if(index > -1) {
+        if (item) {
           tokens.push({
-            
-          })
+            ...token,
+            address: item.l1Address,
+            networkKey,
+            networkName: item.chain,
+          });
         }
       }
+      setTokenSource(tokens);
     })();
   }, [networkKey]);
 
@@ -83,11 +87,11 @@ export const useTokenBalanceList = () => {
     )?.chainId;
   }, [networkKey]);
 
-  const tokens = useMemo(() => {
-    return Tokens.filter(
-      (item) => item.networkKey === (networkKey || FromList[0].networkKey)
-    );
-  }, [networkKey]);
+  // const tokens = useMemo(() => {
+  //   return Tokens.filter(
+  //     (item) => item.networkKey === (networkKey || FromList[0].networkKey)
+  //   );
+  // }, [networkKey]);
   const { data: nativeTokenBalance } = useBalance({
     address: walletAddress as `0x${string}`,
     chainId: selectedChainId,
@@ -96,7 +100,7 @@ export const useTokenBalanceList = () => {
   console.log("nativeBalance: ", selectedChainId, nativeTokenBalance);
 
   const erc20Contracts = useMemo(() => {
-    return tokens.map(({ address }) => ({
+    return tokenSource.map(({ address }) => ({
       abi: IERC20.abi,
       functionName: "balanceOf",
       address: address as `0x${string}`,
@@ -104,7 +108,7 @@ export const useTokenBalanceList = () => {
       chainId: selectedChainId,
       // chainId
     }));
-  }, [tokens, walletAddress, selectedChainId]);
+  }, [tokenSource, walletAddress, selectedChainId]);
 
   const { data: erc20Balances } = useReadContracts({
     config: wagmiConfig,
@@ -121,7 +125,7 @@ export const useTokenBalanceList = () => {
     const erc20BalancesValue = erc20Balances?.map(
       (item) => item.result as bigint
     );
-    const tokenList = [...tokens].map((token, index) => ({
+    const tokenList = [...tokenSource].map((token, index) => ({
       ...token,
       balance: erc20BalancesValue?.[index],
       formatedBalance: formatBalance(
@@ -143,7 +147,7 @@ export const useTokenBalanceList = () => {
     }
     tokenList.unshift(native);
     return tokenList;
-  }, [nativeTokenBalance, erc20Balances, from, tokens, networkKey]);
+  }, [nativeTokenBalance, erc20Balances, from, tokenSource, networkKey]);
 
   const refreshTokenBalanceList = () => {
     queryClient.invalidateQueries();
