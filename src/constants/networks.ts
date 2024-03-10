@@ -177,10 +177,30 @@ export const projectId = import.meta.env.VITE_PROJECT_ID;
 if (!projectId) {
   throw new Error("VITE_PROJECT_ID is not set");
 }
+const createEraChain = (network: ZkSyncNetwork) => {
+  return {
+    id: network.id,
+    name: network.name,
+    network: network.key,
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: { http: [network.rpcUrl] },
+      public: { http: [network.rpcUrl] },
+    },
+  };
+};
 
 // Create wagmiConfig
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [goerli, mainnet, arbitrum, lineaTestnet, mantleTestnet],
+  chains: [
+    goerli,
+    mainnet,
+    arbitrum,
+    lineaTestnet,
+    mantleTestnet,
+    createEraChain(nexusGoerliNode[0]),
+    createEraChain(nexusNode[0]),
+  ],
   projectId,
   metadata: {
     name: "Web3Modal React Example",
