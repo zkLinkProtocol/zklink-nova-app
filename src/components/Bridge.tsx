@@ -25,9 +25,10 @@ import {
 } from "react-icons/ai";
 import cionIcon from "@/assets/img/cion.png";
 import toast from "react-hot-toast";
-
+import { debounce } from "lodash";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { BigNumber, utils } from "ethers";
+import { utils } from "ethers";
+import BigNumber from "bignumber.js";
 import { useBridgeNetworkStore } from "@/hooks/useNetwork";
 import Tokens from "@/constants/tokens";
 import { STORAGE_NETWORK_KEY } from "@/constants";
@@ -185,52 +186,54 @@ export default function Bridge(props: IBridgeComponentProps) {
     })();
   }, []);
 
+  const computePoints = debounce(async () => {
+    if (!amount) {
+      setShowNoPointsTip(false);
+      return;
+    }
+    if (tokenList[tokenActive].address === ETH_ADDRESS) {
+      if (Number(amount) < minDepositValue) {
+        setShowNoPointsTip(true);
+      } else {
+        setShowNoPointsTip(false);
+      }
+    } else {
+      try {
+        const [priceInfo, ethPriceInfo] = await Promise.all([
+          getTokenPrice(tokenList[tokenActive].address),
+          getTokenPrice(ETH_ADDRESS),
+        ]);
+        if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
+          const ethValue = new BigNumber(priceInfo.usdPrice)
+            .multipliedBy(amount)
+            .div(ethPriceInfo.usdPrice)
+            .toNumber();
+          if (ethValue < minDepositValue) {
+            setShowNoPointsTip(true);
+          } else {
+            setShowNoPointsTip(false);
+          }
+          // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
+          const points = new BigNumber(priceInfo.usdPrice)
+            .multipliedBy(10)
+            .multipliedBy(tokenList[tokenActive].multiplier)
+            .multipliedBy(amount)
+            .div(ethPriceInfo.usdPrice)
+            .toFixed(4);
+          setPoints(points);
+        }
+      } catch (e) {
+        console.log(e);
+        setPriceApiFailed(true);
+      }
+      setPriceApiFailed(false);
+    }
+  }, 500);
+
   useEffect(() => {
     //TODO compute eth value, if less than minDepositValue, show 0 points
-    (async () => {
-      if (!amount) {
-        setShowNoPointsTip(false);
-        return;
-      }
-      if (tokenList[tokenActive].address === ETH_ADDRESS) {
-        if (Number(amount) < minDepositValue) {
-          setShowNoPointsTip(true);
-        } else {
-          setShowNoPointsTip(false);
-        }
-      } else {
-        try {
-          const [priceInfo, ethPriceInfo] = await Promise.all([
-            getTokenPrice(tokenList[tokenActive].address),
-            getTokenPrice(ETH_ADDRESS),
-          ]);
-          if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
-            const ethValue = BigNumber.from(priceInfo.usdPrice)
-              .mul(amount)
-              .div(ethPriceInfo.usdPrice)
-              .toNumber();
-            if (ethValue < minDepositValue) {
-              setShowNoPointsTip(true);
-            } else {
-              setShowNoPointsTip(false);
-            }
-            // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
-            const points = BigNumber.from(priceInfo.usdPrice)
-              .mul(10)
-              .mul(tokenList[tokenActive].multiplier)
-              .mul(amount)
-              .div(ethPriceInfo.usdPrice)
-              .toNumber();
-            setPoints(points);
-          }
-        } catch (e) {
-          console.log(e);
-          setPriceApiFailed(true);
-        }
-        setPriceApiFailed(false);
-      }
-    })();
-  }, [tokenActive, tokenList, amount, minDepositValue]);
+    computePoints();
+  }, [tokenActive, tokenList, amount, minDepositValue, computePoints]);
 
   useEffect(() => {
     if (isFirstDeposit) {
