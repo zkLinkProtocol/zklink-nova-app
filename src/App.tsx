@@ -13,6 +13,7 @@ const About = lazy(() => import('@/pages/About'))
 // const Bridge = lazy(() => import('@/pages/Bridge'))
 
 export default function App() {
+    console.log(import.meta.env.VITE_TWITTER_CLIENT_ID)
     return (
         <main className='main dark text-foreground bg-background header'>
             <BrowserRouter>

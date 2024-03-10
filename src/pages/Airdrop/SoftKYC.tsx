@@ -94,7 +94,7 @@ export default function SoftKYC() {
         const params = {
             response_type: 'code',
             client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-            redirect_uri: 'https://goerli.app.zklink.io/aggregation-parade',
+            redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
             scope: 'tweet.read%20users.read%20follows.read%20follows.write',
             state: 'state',
             code_challenge: 'challenge',
@@ -112,7 +112,7 @@ export default function SoftKYC() {
         const res = await getAccountTwitter({
             code,
             client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-            redirect_uri: 'https://goerli.app.zklink.io/aggregation-parade',
+            redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
         })
 
         const { data } = res
@@ -132,7 +132,7 @@ export default function SoftKYC() {
                 code,
                 grant_type: 'authorization_code',
                 client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-                redirect_uri: 'https://goerli.app.zklink.io/aggregation-parade',
+                redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
                 code_verifier: 'challenge',
             })
 
