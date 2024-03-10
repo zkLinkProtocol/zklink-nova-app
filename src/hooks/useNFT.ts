@@ -1,4 +1,4 @@
-import { NOVA_NFT_CONTRACT } from "@/constants";
+import { NOVA_NFT_CONTRACT, NOVA_CHAIN_ID } from "@/constants";
 import { WalletClient } from "viem";
 import { usePublicClient, useWalletClient, useAccount } from "wagmi";
 import { readContract } from "@wagmi/core";
@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getMintSignature } from "@/api";
 import NovaNFT from "@/constants/abi/NovaNFT.json";
 import { BigNumber } from "ethers";
-
+import { wagmiConfig } from "@/constants/networks";
 export type NOVA_NFT_TYPE = "ISTP" | "ESFJ" | "INFJ" | "ENTP";
 export type NOVA_NFT = {
   name: string;
@@ -20,46 +20,40 @@ const useNovaNFT = () => {
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
 
-  const getNFTBalance = useCallback(
-    async (address: string) => {
-      const balance = await publicClient?.readContract({
-        abi: NovaNFT.abi,
-        address: NOVA_NFT_CONTRACT as `0x${string}`,
-        functionName: "balanceOf",
-        args: [address],
-      });
-      console.log("nft balance: ", balance);
-      return balance;
-    },
-    [publicClient]
-  );
+  const getNFTBalance = useCallback(async (address: string) => {
+    const balance = await readContract(wagmiConfig, {
+      abi: NovaNFT.abi,
+      address: NOVA_NFT_CONTRACT as `0x${string}`,
+      functionName: "balanceOf",
+      args: [address],
+      chainId: NOVA_CHAIN_ID,
+    });
+    console.log("nft balance: ", balance);
+    return balance;
+  }, []);
 
-  const getTokenIdByIndex = useCallback(
-    async (address: string) => {
-      const tokenId = await publicClient?.readContract({
-        abi: NovaNFT.abi,
-        address: NOVA_NFT_CONTRACT as `0x${string}`,
-        functionName: "tokenOfOwnerByIndex",
-        args: [address, 0],
-      });
-      console.log("tokenId: ", tokenId);
-      return tokenId as number;
-    },
-    [publicClient]
-  );
-  const getTokenURIByTokenId = useCallback(
-    async (tokenId: number) => {
-      const tokenURI = await publicClient?.readContract({
-        abi: NovaNFT.abi,
-        address: NOVA_NFT_CONTRACT as `0x${string}`,
-        functionName: "tokenURI",
-        args: [tokenId],
-      });
-      console.log("tokenURI: ", tokenURI);
-      return tokenURI as string;
-    },
-    [publicClient]
-  );
+  const getTokenIdByIndex = useCallback(async (address: string) => {
+    const tokenId = await readContract(wagmiConfig, {
+      abi: NovaNFT.abi,
+      address: NOVA_NFT_CONTRACT as `0x${string}`,
+      functionName: "tokenOfOwnerByIndex",
+      args: [address, 0],
+      chainId: NOVA_CHAIN_ID,
+    });
+    console.log("tokenId: ", tokenId);
+    return tokenId as number;
+  }, []);
+  const getTokenURIByTokenId = useCallback(async (tokenId: number) => {
+    const tokenURI = await readContract(wagmiConfig, {
+      abi: NovaNFT.abi,
+      address: NOVA_NFT_CONTRACT as `0x${string}`,
+      functionName: "tokenURI",
+      args: [tokenId],
+      chainId: NOVA_CHAIN_ID,
+    });
+    console.log("tokenURI: ", tokenURI);
+    return tokenURI as string;
+  }, []);
 
   //ipfs://QmYY5RWPzGEJEjRYhGvBhycYhZxRMxCSkHNTxtVrrjUzQf/ISTP
   const fetchMetadataByURI = async (uri: string) => {
