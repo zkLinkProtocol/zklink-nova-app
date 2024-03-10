@@ -277,16 +277,26 @@ const createEraChain = (network: ZkSyncNetwork) => {
 };
 
 // Create wagmiConfig
+const nodeType = import.meta.env.VITE_NODE_TYPE;
+
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [
-    goerli,
-    mainnet,
-    arbitrum,
-    lineaTestnet,
-    mantleTestnet,
-    createEraChain(nexusGoerliNode[0]),
-    createEraChain(nexusNode[0]),
-  ],
+  chains:
+    nodeType === "nexus-goerli"
+      ? [
+          goerli,
+          lineaTestnet,
+          mantleTestnet,
+          createEraChain(nexusGoerliNode[0]),
+        ]
+      : [
+          mainnet,
+          arbitrum,
+          linea,
+          zkSync,
+          manta,
+          mantle,
+          createEraChain(nexusNode[0]),
+        ],
   projectId,
   metadata: {
     name: "Web3Modal React Example",
