@@ -498,7 +498,7 @@ export default function Dashboard() {
             </GradientButton>
           </CardBox>
         </div>
-        <div className="w-full">
+        <div className="w-full" style={{maxWidth: 'calc(100% - 30rem)'}}>
           <div className="flex gap-[1.5rem]">
             <CardBox className="flex justify-around  py-[3rem] w-1/2">
               <div>

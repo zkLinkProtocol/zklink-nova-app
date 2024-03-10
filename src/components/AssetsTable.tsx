@@ -22,6 +22,7 @@ import styled from 'styled-components'
 import BridgeComponent from '@/components/Bridge'
 import { symbol } from 'prop-types'
 import { formatNumberWithUnit } from '@/utils'
+import _ from 'lodash'
 
 const TabsBar = styled.div`
     .tab-item {
@@ -247,16 +248,36 @@ export default function AssetsTable(props: IAssetsTableProps) {
         return obj
     }
     useEffect(() => {
-        let arr = [{ name: 'All' }]
+        let arr = [
+            { name: 'All' },
+            { name: 'All1' },
+            { name: 'All2' },
+            { name: 'All3' },
+            { name: 'All4' },
+            { name: 'All5' },
+            { name: 'All6' },
+            { name: 'All7' },
+            { name: 'All8' },
+            { name: 'All9' },
+            { name: 'All10' },
+            { name: 'All11' },
+            { name: 'All12' },
+            { name: 'All12' },
+            { name: 'All14' },
+            { name: 'All' },
+            { name: 'All' },
+        ]
         supportTokens.forEach((item) => {
             if (item?.type) {
                 arr.push({ name: item?.type })
             }
         })
 
-        console.log('assets list', arr)
+        let list = _.uniqBy(arr, 'name')
 
-        setAssetTabList(arr)
+        console.log('assets list', list, 'name')
+
+        setAssetTabList(list)
     }, [supportTokens])
 
     useEffect(() => {
@@ -335,23 +356,29 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
     return (
         <>
-            <CardBox className='mt-[2rem] p-[0.38rem] flex justify-between items-center'>
-                <TabsBar className='flex items-center gap-[1.81rem]'>
-                    {assetTabList.map((item, index) => (
-                        <span
-                            key={index}
-                            className={`tab-item ${assetsTabsActive === index ? 'active' : ''}`}
-                            onClick={() => setAssetsTabsActive(index)}>
-                            {item.name}
-                        </span>
-                    ))}
-                </TabsBar>
-                <Checkbox
-                    className='mr-[1.5rem] flex-row-reverse items-center gap-[0.5rem]'
-                    isSelected={isMyHolding}
-                    onValueChange={setIsMyHolding}>
-                    My Holding
-                </Checkbox>
+            <CardBox className='mt-[2rem] p-[0.38rem] flex justify-between items-center w-full overflow-auto'>
+                <div style={{maxWidth: 'calc(100% - 14rem)', overflow: 'auto'}}>
+                    <TabsBar className='flex items-center gap-[0.5rem]'>
+                        {assetTabList.map((item, index) => (
+                            <span
+                                key={index}
+                                className={`tab-item ${assetsTabsActive === index ? 'active' : ''}`}
+                                onClick={() => setAssetsTabsActive(index)}>
+                                {item.name}
+                            </span>
+                        ))}
+                    </TabsBar>
+                </div>
+                
+                <div>
+                    <Checkbox
+                        className='mr-[1.5rem] flex-row-reverse items-center gap-[0.5rem] whitespace-nowrap ml-[1.5rem]'
+                        isSelected={isMyHolding}
+                        onValueChange={setIsMyHolding}>
+                        My Holding
+                    </Checkbox>
+                </div>
+                
             </CardBox>
 
             <TableBox>
