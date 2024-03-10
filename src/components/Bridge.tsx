@@ -607,7 +607,8 @@ export default function Bridge(props: IBridgeComponentProps) {
               isDisabled={actionBtnTooltipForMantleDisabeld}
             >
               <Button
-                className="gradient-btn w-full rounded-full"
+                className="gradient-btn w-full rounded-full "
+                style={{ display: "flex", alignItems: "center" }}
                 disableAnimation
                 size="lg"
                 onClick={handleAction}
@@ -619,7 +620,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </Tooltip>
           ) : (
             <Button
-              className="gradient-btn  w-full rounded-full"
+              className="gradient-btn  w-full rounded-full "
               size="lg"
               color="primary"
               disableAnimation
