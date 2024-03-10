@@ -39,6 +39,11 @@ export const checkInviteCode = (code: string): Promise<Response> => {
   });
 };
 
+export const getMintSignature = (address: string): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/validate/nft`, {
+    params: { address, projectId: "NOVA-SBT-1" },
+  });
+};
 export const getInvite = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/invite/${address}`);
 
