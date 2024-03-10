@@ -67,7 +67,9 @@ const useNovaNFT = () => {
     const json = await res.json();
     const result = { ...json };
     if (json.image && json.image.startsWith("ipfs://")) {
-      result.image = `https://ipfs.io/ipfs/${json.image.substring(7)}`;
+      const type = uri.substr(-4);
+      result.image = `/img/${type}.svg`;
+      //   result.image = `https://ipfs.io/ipfs/${json.image.substring(7)}`;
     }
     return result;
   };
