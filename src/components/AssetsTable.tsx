@@ -257,7 +257,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                                     <TableCell>
                                         <TableItem>
                                             <div className='value'>
-                                                {getTotalTvl(item?.symbol)?.amount} {item?.symbol}
+                                                {getTotalTvl(item?.symbol)?.amount}
                                             </div>
                                             <div className='sub-value mt-[0.12rem]'>${getTotalTvl(item?.symbol)?.tvl}</div>
                                         </TableItem>
@@ -272,7 +272,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                                     <TableCell>
                                         <TableItem>
                                             <div className='value'>
-                                                {item.amount} {item?.symbol}
+                                                {item.amount}
                                             </div>
                                             <div className='sub-value mt-[0.12rem]'>${item.tvl}</div>
                                         </TableItem>

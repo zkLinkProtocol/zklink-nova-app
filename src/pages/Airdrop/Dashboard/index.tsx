@@ -2,13 +2,12 @@ import styled from 'styled-components'
 import AssetsTable from '@/components/AssetsTable'
 import { BgBox, BgCoverImg, CardBox } from '@/styles/common'
 import { useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalContent, ModalHeader, Tooltip, useDisclosure } from '@nextui-org/react'
+import { Button, Modal, ModalBody, ModalContent, ModalHeader, Tooltip, useDisclosure } from '@nextui-org/react'
 import BridgeComponent from '@/components/Bridge'
 import { BOOST_LIST } from '@/constants/boost'
 import { formatNumberWithUnit, getBooster, getNextMilestone } from '@/utils'
 import ReferralList from '@/components/ReferralList'
 import { RootState } from '@/store'
-import { useSelector } from 'react-redux'
 import {
     getAccounTvl,
     getAccountPoint,
@@ -24,6 +23,7 @@ import {
 import { useAccount } from 'wagmi'
 import toast from 'react-hot-toast'
 import { ETH_ADDRESS } from '@/constants'
+import { useSelector } from 'react-redux'
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
@@ -71,12 +71,18 @@ const ProgressBar = styled.div`
         line-height: 1; /* 157.143% */
     }
 
+    
+
+    
+
     .progress-item {
         position: relative;
         height: 0.5rem;
         background: #2a2a2a;
         border-radius: 0.5rem;
-        &.active {
+
+       
+        &.active, .active {
             border-radius: 0.5rem;
             background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
             &:not(:last-child)::after {
@@ -167,13 +173,17 @@ const TabsBox = styled.div`
 
 export default function Dashboard() {
     const { invite } = useSelector((store: RootState) => store.airdrop)
-    const { address } = useAccount()
-    // const address = '0x01568BDFBFdDB3B3756b0c1C89F0A1d63354789D'
+    // const { address } = useAccount()
+    const address = '0x01568BDFBFdDB3B3756b0c1C89F0A1d63354789D'
 
     const [tabsActive, setTabsActive] = useState(0)
 
     const [totalTvlList, setTotalTvlList] = useState([])
-    const [stakingValue, setStakingValue] = useState(0)
+    const [stakingValue, setStakingValue] = useState({
+        usd: 0,
+        eth: 0
+    })
+    const [isStakingUsd, setIsStakingUsd] = useState(false)
     const [accountPoint, setAccountPoint] = useState({
         novaPoint: 0,
         referPoint: 0,
@@ -231,12 +241,17 @@ export default function Dashboard() {
         setAccountTvlData(res?.result || [])
 
         if (res?.result?.length && Array.isArray(res.result)) {
-            let val = 0
+            let usd = 0
+            let eth = 0
             res.result.forEach((item) => {
-                val += +item?.tvl
+                usd += +item?.tvl
+                eth += +item?.amount
             })
 
-            setStakingValue(val)
+            setStakingValue({
+                usd,
+                eth
+            })
         }
     }
 
@@ -274,6 +289,42 @@ export default function Dashboard() {
 
         setTotalTvl(res?.result || 0)
     }
+
+    const [progressList, setProgressList] = useState<any[]>([])
+
+    useEffect(() => {
+
+        let isShow = false
+        let isShowIndex = 0
+        
+        let arr = BOOST_LIST.map((item, index) => {
+
+            const isActive =  +groupTvl > +item.value
+            if (!isActive && !isShow) {
+                isShow = true
+                isShowIndex = index
+            }
+
+            let obj = {
+                ...item,
+                isActive,
+                showProgress: false,
+                progress: +groupTvl !== 0? +groupTvl / item.value : 0
+            }
+
+            
+
+
+           return obj
+            
+        })
+
+        arr[isShowIndex].showProgress = true
+
+
+
+        setProgressList(arr)
+    }, [groupTvl])
 
     
 
@@ -346,8 +397,18 @@ export default function Dashboard() {
                     </CardBox>
 
                     <CardBox className='flex flex-col items-center mt-[1.5rem] p-[1.5rem]'>
-                        <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Your Staking Value</p>
-                        <p className='w-full text-[2.5rem] font-[700]'>${stakingValue}</p>
+                        <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex justify-between items-center'>
+                            <span>Your Staking Value</span>
+                            <Button
+                                size='sm'
+                                className='bg-[#0BC48F] text-[#000] text-[1rem]'
+                                onClick={() => setIsStakingUsd(!isStakingUsd )}
+                            >
+                                Switch to {isStakingUsd ?  'ETH' : 'USD' }
+                            </Button>
+
+                        </p>
+                        <p className='w-full text-[2.5rem] font-[700]'>{ isStakingUsd  ? `$${formatNumberWithUnit(stakingValue.usd)}`:`${formatNumberWithUnit(stakingValue.eth)} ETH` }</p>
                         <GradientButton
                             className='w-full mt-[1.5rem] py-[1rem] text-[1.25rem]'
                             onClick={() => handleBridgeMore()}>
@@ -457,14 +518,16 @@ export default function Dashboard() {
                         </div>
 
                         <CardBox className='mt-[2rem] py-[1.5rem] pl-[1.5rem] pr-[3rem]'>
-                            <ProgressBar className='flex w-full'>
+                            <ProgressBar className='progress-bar flex w-full'>
                                 <div className='title'>Target/Boost</div>
 
-                                {BOOST_LIST.map((item, index) => (
+                                {progressList.map((item, index) => (
                                     <div
-                                        className={`progress-item w-1/5 ${groupTvl > item.value ? 'active' : ''} `}
+                                        className={`progress-item w-1/5 ${groupTvl > item.value ? 'active' : 'not-active-1'} `}
                                         key={index}>
+                                           {item.showProgress &&<div className='bar absolute left-0 top-0 buttom-0 h-full active' style={{width: `${item.progress}%`}}></div>}
                                         <div className='progress-points'>
+                                            {/* <div>{groupTvl}  {item.value} {groupTvl / item.value}</div> */}
                                             <div className='points-top'>{item.booster}</div>
                                             <div className='points-bottom'>{item.value} ETH</div>
                                         </div>

@@ -42,3 +42,12 @@
 .gradient-secondary-btn:disabled {
     cursor: not-allowed;
 }
+
+.not-active:first-child {
+    background-color: red;
+}
+
+.not-active-1:first-child .bar {
+        display: none;
+
+}

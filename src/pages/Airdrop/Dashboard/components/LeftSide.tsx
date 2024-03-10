@@ -29,7 +29,10 @@ export default function LeftSide() {
             </div>
 
             <div className='py-5 px-3 mb-5 border border-white rounded'>
-                <div>Your Staking Value</div>
+                <div className="flex items-center">
+                    <span>Your Staking Value</span>
+                    <Button>Switch to ETH/USD</Button>
+                </div>
                 <div className='text-xl mt-3'>$200,000</div>
                 <div className='mt-5'>
                     <Button
