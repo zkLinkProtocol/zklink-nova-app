@@ -80,6 +80,27 @@ const SelectBox = styled.div`
   }
 `;
 
+const LoyaltyBoostBox = styled.div`
+  background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
+  width: 100px;
+  height: 28px;
+  border-radius: 8px;
+  color: #ffffff;
+  text-align: center;
+  margin-left: 6px;
+  font-size: 12px;
+  line-height: 28px;
+`;
+
+const LoyaltyBoostTooltipContent = styled.div`
+  background: #666666;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: "Space Mono";
+`;
+
 const AssetTypes = [
   { label: "ALL", value: "ALL" },
   {
@@ -137,6 +158,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [points, setPoints] = useState(0);
   const [showNoPointsTip, setShowNoPointsTip] = useState(false);
   const [minDepositValue, setMinDepositValue] = useState(0.1);
+  const [loyalPoints, setLoyalPoints] = useState(0);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -144,6 +166,15 @@ export default function Bridge(props: IBridgeComponentProps) {
       setInputInviteCode(inviteCode);
     }
   }, [inviteCode, setInputInviteCode]);
+
+  useEffect(() => {
+    (async () => {
+      if (address) {
+        //TODO call api to get loyal points
+        setLoyalPoints(300);
+      }
+    })();
+  }, [address]);
 
   useEffect(() => {
     (async () => {
@@ -181,6 +212,14 @@ export default function Bridge(props: IBridgeComponentProps) {
           } else {
             setShowNoPointsTip(false);
           }
+          // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
+          const points = BigNumber.from(priceInfo.usdPrice)
+            .mul(10)
+            .mul(tokenList[tokenActive].multiplier)
+            .mul(amount)
+            .div(ethPriceInfo.usdPrice)
+            .toNumber();
+          setPoints(points);
         }
       }
     })();
@@ -236,12 +275,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
   }, [setNetworkKey, isFirstDeposit, bridgeToken]);
 
-  useEffect(() => {
-    //TODO get points from api;
-    //TODO get current min deposit value
-    //TODO set if show no points tip
-    setPoints(200);
-  }, [amount, tokenActive]);
   const actionBtnTooltipForMantleDisabeld = useMemo(() => {
     if (
       networkKey === "mantle" &&
@@ -462,9 +495,37 @@ export default function Bridge(props: IBridgeComponentProps) {
               <div className="flex items-center justify-center bg-green-800 h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
                 10x Boost
               </div>
+              {loyalPoints && (
+                <Tooltip
+                  showArrow={true}
+                  classNames={{
+                    content: "px-0 py-0 max-w-[400px]",
+                  }}
+                  content={
+                    <LoyaltyBoostTooltipContent>
+                      <p className="mb-8">
+                        Thank you for your continued support of zkLink. As our
+                        loyal user, we're delighted to offer you{" "}
+                        <span className="text-[#03D498]">{loyalPoints}</span>{" "}
+                        addtional Nova Points.{" "}
+                      </p>
+                      <a href="" target="_blank" className="text-[#03D498]">
+                        Learn more.
+                      </a>
+                    </LoyaltyBoostTooltipContent>
+                  }
+                >
+                  <LoyaltyBoostBox>Loyalty Boost</LoyaltyBoostBox>
+                </Tooltip>
+              )}
             </div>
             <div className="flex items-center">
               <span>{points}</span>
+              {loyalPoints && (
+                <div className="ml-1">
+                  + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
+                </div>
+              )}
             </div>
           </div>
           {isFirstDeposit && (
@@ -517,10 +578,10 @@ export default function Bridge(props: IBridgeComponentProps) {
               </div>
             </div>
           )}
-          <div className="flex items-center justify-between mb-2 points-box">
+          {/* <div className="flex items-center justify-between mb-2 points-box">
             <span>Est.fee</span>
             <span>0.002 ETH</span>
-          </div>
+          </div> */}
         </SelectBox>
         <div className="mt-8">
           {isConnected ? (
