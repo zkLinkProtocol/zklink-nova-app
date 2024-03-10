@@ -147,6 +147,8 @@ export default function AssetsTable(props: IAssetsTableProps) {
     const [isMyHolding, setIsMyHolding] = useState(false)
     const bridgeModal = useDisclosure()
 
+    
+
     const getTotalTvl = (symbol: string) => {
         return totalTvlList.find((item: any) => item.symbol === symbol)
     }
@@ -157,7 +159,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
     }
 
     const getToken = (symbol: string) => {
-        const obj = supportTokens.find((item) => item.symbol === symbol)
+        const obj = supportTokens.find((item) => item.symbol == symbol)
         return obj
     }
     useEffect(() => {
@@ -176,25 +178,47 @@ export default function AssetsTable(props: IAssetsTableProps) {
     useEffect(() => {
         const filterType = assetList[assetsTabsActive].name
 
-        let arr = data.map((item) => {
-            let obj = { ...item }
-            const token = getToken(item?.symbol)
-            obj.multiplier = token?.multiplier || 0
-            obj.type = token?.multiplier || null
-            return obj
-        })
-
-        if (assetsTabsActive !== 0) {
-            arr = arr.filter((item) => item?.type === filterType)
-        }
+        let arr:any[] = []
+        
         if (isMyHolding) {
-            arr = arr.filter((item) => +item.tvl !== 0)
+            arr = data.map((item) => {
+                let obj = { ...item }
+                const token = getToken(item?.symbol)
+                obj.multiplier = token?.multiplier || 0
+                obj.type = token?.multiplier || null
+                return obj
+            })
+    
+            if (assetsTabsActive !== 0) {
+                arr = arr.filter((item) => item?.type === filterType)
+            }
+            if (isMyHolding) {
+                arr = arr.filter((item) => +item.tvl !== 0)
+            }
+    
+        } else {
+            arr = supportTokens.map(item => {
+                let obj = {
+                    "tvl": "",
+                    "amount": "",
+                    "tokenAddress": "",
+                    "symbol": item.symbol
+                }
+                return obj
+            })
         }
-
+      
         setTableList(arr)
         // // const arr = data.filter(item => item.)
         // setTableList()
-    }, [isMyHolding, assetsTabsActive, data])
+    }, [isMyHolding, assetsTabsActive, data, supportTokens])
+
+    useEffect(() => {
+
+        // let arr = supportTokens.map(item => {
+        //     ...item
+        // })
+    }, [supportTokens])
 
     return (
         <>
