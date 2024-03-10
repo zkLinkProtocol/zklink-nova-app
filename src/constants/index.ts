@@ -16,4 +16,4 @@ export const NOVA_CHAIN_ID = nodeType === "nexus-goerli" ? 810182 : 810180;
 export const NOVA_NFT_CONTRACT =
   nodeType === "nexus-goerli"
     ? "0xF2fe005206cF81C149EbB2D40A294F5Ac59D9E6D"
-    : "";
+    : "0xE310c6595205252C73e9044f6740BA8775bf0Da0";
