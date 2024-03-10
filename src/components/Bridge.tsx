@@ -370,7 +370,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
 
     refreshTokenBalanceList();
-    if (isFirstDeposit) {
+    if (isFirstDeposit && !showNoPointsTip && !priceApiFailed) {
       const data = {
         address,
         code: inviteCodeType === "join" ? inputInviteCode : "",
