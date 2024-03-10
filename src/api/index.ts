@@ -45,7 +45,7 @@ export const getInvite = (address: string): Promise<Response> =>
 export const getReferrer = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/${address}`);
 
-export const getDepositETHThreshold = (): Promise<{ethAmount:number}> =>
+export const getDepositETHThreshold = (): Promise<{ ethAmount: number }> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getDepositEthThreshold`);
 
 export const getAccounTvl = (address: string): Promise<Response> =>
@@ -103,10 +103,10 @@ export type SupportToken = {
 };
 
 export type TokenPriceInfo = {
-  l2Address: string
-  l1Address: string
-  symbol: string
-  name: string
+  l2Address: string;
+  l1Address: string;
+  symbol: string;
+  name: string;
   decimals: number;
   usdPrice: number;
   liquidity: number;
@@ -121,9 +121,9 @@ export const getAccountRefferalsTVL = (address: string): Promise<Response> =>
 export const getSupportTokens = (): Promise<SupportToken[]> =>
   http.get(`${BASE_URL_POINTS}/tokens/getSupportTokens`);
 export const getSupportedTokens = (): Promise<SupportToken[]> =>
-  http.get(`${BASE_URL_TOKENS}/getSupportTokens`);
+  http.get(`${BASE_URL_POINTS}/tokens/getSupportTokens`);
 export const getTokenPrice = (address: string): Promise<TokenPriceInfo> =>
-  http.get(`${BASE_URL_TOKENS}/${address}`);
+  http.get(`${BASE_URL_POINTS}/tokens/${address}`);
 
 export const getAccountsRank = (): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountsRank`);
