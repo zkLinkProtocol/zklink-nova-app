@@ -164,8 +164,8 @@ export function random(min:number, max:number) {
   return Math.round(Math.random() * (max - min)) + min;
 }
 
-export function formatNumberWithUnit(value: number | string) {
+export function formatNumberWithUnit(value: number) {
   const num = Number(value)
-  if (!num) return 0
+  if (!num) return '0'
   return numeral(num).format('0.00a');
 }
