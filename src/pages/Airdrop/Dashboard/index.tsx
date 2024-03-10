@@ -310,7 +310,7 @@ export default function Dashboard() {
                     <CardBox className='mt-[1.5rem] p-[1.5rem]'>
                         <p className='w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]'>Nova Points</p>
                         <div className='flex items-center gap-[1rem]'>
-                            <span className='text-[2.5rem] font-[700]'>{0}</span>
+                            <span className='text-[2.5rem] font-[700]'>{(+accountPoint.novaPoint || 0) + (+accountPoint.referPoint || 0)}</span>
                             <Tooltip
                                 className='p-[1rem]'
                                 content={

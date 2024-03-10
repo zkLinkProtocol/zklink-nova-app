@@ -1,7 +1,6 @@
 @import './reset.min.css';
 @import './tailwind.css';
 
-
 .text-sub-title {
     color: #999;
 }
@@ -12,6 +11,7 @@
     min-width: 1080px;
     min-height: 100vh;
     overflow: auto;
+    font-family: 'Satoshi';
 }
 
 .gradient-btn {
