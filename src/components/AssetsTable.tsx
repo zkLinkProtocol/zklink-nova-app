@@ -194,7 +194,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         setTableList(arr)
         // // const arr = data.filter(item => item.)
         // setTableList()
-    }, [isMyHolding, assetsTabsActive])
+    }, [isMyHolding, assetsTabsActive, data])
 
     return (
         <>

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Modal, ModalBody, ModalContent, ModalHeader, Tooltip, useDisclosure } from '@nextui-org/react'
 import BridgeComponent from '@/components/Bridge'
 import { BOOST_LIST } from '@/constants/boost'
-import { getBooster, getNextMilestone } from '@/utils'
+import { formatNumberWithUnit, getBooster, getNextMilestone } from '@/utils'
 import ReferralList from '@/components/ReferralList'
 import { RootState } from '@/store'
 import { useSelector } from 'react-redux'
@@ -168,6 +168,8 @@ const TabsBox = styled.div`
 export default function Dashboard() {
     const { invite } = useSelector((store: RootState) => store.airdrop)
     const { address } = useAccount()
+    // const address = '0x01568BDFBFdDB3B3756b0c1C89F0A1d63354789D'
+
     const [tabsActive, setTabsActive] = useState(0)
 
     const [totalTvlList, setTotalTvlList] = useState([])
@@ -273,6 +275,8 @@ export default function Dashboard() {
         setTotalTvl(res?.result || 0)
     }
 
+    
+
     useEffect(() => {
         getSupportTokensFunc()
         getTotalTvlByTokenFunc()
@@ -355,11 +359,11 @@ export default function Dashboard() {
                     <div className='flex gap-[1.5rem]'>
                         <CardBox className='flex justify-around  py-[3rem] w-1/2'>
                         <div>
-                                <p className='text-[1.5rem] leading-[2rem] text-center'>${totalTvl}</p>
+                                <p className='text-[1.5rem] leading-[2rem] text-center'>${formatNumberWithUnit(totalTvl)}</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Nova Network TVL</p>
                             </div>
                             <div>
-                                <p className='text-[1.5rem] leading-[2rem] text-center'>${groupTvl}</p>
+                                <p className='text-[1.5rem] leading-[2rem] text-center'>{formatNumberWithUnit(groupTvl) || 0} ETH</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Group TVL</p>
                             </div>
                             {/* <div>
@@ -389,7 +393,7 @@ export default function Dashboard() {
                         </CardBox>
                         <CardBox className='flex justify-around py-[3rem] w-1/2'>
                             <div>
-                                <p className='text-[1.5rem] leading-[2rem] text-center'>${referralTvl}</p>
+                                <p className='text-[1.5rem] leading-[2rem] text-center'>{formatNumberWithUnit(referralTvl)} ETH</p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]'>Referral TVL</p>
                             </div>
                             <div>
@@ -403,7 +407,7 @@ export default function Dashboard() {
                                     />
                                 </p>
                                 <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.5rem]'>
-                                Your Invite Code (Remaining {invite?.canInviteNumber || 0})
+                                    Your Invite Code (Remaining {invite?.canInviteNumber || 0})
 
                                 <Tooltip
                                     className='p-[1rem]'

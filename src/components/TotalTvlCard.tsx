@@ -29,7 +29,7 @@ export default function TotalTvlCard() {
         const res = await getTotalTvl()
         console.log('total tvl', res)
 
-        setTotalTvl(res?.result || 0)
+        setTotalTvl(parseInt(res?.result) || 0)
     }
 
     const getTvlArr = (str: string) => {

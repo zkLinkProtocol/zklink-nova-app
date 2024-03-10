@@ -6,9 +6,12 @@ import { formatUnits } from "viem";
 import bignumber from "bignumber.js";
 import { ETH_ADDRESS, L2_ETH_TOKEN_ADDRESS } from "@/constants";
 import { BOOST_LIST } from "@/constants/boost";
+import numeral from 'numeral'
+
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
 );
+
 export const L1_TO_L2_ALIAS_OFFSET =
   "0x1111000000000000000000000000000000001111";
 
@@ -159,4 +162,10 @@ export function scaleGasLimit(gasLimit: BigNumber): BigNumber {
 
 export function random(min:number, max:number) {
   return Math.round(Math.random() * (max - min)) + min;
+}
+
+export function formatNumberWithUnit(value: number | string) {
+  const num = Number(value)
+  if (!num) return 0
+  return numeral(num).format('0.00a');
 }

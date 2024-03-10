@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useAccount } from 'wagmi'
 import Bridge from './Bridge'
 import Dashboard from './Dashboard'
-import { setInvite, setViewStatus } from '@/store/modules/airdrop'
+import { setInvite, setIsGroupLeader, setViewStatus } from '@/store/modules/airdrop'
 import { getInvite } from '@/api'
 import { RootState } from '@/store'
 import Home from './Home'
@@ -44,6 +44,12 @@ export default function Airdrop() {
     }, [address, isConnected])
 
     useEffect(() => {
+        if(isConnected) {
+            if (!inviteCode || inviteCode === '') {
+                dispatch(setIsGroupLeader(true))
+            }
+        }
+
         let _status = STATUS_CODE.home
         if (isConnected && invite?.code) {
             _status = STATUS_CODE.dashboard
