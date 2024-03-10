@@ -1,9 +1,12 @@
 import { NOVA_NFT_CONTRACT } from "@/constants";
 import { WalletClient } from "viem";
 import { usePublicClient, useWalletClient, useAccount } from "wagmi";
+import { readContract } from "@wagmi/core";
 import { useCallback, useEffect, useState } from "react";
 import { getMintSignature } from "@/api";
 import NovaNFT from "@/constants/abi/NovaNFT.json";
+import { BigNumber } from "ethers";
+
 export type NOVA_NFT_TYPE = "ISTP" | "ESFJ" | "INFJ" | "ENTP";
 export type NOVA_NFT = {
   name: string;
@@ -77,7 +80,7 @@ const useNovaNFT = () => {
   const getNFT = useCallback(
     async (address: string): Promise<NOVA_NFT | undefined> => {
       const balance = await getNFTBalance(address);
-      if (balance === 0) {
+      if (BigNumber.from(balance).eq(0)) {
         return;
       }
       const tokenId = await getTokenIdByIndex(address);
