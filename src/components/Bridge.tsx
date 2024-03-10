@@ -629,7 +629,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </Button>
           )}
         </div>
-        {showNoPointsTip && (
+        {isFirstDeposit && showNoPointsTip && (
           <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
             <img
               src="/img/icon-no-points.png"
