@@ -137,7 +137,7 @@ export const useTokenBalanceList = () => {
     const native = {
       ...nativeToken,
       networkKey: networkKey!,
-      networkName: from!.chainName,
+      networkName: from?.chainName,
       balance: nativeTokenBalance?.value ?? 0n,
       formatedBalance: formatBalance(nativeTokenBalance?.value ?? 0n, 18),
     };
