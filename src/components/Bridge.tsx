@@ -378,7 +378,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         }
 
         const res = await getInvite(address);
-        if (res?.result) {
+        if (res?.result && !showNoPointsTip) {
           dispatch(setInvite(res?.result));
         }
       } catch (e) {
@@ -388,22 +388,24 @@ export default function Bridge(props: IBridgeComponentProps) {
         } else if (e.message === "The invitation limit has been reached") {
           //TODO can not invite more
           toast.error("The invitation limit has been reached");
-          data.code &&
+          if (data.code && !showNoPointsTip) {
             dispatch(
               setInvite({
                 ...data,
               })
             );
+          }
         } else if (
           e.message === "Has been invited, can not repeat the association"
         ) {
           toast.error(e.message);
-          data.code &&
+          if (data.code && !showNoPointsTip) {
             dispatch(
               setInvite({
                 ...data,
               })
             );
+          }
         }
       }
     }
