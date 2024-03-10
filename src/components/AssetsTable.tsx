@@ -250,22 +250,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
     useEffect(() => {
         let arr = [
             { name: 'All' },
-            { name: 'All1' },
-            { name: 'All2' },
-            { name: 'All3' },
-            { name: 'All4' },
-            { name: 'All5' },
-            { name: 'All6' },
-            { name: 'All7' },
-            { name: 'All8' },
-            { name: 'All9' },
-            { name: 'All10' },
-            { name: 'All11' },
-            { name: 'All12' },
-            { name: 'All12' },
-            { name: 'All14' },
-            { name: 'All' },
-            { name: 'All' },
         ]
         supportTokens.forEach((item) => {
             if (item?.type) {
