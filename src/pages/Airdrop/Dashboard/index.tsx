@@ -18,6 +18,7 @@ import {
   getBooster,
   getNextMilestone,
   formatBalance,
+  addNovaChain,
 } from "@/utils";
 import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
@@ -402,9 +403,14 @@ export default function Dashboard() {
         {
           onError: (e) => {
             console.log(e);
+            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
+      return;
+    }
+    if (nft) {
+      toast.error("You can mint SBT only once.");
       return;
     }
     try {
