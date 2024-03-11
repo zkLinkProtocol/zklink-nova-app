@@ -146,21 +146,21 @@ export type TotalSupply = {
 }
 
 export type ExplorerTvlItem = {
-      "l2Address": string,
-      "l1Address": string,
-      "networkKey": string,
-      "symbol": string,
-      "name": string,
-      "decimals": number,
-      "usdPrice": number,
-      "liquidity": number,
-      "iconURL": string,
-      "totalSupply": TotalSupply,
-      "tvl": string
+      l2Address: string,
+      l1Address: string,
+      networkKey: string,
+      symbol: string,
+      name: string,
+      decimals: number,
+      usdPrice: number,
+      liquidity: number,
+      iconURL: string,
+      totalSupply: TotalSupply,
+      tvl: string
 }
 
 
-export const getExplorerTvl = (isall: boolean): Promise<ExplorerTvlItem[]> => http.get(`https://explorer-api.zklink.io/tokens/tvl`, {
+export const getExplorerTokenTvl = (isall: boolean): Promise<ExplorerTvlItem[]> => http.get(`https://explorer-api.zklink.io/tokens/tvl`, {
   params: { isall }
 })
 

@@ -26,10 +26,12 @@ import {
   getAccountPoint,
   getAccountRefferalsTVL,
   getAccountTvl,
+  getExplorerTokenTvl,
   getGroupTvl,
   getReferralTvl,
   getReferrer,
   getSupportTokens,
+  getTokenPrice,
   getTotalTvl,
   getTotalTvlByToken,
 } from "@/api";
@@ -188,16 +190,14 @@ const TabsBox = styled.div`
 
 export default function Dashboard() {
   const { invite } = useSelector((store: RootState) => store.airdrop);
-  const { address } = useAccount();
-  // const address = '0x01568BDFBFdDB3B3756b0c1C89F0A1d63354789D'
+  // const { address } = useAccount();
+  const address = '0x9FA3b1D0D516E92b7576AC9DD2Ed8f9d3Fc34e27'
 
   const [tabsActive, setTabsActive] = useState(0);
 
   const [totalTvlList, setTotalTvlList] = useState([]);
-  const [stakingValue, setStakingValue] = useState({
-    usd: 0,
-    eth: 0,
-  });
+  const [stakingUsdValue, setStakingUsdValue] = useState(0);
+  const [stakingEthValue, setStakingEthValue] = useState(0);
   const [isStakingUsd, setIsStakingUsd] = useState(false);
   const [accountPoint, setAccountPoint] = useState({
     novaPoint: 0,
@@ -276,18 +276,15 @@ export default function Dashboard() {
     console.log("account tvl", res);
     setAccountTvlData(res?.result || []);
 
-    if (res?.result?.length && Array.isArray(res.result)) {
+    if (res?.result && Array.isArray(res.result) && res.result.length > 0) {
       let usd = 0;
-      let eth = 0;
       res.result.forEach((item) => {
         usd += +item?.tvl;
-        eth += +item?.amount;
       });
+        // eth += +item?.tvl === 0||  +ethUsdPrice === 0? 0: +item.tvl / ethUsdPrice
 
-      setStakingValue({
-        usd,
-        eth,
-      });
+
+      setStakingUsdValue(usd);
     }
   };
 
@@ -354,7 +351,30 @@ export default function Dashboard() {
     setProgressList(arr);
   }, [groupTvl]);
 
+  const [ethUsdPrice, setEthUsdPrice] = useState(0)
+
+  const getEthUsdPrice = async () => {
+    const tokenList = await getExplorerTokenTvl(true)
+
+    const ethToken = tokenList.find(item => item.symbol === 'ETH')
+    console.log('ethToken', ethToken)
+    if (ethToken) {
+      const res = await getTokenPrice(ethToken.l2Address)
+      setEthUsdPrice(+res.usdPrice || 0)
+    }
+
+  }
+
   useEffect(() => {
+    const ethValue = +stakingUsdValue !== 0 && +ethUsdPrice !== 0 ? stakingUsdValue / ethUsdPrice : 0
+    
+    console.log('stakingEth', ethValue, stakingUsdValue, ethUsdPrice)
+    setStakingEthValue(ethValue)
+
+  }, [ethUsdPrice, stakingUsdValue])
+
+  useEffect(() => {
+    getEthUsdPrice()
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getAccountPointFunc();
@@ -391,7 +411,7 @@ export default function Dashboard() {
       await sendMintTx(address, mintType);
       mintModal.onClose();
       toast.success("Successfully minted SBT!");
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
       if (e.message) {
         toast.error(e.message);
@@ -491,8 +511,8 @@ export default function Dashboard() {
             </p>
             <p className="w-full text-[2.5rem] font-[700]">
               {isStakingUsd
-                ? `$${formatNumberWithUnit(stakingValue.usd)}`
-                : `${formatNumberWithUnit(stakingValue.eth)} ETH`}
+                ? `$${formatNumberWithUnit(stakingUsdValue)}`
+                : `${formatNumberWithUnit(stakingEthValue)} ETH`}
             </p>
             <GradientButton
               className="w-full mt-[1.5rem] py-[1rem] text-[1.25rem]"
@@ -631,9 +651,8 @@ export default function Dashboard() {
 
                 {progressList.map((item, index) => (
                   <div
-                    className={`progress-item w-1/5 ${
-                      groupTvl > item.value ? "active" : "not-active-1"
-                    } `}
+                    className={`progress-item w-1/5 ${groupTvl > item.value ? "active" : "not-active-1"
+                      } `}
                     key={index}
                   >
                     {item.showProgress && (
@@ -669,9 +688,8 @@ export default function Dashboard() {
               </span>
 
               <div
-                className={`tab-item relative flex items-center gap-[0.5rem] ${
-                  tabsActive === 2 ? "active" : ""
-                }`}
+                className={`tab-item relative flex items-center gap-[0.5rem] ${tabsActive === 2 ? "active" : ""
+                  }`}
                 onClick={() => setTabsActive(2)}
               >
                 <span>Referral</span>

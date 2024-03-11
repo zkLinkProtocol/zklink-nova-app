@@ -23,7 +23,7 @@ import BridgeComponent from '@/components/Bridge'
 import { symbol } from 'prop-types'
 import { formatNumberWithUnit } from '@/utils'
 import _ from 'lodash'
-import { ExplorerTvlItem, getExplorerTvl } from '@/api'
+import { ExplorerTvlItem, getExplorerTokenTvl } from '@/api'
 
 const TabsBar = styled.div`
     .tab-item {
@@ -194,7 +194,7 @@ export type AssetsListItem = {
 }
 
 export type TokenAddress = {
-    chain:string,
+    chain: string,
     l1Address: string,
     l2Address: string
 }
@@ -217,15 +217,15 @@ export default function AssetsTable(props: IAssetsTableProps) {
     const bridgeModal = useDisclosure()
 
     const yieldsTypeList = [
-        {name:'NOVA Points', label: 'NOVA Pts'},
-        {name: 'Native Yield', label: 'Native Yield'},
-        {name: 'EL Points', label: 'EL Pts'},
-        {name: 'Kelp Miles', label: 'Kelp Miles'},
-        {name: 'Puffer Points', label: 'Puffer Pts'},
-        {name: 'ezPoints', label: 'ezPoints'},
-        {name: 'Loyalty', label: 'Loyalty Pts'},
-        {name: 'Pearls', label: 'Pearls'},
-        {name: 'Shard', label: 'Shard'}
+        { name: 'NOVA Points', label: 'NOVA Pts' },
+        { name: 'Native Yield', label: 'Native Yield' },
+        { name: 'EL Points', label: 'EL Pts' },
+        { name: 'Kelp Miles', label: 'Kelp Miles' },
+        { name: 'Puffer Points', label: 'Puffer Pts' },
+        { name: 'ezPoints', label: 'ezPoints' },
+        { name: 'Loyalty', label: 'Loyalty Pts' },
+        { name: 'Pearls', label: 'Pearls' },
+        { name: 'Shard', label: 'Shard' }
     ]
 
     const getYieldsType = (name: string) => {
@@ -233,12 +233,15 @@ export default function AssetsTable(props: IAssetsTableProps) {
             label: '',
             index: 0
         }
-        yieldsTypeList.forEach((item, index) => {
-            if (item.name === name) {
-                obj.label = item.label
-                obj.index = index
-            }
-        })
+        if (yieldsTypeList && Array.isArray(yieldsTypeList) && yieldsTypeList.length > 0) {
+            yieldsTypeList.forEach((item, index) => {
+                if (item.name === name) {
+                    obj.label = item.label
+                    obj.index = index
+                }
+            })
+        }
+
 
         return obj
     }
@@ -258,25 +261,27 @@ export default function AssetsTable(props: IAssetsTableProps) {
     }
 
     const [explorerTvl, setExplorerTvl] = useState<ExplorerTvlItem[]>([])
-    const getExplorerTvlFunc = async() => {
-        const res = await getExplorerTvl(true)
+    const getExplorerTokenTvlFunc = async () => {
+        const res = await getExplorerTokenTvl(true)
         console.log(res)
         setExplorerTvl(res)
     }
 
     useEffect(() => {
-        getExplorerTvlFunc()
+        getExplorerTokenTvlFunc()
     }, [])
 
     useEffect(() => {
         let arr = [
             { name: 'All' },
         ]
-        supportTokens.forEach((item) => {
-            if (item?.type) {
-                arr.push({ name: item?.type })
-            }
-        })
+        if (supportTokens && Array.isArray(supportTokens) && supportTokens.length > 0) {
+            supportTokens.forEach((item) => {
+                if (item?.type) {
+                    arr.push({ name: item?.type })
+                }
+            })
+        }
 
         let list = _.uniqBy(arr, 'name')
 
@@ -288,23 +293,24 @@ export default function AssetsTable(props: IAssetsTableProps) {
     const getIconUrlByL2Address = (tokenAddress: TokenAddress[]) => {
         let imgURL = ''
         // tokenAddress
-        
+
         // explorerTvl.forEach(item => { 
         //     if (item.l2Address !== l2Address) return
         //     console.log('========', item, item.l2Address, l2Address, item.l2Address == l2Address)
         // })
 
-        tokenAddress.forEach(addressItem => {
-            const obj = explorerTvl.find(item => item.l2Address.toLowerCase() == addressItem.l2Address.toLowerCase())
-            console.log('l2Address', addressItem, obj, explorerTvl)
-            if (obj?.iconURL && obj.iconURL !=='') {
-                imgURL = obj.iconURL
-            }
-        })
+        if (tokenAddress && Array.isArray(tokenAddress) && tokenAddress.length > 0) {
+            tokenAddress.forEach(addressItem => {
+                const obj = explorerTvl.find(item => item.l2Address.toLowerCase() == addressItem.l2Address.toLowerCase())
+                console.log('l2Address', addressItem, obj, explorerTvl)
+                if (obj?.iconURL && obj.iconURL !== '') {
+                    imgURL = obj.iconURL
+                }
+            })
+        }
 
-        
         return imgURL
-    } 
+    }
 
     useEffect(() => {
 
@@ -383,7 +389,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
     return (
         <>
             <CardBox className='mt-[2rem] p-[0.38rem] flex justify-between items-center w-full overflow-auto'>
-                <div style={{maxWidth: 'calc(100% - 14rem)', overflow: 'auto'}}>
+                <div style={{ maxWidth: 'calc(100% - 14rem)', overflow: 'auto' }}>
                     <TabsBar className='flex items-center gap-[0.5rem]'>
                         {assetTabList.map((item, index) => (
                             <span
@@ -395,7 +401,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         ))}
                     </TabsBar>
                 </div>
-                
+
                 <div>
                     <Checkbox
                         className='mr-[1.5rem] flex-row-reverse items-center gap-[0.5rem] whitespace-nowrap ml-[1.5rem]'
@@ -404,7 +410,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         My Holding
                     </Checkbox>
                 </div>
-                
+
             </CardBox>
 
             <TableBox>
