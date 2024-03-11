@@ -114,9 +114,9 @@ const BannerText = styled.div`
 export default function About() {
   return (
     <BgBox className="relative pb-[3rem]">
-      <div className="pt-[8.5rem] px-[252px]">
-        <div className="flex relative">
-          <img src="/img/about-banner.png" alt="" className="banner" />
+      <div className="pt-[8.5rem] px-[252px] min-w-[1176px] box-content ">
+        <div className="flex relative ">
+          <img src="/img/about-banner.png"  className="banner" />
 
           <BannerText className="absolute flex flex-col justify-center items-center">
             <p className="text text-center">zkLink Nova Campaign</p>
