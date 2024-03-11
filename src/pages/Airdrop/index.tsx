@@ -61,16 +61,15 @@ export default function Airdrop() {
         : STATUS_CODE.home;
     if (isConnected && invite?.code) {
       _status = STATUS_CODE.dashboard;
-      //   setViewStatus(STATUS_CODE.dashboard);
-    }
-    if ((inviteCode || isGroupLeader) && twitter && isConnected && signature) {
+    } else if (
+      (inviteCode || isGroupLeader) &&
+      twitter &&
+      isConnected &&
+      signature
+    ) {
       _status = STATUS_CODE.deposit;
-      //   dispatch(setViewStatus(STATUS_CODE.deposit));
-    }
-
-    if (inviteCode || isGroupLeader || isConnected) {
+    } else if (inviteCode || isGroupLeader || isConnected) {
       _status = STATUS_CODE.softKYC;
-      //   dispatch(setViewStatus(STATUS_CODE.softKYC));
     }
     console.log("_status", _status, isConnected);
     dispatch(setViewStatus(_status));
