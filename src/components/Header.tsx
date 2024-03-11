@@ -12,7 +12,7 @@ import { useAccount } from "wagmi";
 import styled from "styled-components";
 import { showAccount } from "@/utils";
 import { useEffect, useState } from "react";
-import { setInvite, setSignature } from "@/store/modules/airdrop";
+import { setInvite, setSignature, setDepositStatus } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useSignMessage } from "wagmi";
@@ -61,7 +61,7 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { signature } = useSelector((store: any) => store.airdrop);
+  const { signature,depositStatus } = useSelector((store: any) => store.airdrop);
 
   const { signMessage } = useSignMessage();
   const dispatch = useDispatch();
@@ -120,7 +120,6 @@ export default function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   return (
     <>
       <Navbar
@@ -161,7 +160,7 @@ export default function Header() {
               <NavbarItem>
                 <NavLink to="/about">About</NavLink>
               </NavbarItem>
-              <NavbarItem>
+              {/* <NavbarItem>
                 <a
                   href={
                     nodeType === "nexus-goerli"
@@ -174,7 +173,7 @@ export default function Header() {
                   <span>Bridge</span>
                   <MdArrowOutward className="size-[1.75rem]" />
                 </a>
-              </NavbarItem>
+              </NavbarItem> */}
             </NavbarContent>
           </NavBox>
         </NavbarBrand>
@@ -199,6 +198,23 @@ export default function Header() {
                             onClick={() => web3Modal.open({ view: 'Networks' })}>
                             Network
                         </Button> */}
+            {depositStatus?
+            (depositStatus === 'pending'? (
+              <Button
+                className='border-solid border-1 border-[#03D498] text-[#03D498] bg-[#000] ' title="Please allow a few minutes for your deposit to be confirmed on zkLink Nova.">
+                Pending Deposit<div className="relative flex w-8 h-8"><i className="absolute w-full h-full rounded-full animate-spinner-ease-spin border-solid border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i><i className="absolute w-full h-full rounded-full opacity-75 animate-spinner-linear-spin border-dotted border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i></div>
+              </Button>
+            ):(
+              <Button
+                className='border-solid border-1 border-[#03D498] text-[#03D498]bg-[#000] ' title="Your funds have been deposited successfully.">
+                Successful Deposit <img src="/img/success.svg" alt="" />
+              </Button>
+            ))
+            :(<Button
+                className='border-solid border-1 border-[#fff] text-[#fff]'
+                onClick={() => window.location.href = (nodeType === "nexus-goerli"? "https://goerli.portal.zklink.io/bridge/": "https://portal.zklink.io/bridge/")}>
+                Deposit History
+            </Button>)}
             <Button
               className="bg-[#1D4138] text-[#03D498] px-4 flex justify-center items-center gap-[0.75rem]"
               disableAnimation

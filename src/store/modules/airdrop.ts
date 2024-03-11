@@ -7,6 +7,7 @@ export interface airdropState {
     isGroupLeader: boolean,
     signature: string,
     twitterAuthCode: string,
+    depositStatus: string,
     twitter: Twitter | null,
     invite: Invite | null
 }
@@ -17,6 +18,7 @@ const initialState: airdropState = {
     isGroupLeader: false,
     signature: '',
     twitterAuthCode: '',
+    depositStatus: '',
     twitter: null,
     invite: null,
 };
@@ -40,6 +42,9 @@ export const airdrop = createSlice({
         setTwitterAuthCode(state, action: PayloadAction<string>) {
             state.twitterAuthCode = action.payload
         },
+        setDepositStatus(state, action: PayloadAction<string>) {
+            state.depositStatus = action.payload
+        },
         setTwitter(state, action: PayloadAction<Twitter | null>) {
             state.twitter = action.payload
         },
@@ -49,5 +54,5 @@ export const airdrop = createSlice({
     },
 });
 
-export const { setViewStatus, setInviteCode, setIsGroupLeader, setSignature, setTwitterAuthCode, setTwitter, setInvite, } = airdrop.actions;
+export const { setViewStatus, setInviteCode, setIsGroupLeader, setSignature, setTwitterAuthCode, setTwitter, setInvite,setDepositStatus } = airdrop.actions;
 export default airdrop.reducer;
