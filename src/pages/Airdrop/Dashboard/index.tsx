@@ -190,8 +190,8 @@ const TabsBox = styled.div`
 
 export default function Dashboard() {
   const { invite } = useSelector((store: RootState) => store.airdrop);
-  // const { address } = useAccount();
-  const address = '0x9FA3b1D0D516E92b7576AC9DD2Ed8f9d3Fc34e27'
+  const { address } = useAccount();
+  // const address = '0x9FA3b1D0D516E92b7576AC9DD2Ed8f9d3Fc34e27'
 
   const [tabsActive, setTabsActive] = useState(0);
 
