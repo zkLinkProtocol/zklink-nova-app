@@ -133,7 +133,7 @@ export const useTokenBalanceList = () => {
     },
   });
 
-  console.log("data: ", selectedChainId, erc20Balances);
+  console.log("erc20 data: ", selectedChainId, erc20Balances);
 
   const tokenList = useMemo(() => {
     const erc20BalancesValue = erc20Balances?.map(

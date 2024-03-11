@@ -17,20 +17,12 @@ import {
 } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import {
-  AiOutlineCheck,
-  AiOutlineDown,
-  AiOutlineUp,
-  AiOutlineSearch,
-} from "react-icons/ai";
-import cionIcon from "@/assets/img/cion.png";
+import { AiOutlineCheck, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { debounce } from "lodash";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { utils } from "ethers";
 import BigNumber from "bignumber.js";
 import { useBridgeNetworkStore } from "@/hooks/useNetwork";
-import Tokens from "@/constants/tokens";
 import { STORAGE_NETWORK_KEY } from "@/constants";
 import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
@@ -150,7 +142,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const tokenModal = useDisclosure();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const { sendDepositTx, loading } = useBridgeTx();
+  const { sendDepositTx, loading, getDepositL2TxHash } = useBridgeTx();
   const [amount, setAmount] = useState(0);
   const [inviteCodeType, setInviteCodeType] = useState(
     InviteCodeTypes[0].value
@@ -391,6 +383,11 @@ export default function Bridge(props: IBridgeComponentProps) {
       return;
     }
     try {
+      // const l2Hash = await getDepositL2TxHash(
+      //   "0x131b99bf3466ecb1353c059bbfc8a6c1700e98f0e057f452bf17367ee2999b2d"
+      // );
+      // console.log("l2TxHash: ", l2Hash);
+      // return;
       const hash = await sendDepositTx(
         tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))

@@ -9,6 +9,21 @@ export type Token = {
   networkKey?: string;
 };
 
+export type Address = Hash;
+export type ForwardL2Request = {
+  gateway: Address;
+  isContractCall: boolean;
+  sender: Address;
+  txId: BigNumberish;
+  contractAddressL2: Address;
+  l2Value: BigNumberish;
+  l2CallData: BytesLike;
+  l2GasLimit: BigNumberish;
+  l2GasPricePerPubdata: BigNumberish;
+  factoryDeps: BytesLike[];
+  refundRecipient: Address;
+};
+
 export type TableColumnItem = {
   key: string;
   label: string;
