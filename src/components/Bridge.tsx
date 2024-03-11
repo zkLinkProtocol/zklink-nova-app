@@ -46,6 +46,8 @@ import {
 import { RootState } from "@/store";
 import { setInvite } from "@/store/modules/airdrop";
 import { parseUnits } from "viem";
+import { Token } from "@/hooks/useTokenList";
+import { isSameAddress } from "@/utils";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -110,7 +112,15 @@ const AssetTypes = [
   },
   {
     label: "Stable",
-    value: "STABLE",
+    value: "Stablecoin",
+  },
+  {
+    label: "Synthetic",
+    value: "Synthetic",
+  },
+  {
+    label: "RWA",
+    value: "RWA",
   },
   {
     label: "LST",
@@ -161,6 +171,8 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [minDepositValue, setMinDepositValue] = useState(0.1);
   const [loyalPoints, setLoyalPoints] = useState(0);
   const [priceApiFailed, setPriceApiFailed] = useState(false);
+  const [category, setCategory] = useState(AssetTypes[0].value);
+  const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -179,6 +191,17 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [address]);
 
   useEffect(() => {
+    if (category === "ALL") {
+      setTokenFiltered([...tokenList]);
+    } else {
+      const tokens = tokenList.filter(
+        (item) => item.type?.toUpperCase() === category.toUpperCase()
+      );
+      setTokenFiltered(tokens);
+    }
+  }, [tokenList, category]);
+
+  useEffect(() => {
     (async () => {
       const minDeposit = await getDepositETHThreshold();
       console.log("minDeposit: ", minDeposit);
@@ -187,11 +210,11 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, []);
 
   const computePoints = debounce(async () => {
-    if (!amount) {
+    if (!amount || !tokenFiltered[tokenActive]) {
       setShowNoPointsTip(false);
       return;
     }
-    if (tokenList[tokenActive].address === ETH_ADDRESS) {
+    if (tokenFiltered[tokenActive]?.address === ETH_ADDRESS) {
       if (Number(amount) < minDepositValue) {
         setShowNoPointsTip(true);
       } else {
@@ -200,7 +223,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     } else {
       try {
         const [priceInfo, ethPriceInfo] = await Promise.all([
-          getTokenPrice(tokenList[tokenActive].address),
+          getTokenPrice(tokenFiltered[tokenActive]?.address),
           getTokenPrice(ETH_ADDRESS),
         ]);
         if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
@@ -216,7 +239,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
           const points = new BigNumber(priceInfo.usdPrice)
             .multipliedBy(10)
-            .multipliedBy(tokenList[tokenActive].multiplier)
+            .multipliedBy(tokenFiltered[tokenActive].multiplier)
             .multipliedBy(amount)
             .div(ethPriceInfo.usdPrice)
             .toFixed(4);
@@ -252,9 +275,11 @@ export default function Bridge(props: IBridgeComponentProps) {
         setNetworkKey(fromList[0].networkKey);
       }
     } else if (bridgeToken) {
-      const token = Tokens.find((item) => item.address === bridgeToken);
+      const token = tokenList.find((item) =>
+        isSameAddress(item.address, bridgeToken)
+      );
       if (token) {
-        const _tokenList = Tokens.filter(
+        const _tokenList = tokenList.filter(
           (item) => item.networkKey === token.networkKey
         );
         let index = 0;
@@ -283,17 +308,17 @@ export default function Bridge(props: IBridgeComponentProps) {
       setTokenActive(0);
       setNetworkKey(fromList[0].networkKey);
     }
-  }, [setNetworkKey, isFirstDeposit, bridgeToken]);
+  }, [setNetworkKey, isFirstDeposit, bridgeToken, tokenList]);
 
   const actionBtnTooltipForMantleDisabeld = useMemo(() => {
     if (
       networkKey === "mantle" &&
-      tokenList[tokenActive].address === ETH_ADDRESS
+      tokenFiltered[tokenActive]?.address === ETH_ADDRESS
     ) {
       return false;
     }
     return true;
-  }, [networkKey, tokenActive, tokenList]);
+  }, [networkKey, tokenActive, tokenFiltered]);
 
   const handleFrom = (index: number) => {
     setFromActive(index);
@@ -313,14 +338,19 @@ export default function Bridge(props: IBridgeComponentProps) {
   const actionBtnDisabled = useMemo(() => {
     if (
       !invalidChain &&
-      tokenList[tokenActive] &&
-      (!tokenList[tokenActive].balance || tokenList[tokenActive].balance! < 0)
+      tokenFiltered[tokenActive] &&
+      (!tokenFiltered[tokenActive].balance ||
+        tokenFiltered[tokenActive].balance! < 0)
     ) {
       return true;
     }
     return false;
-  }, [tokenList, tokenActive, invalidChain]);
-  console.log("actionBtnDisabled: ", actionBtnDisabled, tokenList[tokenActive]);
+  }, [tokenFiltered, tokenActive, invalidChain]);
+  console.log(
+    "actionBtnDisabled: ",
+    actionBtnDisabled,
+    tokenFiltered[tokenActive]
+  );
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
@@ -360,12 +390,14 @@ export default function Bridge(props: IBridgeComponentProps) {
       return;
     }
     try {
-      await sendDepositTx(
-        tokenList[tokenActive]?.address as `0x${string}`,
+      const hash = await sendDepositTx(
+        tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))
-        parseUnits(String(amount), tokenList[tokenActive]?.decimals)
+        parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals)
       );
+      //success modal
     } catch (e) {
+      //fail modal
       return;
     }
 
@@ -461,7 +493,8 @@ export default function Bridge(props: IBridgeComponentProps) {
               {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
             <div>
-              Balance: <span>{tokenList[tokenActive]?.formatedBalance}</span>
+              Balance:{" "}
+              <span>{tokenFiltered[tokenActive]?.formatedBalance}</span>
             </div>
           </div>
           <div className="flex items-center gap-4 mt-2">
@@ -480,10 +513,10 @@ export default function Bridge(props: IBridgeComponentProps) {
               onClick={() => tokenModal.onOpen()}
             >
               <Avatar
-                src={tokenList[tokenActive]?.icon}
+                src={tokenFiltered[tokenActive]?.icon}
                 style={{ width: 24, height: 24 }}
               />
-              <span>{tokenList[tokenActive]?.symbol}</span>
+              <span>{tokenFiltered[tokenActive]?.symbol}</span>
               {tokenModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
           </div>
@@ -700,13 +733,15 @@ export default function Bridge(props: IBridgeComponentProps) {
             <Tabs
               aria-label="Options"
               classNames={{ tabList: "w-full", tab: "w-auto" }}
+              selectedKey={category}
+              onSelectionChange={(key: React.Key) => setCategory(key as string)}
             >
               {AssetTypes.map((item) => (
                 <Tab key={item.value} title={item.label}></Tab>
               ))}
             </Tabs>
             <div className="h-[500px] overflow-scroll">
-              {tokenList.map((item, index) => (
+              {tokenFiltered.map((item, index) => (
                 <ModalSelectItem
                   className="flex items-center justify-between p-4 cursor-pointer"
                   key={index}

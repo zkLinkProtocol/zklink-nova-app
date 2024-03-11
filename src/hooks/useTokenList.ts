@@ -1,6 +1,5 @@
 import { useMemo, useEffect, useState } from "react";
 import { useAccount, useBalance, useReadContracts } from "wagmi";
-import Tokens from "@/constants/tokens";
 import { useBridgeNetworkStore } from "./useNetwork";
 import FromList from "@/constants/fromChainList";
 import IERC20 from "@/constants/abi/IERC20.json";
@@ -28,6 +27,7 @@ const nativeToken = {
   symbol: "ETH",
   decimals: 18,
   icon: ethIcon,
+  type: "Native",
 };
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 const isSameNetwork = (networkKey: string, chain: string) => {

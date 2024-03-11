@@ -6,7 +6,7 @@ import { formatUnits } from "viem";
 import bignumber from "bignumber.js";
 import { ETH_ADDRESS, L2_ETH_TOKEN_ADDRESS } from "@/constants";
 import { BOOST_LIST } from "@/constants/boost";
-import numeral from 'numeral'
+import numeral from "numeral";
 
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -160,12 +160,16 @@ export function scaleGasLimit(gasLimit: BigNumber): BigNumber {
     .div(L1_FEE_ESTIMATION_COEF_DENOMINATOR);
 }
 
-export function random(min:number, max:number) {
+export function random(min: number, max: number) {
   return Math.round(Math.random() * (max - min)) + min;
 }
 
 export function formatNumberWithUnit(value: number) {
-  const num = Number(value)
-  if (!num) return '0'
-  return numeral(num).format('0.00a');
+  const num = Number(value);
+  if (!num) return "0";
+  return numeral(num).format("0.00a");
+}
+
+export function isSameAddress(a: string, b: string) {
+  return a && b && a.toLowerCase() === b.toLowerCase();
 }
