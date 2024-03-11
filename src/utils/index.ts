@@ -7,6 +7,7 @@ import bignumber from "bignumber.js";
 import { ETH_ADDRESS, L2_ETH_TOKEN_ADDRESS } from "@/constants";
 import { BOOST_LIST } from "@/constants/boost";
 import numeral from "numeral";
+import { nexusGoerliNode, nexusNode } from "@/constants/networks";
 
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -176,4 +177,44 @@ export function isSameAddress(a: string, b: string) {
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+type AddEvmChainParams = {
+  chainId: string;
+  chainName: string;
+  rpcUrls: string[];
+  iconUrls: string[];
+  nativeCurrency: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  blockExplorerUrls: string[];
+};
+export async function addEvmChain(chain: AddEvmChainParams) {
+  if (!window.ethereum) {
+    throw new Error("No wallet installed");
+  }
+  await window.ethereum.request({
+    method: "wallet_addEthereumChain",
+    params: [chain],
+  });
+}
+const nodeType = import.meta.env.VITE_NODE_TYPE;
+
+export async function addNovaChain() {
+  const network =
+    nodeType === "nexus-goerli" ? nexusGoerliNode[0] : nexusNode[0];
+  await addEvmChain({
+    chainId: "0x" + network.id.toString(16),
+    chainName: network.name,
+    rpcUrls: [network.rpcUrl],
+    iconUrls: [],
+    nativeCurrency: {
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18,
+    },
+    blockExplorerUrls: [network.blockExplorerUrl ?? ""],
+  });
 }

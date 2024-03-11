@@ -2,9 +2,9 @@ import { PRIMARY_CHAIN_KEY } from "@/constants/networks";
 import lineaIcon from "../assets/img/linea.svg";
 import ethereumIcon from "../assets/img/ethereum.svg";
 import mantleIcon from "../assets/img/mantle.svg";
-import mantaIcon from '../assets/img/manta.jpg'
-import arbIcon from '../assets/img/arbitrum.svg'
-import zkscyncIcon from '../assets/img/zksync.svg'
+import mantaIcon from "../assets/img/manta.jpg";
+import arbIcon from "../assets/img/arbitrum.svg";
+import zkscyncIcon from "../assets/img/zksync.svg";
 import {
   goerli,
   lineaTestnet,
@@ -14,7 +14,7 @@ import {
   zkSync,
   manta,
   mantle,
-  arbitrum
+  arbitrum,
 } from "wagmi/chains";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
@@ -26,6 +26,7 @@ const FromListMainnet = [
     networkKey: "ethereum",
     isEthGasToken: true,
     chainName: "Ethereum",
+    explorerUrl: mainnet.blockExplorers.default.url,
   },
   {
     label: "Linea",
@@ -34,38 +35,43 @@ const FromListMainnet = [
     networkKey: PRIMARY_CHAIN_KEY,
     isEthGasToken: true,
     chainName: "Linea",
+    explorerUrl: linea.blockExplorers.default.url,
   },
   {
     label: "Arbitrum",
     icon: arbIcon,
     chainId: arbitrum.id,
-    networkKey: 'arbitrum',
+    networkKey: "arbitrum",
     isEthGasToken: true,
     chainName: "Arbitrum",
+    explorerUrl: arbitrum.blockExplorers.default.url,
   },
   {
     label: "zkSync",
     icon: zkscyncIcon,
     chainId: zkSync.id,
-    networkKey: 'zksync',
+    networkKey: "zksync",
     isEthGasToken: true,
     chainName: "ZkSync",
+    explorerUrl: zkSync.blockExplorers.default.url,
   },
   {
     label: "Manta",
     icon: mantaIcon,
     chainId: manta.id,
-    networkKey: 'manta',
+    networkKey: "manta",
     isEthGasToken: true,
     chainName: "Manta",
+    explorerUrl: manta.blockExplorers.default.url,
   },
   {
     label: "Mantle",
     icon: mantleIcon,
     chainId: mantle.id,
-    networkKey: 'mantle',
+    networkKey: "mantle",
     isEthGasToken: true,
     chainName: "Mantle",
+    explorerUrl: mantle.blockExplorers.default.url,
   },
 ];
 
@@ -77,6 +83,7 @@ const FromListGoerli = [
     networkKey: "goerli",
     isEthGasToken: true,
     chainName: "Goerli",
+    explorerUrl: goerli.blockExplorers.default.url,
   },
   {
     label: "Linea Goerli Testnet",
@@ -85,6 +92,7 @@ const FromListGoerli = [
     networkKey: PRIMARY_CHAIN_KEY,
     isEthGasToken: true,
     chainName: "Linea Goerli",
+    explorerUrl: lineaTestnet.blockExplorers.default.url,
   },
   {
     label: "Mantle Goerli Testnet",
@@ -93,6 +101,7 @@ const FromListGoerli = [
     networkKey: "mantle",
     isEthGasToken: false,
     chainName: "Mantle Goerli",
+    explorerUrl: mantleTestnet.blockExplorers.default.url,
   },
 ];
 

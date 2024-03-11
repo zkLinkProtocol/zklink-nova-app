@@ -398,7 +398,7 @@
 
 "@esbuild/darwin-arm64@0.19.12":
   version "0.19.12"
-  resolved "https://registry.yarnpkg.com/@esbuild/darwin-arm64/-/darwin-arm64-0.19.12.tgz#cbee41e988020d4b516e9d9e44dd29200996275e"
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.19.12.tgz"
   integrity sha512-B6IeSgZgtEzGC42jsI+YYu9Z3HKRxp8ZT3cqhvliEHovq8HSX2YX8lNocDn79gCKJXOSaEot9MVYky7AKjCs8g==
 
 "@esbuild/darwin-x64@0.19.12":
@@ -488,7 +488,7 @@
 
 "@esbuild/win32-x64@0.19.12":
   version "0.19.12"
-  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.19.12.tgz"
+  resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.19.12.tgz#c57c8afbb4054a3ab8317591a0b7320360b444ae"
   integrity sha512-T1QyPSDCyMXaO3pzBkF96E8xMkiRYbUEZADd29SyPGabqxMViNoii+NcK7eWJAEoU6RZyEm5lVSIjTmcdoB9HA==
 
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
@@ -2188,7 +2188,7 @@
 
 "@parcel/watcher-darwin-arm64@2.4.1":
   version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@parcel/watcher-darwin-arm64/-/watcher-darwin-arm64-2.4.1.tgz#c817c7a3b4f3a79c1535bfe54a1c2818d9ffdc34"
+  resolved "https://registry.npmjs.org/@parcel/watcher-darwin-arm64/-/watcher-darwin-arm64-2.4.1.tgz"
   integrity sha512-ln41eihm5YXIY043vBrrHfn94SIBlqOWmoROhsMVTSXGh0QahKGy77tfEywQ7v3NywyxBBkGIfrWRHm0hsKtzA==
 
 "@parcel/watcher-darwin-x64@2.4.1":
@@ -2247,7 +2247,7 @@
 
 "@parcel/watcher-win32-x64@2.4.1":
   version "2.4.1"
-  resolved "https://registry.npmjs.org/@parcel/watcher-win32-x64/-/watcher-win32-x64-2.4.1.tgz"
+  resolved "https://registry.yarnpkg.com/@parcel/watcher-win32-x64/-/watcher-win32-x64-2.4.1.tgz#4bf920912f67cae5f2d264f58df81abfea68dadf"
   integrity sha512-+DvS92F9ezicfswqrvIRM2njcYJbd5mb9CUgtrHCHmvn7pPPa+nMDRu1o1bYYz/l5IB2NVGNJWiH7h1E58IF2A==
 
 "@parcel/watcher@^2.4.1":
@@ -3065,7 +3065,7 @@
 
 "@rollup/rollup-darwin-arm64@4.12.0":
   version "4.12.0"
-  resolved "https://registry.yarnpkg.com/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.12.0.tgz#6c082de71f481f57df6cfa3701ab2a7afde96f69"
+  resolved "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.12.0.tgz"
   integrity sha512-X64tZd8dRE/QTrBIEs63kaOBG0b5GVEd3ccoLtyf6IdXtHdh8h+I56C2yC3PtC9Ucnv0CpNFJLqKFVgCYe0lOQ==
 
 "@rollup/rollup-darwin-x64@4.12.0":
@@ -3115,7 +3115,7 @@
 
 "@rollup/rollup-win32-x64-msvc@4.12.0":
   version "4.12.0"
-  resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.12.0.tgz"
+  resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.12.0.tgz#9ffdf9ed133a7464f4ae187eb9e1294413fab235"
   integrity sha512-ZYmr5mS2wd4Dew/JjT0Fqi2NPB/ZhZ2VvPp7SmvPZb4Y1CG/LRcS6tcRo2cYU7zLK5A7cdbhWnnWmUjoI4qapg==
 
 "@safe-global/safe-apps-provider@0.18.1":
@@ -5249,7 +5249,7 @@ fs.realpath@^1.0.0:
 
 fsevents@~2.3.2, fsevents@~2.3.3:
   version "2.3.3"
-  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.2:
@@ -5515,7 +5515,7 @@ immer@^10.0.3:
 
 immutable@^4.0.0:
   version "4.3.5"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.5.tgz#f8b436e66d59f99760dc577f5c99a4fd2a5cc5a0"
+  resolved "https://registry.npmjs.org/immutable/-/immutable-4.3.5.tgz"
   integrity sha512-8eabxkth9gZatlwl5TBuJnCsoTADlL6ftEr7A4qgdaTsPyreilDSnUk57SO+jfKcNtxPa22U5KK6DSeAYhpBJw==
 
 import-fresh@^3.2.1:
@@ -6201,7 +6201,7 @@ natural-compare@^1.4.0:
 
 neo-async@^2.6.2:
   version "2.6.2"
-  resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
+  resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 node-addon-api@^2.0.0:
@@ -7012,14 +7012,14 @@ safe-stable-stringify@^2.1.0:
 
 sass-loader@^14.1.1:
   version "14.1.1"
-  resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-14.1.1.tgz#2c9d2277c5b1c5fe789cd0570c046d8ad23cb7ca"
+  resolved "https://registry.npmjs.org/sass-loader/-/sass-loader-14.1.1.tgz"
   integrity sha512-QX8AasDg75monlybel38BZ49JP5Z+uSKfKwF2rO7S74BywaRmGQMUBw9dtkS+ekyM/QnP+NOrRYq8ABMZ9G8jw==
   dependencies:
     neo-async "^2.6.2"
 
 sass@^1.71.1:
   version "1.71.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.71.1.tgz#dfb09c63ce63f89353777bbd4a88c0a38386ee54"
+  resolved "https://registry.npmjs.org/sass/-/sass-1.71.1.tgz"
   integrity sha512-wovtnV2PxzteLlfNzbgm1tFXPLoZILYAMJtvoXXkD7/+1uP41eKkIt1ypWq5/q2uT94qHjXehEYfmjKOvjL9sg==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"

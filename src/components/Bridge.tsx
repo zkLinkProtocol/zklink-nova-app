@@ -36,16 +36,96 @@ import {
   getDepositETHThreshold,
 } from "@/api";
 import { RootState } from "@/store";
-import { setInvite } from "@/store/modules/airdrop";
+import {
+  setInvite,
+  setDepositStatus,
+  setDepositL1TxHash,
+} from "@/store/modules/airdrop";
 import { parseUnits } from "viem";
 import { Token } from "@/hooks/useTokenList";
 import { isSameAddress } from "@/utils";
+
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
     border-radius: 8px;
   }
 `;
+
+const Trans = styled.div`
+  .statusImg {
+    width: 128px;
+    margin-top: 20px;
+    margin-left: calc(50% - 64px);
+    margin-bottom: 23px;
+  }
+  .statusBut {
+    transform: scale(3.5);
+    background: transparent;
+    margin-top: 50px;
+    margin-left: calc(50% - 48px);
+    margin-bottom: 50px;
+  }
+  .title {
+    color: #fff;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 133.333% */
+    letter-spacing: -0.5px;
+    margin-bottom: 23px;
+  }
+  .inner {
+    color: #a0a5ad;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 133.333% */
+    letter-spacing: -0.5px;
+    margin-bottom: 23px;
+  }
+  .button {
+    height: 56px;
+    width: 100%;
+    border-radius: 8px;
+    background: linear-gradient(
+      90deg,
+      #48ecae 0%,
+      #3e52fc 51.07%,
+      #49ced7 100%
+    );
+    color: #fff;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 56px;
+    letter-spacing: -0.5px;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+  .view {
+    color: #48ecae;
+    background: transparent;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 133.333% */
+    letter-spacing: -0.5px;
+    cursor: pointer;
+  }
+  .inline {
+    display: inline;
+  }
+`;
+
 const Container = styled.div`
   background: #313841;
   padding: 32px;
@@ -140,6 +220,10 @@ export default function Bridge(props: IBridgeComponentProps) {
   const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
   const tokenModal = useDisclosure();
+  const transLoadModal = useDisclosure();
+  const transSuccModal = useDisclosure();
+  const transFailModal = useDisclosure();
+  const [failMessage, setFailMessage] = useState("");
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const { sendDepositTx, loading, getDepositL2TxHash } = useBridgeTx();
@@ -147,10 +231,10 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [inviteCodeType, setInviteCodeType] = useState(
     InviteCodeTypes[0].value
   );
+  const [url, setUrl] = useState("");
   const { inviteCode, signature, twitter, invite } = useSelector(
     (store: RootState) => store.airdrop
   );
-
   const [inputInviteCode, setInputInviteCode] = useState("");
 
   const [fromActive, setFromActive] = useState(0);
@@ -268,7 +352,9 @@ export default function Bridge(props: IBridgeComponentProps) {
       }
     } else if (bridgeToken) {
       const token = tokenList.find((item) =>
-        isSameAddress(item.address, bridgeToken)
+        bridgeToken.indexOf("0x") > -1
+          ? isSameAddress(item.address, bridgeToken)
+          : item.symbol === bridgeToken
       );
       if (token) {
         const _tokenList = tokenList.filter(
@@ -283,9 +369,6 @@ export default function Bridge(props: IBridgeComponentProps) {
           index = _tokenList.findIndex(
             (item) => item.address === token.address
           );
-          if (from?.isEthGasToken) {
-            index++;
-          }
           setTokenActive(index);
         }
         setFromActive(fromIndex);
@@ -382,6 +465,11 @@ export default function Bridge(props: IBridgeComponentProps) {
     if (!amount) {
       return;
     }
+    transLoadModal.onOpen();
+    let time = setTimeout(() => {}, 100);
+    for (let i = 0; i <= Number(time); i++) {
+      clearTimeout(i);
+    }
     try {
       // const l2Hash = await getDepositL2TxHash(
       //   "0x131b99bf3466ecb1353c059bbfc8a6c1700e98f0e057f452bf17367ee2999b2d"
@@ -393,9 +481,32 @@ export default function Bridge(props: IBridgeComponentProps) {
         // utils.parseEther(String(amount))
         parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals)
       );
-      //success modal
+      if (!hash) {
+        return;
+      }
+      setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
+      dispatch(setDepositL1TxHash(hash!));
+      transLoadModal.onClose();
+      dispatch(setDepositStatus("pending"));
+      transSuccModal.onOpen();
+      setTimeout(() => {
+        transSuccModal.onClose();
+      }, 5000);
     } catch (e) {
-      //fail modal
+      transLoadModal.onClose();
+      dispatch(setDepositStatus(""));
+      if (e.message) {
+        if (e.message.includes("User rejected the request")) {
+          setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
+        }
+      }
+
+      transFailModal.onOpen();
+      setTimeout(() => {
+        transFailModal.onClose();
+      }, 5000);
       return;
     }
 
@@ -754,6 +865,87 @@ export default function Bridge(props: IBridgeComponentProps) {
                 </ModalSelectItem>
               ))}
             </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal
+        style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
+        size="xl"
+        isOpen={transLoadModal.isOpen}
+        onOpenChange={transLoadModal.onOpenChange}
+        className="trans"
+      >
+        <ModalContent>
+          <ModalBody className="pb-8">
+            <Trans>
+              <Button
+                className="statusBut"
+                disableAnimation
+                size="lg"
+                isLoading={loading}
+                disabled={actionBtnDisabled}
+              ></Button>
+              <div className="title">Depositing</div>
+              <div className="inner">
+                Please sign the transaction in your wallet.
+              </div>
+            </Trans>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal
+        style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
+        size="xl"
+        isOpen={transSuccModal.isOpen}
+        onOpenChange={transSuccModal.onOpenChange}
+        className="trans"
+      >
+        <ModalContent>
+          <ModalBody className="pb-8">
+            <Trans>
+              <img src="/img/transSuccess.png" alt="" className="statusImg" />
+              <div className="title">Transaction Submitted</div>
+              <div className="inner">
+                Please allow a few minutes for your deposit to be confirmed on
+                zkLink Nova.
+              </div>
+              <a
+                href={url}
+                target="_blank"
+                className="view"
+                onClick={transSuccModal.onClose}
+              >
+                View in explorer
+              </a>
+            </Trans>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal
+        style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
+        size="xl"
+        isOpen={transFailModal.isOpen}
+        onOpenChange={transFailModal.onOpenChange}
+      >
+        <ModalContent>
+          <ModalBody className="pb-8">
+            <Trans>
+              <img src="/img/transFail.png" alt="" className="statusImg" />
+              <div className="title">Transaction Failed</div>
+              <div className="title">{failMessage}</div>
+              <div className="inner">
+                If you have any questions regarding this transaction, please{" "}
+                <a
+                  href="https://discord.com/invite/zklink"
+                  target="_blank"
+                  className="view inline"
+                  onClick={transFailModal.onClose}
+                >
+                  contact us
+                </a>{" "}
+                for help
+              </div>
+            </Trans>
           </ModalBody>
         </ModalContent>
       </Modal>

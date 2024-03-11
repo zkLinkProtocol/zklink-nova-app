@@ -18,6 +18,7 @@ import {
   getBooster,
   getNextMilestone,
   formatBalance,
+  addNovaChain,
 } from "@/utils";
 import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
@@ -281,8 +282,7 @@ export default function Dashboard() {
       res.result.forEach((item) => {
         usd += +item?.tvl;
       });
-        // eth += +item?.tvl === 0||  +ethUsdPrice === 0? 0: +item.tvl / ethUsdPrice
-
+      // eth += +item?.tvl === 0||  +ethUsdPrice === 0? 0: +item.tvl / ethUsdPrice
 
       setStakingUsdValue(usd);
     }
@@ -351,30 +351,31 @@ export default function Dashboard() {
     setProgressList(arr);
   }, [groupTvl]);
 
-  const [ethUsdPrice, setEthUsdPrice] = useState(0)
+  const [ethUsdPrice, setEthUsdPrice] = useState(0);
 
   const getEthUsdPrice = async () => {
-    const tokenList = await getExplorerTokenTvl(true)
+    const tokenList = await getExplorerTokenTvl(true);
 
-    const ethToken = tokenList.find(item => item.symbol === 'ETH')
-    console.log('ethToken', ethToken)
+    const ethToken = tokenList.find((item) => item.symbol === "ETH");
+    console.log("ethToken", ethToken);
     if (ethToken) {
-      const res = await getTokenPrice(ethToken.l2Address)
-      setEthUsdPrice(+res.usdPrice || 0)
+      const res = await getTokenPrice(ethToken.l2Address);
+      setEthUsdPrice(+res.usdPrice || 0);
     }
-
-  }
-
-  useEffect(() => {
-    const ethValue = +stakingUsdValue !== 0 && +ethUsdPrice !== 0 ? stakingUsdValue / ethUsdPrice : 0
-    
-    console.log('stakingEth', ethValue, stakingUsdValue, ethUsdPrice)
-    setStakingEthValue(ethValue)
-
-  }, [ethUsdPrice, stakingUsdValue])
+  };
 
   useEffect(() => {
-    getEthUsdPrice()
+    const ethValue =
+      +stakingUsdValue !== 0 && +ethUsdPrice !== 0
+        ? stakingUsdValue / ethUsdPrice
+        : 0;
+
+    console.log("stakingEth", ethValue, stakingUsdValue, ethUsdPrice);
+    setStakingEthValue(ethValue);
+  }, [ethUsdPrice, stakingUsdValue]);
+
+  useEffect(() => {
+    getEthUsdPrice();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getAccountPointFunc();
@@ -402,9 +403,14 @@ export default function Dashboard() {
         {
           onError: (e) => {
             console.log(e);
+            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
+      return;
+    }
+    if (nft) {
+      toast.error("You can mint SBT only once.");
       return;
     }
     try {
@@ -515,7 +521,7 @@ export default function Dashboard() {
                 : `${formatNumberWithUnit(stakingEthValue)} ETH`}
             </p>
             <GradientButton
-              className="w-full mt-[1.5rem] py-[1rem] text-[1.25rem]"
+              className="w-full mt-[1.5rem] py-[1rem] text-[1.25rem] cursor-pointer"
               onClick={() => handleBridgeMore()}
             >
               Bridge More
@@ -651,8 +657,9 @@ export default function Dashboard() {
 
                 {progressList.map((item, index) => (
                   <div
-                    className={`progress-item w-1/5 ${groupTvl > item.value ? "active" : "not-active-1"
-                      } `}
+                    className={`progress-item w-1/5 ${
+                      groupTvl > item.value ? "active" : "not-active-1"
+                    } `}
                     key={index}
                   >
                     {item.showProgress && (
@@ -688,8 +695,9 @@ export default function Dashboard() {
               </span>
 
               <div
-                className={`tab-item relative flex items-center gap-[0.5rem] ${tabsActive === 2 ? "active" : ""
-                  }`}
+                className={`tab-item relative flex items-center gap-[0.5rem] ${
+                  tabsActive === 2 ? "active" : ""
+                }`}
                 onClick={() => setTabsActive(2)}
               >
                 <span>Referral</span>
