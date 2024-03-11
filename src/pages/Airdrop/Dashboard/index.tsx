@@ -522,7 +522,7 @@ export default function Dashboard() {
             </p>
             <GradientButton
               className="w-full mt-[1.5rem] py-[1rem] text-[1.25rem] cursor-pointer"
-              onClick={() => handleBridgeMore()}
+              onClick={() => handleBridgeMore('ETH')}
             >
               Bridge More
             </GradientButton>

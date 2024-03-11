@@ -249,6 +249,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [priceApiFailed, setPriceApiFailed] = useState(false);
   const [category, setCategory] = useState(AssetTypes[0].value);
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
+  const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -350,7 +351,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       } else if (!network) {
         setNetworkKey(fromList[0].networkKey);
       }
-    } else if (bridgeToken) {
+    } else if (bridgeToken && !bridgeTokenInited) {
       const token = tokenList.find((item) =>
         bridgeToken.indexOf("0x") > -1
           ? isSameAddress(item.address, bridgeToken)
@@ -378,12 +379,17 @@ export default function Bridge(props: IBridgeComponentProps) {
         setTokenActive(0);
         setNetworkKey(fromList[0].networkKey);
       }
-    } else {
-      setFromActive(0);
-      setTokenActive(0);
-      setNetworkKey(fromList[0].networkKey);
+      if (tokenList.length > 1) {
+        setBridgeTokenInited(true);
+      }
     }
-  }, [setNetworkKey, isFirstDeposit, bridgeToken, tokenList]);
+  }, [
+    setNetworkKey,
+    isFirstDeposit,
+    bridgeToken,
+    tokenList,
+    bridgeTokenInited,
+  ]);
 
   const actionBtnTooltipForMantleDisabeld = useMemo(() => {
     if (
@@ -416,12 +422,13 @@ export default function Bridge(props: IBridgeComponentProps) {
       !invalidChain &&
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
-        tokenFiltered[tokenActive].balance! < 0)
+        tokenFiltered[tokenActive].balance! < 0 ||
+        Number(tokenFiltered[tokenActive].formatedBalance) < amount)
     ) {
       return true;
     }
     return false;
-  }, [tokenFiltered, tokenActive, invalidChain]);
+  }, [tokenFiltered, tokenActive, invalidChain, amount]);
   console.log(
     "actionBtnDisabled: ",
     actionBtnDisabled,
