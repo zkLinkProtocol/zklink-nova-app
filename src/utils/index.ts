@@ -173,3 +173,7 @@ export function formatNumberWithUnit(value: number) {
 export function isSameAddress(a: string, b: string) {
   return a && b && a.toLowerCase() === b.toLowerCase();
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

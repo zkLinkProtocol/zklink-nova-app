@@ -2,16 +2,25 @@ import {
   PRIMARY_CHAIN_KEY,
   nexusGoerliNode,
   nexusNode,
+  wagmiConfig,
 } from "../constants/networks";
-import { BigNumber, utils, BigNumberish, ethers } from "ethers";
+import { BigNumber, utils, BigNumberish, ethers, VoidSigner } from "ethers";
 import { usePublicClient, useWalletClient } from "wagmi";
-import type { Abi, Address, WriteContractParameters } from "viem";
+import type {
+  Abi,
+  Address,
+  WriteContractParameters,
+  Hash,
+  TransactionRequest,
+} from "viem";
 import IZkSync from "../constants/abi/IZkSync.json";
 import IL1Bridge from "../constants/abi/IL1Bridge.json";
 import WrappedMNTAbi from "../constants/abi/WrappedMNT.json";
 import IERC20 from "../constants/abi/IERC20.json";
+import secondaryAbi from "../constants/abi/ZkLink.json";
+import primaryGetterAbi from "../constants/abi/GettersFacet.json";
 import { useAccount } from "wagmi";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Provider } from "zksync-web3";
 import { l1EthDepositAbi } from "./abi";
 import { Interface } from "ethers/lib/utils";
@@ -20,10 +29,13 @@ import {
   applyL1ToL2Alias,
   isETH,
   scaleGasLimit,
+  sleep,
 } from "@/utils";
-import { WalletClient } from "viem";
+import { WalletClient, decodeEventLog } from "viem";
+import { getPublicClient } from "@wagmi/core";
+
 import { useBridgeNetworkStore } from "./useNetwork";
-import { FullDepositFee } from "@/types";
+import { ForwardL2Request, FullDepositFee } from "@/types";
 import { suggestMaxPriorityFee } from "@rainbow-me/fee-suggestions";
 import { WRAPPED_MNT } from "@/constants";
 
@@ -506,8 +518,133 @@ export const useBridgeTx = () => {
     }
   };
 
+  const getDepositL2TransactionHash = async (l1TransactionHash: string) => {
+    const transaction = await publicClient?.waitForTransactionReceipt({
+      hash: l1TransactionHash as Hash,
+    });
+    for (const log of transaction?.logs ?? []) {
+      try {
+        const { args, eventName } = decodeEventLog({
+          abi: IZkSync.abi,
+          data: log.data,
+          topics: log.topics,
+        });
+        if (eventName === "NewPriorityRequest") {
+          return (args as unknown as { txHash: Hash }).txHash;
+        }
+      } catch {
+        // ignore failed decoding
+      }
+    }
+    throw new Error("No L2 transaction hash found");
+  };
+
+  const getCanonicalTxHash = async (
+    forwardHash: Hash
+  ): Promise<Hash | undefined> => {
+    const primaryNetwork = nodeConfig.find(
+      (item) => item.key === PRIMARY_CHAIN_KEY
+    );
+    const web3Provider = new ethers.providers.Web3Provider(
+      getPublicClient(wagmiConfig, {
+        chainId: primaryNetwork!.l1Network?.id,
+      }) as any,
+      "any"
+    );
+    const voidSigner = new VoidSigner(address || ETH_ADDRESS, web3Provider);
+
+    // const l2Provider = new Provider(primaryNetwork!.rpcUrl);
+    const l1Provider = voidSigner.provider;
+    const contractAddress = primaryNetwork!.mainContract;
+    const iface = new Interface(primaryGetterAbi.abi);
+    const tx: ethers.providers.TransactionRequest = {
+      to: contractAddress,
+      data: iface.encodeFunctionData("getCanonicalTxHash", [forwardHash]),
+    };
+    const ctx = (await l1Provider!.call(tx)) as Hash;
+
+    if (
+      ctx ==
+      "0x0000000000000000000000000000000000000000000000000000000000000000"
+    ) {
+      return undefined;
+    }
+    return ctx;
+  };
+
+  const getDepositL2TransactionHashForSecondary = async (
+    l1TransactionHash: string
+  ): Promise<Hash> => {
+    const transaction = await publicClient?.waitForTransactionReceipt({
+      hash: l1TransactionHash as Hash,
+    });
+    console.log("getDepositL2TransactionHashForSecondary", l1TransactionHash);
+    let forwardL2Request: ForwardL2Request | undefined;
+    for (const log of transaction?.logs ?? []) {
+      try {
+        const { args, eventName } = decodeEventLog({
+          abi: secondaryAbi.abi,
+          data: log.data,
+          topics: log.topics,
+        });
+        if (eventName === "NewPriorityRequest") {
+          forwardL2Request = (
+            args as unknown as { l2Request: ForwardL2Request }
+          ).l2Request;
+        }
+      } catch {
+        // ignore failed decoding
+      }
+    }
+
+    if (!forwardL2Request) {
+      throw new Error("No L2 transaction hash found");
+    }
+
+    const abicoder = new ethers.utils.AbiCoder();
+    const encodedata = abicoder.encode(
+      [
+        "(address,bool,address,uint256,address,uint256,bytes,uint256,uint256,bytes[],address)",
+      ],
+      [
+        [
+          forwardL2Request.gateway,
+          forwardL2Request.isContractCall,
+          forwardL2Request.sender,
+          forwardL2Request.txId,
+          forwardL2Request.contractAddressL2,
+          forwardL2Request.l2Value,
+          forwardL2Request.l2CallData,
+          forwardL2Request.l2GasLimit,
+          forwardL2Request.l2GasPricePerPubdata,
+          forwardL2Request.factoryDeps,
+          forwardL2Request.refundRecipient,
+        ],
+      ]
+    );
+    const forwardHash = ethers.utils.keccak256(encodedata) as Hash;
+    console.log(forwardHash);
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const canonicalTxHash = await getCanonicalTxHash(forwardHash);
+      if (canonicalTxHash) return canonicalTxHash;
+      await sleep(5000);
+    }
+  };
+
+  const getDepositL2TxHash = async (l1TransactionHash: Hash) => {
+    if (networkKey === PRIMARY_CHAIN_KEY) {
+      return getDepositL2TransactionHash(l1TransactionHash);
+    } else {
+      return getDepositL2TransactionHashForSecondary(l1TransactionHash);
+    }
+  };
+
   return {
     sendDepositTx,
     loading,
+    getDepositL2TransactionHash,
+    getDepositL2TransactionHashForSecondary,
+    getDepositL2TxHash,
   };
 };
