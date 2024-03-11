@@ -5,6 +5,7 @@ import {
   NavbarItem,
   Button,
   Avatar,
+  Tooltip
 } from "@nextui-org/react";
 import { Link, NavLink } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
@@ -200,15 +201,31 @@ export default function Header() {
                         </Button> */}
             {depositStatus?
             (depositStatus === 'pending'? (
+              <Tooltip
+                  showArrow={true}
+                  classNames={{
+                    content: "max-w-[300px] p-4",
+                  }}
+                  content="Please allow a few minutes for your deposit to be confirmed on zkLink Nova."
+                >
               <Button
-                className='border-solid border-1 border-[#03D498] text-[#03D498] bg-[#000] ' title="Please allow a few minutes for your deposit to be confirmed on zkLink Nova.">
+                className='border-solid border-1 border-[#03D498] text-[#03D498] bg-[#000] '>
                 Pending Deposit<div className="relative flex w-8 h-8"><i className="absolute w-full h-full rounded-full animate-spinner-ease-spin border-solid border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i><i className="absolute w-full h-full rounded-full opacity-75 animate-spinner-linear-spin border-dotted border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i></div>
               </Button>
+              </Tooltip>
             ):(
+              <Tooltip
+                  showArrow={true}
+                  classNames={{
+                    content: "max-w-[300px] p-4",
+                  }}
+                  content="Your funds have been deposited successfully."
+                >
               <Button
-                className='border-solid border-1 border-[#03D498] text-[#03D498]bg-[#000] ' title="Your funds have been deposited successfully.">
+                className='border-solid border-1 border-[#03D498] text-[#03D498]bg-[#000] '>
                 Successful Deposit <img src="/img/success.svg" alt="" />
               </Button>
+              </Tooltip>
             ))
             :(<Button
                 className='border-solid border-1 border-[#fff] text-[#fff]'
