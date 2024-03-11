@@ -22,6 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { formatBalance, isSameAddress } from "@/utils";
 import { PRIMARY_CHAIN_KEY, wagmiConfig } from "@/constants/networks";
 import { getSupportedTokens } from "@/api";
+
 const nativeToken = {
   address: "0x0000000000000000000000000000000000000000",
   symbol: "ETH",
@@ -149,7 +150,7 @@ export const useTokenBalanceList = () => {
     }));
     const native = {
       ...nativeToken,
-      networkKey: networkKey!,
+      networkKey: networkKey ?? FromList[0].networkKey,
       networkName: from?.chainName,
       balance: nativeTokenBalance?.value ?? 0n,
       formatedBalance: formatBalance(nativeTokenBalance?.value ?? 0n, 18),
