@@ -322,6 +322,7 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   const handleFrom = (index: number) => {
     setFromActive(index);
+    setTokenActive(0);
     setNetworkKey(fromList[index].networkKey);
     fromModal.onClose();
   };
@@ -459,20 +460,20 @@ export default function Bridge(props: IBridgeComponentProps) {
     address,
     invalidChain,
     amount,
-    sendDepositTx,
-    tokenList,
-    tokenActive,
     refreshTokenBalanceList,
+    showNoPointsTip,
+    priceApiFailed,
     onClose,
     inputInviteCode,
     switchChain,
     fromActive,
+    sendDepositTx,
+    tokenFiltered,
+    tokenActive,
     signature,
     twitter?.username,
     twitter?.name,
     dispatch,
-    showNoPointsTip,
-    priceApiFailed,
   ]);
 
   return (
