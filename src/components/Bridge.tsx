@@ -222,6 +222,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const transLoadModal = useDisclosure();
   const transSuccModal = useDisclosure();
   const transFailModal = useDisclosure();
+  const [failMessage, setFailMessage] = useState("");
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const { sendDepositTx, loading, getDepositL2TxHash } = useBridgeTx();
@@ -479,6 +480,9 @@ export default function Bridge(props: IBridgeComponentProps) {
         // utils.parseEther(String(amount))
         parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals)
       );
+      if (!hash) {
+        return;
+      }
       setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
       dispatch(setDepositL1TxHash(hash!));
       transLoadModal.onClose();
@@ -490,6 +494,14 @@ export default function Bridge(props: IBridgeComponentProps) {
     } catch (e) {
       transLoadModal.onClose();
       dispatch(setDepositStatus(""));
+      if (e.message) {
+        if (e.message.includes("User rejected the request")) {
+          setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
+        }
+      }
+
       transFailModal.onOpen();
       setTimeout(() => {
         transFailModal.onClose();
@@ -919,16 +931,14 @@ export default function Bridge(props: IBridgeComponentProps) {
             <Trans>
               <img src="/img/transFail.png" alt="" className="statusImg" />
               <div className="title">Transaction Failed</div>
-              <div className="title">
-                小狐狸报错信息，例如： User reject signature
-              </div>
+              <div className="title">{failMessage}</div>
               <div className="inner">
                 If you have any questions regarding this transaction, please{" "}
                 <a
                   href="https://discord.com/invite/zklink"
                   target="_blank"
                   className="view inline"
-                  onClick={transSuccModal.onClose}
+                  onClick={transFailModal.onClose}
                 >
                   contact us
                 </a>{" "}
