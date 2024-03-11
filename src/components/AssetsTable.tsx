@@ -482,7 +482,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                                             className='bg-[#0BC48F] text-[#000] text-[1rem]'
                                             onClick={() => {
                                                 console.log('item: ', item)
-                                                handleBridgeMore(item.tokenAddress)
+                                                handleBridgeMore(item.symbol)
                                             }}>
                                             Bridge More
                                         </Button>
