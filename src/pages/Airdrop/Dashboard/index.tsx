@@ -723,7 +723,7 @@ export default function Dashboard() {
             )}
             {tabsActive === 2 && (
               <CardBox className="mt-[2rem] min-h-[30rem]">
-                <ReferralList data={referrersTvlList} />
+                <ReferralList data={referrersTvlList}  ethUsdPrice={ethUsdPrice} />
               </CardBox>
             )}
           </div>

@@ -30,6 +30,7 @@
 }
 .gradient-btn:disabled {
     cursor:not-allowed;
+    opacity: 0.4 !important;
 }
 .gradient-secondary-btn {
     border: 1px solid transparent;

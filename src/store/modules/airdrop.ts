@@ -3,7 +3,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface airdropState {
     viewStatus: number,
-    inviteCode: string | null,
+    inviteCode: string,
     isGroupLeader: boolean,
     signature: string,
     twitterAuthCode: string,
@@ -13,7 +13,7 @@ export interface airdropState {
 
 const initialState: airdropState = {
     viewStatus: 0,
-    inviteCode: null,
+    inviteCode: '',
     isGroupLeader: false,
     signature: '',
     twitterAuthCode: '',

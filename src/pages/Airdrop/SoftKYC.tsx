@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { BgBox, BgCoverImg, CardBox, FooterTvlText } from "@/styles/common";
 import {
+  setInviteCode,
   setSignature,
   setTwitter,
   setTwitterAuthCode,
@@ -15,8 +16,8 @@ import {
 import toast from "react-hot-toast";
 import { useSignMessage } from "wagmi";
 import { SIGN_MESSAGE } from "@/constants/sign";
-import { Button } from "@nextui-org/react";
-import { getAccountTwitter } from "@/api";
+import { Button, Input } from "@nextui-org/react";
+import { checkInviteCode, getAccountTwitter } from "@/api";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { postData } from "@/utils";
 import { STATUS_CODE } from ".";
@@ -86,6 +87,22 @@ const StepItem = styled.div`
   }
 `;
 
+const InviteInput = styled.input`
+  border-radius: 8px;
+  border: 1px solid #7ba099;
+  display: inline-flex;
+  padding: 8px 12px 8px 12px;
+  align-items: center;
+  font-size: 1rem;
+  color: #fff;
+  font-family: Satoshi;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.5px;
+`;
+
 export default function SoftKYC() {
   const [searchParams, setSearchParams] = useSearchParams();
   const web3Modal = useWeb3Modal();
@@ -93,6 +110,8 @@ export default function SoftKYC() {
   const { inviteCode, isGroupLeader, signature, twitter } = useSelector(
     (store: RootState) => store.airdrop
   );
+  const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
+  const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
   const [twitterLoading, setTwitterLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -236,6 +255,23 @@ export default function SoftKYC() {
     }
   }, [inviteCode, isGroupLeader, isConnected, signature, twitter]);
 
+  const validInviteCode = (code: string) => {
+    return code && code.length === 6 ? true : false;
+  };
+
+  const enterInviteCode = async (code: string) => {
+    if (!code || code.length !== 6) return;
+    setIsInviteCodeLoading(true);
+    const res = await checkInviteCode(code);
+    setIsInviteCodeLoading(false);
+    if (!res?.result) {
+      toast.error("Invalid invite code. Try another.");
+      return;
+    }
+
+    dispatch(setInviteCode(code));
+  };
+
   return (
     <BgBox>
       <BgCoverImg />
@@ -264,13 +300,35 @@ export default function SoftKYC() {
                   You could modify it before bridge
                 </p>
               </StepItem>
-              <div>
-                {
+
+              <div className="flex items-center gap-[0.5rem]">
+                <InviteInput
+                  type="text"
+                  placeholder="Invite Code"
+                  value={inviteCodeValue}
+                  className={`max-w-[120px] ${validInviteCode(inviteCode) ? 'bg-[#1D4138] cursor-not-allowed': 'bg-[rgba(0, 0, 0, 0.5)]'}`}
+                  readOnly={validInviteCode(inviteCode)}
+                  // disabled={validInviteCode(inviteCode)}
+                  maxLength={6}
+                  onChange={(e) => setInviteCodeValue(e.target.value)}
+                />
+                {validInviteCode(inviteCode) ? (
                   <img
                     src="/img/icon-right.svg"
                     className="w-[1.5rem] h-[1.5rem]"
                   />
-                }
+                ) : (
+                  <Button
+                    className={`gradient-btn px-[1rem] py-[0.5rem] text-[1rem] ${
+                      !validInviteCode(inviteCodeValue) ? "disabled" : ""
+                    }`}
+                    isLoading={isInviteCodeLoading}
+                    disabled={!validInviteCode(inviteCodeValue)}
+                    onClick={() => enterInviteCode(inviteCodeValue)}
+                  >
+                    <span className="ml-[0.5rem]">Confirm</span>
+                  </Button>
+                )}
               </div>
             </CardBox>
           </div>
@@ -298,7 +356,7 @@ export default function SoftKYC() {
                     isLoading={twitterLoading}
                     onClick={handleConnectTwitter}
                   >
-                    <span className="ml-4">Connect Twitter/X</span>
+                    <span className="ml-[0.5rem]">Connect Twitter/X</span>
                   </Button>
                 )}
               </div>
@@ -328,7 +386,7 @@ export default function SoftKYC() {
                     isLoading={isConnecting}
                     onClick={handleConnectWallet}
                   >
-                    Connect Your Wallet
+                    <span className="ml-[0.5rem]">Connect Your Wallet</span>
                   </Button>
                 )}
               </div>

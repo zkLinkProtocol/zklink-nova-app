@@ -144,6 +144,7 @@ export default function Landing() {
       return;
     }
     dispatch(setInviteCode(otp));
+    dispatch(setViewStatus(STATUS_CODE.softKYC));
   };
 
   const handlePageStep = (type: "PREV" | "NEXT") => {
@@ -168,7 +169,7 @@ export default function Landing() {
         <div className="mt-[4.5rem]">
           <PageStep handlePageStep={handlePageStep} />
         </div>
-        <div className="flex justify-between gap-[1.5rem] mt-[4rem]">
+        {/* <div className="flex justify-between gap-[1.5rem] mt-[4rem] none">
           <TabsItem
             className={`w-1/2 ${tabsActive === 0 ? "active" : ""}`}
             onClick={() => {
@@ -185,7 +186,7 @@ export default function Landing() {
           >
             Create Your Group
           </TabsItem>
-        </div>
+        </div> */}
 
         <CardBox className="flex flex-col items-center mt-6 py-8 w-[38.125rem]">
           {tabsActive === 0 && (
