@@ -497,6 +497,7 @@ export const useBridgeTx = () => {
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       const res = await publicClient?.waitForTransactionReceipt({ hash });
       console.log(res);
+      return hash;
     } catch (e) {
       console.log(e);
       return Promise.reject(e);

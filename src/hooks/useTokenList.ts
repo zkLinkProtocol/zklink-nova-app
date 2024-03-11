@@ -1,6 +1,5 @@
 import { useMemo, useEffect, useState } from "react";
 import { useAccount, useBalance, useReadContracts } from "wagmi";
-import Tokens from "@/constants/tokens";
 import { useBridgeNetworkStore } from "./useNetwork";
 import FromList from "@/constants/fromChainList";
 import IERC20 from "@/constants/abi/IERC20.json";
@@ -20,7 +19,7 @@ export type Token = {
   multiplier: number;
 };
 import { useQueryClient } from "@tanstack/react-query";
-import { formatBalance } from "@/utils";
+import { formatBalance, isSameAddress } from "@/utils";
 import { PRIMARY_CHAIN_KEY, wagmiConfig } from "@/constants/networks";
 import { getSupportedTokens } from "@/api";
 const nativeToken = {
@@ -28,6 +27,7 @@ const nativeToken = {
   symbol: "ETH",
   decimals: 18,
   icon: ethIcon,
+  type: "Native",
 };
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 const isSameNetwork = (networkKey: string, chain: string) => {
@@ -49,6 +49,15 @@ export const useTokenBalanceList = () => {
   const [tokenSource, setTokenSource] = useState<Token[]>([]);
   const { networkKey } = useBridgeNetworkStore();
   const { address: walletAddress } = useAccount();
+  const [allTokens, setAllTokens] = useState<
+    { l1Address: string; iconURL: string }[]
+  >([]);
+
+  useEffect(() => {
+    fetch("https://explorer-api.zklink.io/tokens/tvl?isall=true").then((res) =>
+      res.json().then((all) => setAllTokens(all))
+    );
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -62,17 +71,21 @@ export const useTokenBalanceList = () => {
           isSameNetwork(networkKey, item.chain)
         );
         if (item) {
+          const imgItem = allTokens.find((at) =>
+            isSameAddress(at.l1Address, item.l1Address)
+          );
           tokens.push({
             ...token,
             address: item.l1Address,
             networkKey,
             networkName: item.chain,
+            icon: imgItem?.iconURL,
           });
         }
       }
       setTokenSource(tokens);
     })();
-  }, [networkKey]);
+  }, [networkKey, allTokens]);
 
   const queryClient = useQueryClient();
 
