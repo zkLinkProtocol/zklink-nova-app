@@ -7,7 +7,9 @@ import Bridge from "./Bridge";
 import Dashboard from "./Dashboard";
 import {
   setInvite,
+  setInviteCode,
   setIsGroupLeader,
+  setTwitter,
   setViewStatus,
 } from "@/store/modules/airdrop";
 import { getInvite } from "@/api";
@@ -59,8 +61,11 @@ export default function Airdrop() {
       viewStatus === STATUS_CODE.landing
         ? STATUS_CODE.landing
         : STATUS_CODE.home;
+
     if (isConnected && invite?.code) {
       _status = STATUS_CODE.dashboard;
+      dispatch(setInviteCode(""));
+      dispatch(setTwitter(null));
     } else if (
       (inviteCode || isGroupLeader) &&
       twitter &&

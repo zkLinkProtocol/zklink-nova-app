@@ -575,7 +575,7 @@ export default function Dashboard() {
             <CardBox className="flex justify-around py-[3rem] w-1/2">
               <div>
                 <p className="text-[1.5rem] leading-[2rem] text-center">
-                  {formatNumberWithUnit(referralTvl, 'ETH')} 
+                  {formatNumberWithUnit(referralTvl, "ETH")}
                 </p>
                 <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]">
                   Referral TVL

@@ -112,11 +112,11 @@ export default function Home() {
           <CardBox className="py-8 w-[30rem]">
             <TitleBox>
               <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
-                Bridge to Earn Yield and token rewards on zkLink Nova.
+                Bridge to Mega Yield and token rewards on zkLink Nova.
               </h2>
               <p className="sub-title mt-4 px-6 text-[1.5rem] leading-8">
-                The only Ethereum l3 with native yield for Eth and Stablecoins.
-                The Aggregation Parade is now live.
+                The only Ethereum L3 with native yield for Eth and LSTs & LRTs. <br />
+                Live NOW
               </p>
             </TitleBox>
           </CardBox>
@@ -142,7 +142,7 @@ export default function Home() {
                 Enter Your Invite Code
               </h4>
               <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
-                Enter Your Invite Code to participate the campaign
+                Enter your invite code to participate in the campaign.
               </p>
             </TitleBox>
 
