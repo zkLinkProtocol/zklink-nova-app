@@ -28,6 +28,7 @@ const nativeToken = {
   symbol: "ETH",
   decimals: 18,
   icon: ethIcon,
+  multiplier: 2,
   type: "Native",
 };
 const nodeType = import.meta.env.VITE_NODE_TYPE;
