@@ -140,7 +140,10 @@ export default function Landing() {
 
     const res = await checkInviteCode(otp);
     if (!res?.result) {
-      toast.error("Invalid invite code. Try another.");
+      toast.error("Invalid invite code. Try another.", { duration: 3000 });
+      // setTimeout(() => {
+      //   toast.dismiss();
+      // }, 2000);
       return;
     }
     dispatch(setInviteCode(otp));
@@ -160,7 +163,7 @@ export default function Landing() {
       dispatch(setViewStatus(STATUS_CODE.softKYC));
     }
   };
-  
+
   return (
     <BgBox>
       <CoverImgBox />

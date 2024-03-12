@@ -457,6 +457,9 @@ export default function Bridge(props: IBridgeComponentProps) {
         }
       }
     }
+    setTimeout(() => {
+      toast.dismiss();
+    }, 3000);
     if (!address) return;
     if (invalidChain) {
       switchChain(
