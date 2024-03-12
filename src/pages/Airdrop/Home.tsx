@@ -12,7 +12,9 @@ import toast from "react-hot-toast";
 import { STATUS_CODE } from ".";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { RootState } from "@/store";
-
+import Countdown from "@/components/Countdown";
+import { useStartTimerStore } from "@/hooks/useStartTimer";
+import { useAccount } from "wagmi";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -62,10 +64,11 @@ const ConnectWalletText = styled.span`
 export default function Home() {
   const web3Modal = useWeb3Modal();
   const dispatch = useDispatch();
+  const { address } = useAccount();
   // const navigate = useNavigate()
   // const [activeUsers, setActiveUsers] = useState(0)
   const { inviteCode } = useSelector((store: RootState) => store.airdrop);
-
+  const { campaignStart } = useStartTimerStore();
   const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] =
     useState({
       otp: inviteCode || "",
@@ -81,7 +84,7 @@ export default function Home() {
 
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
-    if (!otp || otp.length !== 6) return;
+    if (!otp || otp.length !== 6 || !campaignStart) return;
     const res = await checkInviteCode(otp);
     if (!res?.result) {
       toast.error("Invalid invite code. Try another.", { duration: 3000 });
@@ -115,10 +118,12 @@ export default function Home() {
                 Bridge to Mega Yield and token rewards on zkLink Nova
               </h2>
               <p className="sub-title mt-4 pl-6 pr-8 text-[1.5rem] leading-8">
-                The only Ethereum L3 with native yield for ETH Stablecoins. The Aggreagation Parade is now live.
+                The only Ethereum L3 with native yield for ETH Stablecoins. The
+                Aggreagation Parade is now live.
               </p>
             </TitleBox>
           </CardBox>
+          <Countdown targetDate={new Date("2024-03-15 00:00:00").getTime()} />
           <div className="mt-4">
             {/* <img
                             src='/img/btn-join-early-access.png'
@@ -127,8 +132,15 @@ export default function Home() {
                         /> */}
 
             <GradientButton
-              className={`px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] cursor-pointer`}
-              onClick={() => goInviteCode()}
+              className={`px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] cursor-pointer ${
+                campaignStart ? "" : "disabled"
+              }`}
+              onClick={() => {
+                if (!campaignStart) {
+                  return;
+                }
+                goInviteCode();
+              }}
             >
               JOIN EARLY ACCESS
             </GradientButton>
@@ -162,7 +174,7 @@ export default function Home() {
             <div>
               <GradientButton
                 className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
-                  !otp || otp.length !== 6
+                  !otp || otp.length !== 6 || !campaignStart
                     ? "opacity-40 cursor-not-allowed"
                     : "cursor-pointer"
                 }`}
@@ -177,14 +189,16 @@ export default function Home() {
                             /> */}
             </div>
 
-            <div className="mt-4">
-              <ConnectWalletText
-                className="cursor-pointer text-[1rem]"
-                onClick={() => web3Modal.open()}
-              >
-                Connect Wallet
-              </ConnectWalletText>
-            </div>
+            {!address && (
+              <div className="mt-4">
+                <ConnectWalletText
+                  className="cursor-pointer text-[1rem]"
+                  onClick={() => web3Modal.open()}
+                >
+                  Connect Wallet
+                </ConnectWalletText>
+              </div>
+            )}
           </CardBox>
         </div>
       </div>

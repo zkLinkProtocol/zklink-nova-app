@@ -18,6 +18,7 @@ import { RootState } from "@/store";
 import Home from "./Home";
 import { useSearchParams } from "react-router-dom";
 
+import { useStartTimerStore } from "@/hooks/useStartTimer";
 export const STATUS_CODE = {
   home: 0,
   landing: 1,
@@ -27,6 +28,7 @@ export const STATUS_CODE = {
 };
 
 export default function Airdrop() {
+  const { campaignStart } = useStartTimerStore();
   const { address, isConnected } = useAccount();
   const {
     viewStatus,
@@ -113,7 +115,7 @@ export default function Airdrop() {
 
   return (
     <>
-      {viewStatus === STATUS_CODE.home && <Home />}
+      {(viewStatus === STATUS_CODE.home || !campaignStart) && <Home />}
       {viewStatus === STATUS_CODE.landing && <Landing />}
       {viewStatus === STATUS_CODE.softKYC && <SoftKYC />}
       {viewStatus === STATUS_CODE.deposit && <Bridge />}
