@@ -592,6 +592,29 @@ export default function Bridge(props: IBridgeComponentProps) {
     dispatch,
   ]);
 
+  const bindTwitter = async () => {
+    if (!address) return
+    const data = {
+      address,
+      code: inviteCodeType === "join" ? inputInviteCode : "",
+      siganture: signature,
+      accessToken: twitterAccessToken,
+    };
+    const resBind = await bindInviteCodeWithAddress({
+      ...data,
+    });
+
+    if (resBind?.error) {
+      toast.error(resBind.message);
+      return;
+    }
+
+    const res = await getInvite(address);
+    if (res?.result) {
+      dispatch(setInvite(res?.result));
+    }
+  };
+
   return (
     <>
       <Container className="">
@@ -766,6 +789,14 @@ export default function Bridge(props: IBridgeComponentProps) {
                 disabled={actionBtnDisabled}
               >
                 {btnText}
+              </Button>
+
+              <Button
+                onClick={() => {
+                  bindTwitter();
+                }}
+              >
+                Try Algin
               </Button>
             </Tooltip>
           ) : (
