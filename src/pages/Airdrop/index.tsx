@@ -94,6 +94,9 @@ export default function Airdrop() {
     if (!twitterAccessToken && code) {
       _status = STATUS_CODE.softKYC;
     }
+    if(!isConnected) {
+      dispatch(setTwitterAccessToken(''))
+    }
 
     console.log("_status", _status, isConnected);
     dispatch(setViewStatus(_status));
