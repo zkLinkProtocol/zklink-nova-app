@@ -19,6 +19,8 @@ import {
   setDepositStatus,
   airdropState,
   setDepositL1TxHash,
+  setViewStatus,
+  setTwitterAccessToken,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -26,6 +28,7 @@ import { useSignMessage } from "wagmi";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { MdArrowOutward } from "react-icons/md";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
+import { STATUS_CODE } from "@/pages/AggregationParade";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 const NavBox = styled.nav`
@@ -69,7 +72,7 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { signature, depositStatus, depositL1TxHash } = useSelector(
+  const { signature, depositStatus, depositL1TxHash, invite } = useSelector(
     (store: { airdrop: airdropState }) => store.airdrop
   );
   const { getDepositL2TxHash } = useBridgeTx();
@@ -125,9 +128,10 @@ export default function Header() {
     if (!isConnected) {
       // console.log('disconnect')
       dispatch(setSignature(""));
+      dispatch(setTwitterAccessToken(""));
       dispatch(setInvite(null));
     }
-    if (isConnected && (!signature || signature === "")) {
+    if (isConnected && !signature && !invite?.code) {
       handleSign();
     }
   }, [isConnected, signature]);
@@ -167,12 +171,15 @@ export default function Header() {
         <NavbarBrand className="flex items-end">
           {/* <Logo /> */}
 
-          <a href="https://zklink.io/">
+          <Link
+            to="/"
+            onClick={() => dispatch(setViewStatus(STATUS_CODE.landing))}
+          >
             <LogoBox className="relative">
               <img className="max-w-[145.431px] h-auto" src="/img/NOVA.svg" />
               {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
-          </a>
+          </Link>
 
           <NavBox className="ml-[3.5rem]">
             <NavbarContent

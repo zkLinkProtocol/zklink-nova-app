@@ -19,6 +19,7 @@ import Home from "./Home";
 import { useSearchParams } from "react-router-dom";
 
 import { useStartTimerStore } from "@/hooks/useStartTimer";
+import { code } from "@nextui-org/react";
 export const STATUS_CODE = {
   home: 0,
   landing: 1,
@@ -62,30 +63,34 @@ export default function Airdrop() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    let _status = STATUS_CODE.home;
-    if (isConnected && address && invite?.code) {
-      _status = STATUS_CODE.dashboard;
-    } else if (
-      (inviteCode || isGroupLeader) &&
-      isConnected &&
-      address &&
-      signature &&
-      twitterAccessToken
-    ) {
-      _status = STATUS_CODE.deposit;
-    }
+  // useEffect(() => {
+  //   let _status = STATUS_CODE.home;
+  //   const code = searchParams.get("code");
+  //   if (isConnected && address && invite?.code) {
+  //     _status = STATUS_CODE.dashboard;
+  //   } else if (
+  //     (inviteCode || isGroupLeader) &&
+  //     isConnected &&
+  //     address &&
+  //     signature &&
+  //     twitterAccessToken
+  //   ) {
+  //     _status = STATUS_CODE.deposit;
+  //   } else if ((code && !invite?.code) || isConnected) {
+  //     _status = STATUS_CODE.softKYC;
+  //   }
 
-    dispatch(setViewStatus(_status));
-  }, [
-    address,
-    isConnected,
-    signature,
-    invite,
-    inviteCode,
-    isGroupLeader,
-    twitterAccessToken,
-  ]);
+  //   dispatch(setViewStatus(_status));
+  // }, [
+  //   address,
+  //   isConnected,
+  //   signature,
+  //   invite,
+  //   inviteCode,
+  //   isGroupLeader,
+  //   twitterAccessToken,
+  //   searchParams,
+  // ]);
 
   return (
     <>

@@ -16,7 +16,7 @@ export interface airdropState {
 }
 
 const initialState: airdropState = {
-  viewStatus: 0,
+  viewStatus: 1,
   inviteCode: "",
   isGroupLeader: false,
   signature: "",

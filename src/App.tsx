@@ -4,8 +4,10 @@ import Header from "./components/Header";
 
 // import Home from './pages/Home'
 import Toast from "./components/Toast";
+import AggregationParade from "./pages/AggregationParade";
 // const Home = lazy(() => import('@/pages/Home'))
 const Airdrop = lazy(() => import("@/pages/Airdrop"));
+// const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 const Dashboard = lazy(() => import("@/pages/Airdrop/Dashboard"));
 const AirdropBridge = lazy(() => import("@/pages/Airdrop/Bridge"));
 const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
@@ -30,7 +32,7 @@ export default function App() {
             path="/aggregation-parade"
             element={
               <Suspense fallback="">
-                <Airdrop />
+                <AggregationParade />
               </Suspense>
             }
           />

@@ -1,0 +1,76 @@
+import { RootState } from "@/store";
+import Landing from "./Landing";
+import SoftKYC from "./SoftKYC";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
+import { setTwitterAccessToken, setViewStatus } from "@/store/modules/airdrop";
+import { useSearchParams } from "react-router-dom";
+import Bridge from "./Bridge";
+
+export const STATUS_CODE = {
+  landing: 1,
+  softKYC: 2,
+  deposit: 3,
+  dashboard: 4,
+};
+
+export default function AggregationParade() {
+  const [searchParams] = useSearchParams();
+  const { isConnected, isDisconnected } = useAccount();
+  const { viewStatus, inviteCode, twitterAccessToken, signature, invite } =
+    useSelector((store: RootState) => store.airdrop);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("isDisconnected", isDisconnected);
+  }, [isDisconnected]);
+
+  useEffect(() => {
+    console.log("isConnected", isConnected);
+  }, [isConnected]);
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (code && invite?.code) {
+      dispatch(setViewStatus(STATUS_CODE.softKYC));
+      return;
+    }
+
+    if (isConnected && invite?.code) {
+      dispatch(setViewStatus(STATUS_CODE.dashboard));
+      return;
+    }
+
+    if (isConnected) {
+      dispatch(setViewStatus(STATUS_CODE.softKYC));
+      if (inviteCode && twitterAccessToken && signature) {
+        dispatch(setViewStatus(STATUS_CODE.deposit));
+      }
+    }
+  }, [
+    searchParams,
+    isConnected,
+    twitterAccessToken,
+    inviteCode,
+    signature,
+    invite,
+  ]);
+
+  useEffect(() => {
+    console.log("viewStatus", viewStatus);
+
+    if (viewStatus === STATUS_CODE.landing) {
+      dispatch(setTwitterAccessToken(""));
+    }
+  }, [viewStatus]);
+
+  return (
+    <>
+      {viewStatus === STATUS_CODE.landing && <Landing />}
+      {viewStatus === STATUS_CODE.softKYC && <SoftKYC />}
+      {viewStatus === STATUS_CODE.deposit && <Bridge />}
+      {viewStatus === STATUS_CODE.dashboard && <>Dashboard</>}
+    </>
+  );
+}
