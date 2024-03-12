@@ -105,6 +105,7 @@ export default function Landing() {
       toast.error("Invalid invite code. Try another.", { duration: 3000 });
       return;
     }
+    dispatch(setViewStatus(STATUS_CODE.softKYC))
     dispatch(setTwitterAccessToken(""));
     dispatch(setInviteCode(otp));
     dispatch(setViewStatus(STATUS_CODE.softKYC));

@@ -4,9 +4,14 @@ import SoftKYC from "./SoftKYC";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
-import { setTwitterAccessToken, setViewStatus } from "@/store/modules/airdrop";
+import {
+  setInvite,
+  setTwitterAccessToken,
+  setViewStatus,
+} from "@/store/modules/airdrop";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Bridge from "./Bridge";
+import { getInvite } from "@/api";
 
 export const STATUS_CODE = {
   softKYC: 1,
@@ -16,7 +21,7 @@ export const STATUS_CODE = {
 
 export default function AggregationParade() {
   const [searchParams] = useSearchParams();
-  const { isConnected, isDisconnected } = useAccount();
+  const { isConnected, isDisconnected, address } = useAccount();
   const { viewStatus, inviteCode, twitterAccessToken, signature, invite } =
     useSelector((store: RootState) => store.airdrop);
   const dispatch = useDispatch();
@@ -59,6 +64,17 @@ export default function AggregationParade() {
     //   dispatch(setTwitterAccessToken(""));
     // }
   }, [viewStatus]);
+
+  const getInviteFunc = async () => {
+    if(!address) return
+    const res = await getInvite(address);
+    if (res?.result) {
+      dispatch(setInvite(res?.result));
+    }
+  };
+  useEffect(() => {
+    getInviteFunc();
+  }, [address]);
 
   return (
     <>
