@@ -165,7 +165,7 @@ export default function Landing() {
             <Button
               className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] `}
               disabled={
-                !otp || otp.length !== 6 || !campaignStart || invite?.code
+                !otp || otp.length !== 6 || !campaignStart 
               }
               onClick={enterInviteCode}
             >
