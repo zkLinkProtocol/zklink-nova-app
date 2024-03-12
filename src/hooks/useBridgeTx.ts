@@ -604,20 +604,23 @@ export const useBridgeTx = () => {
     const abicoder = new ethers.utils.AbiCoder();
     const encodedata = abicoder.encode(
       [
-        "(address,bool,address,uint256,address,uint256,bytes,uint256,uint256,bytes[],address)",
+        "(bytes32,address,bool,address,uint256,address,uint256,bytes32,uint256,uint256,bytes32,address)",
       ],
       [
         [
+          "0xe0aaca1722ef50bb0c9b032e5b16ce2b79fa9f23638835456b27fd6894f8292c",
           forwardL2Request.gateway,
           forwardL2Request.isContractCall,
           forwardL2Request.sender,
           forwardL2Request.txId,
           forwardL2Request.contractAddressL2,
           forwardL2Request.l2Value,
-          forwardL2Request.l2CallData,
+          ethers.utils.keccak256(forwardL2Request.l2CallData),
           forwardL2Request.l2GasLimit,
           forwardL2Request.l2GasPricePerPubdata,
-          forwardL2Request.factoryDeps,
+          ethers.utils.keccak256(
+            abicoder.encode(["bytes[]"], [forwardL2Request.factoryDeps])
+          ),
           forwardL2Request.refundRecipient,
         ],
       ]
