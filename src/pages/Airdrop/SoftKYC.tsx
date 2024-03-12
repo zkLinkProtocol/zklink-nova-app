@@ -108,9 +108,8 @@ export default function SoftKYC() {
   const [searchParams, setSearchParams] = useSearchParams();
   const web3Modal = useWeb3Modal();
   const { isConnected, isConnecting } = useAccount();
-  const { inviteCode, isGroupLeader, signature, twitterAccessToken } = useSelector(
-    (store: RootState) => store.airdrop
-  );
+  const { inviteCode, isGroupLeader, signature, twitterAccessToken } =
+    useSelector((store: RootState) => store.airdrop);
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
   const [twitterLoading, setTwitterLoading] = useState(false);
@@ -136,7 +135,7 @@ export default function SoftKYC() {
   };
 
   const getTwitterByCode = async (code: string) => {
-    setSearchParams("");
+    // setSearchParams("");
     setTwitterLoading(true);
     const res = await getAccountTwitter({
       code,
@@ -156,55 +155,65 @@ export default function SoftKYC() {
   };
 
   const toastTwitterError = () => {
+    setSearchParams("state=state");
     toast.error("Could not connect to Twitter. Try again.");
+    setTwitterLoading(false);
   };
 
   const getTwitterAPI = async (code: string) => {
-    try {
-      const res = await postData("/twitter/2/oauth2/token", {
-        code,
-        grant_type: "authorization_code",
-        client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-        redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
-        code_verifier: "challenge",
-      });
+    setTwitterLoading(true);
+    postData("/twitter/2/oauth2/token", {
+      code,
+      grant_type: "authorization_code",
+      client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
+      redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      code_verifier: "challenge",
+    })
+      .then((res) => {
+        console.log(res);
 
-      setSearchParams("");
+        if (res?.error) {
+          toastTwitterError();
+          return;
+        }
 
-      console.log(res);
+        const { access_token } = res;
 
-      const { access_token } = res;
-
-      console.log(access_token);
-      if (access_token && access_token !== "") {
-        fetch("/twitter/2/users/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        })
-          .then(async (res) => {
-            let { data } = await res.json();
-            console.log(data);
-            dispatch(setTwitter(data));
-
-            if (data?.username) {
-              const res = await validTwitter(data.usernmae);
-              if (res.result) {
-                dispatch(setTwitterAccessToken(access_token));
-              } else {
-                toastTwitterError();
-              }
-            }
+        console.log(access_token);
+        if (access_token && access_token !== "") {
+          fetch("/twitter/2/users/me", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access_token}`,
+            },
           })
-          .catch(() => toastTwitterError());
+            .then(async (res: any) => {
+              let { data } = await res.json();
+              console.log(data);
+              dispatch(setTwitter(data));
 
-        // console.log(res.json())
-      }
-    } catch (error) {
-      toastTwitterError();
-    }
+              if (data?.username) {
+                const res = await validTwitter(data.usernmae);
+
+                if (res.result) {
+                  setTwitterLoading(false);
+                  setSearchParams();
+                  dispatch(setTwitterAccessToken(access_token));
+                } else {
+                  toastTwitterError();
+                }
+              }
+            })
+            .catch(() => {
+              toastTwitterError();
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toastTwitterError;
+      });
   };
 
   const handleSign = async () => {
@@ -250,7 +259,7 @@ export default function SoftKYC() {
     const error = searchParams.get("error");
 
     if (error) {
-      setSearchParams("");
+      // setSearchParams("");
       toast.error("Could not connect to Twitter. Try again.");
       return;
     }
@@ -263,7 +272,12 @@ export default function SoftKYC() {
   const [isNextDisabled, setIsNextDisabled] = useState(true);
 
   useEffect(() => {
-    if ((inviteCode || isGroupLeader) && twitterAccessToken && isConnected && signature) {
+    if (
+      (inviteCode || isGroupLeader) &&
+      twitterAccessToken &&
+      isConnected &&
+      signature
+    ) {
       setIsNextDisabled(false);
     }
   }, [inviteCode, isGroupLeader, isConnected, signature, twitterAccessToken]);

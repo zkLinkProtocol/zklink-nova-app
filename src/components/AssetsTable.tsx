@@ -182,13 +182,13 @@ export type TokenAddress = {
 
 export type AssetsListItem = {
   // acount tvl
-  tvl: string;
-  amount: string;
+  tvl: string | number;
+  amount: string | number;
   tokenAddress: string;
   iconURL: string;
   // total tvl by token
-  groupAmount: string;
-  groupTvl: string;
+  groupAmount: string | number;
+  groupTvl: string | number;
   // support token
   symbol: string;
   decimals: number;
@@ -330,28 +330,13 @@ export default function AssetsTable(props: IAssetsTableProps) {
     return imgURL;
   };
 
-  const getTokenAccountTvl = (
-    address: TokenAddress[]
-  ): { accountTvlObj: AccountTvlItem | null; chain: string } => {
-    let accountTvlObj: AccountTvlItem | null = null;
-    let chain = "";
+  const getTokenAccountTvl = (l2Address: string) => {
+    const accountTvl = accountTvlData.find(
+      (tvlItem) =>
+        l2Address.toLowerCase() === tvlItem.tokenAddress.toLowerCase()
+    );
 
-    address.forEach((item) => {
-      const accountTvl = accountTvlData.find(
-        (tvlItem) =>
-          item.l2Address.toLowerCase() === tvlItem.tokenAddress.toLowerCase()
-      );
-
-      if (accountTvl) {
-        accountTvlObj = accountTvl;
-        chain = item.chain;
-      }
-    });
-
-    return {
-      chain,
-      accountTvlObj,
-    };
+    return accountTvl;
   };
 
   const getTotalTvlByAddressList = (
@@ -399,37 +384,24 @@ export default function AssetsTable(props: IAssetsTableProps) {
         };
         return obj;
       });
-
-      // if (isMyHolding) {
-      //     arr = arr.filter((item) => +item.tvl !== 0)
-      // }
     } else {
-      arr = supportTokens.map((item) => {
-        const { accountTvlObj } = getTokenAccountTvl(item.address);
+      // const arr = totalTvlList.map(item => {
+      //   const obj = {
 
-        // const tokenAddress = item.address.find(item => item.l2Address === )
+      //   }
 
-        const totalTvlObj = accountTvlObj
-          ? getTotalTvl(accountTvlObj.tokenAddress)
-          : getTotalTvlByAddressList(item.address);
+      // })
 
-        const chain = totalTvlObj
-          ? item.address.find(
-              (item) =>
-                item.l2Address.toLowerCase() ===
-                totalTvlObj.tokenAddress.toLowerCase()
-            )?.chain
-          : "";
-
+      supportTokens.forEach((item) => {
         let obj = {
           // acount tvl
-          amount: formatNumberWithUnit(accountTvlObj?.amount || 0),
-          tvl: formatNumberWithUnit(accountTvlObj?.tvl || 0, "$"),
-          tokenAddress: totalTvlObj?.tokenAddress || "",
-          iconURL: getIconUrlByL2Address(accountTvlObj?.tokenAddress || ""),
+          amount: 0,
+          tvl: 0,
+          tokenAddress: "",
+          iconURL: "",
           // total tvl by token
-          groupAmount: formatNumberWithUnit(totalTvlObj?.amount || 0),
-          groupTvl: formatNumberWithUnit(totalTvlObj?.tvl || 0, "$"),
+          groupAmount: 0,
+          groupTvl: 0,
           // support token
           symbol: item?.symbol,
           // address: item?.address,
@@ -438,12 +410,43 @@ export default function AssetsTable(props: IAssetsTableProps) {
           type: item?.type,
           yieldType: item?.yieldType,
           multiplier: item?.multiplier,
-          chain,
         };
-        return obj;
-      });
+        item.address.forEach((chains) => {
+          const accountTvl = getTokenAccountTvl(chains.l2Address);
+          const totalTvl = getTotalTvl(chains.l2Address);
+          obj.amount += accountTvl?.amount ? +accountTvl.amount : 0;
+          obj.tvl += accountTvl?.tvl ? +accountTvl.tvl : 0;
+          obj.groupAmount += totalTvl?.amount ? +totalTvl.amount : 0;
+          obj.groupTvl += totalTvl?.tvl ? +totalTvl.tvl : 0;
+          obj.tokenAddress = totalTvl?.tokenAddress || "";
 
-      console.log(arr);
+          obj.iconURL =
+            !obj?.iconURL || obj.iconURL === ""
+              ? getIconUrlByL2Address(chains.l2Address)
+              : obj.iconURL;
+          // let obj = {
+          //   // acount tvl
+          //   amount: formatNumberWithUnit(accountTvl?.amount || 0),
+          //   tvl: formatNumberWithUnit(accountTvl?.tvl || 0, "$"),
+          //   tokenAddress: totalTvl?.tokenAddress || "",
+          //   iconURL: getIconUrlByL2Address(chains.l2Address || ""),
+          //   // total tvl by token
+          //   groupAmount: formatNumberWithUnit(totalTvl?.amount || 0),
+          //   groupTvl: formatNumberWithUnit(totalTvl?.tvl || 0, "$"),
+          //   // support token
+          //   symbol: item?.symbol,
+          //   // address: item?.address,
+          //   decimals: item?.decimals,
+          //   cgPriceId: item?.cgPriceId,
+          //   type: item?.type,
+          //   yieldType: item?.yieldType,
+          //   multiplier: item?.multiplier,
+          //   chain: chains.chain,
+          // };
+          // arr.push(obj);
+        });
+        arr.push(obj);
+      });
     }
 
     if (assetsTabsActive !== 0) {
@@ -532,7 +535,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                       />
                       <p className="value ml-[0.5rem]">
                         {item.symbol}
-                        {item?.chain && `.${item.chain}`}
+                        {/* {item?.chain && `.${item.chain}`} */}
                       </p>
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
                         {item?.multiplier}x boost

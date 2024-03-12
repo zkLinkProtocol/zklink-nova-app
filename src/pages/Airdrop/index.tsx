@@ -15,6 +15,7 @@ import {
 import { getInvite } from "@/api";
 import { RootState } from "@/store";
 import Home from "./Home";
+import { useSearchParams } from "react-router-dom";
 
 export const STATUS_CODE = {
   home: 0,
@@ -56,6 +57,7 @@ export default function Airdrop() {
     getInviteFunc();
   }, [address, isConnected]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     console.log(
       "---viewStatus----",
@@ -64,6 +66,9 @@ export default function Airdrop() {
       inviteCode,
       isGroupLeader
     );
+    const code = searchParams.get("code");
+    const state = searchParams.get("state");
+   
     let _status = STATUS_CODE.home;
     if (isConnected) {
       if (invite?.code) {
@@ -77,6 +82,10 @@ export default function Airdrop() {
       }
     }
 
+    if (code || state) {
+      _status = STATUS_CODE.softKYC
+    }
+
     console.log("_status", _status, isConnected);
     dispatch(setViewStatus(_status));
   }, [
@@ -87,6 +96,7 @@ export default function Airdrop() {
     address,
     signature,
     invite,
+    searchParams,
   ]);
 
   return (
