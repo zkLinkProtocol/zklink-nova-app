@@ -163,11 +163,14 @@ export const getExplorerTokenTvl = (
     params: { isall },
   });
 
-export const validTwitter = (twitterHandler: string): Promise<Response> => {
-  console.log("twitterHandler", twitterHandler);
+export const validTwitter = (
+  twitterHandler: string,
+  address: string
+): Promise<Response> => {
   return http.get(`${BASE_URL_API}/invite/validTwitter`, {
     params: {
       twitterHandler,
+      address,
     },
   });
 };

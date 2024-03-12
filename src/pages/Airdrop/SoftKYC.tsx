@@ -107,7 +107,7 @@ const InviteInput = styled.input`
 export default function SoftKYC() {
   const [searchParams, setSearchParams] = useSearchParams();
   const web3Modal = useWeb3Modal();
-  const { isConnected, isConnecting } = useAccount();
+  const { address, isConnected, isConnecting } = useAccount();
   const { inviteCode, isGroupLeader, signature, twitterAccessToken } =
     useSelector((store: RootState) => store.airdrop);
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
@@ -197,24 +197,19 @@ export default function SoftKYC() {
               // dispatch(setTwitter(data));
 
               if (data?.username) {
-                setTwitterLoading(false);
-                dispatch(setTwitterAccessToken(access_token));
-                console.log("twitter account", access_token);
-                setSearchParams("");
+                console.log(data?.username);
+                const res = await validTwitter(data?.username, address);
 
-                // console.log(data?.username);
-                // const res = await validTwitter(data?.username);
-
-                // if (res.result) {
-                //   setTwitterLoading(false);
-                //   dispatch(setTwitterAccessToken(access_token));
-                //   console.log("twitter account", access_token);
-                //   setSearchParams("");
-                // } else {
-                //   toastTwitterError(
-                //     "Sorry, this Twitter account has already been bound."
-                //   );
-                // }
+                if (res.result) {
+                  setTwitterLoading(false);
+                  dispatch(setTwitterAccessToken(access_token));
+                  console.log("twitter account", access_token);
+                  setSearchParams("");
+                } else {
+                  toastTwitterError(
+                    "Sorry, this Twitter account has already been bound."
+                  );
+                }
               }
             })
             .catch(() => {
