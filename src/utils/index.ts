@@ -165,10 +165,21 @@ export function random(min: number, max: number) {
   return Math.round(Math.random() * (max - min)) + min;
 }
 
-export function formatNumberWithUnit(value: number) {
-  const num = Number(value);
-  if (!num) return "0";
-  return numeral(num).format("0.00a");
+export function formatNumberWithUnit(value: number | string, symbol?: string) {
+  let format = symbol === "$" ? "$0" : `0 ${symbol ? symbol : ""}`;
+
+  if (+value && !isNaN(+value)) {
+    if (+value < 0.01) {
+      format = symbol === "$" ? "<$0.01" : `<0.01 ${symbol ? symbol : ""}`;
+    } else {
+      format =
+        symbol === "$"
+          ? `$${numeral(value).format("0.00a")}`
+          : `${numeral(value).format("0.00a")} ${symbol ? symbol : ""}`;
+    }
+  }
+
+  return format;
 }
 
 export function isSameAddress(a: string, b: string) {

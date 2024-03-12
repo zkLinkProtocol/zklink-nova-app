@@ -191,8 +191,8 @@ const TabsBox = styled.div`
 
 export default function Dashboard() {
   const { invite } = useSelector((store: RootState) => store.airdrop);
-  const { address } = useAccount();
-  // const address = '0x9FA3b1D0D516E92b7576AC9DD2Ed8f9d3Fc34e27'
+  // const { address } = useAccount();
+  const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F";
 
   const [tabsActive, setTabsActive] = useState(0);
 
@@ -517,12 +517,12 @@ export default function Dashboard() {
             </p>
             <p className="w-full text-[2.5rem] font-[700]">
               {isStakingUsd
-                ? `$${formatNumberWithUnit(stakingUsdValue)}`
-                : `${formatNumberWithUnit(stakingEthValue)} ETH`}
+                ? `${formatNumberWithUnit(stakingUsdValue, "$")}`
+                : `${formatNumberWithUnit(stakingEthValue, "ETH")}`}
             </p>
             <GradientButton
               className="w-full mt-[1.5rem] py-[1rem] text-[1.25rem] cursor-pointer"
-              onClick={() => handleBridgeMore('ETH')}
+              onClick={() => handleBridgeMore("ETH")}
             >
               Bridge More
             </GradientButton>
@@ -533,7 +533,7 @@ export default function Dashboard() {
             <CardBox className="flex justify-around  py-[3rem] w-1/2">
               <div>
                 <p className="text-[1.5rem] leading-[2rem] text-center">
-                  ${formatNumberWithUnit(totalTvl)}
+                  {formatNumberWithUnit(totalTvl, "$")}
                 </p>
                 <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]">
                   Nova Network TVL
@@ -541,7 +541,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-[1.5rem] leading-[2rem] text-center">
-                  {formatNumberWithUnit(groupTvl) || 0} ETH
+                  {formatNumberWithUnit(groupTvl, "ETH")}
                 </p>
                 <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]">
                   Group TVL
@@ -575,7 +575,7 @@ export default function Dashboard() {
             <CardBox className="flex justify-around py-[3rem] w-1/2">
               <div>
                 <p className="text-[1.5rem] leading-[2rem] text-center">
-                  {formatNumberWithUnit(referralTvl)} ETH
+                  {formatNumberWithUnit(referralTvl, 'ETH')} 
                 </p>
                 <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]">
                   Referral TVL
@@ -731,7 +731,10 @@ export default function Dashboard() {
             )}
             {tabsActive === 2 && (
               <CardBox className="mt-[2rem] min-h-[30rem]">
-                <ReferralList data={referrersTvlList}  ethUsdPrice={ethUsdPrice} />
+                <ReferralList
+                  data={referrersTvlList}
+                  ethUsdPrice={ethUsdPrice}
+                />
               </CardBox>
             )}
           </div>
