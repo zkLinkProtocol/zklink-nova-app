@@ -303,7 +303,9 @@ export const wagmiConfig = defaultWagmiConfig({
     name: "zkLink Nova Portal",
     description:
       "zkLink Nova Portal - view balances, transfer and bridge tokens",
-    url: "https://portal.zklink.io",
+    url: "https://app.zklink.io/",
     icons: ["../public/img/icon.png"],
   },
+
+  enableCoinbase: false,
 });
