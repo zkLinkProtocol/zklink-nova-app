@@ -52,13 +52,22 @@ export const useTokenBalanceList = () => {
   const { networkKey } = useBridgeNetworkStore();
   const { address: walletAddress } = useAccount();
   const [allTokens, setAllTokens] = useState<
-    { l1Address: string; iconURL: string }[]
+    { l1Address: string; iconURL: string; usdPrice: number; symbol: string }[]
   >([]);
 
   useEffect(() => {
     fetch("https://explorer-api.zklink.io/tokens/tvl?isall=true").then((res) =>
       res.json().then((all) => setAllTokens(all))
     );
+    const timer = setInterval(() => {
+      fetch("https://explorer-api.zklink.io/tokens/tvl?isall=true").then(
+        (res) => res.json().then((all) => setAllTokens(all))
+      );
+    }, 1000 * 10);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -173,6 +182,7 @@ export const useTokenBalanceList = () => {
     loading: queryClient.isFetching,
     tokenList,
     refreshTokenBalanceList,
+    allTokens,
   };
 };
 

@@ -240,13 +240,13 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
   const { setNetworkKey, networkKey } = useBridgeNetworkStore();
-  const { tokenList, refreshTokenBalanceList } = useTokenBalanceList();
+  const { tokenList, refreshTokenBalanceList, allTokens } =
+    useTokenBalanceList();
 
   const [points, setPoints] = useState(0);
   const [showNoPointsTip, setShowNoPointsTip] = useState(false);
   const [minDepositValue, setMinDepositValue] = useState(0.1);
   const [loyalPoints, setLoyalPoints] = useState(0);
-  const [priceApiFailed, setPriceApiFailed] = useState(false);
   const [category, setCategory] = useState(AssetTypes[0].value);
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
@@ -286,7 +286,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     })();
   }, []);
 
-  const computePoints = debounce(async () => {
+  const computePoints = debounce(() => {
     if (!amount || !tokenFiltered[tokenActive]) {
       setShowNoPointsTip(false);
       return;
@@ -299,10 +299,14 @@ export default function Bridge(props: IBridgeComponentProps) {
       }
     }
     try {
-      const [priceInfo, ethPriceInfo] = await Promise.all([
-        getTokenPrice(tokenFiltered[tokenActive]?.address),
-        getTokenPrice(ETH_ADDRESS),
-      ]);
+      const priceInfo = allTokens.find(
+        (item) => item.symbol === tokenFiltered[tokenActive].symbol
+      );
+      const ethPriceInfo = allTokens.find((item) => item.symbol === "ETH");
+      // const [priceInfo, ethPriceInfo] = await Promise.all([
+      //   getTokenPrice(tokenFiltered[tokenActive]?.address),
+      //   getTokenPrice(ETH_ADDRESS),
+      // ]);
       if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
         const ethValue = new BigNumber(priceInfo.usdPrice)
           .multipliedBy(amount)
@@ -324,15 +328,20 @@ export default function Bridge(props: IBridgeComponentProps) {
       }
     } catch (e) {
       console.log(e);
-      setPriceApiFailed(true);
     }
-    setPriceApiFailed(false);
   }, 500);
 
   useEffect(() => {
     //TODO compute eth value, if less than minDepositValue, show 0 points
     computePoints();
-  }, [tokenActive, tokenList, amount, minDepositValue, computePoints]);
+  }, [
+    tokenActive,
+    tokenList,
+    amount,
+    minDepositValue,
+    computePoints,
+    allTokens,
+  ]);
 
   useEffect(() => {
     if (isFirstDeposit) {
@@ -521,7 +530,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
 
     refreshTokenBalanceList();
-    if (isFirstDeposit && !showNoPointsTip && !priceApiFailed) {
+    if (isFirstDeposit && !showNoPointsTip) {
       const data = {
         address,
         code: inviteCodeType === "join" ? inputInviteCode : "",
@@ -539,7 +548,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         }
 
         const res = await getInvite(address);
-        if (res?.result && !showNoPointsTip && !priceApiFailed) {
+        if (res?.result && !showNoPointsTip) {
           dispatch(setInvite(res?.result));
         }
       } catch (e) {
@@ -549,7 +558,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         } else if (e.message === "The invitation limit has been reached") {
           //TODO can not invite more
           toast.error("The invitation limit has been reached");
-          if (data.code && !showNoPointsTip && !priceApiFailed) {
+          if (data.code && !showNoPointsTip) {
             // dispatch(
             //   setInvite({
             //     ...data,
@@ -560,7 +569,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           e.message === "Has been invited, can not repeat the association"
         ) {
           toast.error(e.message);
-          if (data.code && !showNoPointsTip && !priceApiFailed) {
+          if (data.code && !showNoPointsTip) {
             // dispatch(
             //   setInvite({
             //     ...data,
@@ -573,29 +582,31 @@ export default function Bridge(props: IBridgeComponentProps) {
     //TODO call api to save referel data
     onClose?.();
   }, [
-    isFirstDeposit,
-    inviteCodeType,
     address,
     invalidChain,
     amount,
+    isFirstDeposit,
+    inviteCodeType,
+    transLoadModal,
     refreshTokenBalanceList,
     showNoPointsTip,
-    priceApiFailed,
     onClose,
-    inputInviteCode,
     switchChain,
     fromActive,
+    inputInviteCode,
     sendDepositTx,
     tokenFiltered,
     tokenActive,
+    dispatch,
+    transSuccModal,
+    transFailModal,
     signature,
     twitterAccessToken,
-    dispatch,
   ]);
 
   const bindTwitter = async () => {
     if (!address) return;
-    console.log('inviteCodeType-----',inviteCodeType)
+    console.log("inviteCodeType-----", inviteCodeType);
     const data = {
       address,
       code: inviteCodeType === "join" ? inputInviteCode : "",
@@ -709,7 +720,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               )}
             </div>
             <div className="flex items-center">
-              <span>{points}</span>
+              <span>{showNoPointsTip ? 0 : points}</span>
               {loyalPoints > 0 && (
                 <div className="ml-1">
                   + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
