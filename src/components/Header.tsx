@@ -171,10 +171,7 @@ export default function Header() {
         <NavbarBrand className="flex items-end">
           {/* <Logo /> */}
 
-          <Link
-            to="/"
-            onClick={() => dispatch(setViewStatus(STATUS_CODE.landing))}
-          >
+          <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
             <LogoBox className="relative">
               <img className="max-w-[145.431px] h-auto" src="/img/NOVA.svg" />
               {/* <span className='logo-text'>zk.Link</span> */}

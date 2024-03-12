@@ -11,6 +11,7 @@ import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
 import { setViewStatus } from "@/store/modules/airdrop";
 import { STATUS_CODE } from ".";
+import { useNavigate } from "react-router-dom";
 
 const BgBox = styled.div`
   position: relative;
@@ -141,11 +142,13 @@ export default function Bridge() {
     </>
   );
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   useEffect(() => {
-    if(!isConnected) {
-      dispatch(setViewStatus(STATUS_CODE.landing))
+    if (!isConnected) {
+      // dispatch(setViewStatus(STATUS_CODE.landing));
+      navigator("/");
     }
   }, [isConnected]);
 

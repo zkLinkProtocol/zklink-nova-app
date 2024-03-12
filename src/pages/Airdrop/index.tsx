@@ -4,7 +4,7 @@ import SoftKYC from "./SoftKYC";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import Bridge from "./Bridge";
-import Dashboard from "./Dashboard";
+import Dashboard from "../AggregationParade/Dashboard";
 import {
   setInvite,
   setInviteCode,

@@ -5,14 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { setTwitterAccessToken, setViewStatus } from "@/store/modules/airdrop";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Bridge from "./Bridge";
 
 export const STATUS_CODE = {
-  landing: 1,
-  softKYC: 2,
-  deposit: 3,
-  dashboard: 4,
+  softKYC: 1,
+  deposit: 2,
+  dashboard: 3,
 };
 
 export default function AggregationParade() {
@@ -25,10 +24,6 @@ export default function AggregationParade() {
   useEffect(() => {
     console.log("isDisconnected", isDisconnected);
   }, [isDisconnected]);
-
-  useEffect(() => {
-    console.log("isConnected", isConnected);
-  }, [isConnected]);
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -60,14 +55,14 @@ export default function AggregationParade() {
   useEffect(() => {
     console.log("viewStatus", viewStatus);
 
-    if (viewStatus === STATUS_CODE.landing) {
-      dispatch(setTwitterAccessToken(""));
-    }
+    // if (viewStatus === STATUS_CODE.landing) {
+    //   dispatch(setTwitterAccessToken(""));
+    // }
   }, [viewStatus]);
 
   return (
     <>
-      {viewStatus === STATUS_CODE.landing && <Landing />}
+      {/* {viewStatus === STATUS_CODE.landing && <Landing />} */}
       {viewStatus === STATUS_CODE.softKYC && <SoftKYC />}
       {viewStatus === STATUS_CODE.deposit && <Bridge />}
       {viewStatus === STATUS_CODE.dashboard && <>Dashboard</>}

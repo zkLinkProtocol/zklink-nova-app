@@ -49,6 +49,7 @@ import {
   setViewStatus,
 } from "@/store/modules/airdrop";
 import { STATUS_CODE } from "..";
+import { useNavigate } from "react-router-dom";
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
@@ -261,7 +262,7 @@ export default function Dashboard() {
 
   const handleCopy = () => {
     if (!invite?.code) return;
-    navigator.clipboard.writeText(invite?.code);
+    window.navigator.clipboard.writeText(invite?.code);
     toast.success("Copied", { duration: 2000 });
   };
 
@@ -357,12 +358,14 @@ export default function Dashboard() {
   const [progressList, setProgressList] = useState<any[]>([]);
 
   const dispatch = useDispatch();
+  const navigator = useNavigate();
   useEffect(() => {
     if (!isConnected) {
       dispatch(setInvite(null));
-      dispatch(setInviteCode(""));
+      // dispatch(setInviteCode(''))
       dispatch(setTwitterAccessToken(""));
-      dispatch(setViewStatus(STATUS_CODE.home));
+      // dispatch(setViewStatus(STATUS_CODE.landing));
+      navigator("/");
     }
   }, [isConnected]);
 
@@ -428,8 +431,6 @@ export default function Dashboard() {
     getReferralTvlFunc();
     getTotalTvlFunc();
   }, [address]);
-
-  useEffect(() => {}, [address]);
 
   const handleMintNow = useCallback(() => {
     if (nft) {

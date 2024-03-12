@@ -23,7 +23,7 @@ import BridgeComponent from "@/components/Bridge";
 import { formatNumberWithUnit } from "@/utils";
 import _ from "lodash";
 import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
-import { AccountTvlItem, TotalTvlItem } from "@/pages/Airdrop/Dashboard";
+import { AccountTvlItem, TotalTvlItem } from "@/pages/AggregationParade/Dashboard";
 
 const TabsBar = styled.div`
   .tab-item {

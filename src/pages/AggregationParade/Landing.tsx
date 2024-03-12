@@ -1,9 +1,13 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OTPInput from "react-otp-input";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { setInviteCode, setTwitterAccessToken, setViewStatus } from "@/store/modules/airdrop";
+import {
+  setInviteCode,
+  setTwitterAccessToken,
+  setViewStatus,
+} from "@/store/modules/airdrop";
 // import { useNavigate } from 'react-router-dom'
 import { FooterTvlText } from "@/styles/common";
 import "@/styles/otp-input.css";
@@ -15,6 +19,7 @@ import { RootState } from "@/store";
 import { useStartTimerStore } from "@/hooks/useStartTimer";
 import { useAccount } from "wagmi";
 import { Button } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -74,7 +79,9 @@ export default function Landing() {
   const { isConnected } = useAccount();
   // const navigate = useNavigate()
   // const [activeUsers, setActiveUsers] = useState(0)
-  const { inviteCode } = useSelector((store: RootState) => store.airdrop);
+  const { inviteCode, signature } = useSelector(
+    (store: RootState) => store.airdrop
+  );
   const { campaignStart } = useStartTimerStore();
   const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] =
     useState({
@@ -84,6 +91,7 @@ export default function Landing() {
       placeholder: "",
       inputType: "text" as const,
     });
+  const navigator = useNavigate();
 
   const handleOTPChange = (otp: string) => {
     setConfig((prevConfig) => ({ ...prevConfig, otp }));
@@ -97,10 +105,17 @@ export default function Landing() {
       toast.error("Invalid invite code. Try another.", { duration: 3000 });
       return;
     }
-    dispatch(setTwitterAccessToken(''))
+    dispatch(setTwitterAccessToken(""));
     dispatch(setInviteCode(otp));
     dispatch(setViewStatus(STATUS_CODE.softKYC));
+    navigator("/aggregation-parade");
   };
+
+  // useEffect(() => {
+  //   if (isConnected && signature) {
+  //     navigator("/aggregation-parade");
+  //   }
+  // }, [isConnected]);
 
   return (
     <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">

@@ -8,13 +8,14 @@ import AggregationParade from "./pages/AggregationParade";
 // const Home = lazy(() => import('@/pages/Home'))
 const Airdrop = lazy(() => import("@/pages/Airdrop"));
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
-const Dashboard = lazy(() => import("@/pages/Airdrop/Dashboard"));
-const AirdropBridge = lazy(() => import("@/pages/Airdrop/Bridge"));
+const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
+const AirdropBridge = lazy(() => import("@/pages/AggregationParade/Bridge"));
 const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 const About = lazy(() => import("@/pages/About"));
 // const Bridge = lazy(() => import('@/pages/Bridge'))
 import Countdown from "@/components/Countdown";
 import styled from "styled-components";
+import Landing from "./pages/AggregationParade/Landing";
 const HideBox = styled.div`
   position: absolute;
   left: -9999px;
@@ -27,7 +28,15 @@ export default function App() {
         <Header />
 
         <Routes>
-          <Route path="/" element={<Navigate to="/aggregation-parade" />} />
+          {/* <Route path="/" element={<Navigate to="/aggregation-parade" />} /> */}
+          <Route
+            path="/"
+            element={
+              <Suspense fallback="">
+                <Landing />
+              </Suspense>
+            }
+          />
           <Route
             path="/aggregation-parade"
             element={

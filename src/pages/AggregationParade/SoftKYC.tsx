@@ -1,7 +1,11 @@
 import { checkInviteCode, validTwitter } from "@/api";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { RootState } from "@/store";
-import { setInviteCode, setSignature, setTwitterAccessToken } from "@/store/modules/airdrop";
+import {
+  setInviteCode,
+  setSignature,
+  setTwitterAccessToken,
+} from "@/store/modules/airdrop";
 import { CardBox } from "@/styles/common";
 import { postData } from "@/utils";
 import { Button } from "@nextui-org/react";
@@ -10,7 +14,7 @@ import qs from "qs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAccount, useSignMessage } from "wagmi";
 
@@ -108,7 +112,7 @@ const InviteInput = styled.input`
 
 export default function SoftKYC() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { address, isConnected, isConnecting } = useAccount();
+  const { address, isConnected, isDisconnected, isConnecting } = useAccount();
   const web3Modal = useWeb3Modal();
   const { inviteCode, signature, twitterAccessToken } = useSelector(
     (store: RootState) => store.airdrop
@@ -116,7 +120,6 @@ export default function SoftKYC() {
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
   const [twitterLoading, setTwitterLoading] = useState(false);
-
   const dispatch = useDispatch();
   const { signMessage } = useSignMessage();
 
@@ -187,7 +190,6 @@ export default function SoftKYC() {
     toast.error(text || "Could not connect to Twitter. Try again.");
     setTwitterLoading(false);
   };
-
 
   const getTwitterAPI = async (code: string) => {
     setTwitterLoading(true);
@@ -263,9 +265,17 @@ export default function SoftKYC() {
 
     if (code) {
       getTwitterAPI(code);
-      setSearchParams('')
+      setSearchParams("");
     }
   }, [searchParams]);
+
+  // const navigator = useNavigate();
+  // useEffect(() => {
+  //   console.log("isConnected", isConnected);
+  //   if (isDisconnected) {
+  //     navigator("/");
+  //   }
+  // }, [isConnected]);
 
   return (
     <BgBox>
