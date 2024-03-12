@@ -544,9 +544,11 @@ export default function AssetsTable(props: IAssetsTableProps) {
                   </TableCell>
                   <TableCell>
                     <TableItem>
-                      <div className="value">{item.groupAmount}</div>
+                      <div className="value">
+                        {formatNumberWithUnit(item.groupAmount)}
+                      </div>
                       <div className="sub-value mt-[0.12rem]">
-                        {item.groupTvl}
+                        {formatNumberWithUnit(item.groupTvl, "$")}
                       </div>
                     </TableItem>
                   </TableCell>
@@ -572,8 +574,12 @@ export default function AssetsTable(props: IAssetsTableProps) {
                   </TableCell> */}
                   <TableCell>
                     <TableItem>
-                      <div className="value">{item.amount}</div>
-                      <div className="sub-value mt-[0.12rem]">{item.tvl}</div>
+                      <div className="value">
+                        {formatNumberWithUnit(item.amount)}
+                      </div>
+                      <div className="sub-value mt-[0.12rem]">
+                        {formatNumberWithUnit(item.tvl, "$")}
+                      </div>
                     </TableItem>
                   </TableCell>
                   <TableCell>
