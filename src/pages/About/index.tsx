@@ -43,6 +43,7 @@ const BgBox = styled.div`
   }
   .jump {
     color: #03d498;
+    cursor: pointer;
   }
   .marginLeft {
     margin-left: 30px;
@@ -116,7 +117,7 @@ export default function About() {
     <BgBox className="relative pb-[3rem]">
       <div className="pt-[8.5rem] px-[252px] min-w-[1176px] box-content ">
         <div className="flex relative ">
-          <img src="/img/about-banner.png"  className="banner" />
+          <img src="/img/about-banner.png" className="banner" />
 
           <BannerText className="absolute flex flex-col justify-center items-center">
             <p className="text text-center">zkLink Nova Campaign</p>
@@ -158,8 +159,8 @@ export default function About() {
         </div>
         <div className="paragraph">
           <div className="title mt-4">Minimal Entry:</div>
-          <div>1. First 7 days 0.1 ETH</div>
-          <div>2. After the 7th day 0.25 ETH</div>
+          <div>1. First 7 days 0.1 ETH (Or Equivalent)</div>
+          <div>2. After the 7th day 0.25 ETH (Or Equivalent)</div>
         </div>
         <div className="paragraph2">
           <div className="title">Deposit / Bridge Assets to Nova</div>
@@ -167,7 +168,11 @@ export default function About() {
             Bridging any supported assets to Nova can instantly earn Nova
             points. The points earned is determined by a multiple factors:
           </div>
-          <div>Nova Points = SUM(Deposit Value * Token Multiplier) * 10</div>
+          <ul>
+            <li className="before">Deposit Value </li>
+            <li className="before">Token Multiplier</li>
+            <li className="before">Deposit multiplier </li>
+          </ul>
         </div>
         <div className="paragraph title">
           To join the Aggregation Parade, make sure your deposit surpasses the
@@ -176,10 +181,10 @@ export default function About() {
         <div className="paragraph">
           <div className="title">Holding assets on Nova</div>
           <div>
-            Holding any <span className="jump">supported assets</span> on Nova
-            allows you to accrue Nova points until the final Nova Point
-            computation date. Check how your Nova points are computed by holding
-            Value here.
+            Holding any <a className="jump">supported assets</a> on Nova allows
+            you to accrue Nova points until the final Nova Point computation
+            date. Check how your Nova points are computed by holding Value{" "}
+            <a className="jump">here</a>.
           </div>
           <div className="before title">
             Nova points update will be computed every 8 hours
@@ -215,6 +220,24 @@ export default function About() {
             <span className="title">Token Multiplier:</span> Tokens are
             categorized into three tiers, with higher liquidity tokens receiving
             more Nova Points.
+          </div>
+          <ul>
+            <li className="before marginLeft">
+              2x Multiplier for token in category: Native, Stablecoin
+            </li>
+            <li className="before marginLeft">
+              1.5x Multiplier for token in category: L2 Native, RWA, LST
+            </li>
+            <li className="before marginLeft">
+              1x Multiplier for token in category: LRT
+            </li>
+          </ul>
+        </div>
+        <div className="paragraph">
+          <div>
+            <span className="title">INITIAL ONE- TIME BOOST: </span> You will
+            receive 10 times Nova points for EACH deposit/ bridging action that
+            occurs.
           </div>
         </div>
         <div className="paragraph">
@@ -334,13 +357,13 @@ export default function About() {
                     <img src="/img/1.png" alt="" className='person'/>
                 </div> */}
         <div className="mb-[1rem]">
-          <img src="/img/img-about-info.svg" className="w-full" />
+          <img src="/img/img-about-info.png" className="w-full" />
         </div>
         <div className="paragraph">
           <div>
             After obtaining your SBT, you can upgrade it into an ERC721 NFT
-            through collecting ONE OF EACH of the FOUR different types of
-            trademark NFT with our referral program.
+            through collecting ONE OF EACH of the four different types of
+            trademark NFT through our referral program.
           </div>
           <div className="before">
             You will get a trademark NFT airdrop for each 3 referral.
@@ -378,6 +401,12 @@ export default function About() {
           <div className="title">Phase 3: Releasing phase 4/24</div>
           <div className="before">
             Nova Points will be released in the form of $ZKL
+          </div>
+        </div>
+        <div className="paragraph">
+          <div className="title">Phase 4: Reunification Phase 5/24</div>
+          <div className="before">
+            More to be revealed after bitcoin halving
           </div>
         </div>
         <div className="paragraph title big">About zkLink Nova Network</div>
