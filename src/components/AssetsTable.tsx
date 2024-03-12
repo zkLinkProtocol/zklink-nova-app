@@ -20,10 +20,10 @@ import {
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BridgeComponent from "@/components/Bridge";
-import { symbol } from "prop-types";
 import { formatNumberWithUnit } from "@/utils";
 import _ from "lodash";
-import { ExplorerTvlItem, getExplorerTokenTvl } from "@/api";
+import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
+import { AccountTvlItem, TotalTvlItem } from "@/pages/Airdrop/Dashboard";
 
 const TabsBar = styled.div`
   .tab-item {
@@ -174,6 +174,12 @@ export const TableBox = styled.div`
   }
 `;
 
+export type TokenAddress = {
+  chain: string;
+  l1Address: string;
+  l2Address: string;
+};
+
 export type AssetsListItem = {
   // acount tvl
   tvl: string;
@@ -185,28 +191,22 @@ export type AssetsListItem = {
   groupTvl: string;
   // support token
   symbol: string;
-  address: string;
   decimals: number;
   cgPriceId: string;
   type: string;
   yieldType: string[];
-  multiplier: string;
-};
-
-export type TokenAddress = {
-  chain: string;
-  l1Address: string;
-  l2Address: string;
+  multiplier: number;
+  chain?: string;
 };
 
 interface IAssetsTableProps {
-  data: any[];
-  totalTvlList: any[];
-  supportTokens: any[];
+  accountTvlData: AccountTvlItem[];
+  totalTvlList: TotalTvlItem[];
+  supportTokens: SupportToken[];
 }
 
 export default function AssetsTable(props: IAssetsTableProps) {
-  const { data, totalTvlList, supportTokens } = props;
+  const { accountTvlData, totalTvlList, supportTokens } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
   const [tableList, setTableList] = useState<AssetsListItem[]>([]);
@@ -247,8 +247,11 @@ export default function AssetsTable(props: IAssetsTableProps) {
     return obj;
   };
 
-  const getTotalTvl = (symbol: string) => {
-    return totalTvlList.find((item: any) => item.symbol == symbol);
+  const getTotalTvl = (tokenAddress: string) => {
+    console.log("=========getTotalTvl=======", tokenAddress);
+    return totalTvlList.find(
+      (item) => item.tokenAddress.toLowerCase() === tokenAddress.toLowerCase()
+    );
   };
 
   const handleBridgeMore = (token: string) => {
@@ -256,9 +259,38 @@ export default function AssetsTable(props: IAssetsTableProps) {
     bridgeModal.onOpen();
   };
 
-  const getToken = (symbol: string) => {
-    const obj = supportTokens.find((item) => item.symbol == symbol);
-    return obj;
+  const getTokenAndChain = (
+    symbol: string,
+    tokenAddress: string
+  ): { chain: string; token: SupportToken | null } => {
+    // const obj = supportTokens.find((item) => item.symbol == tokenAddress);
+
+    let chain = "";
+    let supportToken = null;
+
+    console.log("====get token=====", symbol, tokenAddress, supportTokens);
+
+    const tokenFilter = supportTokens.filter(
+      (token) => token.symbol === symbol
+    );
+
+    console.log("====get token filter=====", tokenFilter);
+
+    tokenFilter.forEach((token: SupportToken) => {
+      const addressObj = token.address.find(
+        (item) => item.l2Address.toLowerCase() === tokenAddress.toLowerCase()
+      );
+
+      if (addressObj) {
+        chain = addressObj.chain;
+        supportToken = token;
+      }
+    });
+
+    return {
+      token: supportToken,
+      chain: chain,
+    };
   };
 
   const [explorerTvl, setExplorerTvl] = useState<ExplorerTvlItem[]>([]);
@@ -290,53 +322,92 @@ export default function AssetsTable(props: IAssetsTableProps) {
     setAssetTabList(list);
   }, [supportTokens]);
 
-  const getIconUrlByL2Address = (tokenAddress: TokenAddress[]) => {
+  const getIconUrlByL2Address = (tokenAddress: string) => {
     let imgURL = "";
 
-    if (
-      tokenAddress &&
-      Array.isArray(tokenAddress) &&
-      tokenAddress.length > 0
-    ) {
-      tokenAddress.forEach((addressItem) => {
-        const obj = explorerTvl.find(
-          (item) =>
-            item.l2Address.toLowerCase() == addressItem.l2Address.toLowerCase()
-        );
-        if (obj?.iconURL && obj.iconURL !== "") {
-          imgURL = obj.iconURL;
-        }
-      });
+    const obj = explorerTvl.find(
+      (item) => item.l2Address.toLowerCase() === tokenAddress.toLowerCase()
+    );
+    if (obj?.iconURL && obj.iconURL !== "") {
+      imgURL = obj.iconURL;
     }
 
     return imgURL;
+  };
+
+  const getTokenAccountTvl = (
+    address: TokenAddress[]
+  ): { accountTvlObj: AccountTvlItem | null; chain: string } => {
+    let accountTvlObj: AccountTvlItem | null = null;
+    let chain = "";
+
+    address.forEach((item) => {
+      const accountTvl = accountTvlData.find(
+        (tvlItem) =>
+          item.l2Address.toLowerCase() === tvlItem.tokenAddress.toLowerCase()
+      );
+
+      console.log(
+        "========get accountTvl=========",
+        item,
+        accountTvl,
+        accountTvlData
+      );
+
+      if (accountTvl) {
+        accountTvlObj = accountTvl;
+        chain = item.chain;
+      }
+    });
+
+    return {
+      chain,
+      accountTvlObj,
+    };
+  };
+
+  const getTotalTvlByAddressList = (
+    address: TokenAddress[]
+  ): TotalTvlItem | null => {
+    let obj = null;
+    address.forEach((item) => {
+      const totalTvlObj = getTotalTvl(item.l2Address);
+      if (totalTvlObj) {
+        obj = totalTvlObj;
+      }
+    });
+
+    return obj;
   };
 
   useEffect(() => {
     let arr: AssetsListItem[] = [];
 
     if (isMyHolding) {
-      arr = data.map((item: any) => {
-        const tokenObj = getToken(item?.symbol);
-        const totalTvlObj = getTotalTvl(item?.symbol);
+      arr = accountTvlData.map((item: AccountTvlItem) => {
+        const totalTvlObj = getTotalTvl(item?.tokenAddress);
+        const { token, chain } = getTokenAndChain(
+          item?.symbol,
+          item?.tokenAddress
+        );
 
         let obj = {
           // acount tvl
+          symbol: item.symbol,
+          tokenAddress: item?.tokenAddress,
           amount: formatNumberWithUnit(+item?.amount),
           tvl: formatNumberWithUnit(item?.tvl, "$"),
-          tokenAddress: item?.tokenAddress,
-          iconURL: getIconUrlByL2Address(tokenObj?.address),
+          iconURL: getIconUrlByL2Address(item.tokenAddress),
           // total tvl by token
-          groupAmount: formatNumberWithUnit(totalTvlObj?.amount),
-          groupTvl: formatNumberWithUnit(totalTvlObj?.amount, "$"),
+          groupAmount: formatNumberWithUnit(totalTvlObj?.amount || 0),
+          groupTvl: formatNumberWithUnit(totalTvlObj?.amount || 0, "$"),
           // support token
-          symbol: tokenObj?.symbol,
-          address: tokenObj?.address,
-          decimals: tokenObj?.decimals,
-          cgPriceId: tokenObj?.cgPriceId,
-          type: tokenObj?.type,
-          yieldType: tokenObj?.yieldType,
-          multiplier: tokenObj?.multiplier,
+          decimals: token?.decimals || 0,
+          cgPriceId: token?.cgPriceId || "",
+          type: token?.type || "",
+          yieldType: token?.yieldType || [],
+          multiplier: token?.multiplier || 0,
+          chain: chain,
         };
         return obj;
       });
@@ -346,29 +417,45 @@ export default function AssetsTable(props: IAssetsTableProps) {
       // }
     } else {
       arr = supportTokens.map((item) => {
-        const accountTvlObj = data.find((obj) => obj?.symbol == item?.symbol);
-        const totalTvlObj = getTotalTvl(item?.symbol);
+        const { accountTvlObj } = getTokenAccountTvl(item.address);
+
+        // const tokenAddress = item.address.find(item => item.l2Address === )
+
+        const totalTvlObj = accountTvlObj
+          ? getTotalTvl(accountTvlObj.tokenAddress)
+          : getTotalTvlByAddressList(item.address);
+
+        const chain = totalTvlObj
+          ? item.address.find(
+              (item) =>
+                item.l2Address.toLowerCase() ===
+                totalTvlObj.tokenAddress.toLowerCase()
+            )?.chain
+          : "";
 
         let obj = {
           // acount tvl
-          amount: formatNumberWithUnit(accountTvlObj?.amount),
-          tvl: formatNumberWithUnit(accountTvlObj?.tvl, "$"),
-          tokenAddress: accountTvlObj?.tokenAddress,
-          iconURL: getIconUrlByL2Address(item?.address),
+          amount: formatNumberWithUnit(accountTvlObj?.amount || 0),
+          tvl: formatNumberWithUnit(accountTvlObj?.tvl || 0, "$"),
+          tokenAddress: totalTvlObj?.tokenAddress || "",
+          iconURL: getIconUrlByL2Address(accountTvlObj?.tokenAddress || ""),
           // total tvl by token
-          groupAmount: formatNumberWithUnit(totalTvlObj?.amount),
-          groupTvl: formatNumberWithUnit(totalTvlObj?.tvl, "$"),
+          groupAmount: formatNumberWithUnit(totalTvlObj?.amount || 0),
+          groupTvl: formatNumberWithUnit(totalTvlObj?.tvl || 0, "$"),
           // support token
           symbol: item?.symbol,
-          address: item?.address,
+          // address: item?.address,
           decimals: item?.decimals,
           cgPriceId: item?.cgPriceId,
           type: item?.type,
           yieldType: item?.yieldType,
           multiplier: item?.multiplier,
+          chain,
         };
         return obj;
       });
+
+      console.log(arr);
     }
 
     if (assetsTabsActive !== 0) {
@@ -376,9 +463,15 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => item?.type === filterType);
     }
 
-    console.log("----assets list----", arr);
+    console.log("asset list=========", arr);
     setTableList(arr);
-  }, [isMyHolding, assetsTabsActive, data, supportTokens, explorerTvl]);
+  }, [
+    isMyHolding,
+    assetsTabsActive,
+    accountTvlData,
+    supportTokens,
+    explorerTvl,
+  ]);
 
   return (
     <>
@@ -450,7 +543,10 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         src={item.iconURL}
                         className="flex rounded-full w-[2.125rem] h-[2.125rem]"
                       />
-                      <p className="value ml-[0.5rem]">{item?.symbol}</p>
+                      <p className="value ml-[0.5rem]">
+                        {item.symbol}
+                        {item?.chain && `.${item.chain}`}
+                      </p>
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
                         {item?.multiplier}x boost
                       </span>

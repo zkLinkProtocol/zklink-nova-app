@@ -23,6 +23,7 @@ import {
 import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
 import {
+  SupportToken,
   getAccounTvl,
   getAccountPoint,
   getAccountRefferalsTVL,
@@ -189,6 +190,24 @@ const TabsBox = styled.div`
   }
 `;
 
+export type TotalTvlItem = {
+  symbol: string;
+  tokenAddress: string;
+  amount: string;
+  tvl: string;
+  type: string;
+  yieldType: string;
+  iconURL: string | null;
+};
+
+export type AccountTvlItem = {
+  tvl: string;
+  amount: string;
+  tokenAddress: string;
+  symbol: string;
+  iconURL: string | null;
+};
+
 export default function Dashboard() {
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const { address } = useAccount();
@@ -196,7 +215,7 @@ export default function Dashboard() {
 
   const [tabsActive, setTabsActive] = useState(0);
 
-  const [totalTvlList, setTotalTvlList] = useState([]);
+  const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [stakingUsdValue, setStakingUsdValue] = useState(0);
   const [stakingEthValue, setStakingEthValue] = useState(0);
   const [isStakingUsd, setIsStakingUsd] = useState(false);
@@ -208,11 +227,11 @@ export default function Dashboard() {
   const [bridgeToken, setBridgeToken] = useState("");
   const bridgeModal = useDisclosure();
   const mintModal = useDisclosure();
-  const [accountTvlData, setAccountTvlData] = useState([]);
+  const [accountTvlData, setAccountTvlData] = useState<AccountTvlItem[]>([]);
   const [groupTvl, setGroupTvl] = useState(0);
   const [totalTvl, setTotalTvl] = useState(0);
   const [referralTvl, setReferralTvl] = useState(0);
-  const [supportTokens, setSupportTokens] = useState<any[]>([]);
+  const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const chainId = useChainId();
   const { nft, loading: mintLoading, sendMintTx } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
@@ -275,25 +294,31 @@ export default function Dashboard() {
 
     const res = await getAccountTvl(address);
     console.log("account tvl", res);
-    setAccountTvlData(res?.result || []);
 
-    if (res?.result && Array.isArray(res.result) && res.result.length > 0) {
-      let usd = 0;
-      res.result.forEach((item) => {
-        usd += +item?.tvl;
-      });
-      // eth += +item?.tvl === 0||  +ethUsdPrice === 0? 0: +item.tvl / ethUsdPrice
-
-      setStakingUsdValue(usd);
+    const { result } = res;
+    let data = [];
+    if (result && Array.isArray(result) && result.length > 0) {
+      data = result;
     }
+    setAccountTvlData(data);
+
+    let usd = 0;
+    data.forEach((item) => {
+      usd += +item?.tvl;
+    });
+
+    setStakingUsdValue(usd);
   };
 
   const getTotalTvlByTokenFunc = async () => {
     const res = await getTotalTvlByToken();
 
-    console.log("total tvl", res);
-
-    setTotalTvlList(res?.result || []);
+    const { result } = res;
+    let arr = [];
+    if (result && Array.isArray(result) && result.length > 0) {
+      arr = result;
+    }
+    setTotalTvlList(arr);
   };
 
   const getGroupTvlFunc = async () => {
@@ -464,8 +489,10 @@ export default function Dashboard() {
             </p>
             <div className="flex items-center gap-[1rem]">
               <span className="text-[2.5rem] font-[700]">
-                {(+accountPoint.novaPoint || 0) +
-                  (+accountPoint.referPoint || 0)}
+                {formatNumberWithUnit(
+                  (+accountPoint.novaPoint || 0) +
+                    (+accountPoint.referPoint || 0)
+                )}
               </span>
               <Tooltip
                 className="p-[1rem]"
@@ -496,11 +523,11 @@ export default function Dashboard() {
 
             <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
               <span>Earn By Your Deposit</span>
-              <span>{accountPoint.novaPoint}</span>
+              <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
             </p>
             <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
               <span>Earn By Referring Friends</span>
-              <span>{accountPoint.referPoint}</span>
+              <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
             </p>
           </CardBox>
 
@@ -715,7 +742,7 @@ export default function Dashboard() {
               <AssetsTable
                 supportTokens={supportTokens}
                 totalTvlList={totalTvlList}
-                data={accountTvlData}
+                accountTvlData={accountTvlData}
               />
             )}
             {tabsActive === 1 && (
