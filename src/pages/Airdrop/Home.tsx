@@ -123,7 +123,7 @@ export default function Home() {
               </p>
             </TitleBox>
           </CardBox>
-          <Countdown targetDate={new Date("2024-03-15 00:00:00").getTime()} />
+          {/* <Countdown targetDate={new Date("2024-03-15 00:00:00").getTime()} /> */}
           <div className="mt-4">
             {/* <img
                             src='/img/btn-join-early-access.png'
