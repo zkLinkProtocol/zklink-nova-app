@@ -450,6 +450,14 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
   }, [invalidChain]);
 
+  const handleInputValue = (v: string) => {
+    if (!v) {
+      setAmount(v);
+    } else if (/^[0-9]*\.?[0-9]*$/.test(v)) {
+      setAmount(v);
+    }
+  };
+
   const handleAction = useCallback(async () => {
     if (!address) return;
     if (invalidChain) {
@@ -640,7 +648,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             >
               <Avatar
                 src={fromList[fromActive].icon}
-                style={{ width: 24, height: 24 }}
+                style={{ width: 24, height: 24, opacity: 1 }}
               />
               <span>{fromList[fromActive].label}</span>
               {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
@@ -654,11 +662,13 @@ export default function Bridge(props: IBridgeComponentProps) {
             <Input
               classNames={{ input: "text-4xl" }}
               size="lg"
-              type="number"
+              // type="number"
               placeholder="0"
               variant={"underlined"}
               value={String(amount)}
-              onValueChange={setAmount}
+              onValueChange={handleInputValue}
+              onWheel={(e) => e.preventDefault()}
+              errorMessage=""
             />
 
             <div
