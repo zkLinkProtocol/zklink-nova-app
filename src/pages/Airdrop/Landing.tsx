@@ -164,6 +164,7 @@ export default function Landing() {
     }
   };
 
+
   return (
     <BgBox>
       <CoverImgBox />

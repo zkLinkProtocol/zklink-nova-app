@@ -121,8 +121,10 @@ export default function SoftKYC() {
     setTwitterLoading(true);
     const params = {
       response_type: "code",
-      client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-      redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      // client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
+      // redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      redirect_uri: "http://localhost:3000/aggregation-parade",
       scope: "tweet.read%20users.read%20follows.read%20follows.write",
       state: "state",
       code_challenge: "challenge",
@@ -163,8 +165,10 @@ export default function SoftKYC() {
     postData("/twitter/2/oauth2/token", {
       code,
       grant_type: "authorization_code",
-      client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-      redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      redirect_uri: "http://localhost:3000/aggregation-parade",
+      // import.meta.env.VITE_TWITTER_CLIENT_ID
+      // redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
       code_verifier: "challenge",
     })
       .then((res) => {
@@ -189,14 +193,17 @@ export default function SoftKYC() {
             .then(async (res: any) => {
               let { data } = await res.json();
               console.log(data);
-              dispatch(setTwitter(data));
+              console.log(data.username);
+              // dispatch(setTwitter(data));
 
               if (data?.username) {
-                const res = await validTwitter(data.usernmae);
+                console.log(data?.username);
+                const res = await validTwitter(data?.username);
 
                 if (res.result) {
                   setTwitterLoading(false);
                   dispatch(setTwitterAccessToken(access_token));
+                  console.log("twitter account", access_token);
                   setSearchParams("");
                 } else {
                   toastTwitterError(

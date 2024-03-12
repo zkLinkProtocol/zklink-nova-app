@@ -10,6 +10,7 @@ import {
   setInviteCode,
   setIsGroupLeader,
   setTwitter,
+  setTwitterAccessToken,
   setViewStatus,
 } from "@/store/modules/airdrop";
 import { getInvite } from "@/api";
@@ -67,20 +68,26 @@ export default function Airdrop() {
       isGroupLeader
     );
     const code = searchParams.get("code");
-    const state = searchParams.get("state");
 
     let _status = STATUS_CODE.home;
-    if (isConnected) {
-      if (invite?.code) {
-        _status = STATUS_CODE.dashboard;
-      } else if ((inviteCode || isGroupLeader) && twitterAccessToken) {
-        _status = STATUS_CODE.deposit;
-      }
-
-      if (!inviteCode || inviteCode === "") {
-        dispatch(setIsGroupLeader(true));
-      }
+    if (isConnected && invite?.code) {
+      _status = STATUS_CODE.dashboard;
+    } else if (
+      isConnected &&
+      signature &&
+      (inviteCode || isGroupLeader) &&
+      twitterAccessToken
+    ) {
+      _status = STATUS_CODE.deposit;
+    } else if (inviteCode || isGroupLeader) {
+      _status = STATUS_CODE.softKYC;
     }
+
+    // if (isConnected) {
+    //   if (!inviteCode || inviteCode === "") {
+    //     dispatch(setIsGroupLeader(true));
+    //   }
+    // }
 
     if (!twitterAccessToken && code) {
       _status = STATUS_CODE.softKYC;
@@ -98,6 +105,11 @@ export default function Airdrop() {
     invite,
     searchParams,
   ]);
+
+  // useEffect(() => {
+  //   dispatch(setTwitterAccessToken(''));
+  //   dispatch(setIsGroupLeader(false));
+  // }, []);
 
   return (
     <>
