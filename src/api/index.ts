@@ -16,8 +16,7 @@ export type BindInviteCodeWithAddressParams = {
   address: string;
   code?: string | null;
   siganture: string;
-  twitterName: string;
-  twitterHandler: string;
+  accessToken: string;
 };
 export const bindInviteCodeWithAddress = (
   data: BindInviteCodeWithAddressParams
@@ -138,29 +137,35 @@ export const getAccountRank = (address: string): Promise<Response> =>
     params: { address },
   });
 
-
-  
 export type TotalSupply = {
-  type: string,
-  hex: string
-}
+  type: string;
+  hex: string;
+};
 
 export type ExplorerTvlItem = {
-      l2Address: string,
-      l1Address: string,
-      networkKey: string,
-      symbol: string,
-      name: string,
-      decimals: number,
-      usdPrice: number,
-      liquidity: number,
-      iconURL: string,
-      totalSupply: TotalSupply,
-      tvl: string
-}
+  l2Address: string;
+  l1Address: string;
+  networkKey: string;
+  symbol: string;
+  name: string;
+  decimals: number;
+  usdPrice: number;
+  liquidity: number;
+  iconURL: string;
+  totalSupply: TotalSupply;
+  tvl: string;
+};
 
+export const getExplorerTokenTvl = (
+  isall: boolean
+): Promise<ExplorerTvlItem[]> =>
+  http.get(`https://explorer-api.zklink.io/tokens/tvl`, {
+    params: { isall },
+  });
 
-export const getExplorerTokenTvl = (isall: boolean): Promise<ExplorerTvlItem[]> => http.get(`https://explorer-api.zklink.io/tokens/tvl`, {
-  params: { isall }
-})
-
+export const validTwitter = (twitterHandler: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/validTwitter`, {
+    params: {
+      twitterHandler,
+    },
+  });

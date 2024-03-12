@@ -232,7 +232,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     InviteCodeTypes[0].value
   );
   const [url, setUrl] = useState("");
-  const { inviteCode, signature, twitter, invite } = useSelector(
+  const { inviteCode, signature, twitterAccessToken, invite } = useSelector(
     (store: RootState) => store.airdrop
   );
   const [inputInviteCode, setInputInviteCode] = useState("");
@@ -525,8 +525,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         address,
         code: inviteCodeType === "join" ? inputInviteCode : "",
         siganture: signature,
-        twitterHandler: twitter?.username ?? "",
-        twitterName: twitter?.name ?? "",
+        accessToken: twitterAccessToken,
       };
       try {
         const resBind = await bindInviteCodeWithAddress({
@@ -550,22 +549,22 @@ export default function Bridge(props: IBridgeComponentProps) {
           //TODO can not invite more
           toast.error("The invitation limit has been reached");
           if (data.code && !showNoPointsTip && !priceApiFailed) {
-            dispatch(
-              setInvite({
-                ...data,
-              })
-            );
+            // dispatch(
+            //   setInvite({
+            //     ...data,
+            //   })
+            // );
           }
         } else if (
           e.message === "Has been invited, can not repeat the association"
         ) {
           toast.error(e.message);
           if (data.code && !showNoPointsTip && !priceApiFailed) {
-            dispatch(
-              setInvite({
-                ...data,
-              })
-            );
+            // dispatch(
+            //   setInvite({
+            //     ...data,
+            //   })
+            // );
           }
         }
       }
@@ -589,8 +588,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     tokenFiltered,
     tokenActive,
     signature,
-    twitter?.username,
-    twitter?.name,
+    twitterAccessToken,
     dispatch,
   ]);
 

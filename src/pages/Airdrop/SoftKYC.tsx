@@ -10,6 +10,7 @@ import {
   setInviteCode,
   setSignature,
   setTwitter,
+  setTwitterAccessToken,
   setTwitterAuthCode,
   setViewStatus,
 } from "@/store/modules/airdrop";
@@ -17,7 +18,7 @@ import toast from "react-hot-toast";
 import { useSignMessage } from "wagmi";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { Button, Input } from "@nextui-org/react";
-import { checkInviteCode, getAccountTwitter } from "@/api";
+import { checkInviteCode, getAccountTwitter, validTwitter } from "@/api";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { postData } from "@/utils";
 import { STATUS_CODE } from ".";
@@ -107,7 +108,7 @@ export default function SoftKYC() {
   const [searchParams, setSearchParams] = useSearchParams();
   const web3Modal = useWeb3Modal();
   const { isConnected, isConnecting } = useAccount();
-  const { inviteCode, isGroupLeader, signature, twitter } = useSelector(
+  const { inviteCode, isGroupLeader, signature, twitterAccessToken } = useSelector(
     (store: RootState) => store.airdrop
   );
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
@@ -154,6 +155,10 @@ export default function SoftKYC() {
     setTwitterLoading(false);
   };
 
+  const toastTwitterError = () => {
+    toast.error("Could not connect to Twitter. Try again.");
+  };
+
   const getTwitterAPI = async (code: string) => {
     try {
       const res = await postData("/twitter/2/oauth2/token", {
@@ -182,15 +187,23 @@ export default function SoftKYC() {
           .then(async (res) => {
             let { data } = await res.json();
             console.log(data);
-
             dispatch(setTwitter(data));
+
+            if (data?.username) {
+              const res = await validTwitter(data.usernmae);
+              if (res.result) {
+                dispatch(setTwitterAccessToken(access_token));
+              } else {
+                toastTwitterError();
+              }
+            }
           })
-          .catch(() => toast.error("Could not connect to Twitter. Try again."));
+          .catch(() => toastTwitterError());
 
         // console.log(res.json())
       }
     } catch (error) {
-      toast.error("Could not connect to Twitter. Try again.");
+      toastTwitterError();
     }
   };
 
@@ -243,17 +256,17 @@ export default function SoftKYC() {
     }
 
     if (code) {
-      getTwitterByCode(code);
+      getTwitterAPI(code);
     }
   }, [searchParams]);
 
   const [isNextDisabled, setIsNextDisabled] = useState(true);
 
   useEffect(() => {
-    if ((inviteCode || isGroupLeader) && twitter && isConnected && signature) {
+    if ((inviteCode || isGroupLeader) && twitterAccessToken && isConnected && signature) {
       setIsNextDisabled(false);
     }
-  }, [inviteCode, isGroupLeader, isConnected, signature, twitter]);
+  }, [inviteCode, isGroupLeader, isConnected, signature, twitterAccessToken]);
 
   const validInviteCode = (code: string) => {
     return code && code.length === 6 ? true : false;
@@ -306,7 +319,11 @@ export default function SoftKYC() {
                   type="text"
                   placeholder="Invite Code"
                   value={inviteCodeValue}
-                  className={`max-w-[120px] ${validInviteCode(inviteCode) ? 'bg-[#1D4138] cursor-not-allowed': 'bg-[rgba(0, 0, 0, 0.5)]'}`}
+                  className={`max-w-[120px] ${
+                    validInviteCode(inviteCode)
+                      ? "bg-[#1D4138] cursor-not-allowed"
+                      : "bg-[rgba(0, 0, 0, 0.5)]"
+                  }`}
                   readOnly={validInviteCode(inviteCode)}
                   // disabled={validInviteCode(inviteCode)}
                   maxLength={6}
@@ -345,7 +362,7 @@ export default function SoftKYC() {
                 </p>
               </StepItem>
               <div>
-                {twitter ? (
+                {twitterAccessToken ? (
                   <img
                     src="/img/icon-right.svg"
                     className="w-[1.5rem] h-[1.5rem]"

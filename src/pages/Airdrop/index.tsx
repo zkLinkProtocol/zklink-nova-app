@@ -26,7 +26,7 @@ export const STATUS_CODE = {
 
 export default function Airdrop() {
   const { address, isConnected } = useAccount();
-  const { viewStatus, inviteCode, isGroupLeader, signature, twitter, invite } =
+  const { viewStatus, inviteCode, isGroupLeader, signature, twitterAccessToken, invite } =
     useSelector((store: RootState) => store.airdrop);
   // const [status, setStatus] = useState(STATUS_CODE.landing)
   const dispatch = useDispatch();
@@ -54,7 +54,7 @@ export default function Airdrop() {
     console.log(
       "---viewStatus----",
       viewStatus,
-      twitter,
+      twitterAccessToken,
       inviteCode,
       isGroupLeader
     );
@@ -78,7 +78,7 @@ export default function Airdrop() {
       dispatch(setTwitter(null));
     } else if (
       (inviteCode || isGroupLeader) &&
-      twitter &&
+      twitterAccessToken &&
       isConnected &&
       signature
     ) {
@@ -91,7 +91,7 @@ export default function Airdrop() {
   }, [
     inviteCode,
     isGroupLeader,
-    twitter,
+    twitterAccessToken,
     isConnected,
     address,
     signature,
