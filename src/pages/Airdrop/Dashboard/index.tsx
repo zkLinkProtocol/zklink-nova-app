@@ -505,8 +505,8 @@ export default function Dashboard() {
                 className="p-[1rem]"
                 content={
                   <p className="text-[1rem]">
-                    {getBooster(groupTvl) !== "0x" &&
-                      `Group Booster: ${getBooster(groupTvl)}`}{" "}
+                    {getBooster(groupTvl) !== 0 &&
+                      `Group Booster: ${getBooster(groupTvl)}x`}
                     <br />
                     Early Bird Booster: 2x <br />
                     <br />
@@ -517,7 +517,7 @@ export default function Dashboard() {
                 }
               >
                 <GreenTag className="py-[0.375rem] w-[5.625rem] text-[1rem]">
-                  0x
+                  {getBooster(groupTvl) + 2}x
                 </GreenTag>
               </Tooltip>
             </div>

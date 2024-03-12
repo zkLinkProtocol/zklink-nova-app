@@ -248,7 +248,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
   };
 
   const getTotalTvl = (tokenAddress: string) => {
-    console.log("=========getTotalTvl=======", tokenAddress);
     return totalTvlList.find(
       (item) => item.tokenAddress.toLowerCase() === tokenAddress.toLowerCase()
     );
@@ -268,13 +267,9 @@ export default function AssetsTable(props: IAssetsTableProps) {
     let chain = "";
     let supportToken = null;
 
-    console.log("====get token=====", symbol, tokenAddress, supportTokens);
-
     const tokenFilter = supportTokens.filter(
       (token) => token.symbol === symbol
     );
-
-    console.log("====get token filter=====", tokenFilter);
 
     tokenFilter.forEach((token: SupportToken) => {
       const addressObj = token.address.find(
@@ -345,13 +340,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
       const accountTvl = accountTvlData.find(
         (tvlItem) =>
           item.l2Address.toLowerCase() === tvlItem.tokenAddress.toLowerCase()
-      );
-
-      console.log(
-        "========get accountTvl=========",
-        item,
-        accountTvl,
-        accountTvlData
       );
 
       if (accountTvl) {
@@ -463,7 +451,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => item?.type === filterType);
     }
 
-    console.log("asset list=========", arr);
     setTableList(arr);
   }, [
     isMyHolding,
@@ -511,8 +498,8 @@ export default function AssetsTable(props: IAssetsTableProps) {
         >
           <TableHeader>
             <TableColumn>Name</TableColumn>
-            <TableColumn>TVL</TableColumn>
-            <TableColumn>
+            <TableColumn>Nova TVL</TableColumn>
+            {/* <TableColumn>
               <div className="flex gap-[0.5rem] items-center">
                 <span>Yield Opportunity</span>
                 <Tooltip
@@ -529,7 +516,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                   />
                 </Tooltip>
               </div>
-            </TableColumn>
+            </TableColumn> */}
             <TableColumn>Your Deposits</TableColumn>
             <TableColumn children={undefined}></TableColumn>
           </TableHeader>
@@ -560,7 +547,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                       </div>
                     </TableItem>
                   </TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     <TableItem className="flex flex-wrap items-center gap-[0.44rem]">
                       {item?.yieldType &&
                         Array.isArray(item?.yieldType) &&
@@ -578,10 +565,8 @@ export default function AssetsTable(props: IAssetsTableProps) {
                             <></>
                           )
                         )}
-                      {/* <span className='tag tag-gradient-purple px-[1rem] py-[0.12rem]'>Kelp Miles</span> */}
-                      {/* <span className='tag tag-gradient-green px-[1rem] py-[0.12rem]'>ZKL Points</span> */}
                     </TableItem>
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
                     <TableItem>
                       <div className="value">{item.amount}</div>

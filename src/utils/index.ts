@@ -131,8 +131,8 @@ export function formatBalance(
   ).toFixed();
 }
 
-export function getBooster(value: number): string {
-  let booster = "0x";
+export function getBooster(value: number): number {
+  let booster = 0;
   if (value > BOOST_LIST[0].value) {
     const arr = BOOST_LIST.filter((item) => value > item.value);
     booster = arr[arr.length - 1].booster;

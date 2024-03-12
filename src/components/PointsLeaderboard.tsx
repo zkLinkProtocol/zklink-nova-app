@@ -90,6 +90,11 @@ export default function PointsLeaderboard() {
     }
   };
 
+  const showAccount = (acc: any) => {
+    if (!acc) return;
+    return `${acc.substr(0, 8)}...${acc.substr(-12)}`;
+  };
+
   useEffect(() => {
     getAccountsRankFunc();
     // getAccountRankFunc()
@@ -109,8 +114,8 @@ export default function PointsLeaderboard() {
           return (
             <TableRow key={index} className="py-5">
               <TableCell>{item.rank}</TableCell>
-              <TableCell>{item.address}</TableCell>
-              <TableCell>{item.inviteBy}</TableCell>
+              <TableCell>{showAccount(item.address)}</TableCell>
+              <TableCell>{showAccount(item.inviteBy)}</TableCell>
               <TableCell>
                 {formatNumberWithUnit(
                   (+item?.novaPoint || 0) + (+item?.referPoint || 0)
