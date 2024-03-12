@@ -26,8 +26,14 @@ export const STATUS_CODE = {
 
 export default function Airdrop() {
   const { address, isConnected } = useAccount();
-  const { viewStatus, inviteCode, isGroupLeader, signature, twitterAccessToken, invite } =
-    useSelector((store: RootState) => store.airdrop);
+  const {
+    viewStatus,
+    inviteCode,
+    isGroupLeader,
+    signature,
+    twitterAccessToken,
+    invite,
+  } = useSelector((store: RootState) => store.airdrop);
   // const [status, setStatus] = useState(STATUS_CODE.landing)
   const dispatch = useDispatch();
 
@@ -58,34 +64,19 @@ export default function Airdrop() {
       inviteCode,
       isGroupLeader
     );
+    let _status = STATUS_CODE.home;
     if (isConnected) {
+      if (invite?.code) {
+        _status = STATUS_CODE.dashboard;
+      } else if ((inviteCode || isGroupLeader) && twitterAccessToken) {
+        _status = STATUS_CODE.deposit;
+      }
+
       if (!inviteCode || inviteCode === "") {
         dispatch(setIsGroupLeader(true));
       }
     }
 
-    console.log();
-
-    let _status =
-      viewStatus === STATUS_CODE.landing
-        ? STATUS_CODE.landing
-        : STATUS_CODE.home;
-
-    if (isConnected && invite?.code) {
-      _status = STATUS_CODE.dashboard;
-      dispatch(setInviteCode(""));
-      dispatch(setIsGroupLeader(false));
-      dispatch(setTwitter(null));
-    } else if (
-      (inviteCode || isGroupLeader) &&
-      twitterAccessToken &&
-      isConnected &&
-      signature
-    ) {
-      _status = STATUS_CODE.deposit;
-    } else if (inviteCode || isGroupLeader || isConnected) {
-      _status = STATUS_CODE.softKYC;
-    }
     console.log("_status", _status, isConnected);
     dispatch(setViewStatus(_status));
   }, [
