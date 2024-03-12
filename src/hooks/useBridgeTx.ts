@@ -20,7 +20,7 @@ import IERC20 from "../constants/abi/IERC20.json";
 import secondaryAbi from "../constants/abi/ZkLink.json";
 import primaryGetterAbi from "../constants/abi/GettersFacet.json";
 import { useAccount } from "wagmi";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { Provider } from "zksync-web3";
 import { l1EthDepositAbi } from "./abi";
 import { Interface } from "ethers/lib/utils";
@@ -39,6 +39,8 @@ import { ForwardL2Request, FullDepositFee } from "@/types";
 import { suggestMaxPriorityFee } from "@rainbow-me/fee-suggestions";
 import { WRAPPED_MNT } from "@/constants";
 
+import { zkSyncProvider, LineaProvider } from "./zksyncProviders";
+import { IL1BridgeFactory } from "@/constants/typechain";
 // const networkKey: string = "goerli"; //TODO get from store
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 const nodeConfig = nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
@@ -91,6 +93,26 @@ export const useBridgeTx = () => {
   const [loading, setLoading] = useState(false);
   const { provider: providerL2, getDefaultBridgeAddresses } =
     useZksyncProvider();
+
+  const isZkSyncChain = useMemo(() => {
+    return networkKey === "zksync";
+  }, [networkKey]);
+
+  const isLineaChain = useMemo(() => {
+    return networkKey === PRIMARY_CHAIN_KEY;
+  }, [networkKey]);
+
+  const isArbitrum = useMemo(() => {
+    return networkKey === "arbitrum";
+  }, [networkKey]);
+
+  const isManta = useMemo(() => {
+    return networkKey === "manta";
+  }, [networkKey]);
+
+  const isMantle = useMemo(() => {
+    return networkKey === "mantle";
+  }, [networkKey]);
 
   const getBaseCost = async (l2GasLimit: BigNumber) => {
     const feeData = await getFeeData();
@@ -466,7 +488,7 @@ export const useBridgeTx = () => {
             args: [
               address,
               amount,
-              "",
+              "0x",
               l2GasLimit,
               REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
               [],
@@ -474,6 +496,38 @@ export const useBridgeTx = () => {
             ],
           };
           tx.value = BigNumber.from(baseCost).add(amount).toBigInt();
+          // handle gas for linea and arb
+          const face = new Interface(IZkSync.abi);
+          const txData = face.encodeFunctionData("requestL2Transaction", [
+            address,
+            amount,
+            "0x",
+            l2GasLimit,
+            REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
+            [],
+            address,
+          ]) as `0x${string}`;
+          if (isZkSyncChain) {
+            const fee = await zkSyncProvider.attachEstimateFee()({
+              from: address,
+              to: network.mainContract!,
+              value: BigNumber.from(tx.value).toHexString(),
+              data: txData,
+            });
+            console.log("zksync chain fee for ETH", fee);
+
+            overrides.maxFeePerGas = fee.maxFeePerGas;
+            overrides.maxPriorityFeePerGas = fee.maxPriorityFeePerGas;
+            overrides.gasLimit = fee.gasLimit;
+          }
+
+          if (isArbitrum || isManta || isMantle) {
+            const provider = walletClientToProvider(walletClient!);
+            const gasPrice = await provider.getGasPrice();
+            overrides.gasPrice = gasPrice;
+            delete overrides.maxFeePerGas;
+            delete overrides.maxPriorityFeePerGas;
+          }
         }
       } else {
         const bridgeContract = network.erc20BridgeL1;
@@ -499,16 +553,68 @@ export const useBridgeTx = () => {
         if (allowance.lt(amount)) {
           await sendApproveErc20Tx(token, amount, bridgeContract!);
         }
+        //handle zksync and linea gas
+        const face = new Interface(IL1Bridge.abi);
+        const txData = face.encodeFunctionData("deposit", [
+          address,
+          token,
+          amount,
+          l2GasLimit,
+          REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
+        ]) as `0x${string}`;
+        if (isZkSyncChain) {
+          const fee = await zkSyncProvider.attachEstimateFee()({
+            from: address,
+            to: bridgeContract,
+            value: BigNumber.from(tx.value).toHexString(),
+            data: txData,
+          });
+          console.log("zksync chain fee for ERC20", fee);
+
+          overrides.maxFeePerGas = fee.maxFeePerGas;
+          overrides.maxPriorityFeePerGas = fee.maxPriorityFeePerGas;
+          overrides.gasLimit = fee.gasLimit;
+        }
+
+        if (isLineaChain) {
+          const fee = await LineaProvider.attachEstimateFee()({
+            from: address,
+            to: bridgeContract,
+            value: BigNumber.from(tx.value).toHexString(),
+            data: txData,
+          });
+          console.log("linea fee for ERC20", fee);
+          // TODO will use the gas price data from @rainbow-me/fee-suggestions
+          overrides.gasLimit = fee.gasLimit;
+          delete overrides.maxFeePerGas;
+          delete overrides.maxPriorityFeePerGas;
+        }
+        if (isArbitrum) {
+          const provider = walletClientToProvider(walletClient!);
+          const gasPrice = await provider.getGasPrice();
+          overrides.gasPrice = gasPrice;
+          delete overrides.maxFeePerGas;
+          delete overrides.maxPriorityFeePerGas;
+        }
       }
       if (overrides.maxFeePerGas && overrides.maxPriorityFeePerGas) {
         tx.maxFeePerGas = overrides.maxFeePerGas;
         tx.maxPriorityFeePerGas = overrides.maxPriorityFeePerGas;
+        tx.gas = overrides.gasLimit;
+      } else if (overrides.gasPrice) {
+        tx.gasPrice = overrides.gasPrice;
       } else {
         tx.gas = overrides.gasLimit;
       }
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
-      const res = await publicClient?.waitForTransactionReceipt({ hash });
-      console.log(res);
+      try {
+        const res = await publicClient?.waitForTransactionReceipt({ hash });
+        console.log(res);
+      } catch (e) {
+        // maybe not found. But tx is sent and will succeed
+        console.error(e);
+      }
+
       return hash;
     } catch (e) {
       console.log(e);

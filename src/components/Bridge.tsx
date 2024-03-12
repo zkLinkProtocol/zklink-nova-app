@@ -442,6 +442,21 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [invalidChain]);
 
   const handleAction = useCallback(async () => {
+    if (!address) return;
+    if (invalidChain) {
+      switchChain(
+        { chainId: fromList[fromActive].chainId },
+        {
+          onError: (e) => {
+            console.log(e);
+          },
+        }
+      );
+      return;
+    }
+    if (!amount) {
+      return;
+    }
     if (isFirstDeposit && inviteCodeType === "join") {
       if (!inputInviteCode) {
         toast.error("Please enter invite code to join group.");
@@ -459,21 +474,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     setTimeout(() => {
       toast.dismiss();
     }, 3000);
-    if (!address) return;
-    if (invalidChain) {
-      switchChain(
-        { chainId: fromList[fromActive].chainId },
-        {
-          onError: (e) => {
-            console.log(e);
-          },
-        }
-      );
-      return;
-    }
-    if (!amount) {
-      return;
-    }
+
     transLoadModal.onOpen();
     let time = setTimeout(() => {}, 100);
     for (let i = 0; i <= Number(time); i++) {
