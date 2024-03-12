@@ -209,8 +209,8 @@ export type AccountTvlItem = {
 
 export default function Dashboard() {
   const { invite } = useSelector((store: RootState) => store.airdrop);
-  // const { address } = useAccount();
-  const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F";
+  const { address } = useAccount();
+  // const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F";
 
   const [tabsActive, setTabsActive] = useState(0);
 
