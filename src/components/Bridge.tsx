@@ -593,7 +593,8 @@ export default function Bridge(props: IBridgeComponentProps) {
   ]);
 
   const bindTwitter = async () => {
-    if (!address) return
+    if (!address) return;
+    console.log('inviteCodeType-----',inviteCodeType)
     const data = {
       address,
       code: inviteCodeType === "join" ? inputInviteCode : "",
@@ -790,14 +791,6 @@ export default function Bridge(props: IBridgeComponentProps) {
               >
                 {btnText}
               </Button>
-
-              <Button
-                onClick={() => {
-                  bindTwitter();
-                }}
-              >
-                Try Algin
-              </Button>
             </Tooltip>
           ) : (
             <Button
@@ -810,6 +803,15 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
+
+          <Button
+            className="w-full mt-4"
+            onClick={() => {
+              bindTwitter();
+            }}
+          >
+            Try Algin
+          </Button>
         </div>
         {isFirstDeposit && showNoPointsTip && (
           <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
