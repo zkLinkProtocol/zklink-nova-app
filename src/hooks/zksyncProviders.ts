@@ -20,9 +20,13 @@ export class zkSyncProvider {
     this.provider = provider;
   }
 
-  static attachEstimateFee() {
+  static attachEstimateFee(rpc?: string) {
     //TODO shoule be use config to get the provider
-    const instance = new zkSyncProvider(new ethers.providers.JsonRpcProvider("https://mainnet.era.zksync.io"));
+    const instance = new zkSyncProvider(
+      new ethers.providers.JsonRpcProvider(
+        rpc ?? "https://mainnet.era.zksync.io"
+      )
+    );
     return instance.estimateFee.bind(instance.provider);
   }
 
@@ -46,7 +50,9 @@ export class LineaProvider {
 
   static attachEstimateFee() {
     //TODO shoule be use config to get the provider
-    const instance = new LineaProvider(new ethers.providers.JsonRpcProvider("https://rpc.linea.build"));
+    const instance = new LineaProvider(
+      new ethers.providers.JsonRpcProvider("https://rpc.linea.build")
+    );
     return instance.estimateFee.bind(instance.provider);
   }
 

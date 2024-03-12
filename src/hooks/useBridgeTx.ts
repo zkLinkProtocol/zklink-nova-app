@@ -585,7 +585,7 @@ export const useBridgeTx = () => {
           });
           console.log("linea fee for ERC20", fee);
           // TODO will use the gas price data from @rainbow-me/fee-suggestions
-          overrides.gasLimit = fee.gasLimit;
+          overrides.gasLimit = fee.gasLimit.mul(110).div(100);
           delete overrides.maxFeePerGas;
           delete overrides.maxPriorityFeePerGas;
         }

@@ -42,7 +42,12 @@ import { NOVA_CHAIN_ID } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { setInvite, setInviteCode, setTwitterAccessToken, setViewStatus } from "@/store/modules/airdrop";
+import {
+  setInvite,
+  setInviteCode,
+  setTwitterAccessToken,
+  setViewStatus,
+} from "@/store/modules/airdrop";
 import { STATUS_CODE } from "..";
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
@@ -351,12 +356,12 @@ export default function Dashboard() {
 
   const [progressList, setProgressList] = useState<any[]>([]);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!isConnected) {
-      dispatch(setInvite(null))
-      dispatch(setInviteCode(''))
-      dispatch(setTwitterAccessToken(''))
+      dispatch(setInvite(null));
+      dispatch(setInviteCode(""));
+      dispatch(setTwitterAccessToken(""));
       dispatch(setViewStatus(STATUS_CODE.home));
     }
   }, [isConnected]);
@@ -459,12 +464,24 @@ export default function Dashboard() {
     } catch (e: any) {
       console.log(e);
       if (e.message) {
-        toast.error(e.message);
+        if (e.message.includes("User rejected the request")) {
+          toast.error("User rejected the request");
+        } else {
+          toast.error(e.message);
+        }
       } else {
         toast.error("Mint SBT failed");
       }
     }
-  }, [address, isInvaidChain, switchChain, sendMintTx, mintType, mintModal]);
+  }, [
+    address,
+    isInvaidChain,
+    nft,
+    switchChain,
+    sendMintTx,
+    mintType,
+    mintModal,
+  ]);
 
   return (
     <BgBox>
@@ -849,4 +866,3 @@ export default function Dashboard() {
     </BgBox>
   );
 }
-

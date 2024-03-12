@@ -1,5 +1,5 @@
 import { NOVA_NFT_CONTRACT, NOVA_CHAIN_ID } from "@/constants";
-import { WalletClient } from "viem";
+import { WalletClient, WriteContractParameters } from "viem";
 import { usePublicClient, useWalletClient, useAccount } from "wagmi";
 import { readContract } from "@wagmi/core";
 import { useCallback, useEffect, useState } from "react";
@@ -7,6 +7,10 @@ import { getMintSignature } from "@/api";
 import NovaNFT from "@/constants/abi/NovaNFT.json";
 import { BigNumber } from "ethers";
 import { wagmiConfig } from "@/constants/networks";
+import { zkSyncProvider } from "./zksyncProviders";
+import { Interface } from "ethers/lib/utils";
+import { ethers } from "ethers";
+import { encodeFunctionData } from "viem";
 export type NOVA_NFT_TYPE = "ISTP" | "ESFJ" | "INFJ" | "ENTP";
 export type NOVA_NFT = {
   name: string;
@@ -96,18 +100,37 @@ const useNovaNFT = () => {
         return Promise.reject(
           new Error("You are not authorized, please contact us for help.")
         );
-      const tx = {
+      const tx: WriteContractParameters = {
         address: NOVA_NFT_CONTRACT,
         abi: NovaNFT.abi,
         functionName: "safeMint",
         args: [type, signature],
       };
+      
+      const txData = encodeFunctionData({
+        abi: NovaNFT.abi,
+        functionName: "safeMint",
+        args: [type, signature],
+      });
+      const fee = await zkSyncProvider.attachEstimateFee(
+        "https://rpc.zklink.io"
+      )({
+        from: address as `0x${string}`,
+        to: NOVA_NFT_CONTRACT,
+        value: "0x00",
+        data: txData,
+      });
+      console.log("zksync chain fee for ETH", fee);
+
+      tx.maxFeePerGas = fee.maxFeePerGas.toBigInt();
+      tx.maxPriorityFeePerGas = fee.maxPriorityFeePerGas.toBigInt();
+      tx.gas = fee.gasLimit.toBigInt();
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       const res = await publicClient?.waitForTransactionReceipt({ hash });
       console.log(res);
       await getNFT(address);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return Promise.reject(e);
     } finally {
       setLoading(false);
