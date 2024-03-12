@@ -197,19 +197,24 @@ export default function SoftKYC() {
               // dispatch(setTwitter(data));
 
               if (data?.username) {
-                console.log(data?.username);
-                const res = await validTwitter(data?.username);
+                setTwitterLoading(false);
+                dispatch(setTwitterAccessToken(access_token));
+                console.log("twitter account", access_token);
+                setSearchParams("");
 
-                if (res.result) {
-                  setTwitterLoading(false);
-                  dispatch(setTwitterAccessToken(access_token));
-                  console.log("twitter account", access_token);
-                  setSearchParams("");
-                } else {
-                  toastTwitterError(
-                    "Sorry, this Twitter account has already been bound."
-                  );
-                }
+                // console.log(data?.username);
+                // const res = await validTwitter(data?.username);
+
+                // if (res.result) {
+                //   setTwitterLoading(false);
+                //   dispatch(setTwitterAccessToken(access_token));
+                //   console.log("twitter account", access_token);
+                //   setSearchParams("");
+                // } else {
+                //   toastTwitterError(
+                //     "Sorry, this Twitter account has already been bound."
+                //   );
+                // }
               }
             })
             .catch(() => {
