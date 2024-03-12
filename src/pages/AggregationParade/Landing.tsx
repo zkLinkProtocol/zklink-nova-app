@@ -79,7 +79,7 @@ export default function Landing() {
   const { isConnected } = useAccount();
   // const navigate = useNavigate()
   // const [activeUsers, setActiveUsers] = useState(0)
-  const { inviteCode, signature } = useSelector(
+  const { inviteCode, invite, signature } = useSelector(
     (store: RootState) => store.airdrop
   );
   const { campaignStart } = useStartTimerStore();
@@ -105,12 +105,16 @@ export default function Landing() {
       toast.error("Invalid invite code. Try another.", { duration: 3000 });
       return;
     }
-    dispatch(setViewStatus(STATUS_CODE.softKYC))
+    dispatch(setViewStatus(STATUS_CODE.softKYC));
     dispatch(setTwitterAccessToken(""));
     dispatch(setInviteCode(otp));
     dispatch(setViewStatus(STATUS_CODE.softKYC));
     navigator("/aggregation-parade");
   };
+
+  useEffect(() => {
+    dispatch(setViewStatus(STATUS_CODE.softKYC));
+  }, []);
 
   // useEffect(() => {
   //   if (isConnected && signature) {
@@ -160,7 +164,9 @@ export default function Landing() {
           <div>
             <Button
               className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] `}
-              disabled={!otp || otp.length !== 6 || !campaignStart}
+              disabled={
+                !otp || otp.length !== 6 || !campaignStart || invite?.code
+              }
               onClick={enterInviteCode}
             >
               ENTER INVITE CODE

@@ -12,6 +12,7 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Bridge from "./Bridge";
 import { getInvite } from "@/api";
+import Dashboard from "./Dashboard";
 
 export const STATUS_CODE = {
   softKYC: 1,
@@ -81,7 +82,7 @@ export default function AggregationParade() {
       {/* {viewStatus === STATUS_CODE.landing && <Landing />} */}
       {viewStatus === STATUS_CODE.softKYC && <SoftKYC />}
       {viewStatus === STATUS_CODE.deposit && <Bridge />}
-      {viewStatus === STATUS_CODE.dashboard && <>Dashboard</>}
+      {viewStatus === STATUS_CODE.dashboard && <Dashboard/>}
     </>
   );
 }
