@@ -61,61 +61,31 @@ export default function Airdrop() {
   }, [address, isConnected]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  useEffect(() => {
-    console.log(
-      "---viewStatus----",
-      viewStatus,
-      twitterAccessToken,
-      inviteCode,
-      isGroupLeader
-    );
-    const code = searchParams.get("code");
 
+  useEffect(() => {
     let _status = STATUS_CODE.home;
-    if (isConnected && invite?.code) {
+    if (isConnected && address && invite?.code) {
       _status = STATUS_CODE.dashboard;
     } else if (
-      isConnected &&
-      signature &&
       (inviteCode || isGroupLeader) &&
+      isConnected &&
+      address &&
+      signature &&
       twitterAccessToken
     ) {
       _status = STATUS_CODE.deposit;
-    } else if (inviteCode || isGroupLeader) {
-      _status = STATUS_CODE.softKYC;
     }
 
-    // if (isConnected) {
-    //   if (!inviteCode || inviteCode === "") {
-    //     dispatch(setIsGroupLeader(true));
-    //   }
-    // }
-
-    if (!twitterAccessToken && code) {
-      _status = STATUS_CODE.softKYC;
-    }
-    if(!isConnected) {
-      dispatch(setTwitterAccessToken(''))
-    }
-
-    console.log("_status", _status, isConnected);
     dispatch(setViewStatus(_status));
   }, [
+    address,
+    isConnected,
+    signature,
+    invite,
     inviteCode,
     isGroupLeader,
     twitterAccessToken,
-    isConnected,
-    address,
-    signature,
-    invite,
-    searchParams,
   ]);
-
-
-  // useEffect(() => {
-  //   dispatch(setTwitterAccessToken(''));
-  //   dispatch(setIsGroupLeader(false));
-  // }, []);
 
   return (
     <>

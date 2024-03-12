@@ -1,11 +1,11 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OTPInput from "react-otp-input";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setInviteCode, setViewStatus } from "@/store/modules/airdrop";
 // import { useNavigate } from 'react-router-dom'
-import { FooterTvlText, GradientButton } from "@/styles/common";
+import { FooterTvlText } from "@/styles/common";
 import "@/styles/otp-input.css";
 import { checkInviteCode } from "@/api";
 import toast from "react-hot-toast";
@@ -15,6 +15,7 @@ import { RootState } from "@/store";
 import Countdown from "@/components/Countdown";
 import { useStartTimerStore } from "@/hooks/useStartTimer";
 import { useAccount } from "wagmi";
+import { Button } from "@nextui-org/react";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -131,8 +132,8 @@ export default function Home() {
                             onClick={() => navigate('/airdrop')}
                         /> */}
 
-            <GradientButton
-              className={`px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] cursor-pointer ${
+            <div
+              className={`gradient-btn px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] cursor-pointer ${
                 campaignStart ? "" : "disabled"
               }`}
               onClick={() => {
@@ -143,7 +144,7 @@ export default function Home() {
               }}
             >
               JOIN EARLY ACCESS
-            </GradientButton>
+            </div>
           </div>
         </div>
         <div>
@@ -172,8 +173,8 @@ export default function Home() {
             </div>
 
             <div>
-              <GradientButton
-                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
+              <Button
+                className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
                   !otp || otp.length !== 6 || !campaignStart
                     ? "opacity-40 cursor-not-allowed"
                     : "cursor-pointer"
@@ -181,7 +182,7 @@ export default function Home() {
                 onClick={enterInviteCode}
               >
                 ENTER INVITE CODE
-              </GradientButton>
+              </Button>
               {/* <img
                                 src='/img/btn-enter-invite-code.png'
                                 className='cursor-pointer'

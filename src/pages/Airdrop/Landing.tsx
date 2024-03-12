@@ -11,7 +11,6 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 import toast from "react-hot-toast";
 import "@/styles/otp-input.css";
 import {
-  GradientButton,
   CardBox,
   FooterTvlText,
   GradientBorder,
@@ -23,11 +22,11 @@ import TotalTvlCard from "@/components/TotalTvlCard";
 import { STATUS_CODE } from ".";
 import { PageStep } from "@/components/PageStep";
 import { RootState } from "@/store";
+import { Button } from "@nextui-org/react";
 
 const BgBox = styled.div`
   position: relative;
-  padding-top: 7.5rem;
-  padding-bottom: 7.5rem;
+  padding-top: 5.5rem;
   width: 100%;
   min-height: 100vh;
   /* background-image: image-set('/img/bg-airdrop.png' 0.5x, '/img/bg-airdrop.png' 1x, '/img/bg-airdrop.png' 2x); */
@@ -157,23 +156,28 @@ export default function Landing() {
 
     if (type === "NEXT") {
       if (!inviteCode || inviteCode?.length !== 6) {
-        dispatch(setIsGroupLeader(true));
+        createGroup()
       }
 
       dispatch(setViewStatus(STATUS_CODE.softKYC));
     }
   };
 
+  const createGroup = () => {
+    dispatch(setIsGroupLeader(true));
+    dispatch(setInviteCode(''))
+    dispatch(setViewStatus(STATUS_CODE.softKYC))
+  };
 
   return (
     <BgBox>
       <CoverImgBox />
 
       <div className="relative mx-[auto] pl-[3.25rem] w-[41.5rem] min-h-[32rem] z-[2]">
-        <div className="mt-[4.5rem]">
+        <div className="mt-[2.5rem]">
           <PageStep handlePageStep={handlePageStep} />
         </div>
-        <div className="flex justify-between gap-[1.5rem] mt-[4rem] none">
+        <div className="flex justify-between gap-[1.5rem] mt-[2rem] none">
           <TabsItem
             className={`w-1/2 ${tabsActive === 0 ? "active" : ""}`}
             onClick={() => {
@@ -214,8 +218,8 @@ export default function Landing() {
                 />
               </div>
 
-              <GradientButton
-                className={`mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
+              <Button
+                className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] ${
                   !otp || otp.length !== 6
                     ? "opacity-40 cursor-not-allowed"
                     : "cursor-pointer"
@@ -223,7 +227,7 @@ export default function Landing() {
                 onClick={enterInviteCode}
               >
                 ENTER CODE
-              </GradientButton>
+              </Button>
             </>
           )}
 
@@ -244,12 +248,12 @@ export default function Landing() {
               </DescText>
 
               <div className="mt-[1.5rem]">
-                <GradientButton
-                  className="px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center"
-                  onClick={() => dispatch(setIsGroupLeader(true))}
+                <Button
+                  className="gradient-btn px-[2rem] h-[2.46875rem] text-[1rem] leading-[2.46875rem] text-center"
+                  onClick={createGroup}
                 >
                   Create Your Team
-                </GradientButton>
+                </Button>
               </div>
             </>
           )}
@@ -276,7 +280,7 @@ export default function Landing() {
         </CardBox>
       </div>
 
-      <div className="absolute bottom-[4.5rem] w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center mt-[2rem]">
         {/* <Performance /> */}
         <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
         <TotalTvlCard />

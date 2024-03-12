@@ -810,7 +810,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               bindTwitter();
             }}
           >
-            Try Algin
+            Try Again
           </Button>
         </div>
         {isFirstDeposit && showNoPointsTip && (

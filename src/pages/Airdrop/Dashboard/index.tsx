@@ -41,7 +41,9 @@ import toast from "react-hot-toast";
 import { NOVA_CHAIN_ID } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setInvite, setInviteCode, setTwitterAccessToken, setViewStatus } from "@/store/modules/airdrop";
+import { STATUS_CODE } from "..";
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
@@ -209,7 +211,7 @@ export type AccountTvlItem = {
 
 export default function Dashboard() {
   const { invite } = useSelector((store: RootState) => store.airdrop);
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   // const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F";
 
   const [tabsActive, setTabsActive] = useState(0);
@@ -349,13 +351,15 @@ export default function Dashboard() {
 
   const [progressList, setProgressList] = useState<any[]>([]);
 
-  // const {isConnected} = useAccount()
-  // const dispatch = useDispatch()
-  // useEffect(() => {
-  //   if(!isConnected) {
-  //     dispatch(setViewStatus(STATUS_CODE.home))
-  //   }
-  // }, [isConnected])
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (!isConnected) {
+      dispatch(setInvite(null))
+      dispatch(setInviteCode(''))
+      dispatch(setTwitterAccessToken(''))
+      dispatch(setViewStatus(STATUS_CODE.home));
+    }
+  }, [isConnected]);
 
   useEffect(() => {
     let isShow = false;
@@ -418,7 +422,9 @@ export default function Dashboard() {
     getGroupTvlFunc();
     getReferralTvlFunc();
     getTotalTvlFunc();
-  }, []);
+  }, [address]);
+
+  useEffect(() => {}, [address]);
 
   const handleMintNow = useCallback(() => {
     if (nft) {
@@ -843,3 +849,4 @@ export default function Dashboard() {
     </BgBox>
   );
 }
+

@@ -50,7 +50,6 @@ const ContentBox = styled.div`
   position: relative;
   margin: 0 auto;
   width: 58.875rem;
-  min-height: 40rem;
   z-index: 10;
 `;
 
@@ -309,17 +308,17 @@ export default function SoftKYC() {
     <BgBox>
       <BgCoverImg />
       <ContentBox>
-        <div className="mt-[4.5rem] px-[6.5rem]">
+        <div className="mt-[2rem] px-[6.5rem]">
           <PageStep
             handlePageStep={handlePageStep}
             isNextDisabled={isNextDisabled}
           />
         </div>
-        <div className="mt-[4rem]">
+        <div className="mt-[1.5rem]">
           <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
           <TitleText>To join the zkLink Aggregation Parade</TitleText>
         </div>
-        <div className="mt-[3.56rem]">
+        <div className="mt-[3.5rem]">
           <div className="flex justify-center gap-[0.5rem]">
             <CardBox>
               <StepNum>01</StepNum>
@@ -431,7 +430,7 @@ export default function SoftKYC() {
           </div>
         </div>
       </ContentBox>
-      <div className="absolute bottom-[4.5rem] w-full flex flex-col items-center">
+      <div className="mt-[2.5rem] w-full flex flex-col items-center">
         <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
         <TotalTvlCard />
       </div>

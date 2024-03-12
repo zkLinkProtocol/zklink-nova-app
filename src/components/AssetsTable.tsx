@@ -355,98 +355,44 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
   useEffect(() => {
     let arr: AssetsListItem[] = [];
+    supportTokens.forEach((item) => {
+      let obj = {
+        // acount tvl
+        amount: 0,
+        tvl: 0,
+        tokenAddress: "",
+        iconURL: "",
+        // total tvl by token
+        groupAmount: 0,
+        groupTvl: 0,
+        // support token
+        symbol: item?.symbol,
+        // address: item?.address,
+        decimals: item?.decimals,
+        cgPriceId: item?.cgPriceId,
+        type: item?.type,
+        yieldType: item?.yieldType,
+        multiplier: item?.multiplier,
+      };
+      item.address.forEach((chains) => {
+        const accountTvl = getTokenAccountTvl(chains.l2Address);
+        const totalTvl = getTotalTvl(chains.l2Address);
+        obj.amount += accountTvl?.amount ? +accountTvl.amount : 0;
+        obj.tvl += accountTvl?.tvl ? +accountTvl.tvl : 0;
+        obj.groupAmount += totalTvl?.amount ? +totalTvl.amount : 0;
+        obj.groupTvl += totalTvl?.tvl ? +totalTvl.tvl : 0;
+        obj.tokenAddress = totalTvl?.tokenAddress || "";
+
+        obj.iconURL =
+          !obj?.iconURL || obj.iconURL === ""
+            ? getIconUrlByL2Address(chains.l2Address)
+            : obj.iconURL;
+      });
+      arr.push(obj);
+    });
 
     if (isMyHolding) {
-      arr = accountTvlData.map((item: AccountTvlItem) => {
-        const totalTvlObj = getTotalTvl(item?.tokenAddress);
-        const { token, chain } = getTokenAndChain(
-          item?.symbol,
-          item?.tokenAddress
-        );
-
-        let obj = {
-          // acount tvl
-          symbol: item.symbol,
-          tokenAddress: item?.tokenAddress,
-          amount: formatNumberWithUnit(+item?.amount),
-          tvl: formatNumberWithUnit(item?.tvl, "$"),
-          iconURL: getIconUrlByL2Address(item.tokenAddress),
-          // total tvl by token
-          groupAmount: formatNumberWithUnit(totalTvlObj?.amount || 0),
-          groupTvl: formatNumberWithUnit(totalTvlObj?.amount || 0, "$"),
-          // support token
-          decimals: token?.decimals || 0,
-          cgPriceId: token?.cgPriceId || "",
-          type: token?.type || "",
-          yieldType: token?.yieldType || [],
-          multiplier: token?.multiplier || 0,
-          chain: chain,
-        };
-        return obj;
-      });
-    } else {
-      // const arr = totalTvlList.map(item => {
-      //   const obj = {
-
-      //   }
-
-      // })
-
-      supportTokens.forEach((item) => {
-        let obj = {
-          // acount tvl
-          amount: 0,
-          tvl: 0,
-          tokenAddress: "",
-          iconURL: "",
-          // total tvl by token
-          groupAmount: 0,
-          groupTvl: 0,
-          // support token
-          symbol: item?.symbol,
-          // address: item?.address,
-          decimals: item?.decimals,
-          cgPriceId: item?.cgPriceId,
-          type: item?.type,
-          yieldType: item?.yieldType,
-          multiplier: item?.multiplier,
-        };
-        item.address.forEach((chains) => {
-          const accountTvl = getTokenAccountTvl(chains.l2Address);
-          const totalTvl = getTotalTvl(chains.l2Address);
-          obj.amount += accountTvl?.amount ? +accountTvl.amount : 0;
-          obj.tvl += accountTvl?.tvl ? +accountTvl.tvl : 0;
-          obj.groupAmount += totalTvl?.amount ? +totalTvl.amount : 0;
-          obj.groupTvl += totalTvl?.tvl ? +totalTvl.tvl : 0;
-          obj.tokenAddress = totalTvl?.tokenAddress || "";
-
-          obj.iconURL =
-            !obj?.iconURL || obj.iconURL === ""
-              ? getIconUrlByL2Address(chains.l2Address)
-              : obj.iconURL;
-          // let obj = {
-          //   // acount tvl
-          //   amount: formatNumberWithUnit(accountTvl?.amount || 0),
-          //   tvl: formatNumberWithUnit(accountTvl?.tvl || 0, "$"),
-          //   tokenAddress: totalTvl?.tokenAddress || "",
-          //   iconURL: getIconUrlByL2Address(chains.l2Address || ""),
-          //   // total tvl by token
-          //   groupAmount: formatNumberWithUnit(totalTvl?.amount || 0),
-          //   groupTvl: formatNumberWithUnit(totalTvl?.tvl || 0, "$"),
-          //   // support token
-          //   symbol: item?.symbol,
-          //   // address: item?.address,
-          //   decimals: item?.decimals,
-          //   cgPriceId: item?.cgPriceId,
-          //   type: item?.type,
-          //   yieldType: item?.yieldType,
-          //   multiplier: item?.multiplier,
-          //   chain: chains.chain,
-          // };
-          // arr.push(obj);
-        });
-        arr.push(obj);
-      });
+      arr = arr.filter((item) => +item.tvl !== 0);
     }
 
     if (assetsTabsActive !== 0) {
