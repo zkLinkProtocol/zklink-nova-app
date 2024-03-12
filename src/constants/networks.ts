@@ -273,6 +273,7 @@ const createEraChain = (network: ZkSyncNetwork) => {
       default: { http: [network.rpcUrl] },
       public: { http: [network.rpcUrl] },
     },
+    blockExplorers: { default: { url: network.blockExplorerUrl } },
   };
 };
 
@@ -299,9 +300,10 @@ export const wagmiConfig = defaultWagmiConfig({
         ],
   projectId,
   metadata: {
-    name: "Web3Modal React Example",
-    description: "Web3Modal React Example",
-    url: "",
-    icons: [],
+    name: "zkLink Nova Portal",
+    description:
+      "zkLink Nova Portal - view balances, transfer and bridge tokens",
+    url: "https://portal.zklink.io",
+    icons: ["../public/img/icon.png"],
   },
 });
