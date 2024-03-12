@@ -319,8 +319,8 @@ export default function Bridge(props: IBridgeComponentProps) {
             .multipliedBy(tokenFiltered[tokenActive].multiplier)
             .multipliedBy(amount)
             .div(ethPriceInfo.usdPrice)
-            .toFixed(4);
-          setPoints(points);
+            .toFixed(2);
+          setPoints(Number(points));
         }
       } catch (e) {
         console.log(e);
