@@ -230,7 +230,7 @@ export default function Header() {
                             onClick={() => web3Modal.open({ view: 'Networks' })}>
                             Network
                         </Button> */}
-            {depositStatus && (
+            {address && depositStatus && (
               <>
                 {depositStatus === "pending" && (
                   <Tooltip
@@ -264,7 +264,7 @@ export default function Header() {
                 )}
               </>
             )}
-            {!depositStatus && (
+            {address && !depositStatus && (
               <Button
                 className="border-solid border-1 border-[#fff] text-[#fff]"
                 onClick={() =>
