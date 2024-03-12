@@ -22,12 +22,12 @@ export default function PointsLeaderboard() {
     },
     {
       key: "name",
-      label: "Name",
+      label: "Address",
       align: "start",
     },
     {
       key: "invitedBy",
-      label: "Invited by",
+      label: "Referral Address",
       align: "start",
     },
     {

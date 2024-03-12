@@ -215,13 +215,13 @@ export default function AssetsTable(props: IAssetsTableProps) {
   const bridgeModal = useDisclosure();
 
   const yieldsTypeList = [
-    { name: "NOVA Points", label: "NOVA Pts" },
+    { name: "NOVA Points", label: "Nova Points" },
     { name: "Native Yield", label: "Native Yield" },
-    { name: "EL Points", label: "EL Pts" },
+    { name: "EL Points", label: "EL Points" },
     { name: "Kelp Miles", label: "Kelp Miles" },
-    { name: "Puffer Points", label: "Puffer Pts" },
+    { name: "Puffer Points", label: "Puffer Points" },
     { name: "ezPoints", label: "ezPoints" },
-    { name: "Loyalty", label: "Loyalty Pts" },
+    { name: "Loyalty", label: "Loyalty Points" },
     { name: "Pearls", label: "Pearls" },
     { name: "Shard", label: "Shard" },
   ];
@@ -498,7 +498,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
             isSelected={isMyHolding}
             onValueChange={setIsMyHolding}
           >
-            My Holding
+            My Holdings
           </Checkbox>
         </div>
       </CardBox>
@@ -530,7 +530,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                 </Tooltip>
               </div>
             </TableColumn>
-            <TableColumn>Your Deposit</TableColumn>
+            <TableColumn>Your Deposits</TableColumn>
             <TableColumn children={undefined}></TableColumn>
           </TableHeader>
           <TableBody>

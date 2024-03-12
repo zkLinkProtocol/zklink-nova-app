@@ -286,7 +286,7 @@ export default function Header() {
             >
               <img width={20} height={20} src="/img/icon-wallet.svg" />
               <ButtonText>
-                {isConnected ? showAccount(address) : "Connect wallet"}
+                {isConnected ? showAccount(address) : "Connect Wallet"}
               </ButtonText>
             </Button>
           </NavbarItem>

@@ -51,11 +51,20 @@ export default function Airdrop() {
   }, [address, isConnected]);
 
   useEffect(() => {
+    console.log(
+      "---viewStatus----",
+      viewStatus,
+      twitter,
+      inviteCode,
+      isGroupLeader
+    );
     if (isConnected) {
       if (!inviteCode || inviteCode === "") {
         dispatch(setIsGroupLeader(true));
       }
     }
+
+    console.log();
 
     let _status =
       viewStatus === STATUS_CODE.landing
@@ -65,6 +74,7 @@ export default function Airdrop() {
     if (isConnected && invite?.code) {
       _status = STATUS_CODE.dashboard;
       dispatch(setInviteCode(""));
+      dispatch(setIsGroupLeader(false));
       dispatch(setTwitter(null));
     } else if (
       (inviteCode || isGroupLeader) &&

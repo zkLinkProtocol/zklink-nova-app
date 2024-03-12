@@ -195,7 +195,7 @@ export default function Landing() {
           {tabsActive === 0 && (
             <>
               <DescText className="mx-auto pl-[6.75rem] pr-[6.25rem] text-center">
-                By joining an existing team, your could share the team boost
+                By joining an existing team, you could share the team boost
                 when team tvl meet specific milestone.
               </DescText>
 

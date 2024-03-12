@@ -31,7 +31,6 @@ import {
   getExplorerTokenTvl,
   getGroupTvl,
   getReferralTvl,
-  getReferrer,
   getSupportTokens,
   getTokenPrice,
   getTotalTvl,
@@ -39,7 +38,7 @@ import {
 } from "@/api";
 import { useAccount, useChainId, useBalance, useSwitchChain } from "wagmi";
 import toast from "react-hot-toast";
-import { ETH_ADDRESS, NOVA_CHAIN_ID } from "@/constants";
+import { NOVA_CHAIN_ID } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
 import { useSelector } from "react-redux";
@@ -350,6 +349,14 @@ export default function Dashboard() {
 
   const [progressList, setProgressList] = useState<any[]>([]);
 
+  // const {isConnected} = useAccount()
+  // const dispatch = useDispatch()
+  // useEffect(() => {
+  //   if(!isConnected) {
+  //     dispatch(setViewStatus(STATUS_CODE.home))
+  //   }
+  // }, [isConnected])
+
   useEffect(() => {
     let isShow = false;
     let isShowIndex = 0;
@@ -522,11 +529,11 @@ export default function Dashboard() {
             </p> */}
 
             <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-              <span>Earn By Your Deposit</span>
+              <span>Earned By Your Deposit</span>
               <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
             </p>
             <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-              <span>Earn By Referring Friends</span>
+              <span>Earned By Referring Friends</span>
               <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
             </p>
           </CardBox>
@@ -539,7 +546,7 @@ export default function Dashboard() {
                 className="bg-[#0BC48F] text-[#000] text-[1rem]"
                 onClick={() => setIsStakingUsd(!isStakingUsd)}
               >
-                Switch to {isStakingUsd ? "ETH" : "USD"}
+                Switch To {isStakingUsd ? "ETH" : "USD"}
               </Button>
             </p>
             <p className="w-full text-[2.5rem] font-[700]">
@@ -645,7 +652,7 @@ export default function Dashboard() {
           <div className="mt-[2rem]">
             <div className="flex justify-between items-center leading-[2rem] font-[700]">
               <div className="flex items-center gap-[0.37rem]">
-                <span className="text-[1.5rem]">Group Mile Stone</span>
+                <span className="text-[1.5rem]">Group Milestone</span>
                 <Tooltip
                   className="px-[1rem] py-[1rem]"
                   content={
