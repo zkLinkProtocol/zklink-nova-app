@@ -76,6 +76,7 @@ export default function Header() {
   const { signMessage } = useSignMessage();
   const dispatch = useDispatch();
   console.log("depositL1TxHash: ", depositL1TxHash);
+
   useEffect(() => {
     (async () => {
       if (!depositL1TxHash) {
@@ -88,11 +89,14 @@ export default function Header() {
         );
         if (l2hash) {
           dispatch(setDepositL1TxHash(""));
-          dispatch(setDepositStatus(""));
+          dispatch(setDepositStatus("success"));
+          setTimeout(() => {
+            dispatch(setDepositStatus(""));
+          }, 5000);
         }
       }
     })();
-  }, [depositL1TxHash, getDepositL2TxHash,dispatch]);
+  }, [depositL1TxHash, getDepositL2TxHash, dispatch]);
 
   const handleSign = async () => {
     await signMessage(
@@ -226,44 +230,48 @@ export default function Header() {
                             onClick={() => web3Modal.open({ view: 'Networks' })}>
                             Network
                         </Button> */}
-            {depositStatus ? (
-              depositStatus === "pending" ? (
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "max-w-[300px] p-4",
-                  }}
-                  content="Please allow a few minutes for your deposit to be confirmed on zkLink Nova."
-                >
-                  <Button className="border-solid border-1 border-[#03D498] text-[#03D498] bg-[#000] ">
-                    Pending Deposit
-                    <div className="relative flex w-8 h-8">
-                      <i className="absolute w-full h-full rounded-full animate-spinner-ease-spin border-solid border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i>
-                      <i className="absolute w-full h-full rounded-full opacity-75 animate-spinner-linear-spin border-dotted border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i>
-                    </div>
-                  </Button>
-                </Tooltip>
-              ) : (
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "max-w-[300px] p-4",
-                  }}
-                  content="Your funds have been deposited successfully."
-                >
-                  <Button className="border-solid border-1 border-[#03D498] text-[#03D498]bg-[#000] ">
-                    Successful Deposit <img src="/img/success.svg" alt="" />
-                  </Button>
-                </Tooltip>
-              )
-            ) : (
+            {depositStatus && (
+              <>
+                {depositStatus === "pending" && (
+                  <Tooltip
+                    showArrow={true}
+                    classNames={{
+                      content: "max-w-[300px] p-4",
+                    }}
+                    content="Please allow a few minutes for your deposit to be confirmed on zkLink Nova."
+                  >
+                    <Button className="border-solid border-1 border-[#03D498] text-[#03D498] bg-[#000] ">
+                      Pending Deposit
+                      <div className="relative flex w-6 h-6">
+                        <i className="absolute w-full h-full rounded-full animate-spinner-ease-spin border-solid border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i>
+                        <i className="absolute w-full h-full rounded-full opacity-75 animate-spinner-linear-spin border-dotted border-t-transparent border-l-transparent border-r-transparent border-3 border-b-current"></i>
+                      </div>
+                    </Button>
+                  </Tooltip>
+                )}
+                {depositStatus === "success" && (
+                  <Tooltip
+                    showArrow={true}
+                    classNames={{
+                      content: "max-w-[300px] p-4",
+                    }}
+                    content="Your funds have been deposited successfully."
+                  >
+                    <Button className="border-solid border-1 border-[#03D498] text-[#03D498]bg-[#000] ">
+                      Successful Deposit <img src="/img/success.svg" alt="" />
+                    </Button>
+                  </Tooltip>
+                )}
+              </>
+            )}
+            {!depositStatus && (
               <Button
                 className="border-solid border-1 border-[#fff] text-[#fff]"
                 onClick={() =>
                   window.open(
                     nodeType === "nexus-goerli"
-                      ? "https://goerli.portal.zklink.io/bridge/"
-                      : "https://portal.zklink.io/bridge/",
+                      ? "https://goerli.portal.zklink.io/bridge/transfers"
+                      : "https://portal.zklink.io/bridge/transfers",
                     "_blank"
                   )
                 }
