@@ -297,37 +297,36 @@ export default function Bridge(props: IBridgeComponentProps) {
       } else {
         setShowNoPointsTip(false);
       }
-    } else {
-      try {
-        const [priceInfo, ethPriceInfo] = await Promise.all([
-          getTokenPrice(tokenFiltered[tokenActive]?.address),
-          getTokenPrice(ETH_ADDRESS),
-        ]);
-        if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
-          const ethValue = new BigNumber(priceInfo.usdPrice)
-            .multipliedBy(amount)
-            .div(ethPriceInfo.usdPrice)
-            .toNumber();
-          if (ethValue < minDepositValue) {
-            setShowNoPointsTip(true);
-          } else {
-            setShowNoPointsTip(false);
-          }
-          // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
-          const points = new BigNumber(priceInfo.usdPrice)
-            .multipliedBy(10)
-            .multipliedBy(tokenFiltered[tokenActive].multiplier)
-            .multipliedBy(amount)
-            .div(ethPriceInfo.usdPrice)
-            .toFixed(2);
-          setPoints(Number(points));
-        }
-      } catch (e) {
-        console.log(e);
-        setPriceApiFailed(true);
-      }
-      setPriceApiFailed(false);
     }
+    try {
+      const [priceInfo, ethPriceInfo] = await Promise.all([
+        getTokenPrice(tokenFiltered[tokenActive]?.address),
+        getTokenPrice(ETH_ADDRESS),
+      ]);
+      if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
+        const ethValue = new BigNumber(priceInfo.usdPrice)
+          .multipliedBy(amount)
+          .div(ethPriceInfo.usdPrice)
+          .toNumber();
+        if (ethValue < minDepositValue) {
+          setShowNoPointsTip(true);
+        } else {
+          setShowNoPointsTip(false);
+        }
+        // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
+        const points = new BigNumber(priceInfo.usdPrice)
+          .multipliedBy(10)
+          .multipliedBy(tokenFiltered[tokenActive].multiplier)
+          .multipliedBy(amount)
+          .div(ethPriceInfo.usdPrice)
+          .toFixed(2);
+        setPoints(Number(points));
+      }
+    } catch (e) {
+      console.log(e);
+      setPriceApiFailed(true);
+    }
+    setPriceApiFailed(false);
   }, 500);
 
   useEffect(() => {
@@ -536,6 +535,7 @@ export default function Bridge(props: IBridgeComponentProps) {
 
         if (resBind?.error) {
           toast.error(resBind.message);
+          return;
         }
 
         const res = await getInvite(address);
