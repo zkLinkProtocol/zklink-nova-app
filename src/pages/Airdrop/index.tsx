@@ -68,7 +68,7 @@ export default function Airdrop() {
     );
     const code = searchParams.get("code");
     const state = searchParams.get("state");
-   
+
     let _status = STATUS_CODE.home;
     if (isConnected) {
       if (invite?.code) {
@@ -82,8 +82,8 @@ export default function Airdrop() {
       }
     }
 
-    if (code || state) {
-      _status = STATUS_CODE.softKYC
+    if (!twitterAccessToken && code) {
+      _status = STATUS_CODE.softKYC;
     }
 
     console.log("_status", _status, isConnected);

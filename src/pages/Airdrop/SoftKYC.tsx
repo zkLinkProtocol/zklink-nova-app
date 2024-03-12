@@ -135,7 +135,6 @@ export default function SoftKYC() {
   };
 
   const getTwitterByCode = async (code: string) => {
-    // setSearchParams("");
     setTwitterLoading(true);
     const res = await getAccountTwitter({
       code,
@@ -154,9 +153,8 @@ export default function SoftKYC() {
     setTwitterLoading(false);
   };
 
-  const toastTwitterError = () => {
-    setSearchParams("state=state");
-    toast.error("Could not connect to Twitter. Try again.");
+  const toastTwitterError = (text?: string) => {
+    toast.error(text || "Could not connect to Twitter. Try again.");
     setTwitterLoading(false);
   };
 
@@ -198,10 +196,12 @@ export default function SoftKYC() {
 
                 if (res.result) {
                   setTwitterLoading(false);
-                  setSearchParams();
                   dispatch(setTwitterAccessToken(access_token));
+                  setSearchParams("");
                 } else {
-                  toastTwitterError();
+                  toastTwitterError(
+                    "Sorry, this Twitter account has already been bound."
+                  );
                 }
               }
             })
@@ -259,7 +259,6 @@ export default function SoftKYC() {
     const error = searchParams.get("error");
 
     if (error) {
-      // setSearchParams("");
       toast.error("Could not connect to Twitter. Try again.");
       return;
     }
