@@ -121,10 +121,10 @@ export default function SoftKYC() {
     setTwitterLoading(true);
     const params = {
       response_type: "code",
-      // client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-      // redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
-      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      redirect_uri: "http://localhost:3000/aggregation-parade",
+      client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
+      redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      // redirect_uri: "http://localhost:3000/aggregation-parade",
       scope: "tweet.read%20users.read%20follows.read%20follows.write",
       state: "state",
       code_challenge: "challenge",
@@ -165,10 +165,10 @@ export default function SoftKYC() {
     postData("/twitter/2/oauth2/token", {
       code,
       grant_type: "authorization_code",
-      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      redirect_uri: "http://localhost:3000/aggregation-parade",
-      // import.meta.env.VITE_TWITTER_CLIENT_ID
-      // redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      // redirect_uri: "http://localhost:3000/aggregation-parade",
+      client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
+      redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
       code_verifier: "challenge",
     })
       .then((res) => {
