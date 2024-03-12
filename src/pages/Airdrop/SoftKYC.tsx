@@ -107,7 +107,7 @@ const InviteInput = styled.input`
 export default function SoftKYC() {
   const [searchParams, setSearchParams] = useSearchParams();
   const web3Modal = useWeb3Modal();
-  const { address, isConnected, isConnecting } = useAccount();
+  const { isConnected, isConnecting } = useAccount();
   const { inviteCode, isGroupLeader, signature, twitterAccessToken } =
     useSelector((store: RootState) => store.airdrop);
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
@@ -198,7 +198,7 @@ export default function SoftKYC() {
 
               if (data?.username) {
                 console.log(data?.username);
-                const res = await validTwitter(data?.username, address);
+                const res = await validTwitter(data?.username);
 
                 if (res.result) {
                   setTwitterLoading(false);
