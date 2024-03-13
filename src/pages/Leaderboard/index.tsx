@@ -57,7 +57,7 @@ export default function Leaderboard() {
                 tabsActive === 2 ? "active" : ""
               }`}
             >
-              Referral Leaderboard
+              Mystery Box Winners
             </TabItem>
           </Tooltip>
         </div>
