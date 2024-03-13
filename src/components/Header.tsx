@@ -213,7 +213,14 @@ export default function Header() {
                 </NavLink>
               </NavbarItem>
               <NavbarItem>
-                {isActive() ? (
+                <NavLink
+                  to="/dashboard"
+                  className="nav-link"
+                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+                >
+                  Dashboard
+                </NavLink>
+                {/* {isActive() ? (
                   <NavLink
                     to="/dashboard"
                     className="nav-link"
@@ -227,7 +234,7 @@ export default function Header() {
                       Dashboard
                     </span>
                   </Tooltip>
-                )}
+                )} */}
               </NavbarItem>
               <NavbarItem>
                 <NavLink
