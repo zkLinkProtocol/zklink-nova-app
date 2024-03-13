@@ -4,7 +4,7 @@ import { SIGN_MESSAGE } from "@/constants/sign";
 import { RootState } from "@/store";
 import { setInviteCode, setSignature } from "@/store/modules/airdrop";
 import { CardBox, FooterTvlText } from "@/styles/common";
-import { postData, showAccount } from "@/utils";
+import { getRandomNumber, postData, showAccount } from "@/utils";
 import {
   Avatar,
   Button,
@@ -27,6 +27,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAccount, useSignMessage } from "wagmi";
 import fromList from "@/constants/fromChainList";
+
+const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
+const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 
 const BgBox = styled.div`
   position: relative;
@@ -163,12 +166,26 @@ export default function AggregationParade() {
     setIsInviteCodeChecked(true);
   };
 
+  const getTwitterClientId = () => {
+    let clientId = "";
+    if (clientIds.length > 1) {
+      const index = getRandomNumber(0, clientIds.length - 1);
+      clientId = clientIds[index];
+    } else {
+      clientId = clientIds[0];
+    }
+    return clientId;
+  };
+
+  const clientIds = twitterClientId.split(",");
+
   const handleConnectTwitter = () => {
     setTwitterLoading(true);
+    const clientId = getTwitterClientId();
     const params = {
       response_type: "code",
-      client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-      redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      client_id: clientId,
+      redirect_uri: twitterCallbackURL,
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
       scope: "tweet.read%20users.read%20follows.read%20follows.write",
@@ -210,14 +227,15 @@ export default function AggregationParade() {
   };
 
   const getTwitterAPI = async (code: string) => {
+    const clientId = getTwitterClientId();
     setTwitterLoading(true);
     postData("/twitter/2/oauth2/token", {
       code,
       grant_type: "authorization_code",
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
-      client_id: import.meta.env.VITE_TWITTER_CLIENT_ID,
-      redirect_uri: import.meta.env.VITE_TWITTER_CALLBACK_URL,
+      client_id: clientId,
+      redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     })
       .then((res) => {
