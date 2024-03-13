@@ -36,9 +36,7 @@ import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getDepositETHThreshold,
-} from "@/api";
+import { getDepositETHThreshold } from "@/api";
 import { RootState } from "@/store";
 import {
   setInvite,
@@ -47,7 +45,12 @@ import {
 } from "@/store/modules/airdrop";
 import { parseUnits } from "viem";
 import { Token } from "@/hooks/useTokenList";
-import { copyText, isSameAddress } from "@/utils";
+import {
+  copyText,
+  formatTxHash,
+  getTxHashExplorerLink,
+  isSameAddress,
+} from "@/utils";
 import CopyIcon from "./CopyIcon";
 import VerifyTxHashModal from "./VerifyTxHashModal";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
@@ -264,7 +267,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     }, 5000);
     return () => clearInterval(timer);
   }, [refreshTokenBalanceList]);
-
 
   useEffect(() => {
     (async () => {
@@ -737,15 +739,23 @@ export default function Bridge(props: IBridgeComponentProps) {
               className="w-6 h-6 mr-1 rounded-full"
             />
             <span className="text-[12px] font-semibold">
-              {txhashes[0]?.txhash}
+              <a
+                href={getTxHashExplorerLink(
+                  txhashes[0]?.rpcUrl,
+                  txhashes[0]?.txhash
+                )}
+                target="_blank"
+                className="hover:underline"
+              >
+                {formatTxHash(txhashes[0]?.txhash)}
+              </a>
             </span>
             <Popover placement="top" triggerScaleOnOpen={false}>
-              <PopoverTrigger>
+              <PopoverTrigger onClick={() => copyText(txhashes[0].txhash)}>
                 <img
                   src={"/img/icon-copy.png"}
                   alt=""
                   className="w-6 h-6 ml-auto hover:opacity-85 cursor-pointer"
-                  onClick={() => copyText(txhashes[0].txhash)}
                 />
               </PopoverTrigger>
               <PopoverContent>

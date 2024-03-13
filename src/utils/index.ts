@@ -8,6 +8,7 @@ import { ETH_ADDRESS, L2_ETH_TOKEN_ADDRESS } from "@/constants";
 import { BOOST_LIST } from "@/constants/boost";
 import numeral from "numeral";
 import { nexusGoerliNode, nexusNode } from "@/constants/networks";
+import FromList from "@/constants/fromChainList";
 
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -262,5 +263,21 @@ export const copyText = (text: string) => {
     console.error("Fallback: Oops, unable to copy", err);
   } finally {
     document.body.removeChild(textArea);
+  }
+};
+
+export const formatTxHash = (hash: string) => {
+  if (hash) {
+    return hash.substring(0, 12) + "..." + hash.substr(-12);
+  }
+  return "";
+};
+
+export const getTxHashExplorerLink = (rpcUrl: string, txhash: string) => {
+  if (rpcUrl && txhash) {
+    const network = FromList.find((item) => item.rpcUrl === rpcUrl);
+    if (network) {
+      return `${network.explorerUrl}/tx/${txhash}`;
+    }
   }
 };
