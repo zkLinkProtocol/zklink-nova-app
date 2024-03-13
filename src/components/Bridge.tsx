@@ -226,7 +226,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [failMessage, setFailMessage] = useState("");
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const { sendDepositTx, loading, getDepositL2TxHash } = useBridgeTx();
+  const { sendDepositTx, loading } = useBridgeTx();
   const [amount, setAmount] = useState(0);
   const [inviteCodeType, setInviteCodeType] = useState(
     InviteCodeTypes[0].value
@@ -251,6 +251,13 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      refreshTokenBalanceList();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [refreshTokenBalanceList]);
 
   useEffect(() => {
     if (inviteCode) {
@@ -647,9 +654,9 @@ export default function Bridge(props: IBridgeComponentProps) {
               className="selector flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer"
               onClick={() => fromModal.onOpen()}
             >
-              <Avatar
+              <img
                 src={fromList[fromActive].icon}
-                style={{ width: 24, height: 24, opacity: 1 }}
+                className="w-6 h-6 rounded-full"
               />
               <span>{fromList[fromActive].label}</span>
               {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}

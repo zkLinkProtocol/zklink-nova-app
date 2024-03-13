@@ -121,6 +121,7 @@ export const useTokenBalanceList = () => {
     address: walletAddress as `0x${string}`,
     chainId: selectedChainId,
     token: undefined,
+    query: { queryClient: queryClient },
   });
   console.log("nativeBalance: ", selectedChainId, nativeTokenBalance);
 
@@ -139,7 +140,8 @@ export const useTokenBalanceList = () => {
     config: wagmiConfig,
     contracts: erc20Contracts,
     query: {
-      queryClient,
+      queryClient: queryClient,
+      // refetchInterval: 5000, //not working
       // select: (data) => data.map((item) => item.result),
     },
   });
