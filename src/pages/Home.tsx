@@ -12,6 +12,7 @@ import { useStartTimerStore } from "@/hooks/useStartTimer";
 import { useAccount } from "wagmi";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import Countdown from "@/components/Countdown";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -207,10 +208,10 @@ const ConnectWalletText = styled.span`
 `;
 
 const FooterBox = styled.div`
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translate(-50%, 0);
+  /* position: fixed; */
+  /* bottom: 2rem; */
+  /* left: 50%; */
+  /* transform: translate(-50%, 0); */
 `;
 
 export default function Home() {
@@ -235,7 +236,7 @@ export default function Home() {
   const arr = ["ETH", "Stablecoins", "LSTs", "LRTs", "L2 Native Assets"];
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
-    if (!otp || otp.length !== 6 ) return;
+    if (!otp || otp.length !== 6 || !campaignStart) return;
     // TODO: check invite code ?
     // const res = await checkInviteCode(otp);
     // if (!res?.result) {
@@ -319,15 +320,16 @@ export default function Home() {
         )}
       </CardBox>
 
-      <FooterBox className="w-full">
+      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex items-center justify-between px-36 py-4">
         {/* Footer: total tvl data */}
-        <div className="flex flex-col items-center">
+        {/* <div className="flex flex-col items-center">
           <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
           <TotalTvlCard />
-        </div>
+        </div> */}
+        <TotalTvlCard />
 
         {/* Footer: nav links */}
-        <div className="absolute right-[6rem] bottom-[1rem] flex justify-end items-end">
+        <div className=" right-[6rem] bottom-[1rem] flex justify-end items-end">
           <div className="flex items-center gap-[1.25rem]">
             <a href="https://blog.zk.link/">
               <img
