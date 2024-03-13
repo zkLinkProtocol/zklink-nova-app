@@ -13,6 +13,8 @@ export interface airdropState {
   invite: Invite | null;
   depositL1TxHash: string;
   campaignStart: boolean;
+  isDashboardLoading: boolean;
+  isActiveUser: boolean;
 }
 
 const initialState: airdropState = {
@@ -27,6 +29,8 @@ const initialState: airdropState = {
   invite: null,
   depositL1TxHash: "",
   campaignStart: false,
+  isDashboardLoading: false,
+  isActiveUser: false
 };
 
 export const airdrop = createSlice({
@@ -66,6 +70,12 @@ export const airdrop = createSlice({
     setCampaignStart(state, action: PayloadAction<boolean>) {
       state.campaignStart = action.payload;
     },
+    setIsDashboardLoading(state, action: PayloadAction<boolean>) {
+      state.isDashboardLoading = action.payload;
+    },
+    setIsActiveUser(state, action: PayloadAction<boolean>) {
+      state.isActiveUser = action.payload;
+    },
   },
 });
 
@@ -81,5 +91,7 @@ export const {
   setDepositStatus,
   setDepositL1TxHash,
   setCampaignStart,
+  setIsDashboardLoading,
+  setIsActiveUser
 } = airdrop.actions;
 export default airdrop.reducer;

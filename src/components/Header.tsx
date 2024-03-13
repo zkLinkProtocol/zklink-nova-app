@@ -21,6 +21,8 @@ import {
   setDepositL1TxHash,
   setTwitterAccessToken,
   setInviteCode,
+  setIsActiveUser,
+  setIsDashboardLoading,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
@@ -165,6 +167,36 @@ export default function Header() {
     }
   }, [isConnected]);
 
+  useEffect(() => {
+    console.log(
+      "--------++++++++--------",
+      isConnected,
+      Boolean(invite?.code),
+      invite
+    );
+    if (isConnected && Boolean(invite?.code)) {
+      console.log(
+        "--------++++====== true ====++++--------",
+        isConnected,
+        Boolean(invite?.code),
+        isConnected && Boolean(invite?.code),
+        invite
+      );
+
+      dispatch(setIsActiveUser(true));
+    } else {
+      dispatch(setInvite(null));
+      console.log(
+        "--------++++====== false ====++++--------",
+        isConnected,
+        Boolean(invite?.code),
+        isConnected && Boolean(invite?.code),
+        invite
+      );
+      dispatch(setIsActiveUser(false));
+    }
+  }, [invite, isConnected, address]);
+
   return (
     <>
       <Navbar
@@ -197,7 +229,7 @@ export default function Header() {
                   Aggregation Parade
                 </NavLink>
               </NavbarItem>
-              <NavbarItem>
+              {/* <NavbarItem>
                 {isActive() ? (
                   <NavLink to="/dashboard" className="nav-link">
                     Dashboard
@@ -209,7 +241,7 @@ export default function Header() {
                     </span>
                   </Tooltip>
                 )}
-              </NavbarItem>
+              </NavbarItem> */}
               <NavbarItem>
                 <NavLink to="/leaderboard">Leaderboard</NavLink>
               </NavbarItem>

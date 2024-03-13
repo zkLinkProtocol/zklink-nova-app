@@ -41,8 +41,10 @@ import toast from "react-hot-toast";
 import { NOVA_CHAIN_ID } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Loading from "@/components/Loading";
+import { airdropState, setIsDashboardLoading } from "@/store/modules/airdrop";
 
 const GradientButton = styled.span`
   border-radius: 0.5rem;
@@ -209,7 +211,9 @@ export type AccountTvlItem = {
 
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
-  const { invite } = useSelector((store: RootState) => store.airdrop);
+  const { invite, isDashboardLoading } = useSelector(
+    (store: RootState) => store.airdrop
+  );
   // const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F"; // mainnet account for test
 
   const [tabsActive, setTabsActive] = useState(0);
@@ -239,6 +243,7 @@ export default function Dashboard() {
 
   const { switchChain } = useSwitchChain();
   const navigatorTo = useNavigate();
+  const dispatch = useDispatch();
 
   const { data: nativeTokenBalance } = useBalance({
     address: address as `0x${string}`,
@@ -479,6 +484,7 @@ export default function Dashboard() {
   return (
     <BgBox>
       <BgCoverImg />
+
       <div className="relative flex gap-[1.5rem] px-[4.75rem] z-[1]">
         {/* Left: nova points ... data */}
         <div className="w-[27.125rem]">
@@ -492,7 +498,7 @@ export default function Dashboard() {
                 className="text-center block mx-auto h-full rounded-[1rem]"
               />
             </div>
-            <Tooltip content={nft ? 'coming soon' : ""}>
+            <Tooltip content={nft ? "coming soon" : ""}>
               <GradientButton
                 onClick={handleMintNow}
                 className={classNames(
@@ -502,11 +508,14 @@ export default function Dashboard() {
                 )}
               >
                 <span>{nft ? "Upgrade" : "Mint Now"}</span>
-                {nft ? (<img
-                  src="/img/icon-info.svg"
-                  className="w-[0.875rem] h-[0.875rem]"
-                />) : ""}
-                
+                {nft ? (
+                  <img
+                    src="/img/icon-info.svg"
+                    className="w-[0.875rem] h-[0.875rem]"
+                  />
+                ) : (
+                  ""
+                )}
               </GradientButton>
             </Tooltip>
           </CardBox>
@@ -752,14 +761,16 @@ export default function Dashboard() {
                   Coming Soon
                 </p>
                 <div className="flex">
-                <img style={{width: 80}}
-                  src="/img/logoAlien.svg"
-                  className="w-[9.375rem] h-[9.375rem] mr-[2rem]"
-                />
-                <img style={{width: 80}}
-                  src="/img/logoOK.svg"
-                  className="w-[9.375rem] h-[9.375rem]"
-                />
+                  <img
+                    style={{ width: 80 }}
+                    src="/img/logoAlien.svg"
+                    className="w-[9.375rem] h-[9.375rem] mr-[2rem]"
+                  />
+                  <img
+                    style={{ width: 80 }}
+                    src="/img/logoOK.svg"
+                    className="w-[9.375rem] h-[9.375rem]"
+                  />
                 </div>
               </CardBox>
             )}
