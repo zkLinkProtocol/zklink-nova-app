@@ -709,14 +709,13 @@ export default function SoftKYC() {
 
               {depositStatus === VerifyResult.SUCCESS && (
                 <p className="text-[#03D498] py-4 text-[1rem]">
-                  Your deposit is still processing; you will have to wait
-                  approximately 5 minutes.
+                  Your deposit is still being processed. The estimated remaining wait time is approximately x minutes.
                 </p>
               )}
               {depositStatus === VerifyResult.FAILED && (
                 <p className="text-[#C57D10] py-4 text-[1rem]">
-                  Invalid tx hash, please check the tx hash and network. Also
-                  your wallet.
+                  Invalid transaction hash, please check the transaction hash
+                  and network. Also, check the wallet you're connected to.
                 </p>
               )}
             </div>
