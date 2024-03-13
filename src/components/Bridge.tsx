@@ -289,6 +289,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const computePoints = debounce(() => {
     if (!amount || !tokenFiltered[tokenActive]) {
       setShowNoPointsTip(false);
+      setPoints(0);
       return;
     }
     if (tokenFiltered[tokenActive]?.address === ETH_ADDRESS) {
