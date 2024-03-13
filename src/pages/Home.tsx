@@ -26,11 +26,21 @@ const BgBox = styled.div`
 `;
 
 const CardBox = styled.div`
-  border-radius: 1rem;
-  background: rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(15.800000190734863px);
+border-radius: 16px;
+background: rgba(0, 0, 0, 0.40);
+backdrop-filter: blur(15.800000190734863px);
 `;
 const TitleBox = styled.div`
+  // h2{
+  //   margin-left: 120px;
+  // }
+  .headTitle{
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .flexBox{
+    justify-content: center;
+  }
   .title {
     color: #c2e2ff;
     font-family: Satoshi;
@@ -44,6 +54,144 @@ const TitleBox = styled.div`
     font-style: normal;
     line-height: 2rem; /* 133.333% */
     letter-spacing: -0.03125rem;
+  }
+  @keyframes width {
+    0% {
+      width: 118px;
+    }
+    9% {
+      width: 118px;
+    }
+    10% {
+      width: 296px;
+    }
+    34% {
+      width: 296px;
+    }
+    35% {
+      width: 132px;
+    }
+    59% {
+      width: 132px;
+    }
+    60% {
+      width: 136px;
+    }
+    84% {
+      width: 136px;
+    }
+    85% {
+      width: 412px;
+    }
+    100% {
+      width: 412px;
+    }
+  }
+  .box{
+    width: 500px;
+    height: 52px;
+    border-radius: 8px;
+    // background: rgba(0, 0, 0, 0.40);
+    // backdrop-filter: blur(15.800000190734863px);
+    overflow: hidden;
+    padding: 2px 16px;
+    margin-left: 30px;
+    position: relative;
+    // animation-name: width;
+    // animation-duration: 10s;
+    // animation-iteration-count: infinite;
+    @keyframes move {
+      0% {
+        top: 0;
+      }
+      10% {
+        top: 0;
+      }
+      20% {
+        top: -48px;
+      }
+      33% {
+        top: -48px;
+      }
+      43% {
+        top: -96px
+      }
+      56% {
+        top: -96px
+      }
+      66% {
+        top: -144px
+      }
+      79% {
+        top: -144px
+      }
+      89% {
+        top: -192px
+      }
+      95% {
+        top: -192px
+      }
+      100% {
+        top: 0px
+      }
+    }
+    .move{
+      position: absolute;
+      animation-name: move;
+      animation-duration: 10s;
+      animation-timing-function: ease;
+      animation-iteration-count: infinite;
+      top: 0;
+    }
+    
+  @keyframes width1 {
+    0% {
+      width: 86px;
+    }
+    9% {
+      width: 86px;
+    }
+    10% {
+      width: 264px;
+    }
+    34% {
+      width: 264px;
+    }
+    35% {
+      width: 100px;
+    }
+    59% {
+      width: 100px;
+    }
+    60% {
+      width: 104px;
+    }
+    84% {
+      width: 104px;
+    }
+    85% {
+      width: 380px;
+    }
+    100% {
+      width: 380px;
+    }
+  }
+    .inner{
+      width: 500px;
+      font-family: Satoshi;
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 900;
+      line-height: 48px; /* 140% */
+      letter-spacing: 4px;
+      background: linear-gradient(90deg, #48ECAE 25%, #49CED7 75%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      // animation-name: width1;
+      // animation-duration: 10s;
+      // animation-iteration-count: infinite;
+    }
   }
 `;
 
@@ -81,11 +229,12 @@ export default function Home() {
 
   const navigator = useNavigate();
   const dispatch = useDispatch();
-
   const handleOTPChange = (otp: string) => {
     setConfig((prevConfig) => ({ ...prevConfig, otp }));
   };
-
+  const arr = [
+    'ETH', 'Stablecoins', 'LSTs', 'LRTs', 'L2 Native Assets'
+  ]
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
     if (!otp || otp.length !== 6 || !campaignStart) return;
@@ -104,12 +253,24 @@ export default function Home() {
     <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">
       {/* Title */}
       <TitleBox className="text-center">
-        <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
-          Bridge to Mega Yield and token rewards on zkLink Nova
-        </h2>
+        <div className="flex headTitle">
+          <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
+          The ONLY Aggregated L3 with added yield for
+          </h2>
+        </div>
+        <div className="flex flexBox">
+        <div className="box">
+          <div className="move">
+            <div className="inner">ETH</div>
+            <div className="inner">Stablecoins</div>
+            <div className="inner">LSTs</div>
+            <div className="inner">LRTs</div>
+            <div className="inner">L2 Native Assets</div>
+          </div>
+        </div>
+        </div>
         <p className="sub-title mt-4 pl-6 pr-8 text-[1.5rem] leading-8">
-          The only Ethereum L3 with native yield for ETH Stablecoins. The
-          Aggreagation Parade is now live.
+        Bridge to earn Mega Yield and $ZKL on zkLink Nova
         </p>
       </TitleBox>
 
@@ -120,11 +281,11 @@ export default function Home() {
             Enter Your Invite Code
           </h4>
           <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
-            Enter your invite code to participate in the campaign
+          To participate in the campaign
           </p>
         </TitleBox>
 
-        <div className="my-8">
+        <div className="mt-8">
           <OTPInput
             inputStyle="inputStyle"
             numInputs={numInputs}
@@ -144,7 +305,7 @@ export default function Home() {
             disabled={!otp || otp.length !== 6 || !campaignStart}
             onClick={enterInviteCode}
           >
-            ENTER INVITE CODE
+            SUBMITE
           </Button>
         </div>
 

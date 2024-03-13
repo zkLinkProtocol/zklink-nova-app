@@ -27,6 +27,27 @@ import { useBridgeTx } from "@/hooks/useBridgeTx";
 import { getInvite } from "@/api";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
+const NavNet = styled.div`
+background: #313841;
+border-radius: 5px;
+margin-left: 10px;
+div{
+  width: 79px;
+  height: 22px;
+  flex-shrink: 0;
+  font-family: Satoshi;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, #48ECAE 0%, #606FF2 51.07%, #49CED7 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+`;
 const NavBox = styled.nav`
   a {
     color: #9ccbbd;
@@ -165,7 +186,7 @@ export default function Header() {
               {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
           </Link>
-
+          <NavNet><div>Mainnet Live</div></NavNet>
           <NavBox className="ml-[3.5rem]">
             <NavbarContent
               className="hidden sm:flex gap-[2.5rem]"
