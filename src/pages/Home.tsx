@@ -252,10 +252,10 @@ export default function Home() {
     <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">
       {/* Title */}
       <TitleBox className="text-center">
-        <div className="w-full flex items-center justify-center mt-10 mb-10">
+        <div className="w-full flex sm:flex-col md:flex-row items-center justify-center mt-10 mb-10">
           <img
             src={"/img/img-count-down.png"}
-            className="w-[410px] h-[36px] mr-4"
+            className="lg:w-[410px] lg:h-[36px] mr-4 sm:mb-4  "
             alt=""
           />
           <Countdown />
