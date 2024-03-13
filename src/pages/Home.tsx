@@ -236,7 +236,7 @@ export default function Home() {
   const arr = ["ETH", "Stablecoins", "LSTs", "LRTs", "L2 Native Assets"];
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
-    if (!otp || otp.length !== 6 || !campaignStart) return;
+    if (!otp || otp.length !== 6) return;
     // TODO: check invite code ?
     // const res = await checkInviteCode(otp);
     // if (!res?.result) {
