@@ -703,7 +703,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content="You would receive Nova Points once your deposit is verified. "
+                content=" Nova Points are distributed every 8 hours, and you will receive points equal to 10 distributions after a valid deposit."
               >
                 <img
                   src={"/img/icon-tooltip.png"}

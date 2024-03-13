@@ -53,8 +53,7 @@ export default function Leaderboard() {
                         <TabItem
                             className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed ${tabsActive === 2 ? 'active' : ''}`}
                         >
-
-                            Referral Leaderboard
+                            Mystery Box Winners
                         </TabItem>
                         </Tooltip>
                     </div>

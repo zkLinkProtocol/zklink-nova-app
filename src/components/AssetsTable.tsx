@@ -446,7 +446,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
           classNames={{ thead: "table-header", tbody: "table-tbody" }}
         >
           <TableHeader>
-            <TableColumn>Name</TableColumn>
+            <TableColumn>Asset Name</TableColumn>
             <TableColumn>Nova TVL</TableColumn>
             {/* <TableColumn>
               <div className="flex gap-[0.5rem] items-center">
@@ -484,7 +484,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         {/* {item?.chain && `.${item.chain}`} */}
                       </p>
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
-                        {item?.multiplier}x boost
+                        {item?.multiplier}x Boost
                       </span>
                     </TableItem>
                   </TableCell>
