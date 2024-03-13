@@ -63,7 +63,7 @@ export const useTokenBalanceList = () => {
       fetch("https://explorer-api.zklink.io/tokens/tvl?isall=true").then(
         (res) => res.json().then((all) => setAllTokens(all))
       );
-    }, 1000 * 10);
+    }, 1000 * 1000);
 
     return () => {
       clearInterval(timer);
