@@ -243,20 +243,27 @@ export default function AggregationParade() {
               // dispatch(setTwitter(data));
 
               if (data?.username) {
-                console.log(data?.username);
-                const res = await validTwitter(data?.username, address);
-
-                if (res.result) {
-                  setTwitterLoading(false);
-                  setTwitterAccessToken(access_token);
-                  console.log("twitter account", access_token);
-                  // setSearchParams("");
-                } else {
-                  toastTwitterError(
-                    "Sorry, this Twitter account has already been bound."
-                  );
-                }
+                setTwitterLoading(false);
+                setTwitterAccessToken(access_token);
+              } else {
+                toastTwitterError()
               }
+
+              // if (data?.username) {
+              //   console.log(data?.username);
+              //   const res = await validTwitter(data?.username, address);
+
+              //   if (res.result) {
+              //     setTwitterLoading(false);
+              //     setTwitterAccessToken(access_token);
+              //     console.log("twitter account", access_token);
+              //     // setSearchParams("");
+              //   } else {
+              //     toastTwitterError(
+              //       "Sorry, this Twitter account has already been bound."
+              //     );
+              //   }
+              // }
             })
             .catch(() => {
               toastTwitterError();

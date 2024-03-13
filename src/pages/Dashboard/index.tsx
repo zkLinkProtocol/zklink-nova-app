@@ -41,8 +41,7 @@ import toast from "react-hot-toast";
 import { NOVA_CHAIN_ID } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
-import { useDispatch, useSelector } from "react-redux";
-import { setInvite, setTwitterAccessToken } from "@/store/modules/airdrop";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 

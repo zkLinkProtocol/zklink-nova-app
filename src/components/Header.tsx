@@ -19,14 +19,10 @@ import {
   setDepositStatus,
   airdropState,
   setDepositL1TxHash,
-  setViewStatus,
   setTwitterAccessToken,
   setInviteCode,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
-import { useSignMessage } from "wagmi";
-import { SIGN_MESSAGE } from "@/constants/sign";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import { getInvite } from "@/api";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
@@ -72,17 +68,16 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { signature, depositStatus, depositL1TxHash, invite } = useSelector(
+  const { depositStatus, depositL1TxHash, invite } = useSelector(
     (store: { airdrop: airdropState }) => store.airdrop
   );
   const { getDepositL2TxHash } = useBridgeTx();
-  const { signMessage } = useSignMessage();
   const dispatch = useDispatch();
   console.log("depositL1TxHash: ", depositL1TxHash);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const isActive = useCallback(() => {
-    return isConnected && invite?.code !== "";
+    return isConnected && Boolean(invite?.code);
   }, [isConnected, invite]);
 
   useEffect(() => {
