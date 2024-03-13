@@ -78,15 +78,14 @@ export default function Header() {
   const { getDepositL2TxHash } = useBridgeTx();
   const { signMessage } = useSignMessage();
   const dispatch = useDispatch();
-  console.log("depositL1TxHash: ", depositL1TxHash);
 
   useEffect(() => {
     (async () => {
       if (!depositL1TxHash) {
-        dispatch(setDepositStatus(""));
-
+        // dispatch(setDepositStatus(""));
         return;
       } else {
+        dispatch(setDepositStatus("pending"));
         const l2hash = await getDepositL2TxHash(
           depositL1TxHash as `0x${string}`
         );

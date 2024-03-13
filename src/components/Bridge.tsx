@@ -654,7 +654,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               <span>{fromList[fromActive].label}</span>
               {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
-            <div>
+            <div className="ml-auto">
               Balance:{" "}
               <span>{tokenFiltered[tokenActive]?.formatedBalance}</span>
             </div>

@@ -229,3 +229,16 @@ export async function addNovaChain() {
     blockExplorerUrls: [network.blockExplorerUrl ?? ""],
   });
 }
+
+export const formatNumber = (
+  number: number,
+  locales?: string,
+  ops?: Intl.NumberFormatOptions
+) => {
+  const formatter = new Intl.NumberFormat(locales ?? "en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6,
+    ...ops,
+  });
+  return formatter.format(number);
+};
