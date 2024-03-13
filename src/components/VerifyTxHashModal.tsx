@@ -148,6 +148,7 @@ const VerifyTxHashModal = (props: IProps) => {
                   onWheel={(e) => e.preventDefault()}
                 />
               </div>
+
               <Button
                 className="gradient-btn w-full rounded-full mt-5 "
                 style={{ display: "flex", alignItems: "center" }}
@@ -163,14 +164,14 @@ const VerifyTxHashModal = (props: IProps) => {
             <div className="text-lg font-normal">
               {status === VerifyResult.PENDING && (
                 <p className="text-[#03D498]">
-                  Your deposit is still processing; you will have to wait
-                  approximately 5 minutes.
+                  Your deposit is still being processed. The estimated remaining
+                  wait time is approximately x minutes.
                 </p>
               )}
               {status === VerifyResult.INVALID && (
                 <p className="text-[#C57D10]">
-                  Invalid tx hash, please check the tx hash and network. Also
-                  your wallet.
+                  Invalid transaction hash, please check the transaction hash
+                  and network. Also, check the wallet you're connected to.
                 </p>
               )}
             </div>

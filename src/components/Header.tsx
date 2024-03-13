@@ -22,7 +22,6 @@ import {
   setTwitterAccessToken,
   setInviteCode,
   setIsActiveUser,
-  setIsDashboardLoading,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
@@ -100,7 +99,7 @@ export default function Header() {
   const [searchParams] = useSearchParams();
 
   const isActive = useCallback(() => {
-    return isConnected && Boolean(invite?.code);
+    return isConnected && Boolean(invite?.twitterHandler);
   }, [isConnected, invite]);
 
   useEffect(() => {
@@ -168,31 +167,11 @@ export default function Header() {
   }, [isConnected]);
 
   useEffect(() => {
-    console.log(
-      "--------++++++++--------",
-      isConnected,
-      Boolean(invite?.code),
-      invite
-    );
-    if (isConnected && Boolean(invite?.code)) {
-      console.log(
-        "--------++++====== true ====++++--------",
-        isConnected,
-        Boolean(invite?.code),
-        isConnected && Boolean(invite?.code),
-        invite
-      );
-
+    if (isConnected && Boolean(invite?.twitterHandler)) {
       dispatch(setIsActiveUser(true));
     } else {
       dispatch(setInvite(null));
-      console.log(
-        "--------++++====== false ====++++--------",
-        isConnected,
-        Boolean(invite?.code),
-        isConnected && Boolean(invite?.code),
-        invite
-      );
+
       dispatch(setIsActiveUser(false));
     }
   }, [invite, isConnected, address]);

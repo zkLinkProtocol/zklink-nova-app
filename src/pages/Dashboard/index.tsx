@@ -44,7 +44,6 @@ import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
-import { airdropState, setIsDashboardLoading } from "@/store/modules/airdrop";
 
 const GradientButton = styled.span`
   border-radius: 0.5rem;
@@ -211,9 +210,7 @@ export type AccountTvlItem = {
 
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
-  const { invite, isDashboardLoading } = useSelector(
-    (store: RootState) => store.airdrop
-  );
+  const { invite } = useSelector((store: RootState) => store.airdrop);
   // const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F"; // mainnet account for test
 
   const [tabsActive, setTabsActive] = useState(0);
@@ -481,9 +478,20 @@ export default function Dashboard() {
     }
   }, [isConnected, invite]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
   return (
     <BgBox>
       <BgCoverImg />
+
+      {isLoading && <Loading />}
 
       <div className="relative flex gap-[1.5rem] px-[4.75rem] z-[1]">
         {/* Left: nova points ... data */}

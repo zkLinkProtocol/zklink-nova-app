@@ -174,3 +174,36 @@ export const validTwitter = (
     },
   });
 };
+
+export type TxHashResponse = {
+  isValid: boolean;
+};
+
+export const getTxByTxHash = (
+  txHash: string,
+  chainId: string
+): Promise<TxHashResponse> =>
+  http.get(`${BASE_URL_API}/invite/getTxByTxHash`, {
+    params: { txHash, chainId },
+  });
+
+export type RegisterAccountParams = {
+  address: string;
+  code?: string | null;
+  siganture: string;
+  accessToken: string;
+  chainId: string | number;
+  txHash: string;
+};
+
+export const registerAccount = (
+  data: RegisterAccountParams
+): Promise<Response> => {
+  console.log(data);
+  if (!data.code) {
+    delete data.code;
+  }
+  return http.post(`${BASE_URL_API}/invite/register/account`, {
+    ...data,
+  });
+};

@@ -1,8 +1,19 @@
-import { checkInviteCode } from "@/api";
+import {
+  checkInviteCode,
+  getInvite,
+  getTxByTxHash,
+  registerAccount,
+} from "@/api";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { RootState } from "@/store";
-import { setInviteCode, setSignature } from "@/store/modules/airdrop";
+import {
+  setDepositChainId,
+  setDepositTx,
+  setInvite,
+  setInviteCode,
+  setSignature,
+} from "@/store/modules/airdrop";
 import { CardBox, FooterTvlText } from "@/styles/common";
 import { getRandomNumber, postData, showAccount } from "@/utils";
 import {
@@ -27,6 +38,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAccount, useSignMessage } from "wagmi";
 import fromList from "@/constants/fromChainList";
+import Loading from "@/components/Loading";
 
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
@@ -116,12 +128,19 @@ const InviteInput = styled.input`
   letter-spacing: -0.5px;
 `;
 
+export const enum VerifyResult {
+  "SUCCESS" = "SUCCESS",
+  "FAILED" = "FAILED",
+  "PENDING" = "PENDING",
+  "INVALID" = "INVALID",
+}
+
 export default function SoftKYC() {
   const web3Modal = useWeb3Modal();
   const verifyDepositModal = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();
   const { address, isConnected } = useAccount();
-  const { signature, inviteCode } = useSelector(
+  const { signature, inviteCode, depositTx, depositChainId } = useSelector(
     (store: RootState) => store.airdrop
   );
 
@@ -133,6 +152,11 @@ export default function SoftKYC() {
   const [selectedChainId, setSelectedChainId] = useState<string>(
     String(fromList[0].chainId)
   );
+  const [depositTxHash, setDepositTxHash] = useState<string>("");
+  const [depositStatus, setDepositStatus] = useState("");
+  const [submitStatus, setSubmitStatus] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isReVerifyDeposit, setIsReVerifyDeposit] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -184,10 +208,10 @@ export default function SoftKYC() {
     const clientId = getTwitterClientId();
     const params = {
       response_type: "code",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
+      // client_id: clientId,
+      // redirect_uri: twitterCallbackURL,
+      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      redirect_uri: "http://localhost:3000/aggregation-parade",
       scope: "tweet.read%20users.read%20follows.read%20follows.write",
       state: "state",
       code_challenge: "challenge",
@@ -232,10 +256,10 @@ export default function SoftKYC() {
     postData("/twitter/2/oauth2/token", {
       code,
       grant_type: "authorization_code",
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
+      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      redirect_uri: "http://localhost:3000/aggregation-parade",
+      // client_id: clientId,
+      // redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     })
       .then((res) => {
@@ -299,10 +323,68 @@ export default function SoftKYC() {
   };
 
   // TODO: Verify deposit hash
-  const verifyDepositHash = () => {};
+  const verifyDepositHash = async () => {
+    setDepositStatus("");
+    setIsReVerifyDeposit(true);
+    console.log(selectedChainId, depositTxHash);
+    try {
+      const res = await getTxByTxHash(depositTxHash, selectedChainId);
+      console.log("verifyDepositHash", res);
+      if (res?.isValid) {
+        setDepositStatus(VerifyResult.SUCCESS);
+        dispatch(setDepositTx(depositTxHash));
+        dispatch(setDepositChainId(selectedChainId));
+        verifyDepositModal.onClose();
+      } else {
+        setDepositStatus(VerifyResult.FAILED);
+      }
+    } catch (e) {
+      console.log(e);
+      setDepositStatus(VerifyResult.FAILED);
+    } finally {
+      setIsReVerifyDeposit(false);
+    }
+  };
+
+  const getInviteFunc = async () => {
+    if (!address) return;
+    try {
+      const res = await getInvite(address);
+      console.log("getInviteFunc", res);
+      if (res?.result) {
+        setIsLoading(true);
+        setTimeout(() => {
+          setIsLoading(false);
+          dispatch(setInvite(res?.result));
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // TODO: Submit user bind form
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    if (!address || !submitStatus) return;
+    try {
+      const res = await registerAccount({
+        address: address,
+        code: inviteCodeValue,
+        siganture: signature,
+        accessToken: twitterAccessToken,
+        chainId: depositChainId,
+        txHash: depositTx,
+      });
+
+      console.log("handleSubmit", res);
+
+      if (+res?.status === 0) {
+        getInviteFunc();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -328,8 +410,21 @@ export default function SoftKYC() {
     }
   }, [inviteCode]);
 
+  useEffect(() => {
+    if (
+      validInviteCode(inviteCodeValue) &&
+      twitterAccessToken &&
+      depositTx &&
+      isConnected &&
+      signature
+    ) {
+      setSubmitStatus(true);
+    }
+  }, [inviteCodeValue, twitterAccessToken, depositTx, isConnected, signature]);
+
   return (
     <BgBox>
+      {isLoading && <Loading />}
       <div>
         {/* Title */}
         <div className="mt-[1rem]">
@@ -395,10 +490,14 @@ export default function SoftKYC() {
 
           {/* Step 2: Bridge  */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox>
+            <CardBox className={`${depositTx ? "successed" : ""}`}>
               <StepNum>02</StepNum>
             </CardBox>
-            <CardBox className="flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem]">
+            <CardBox
+              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+                depositTx ? "successed" : ""
+              }`}
+            >
               <StepItem>
                 <p className="step-title">Bridge and Earn</p>
                 <p className="step-sub-title mt-[0.25rem]">
@@ -414,15 +513,13 @@ export default function SoftKYC() {
                 >
                   <span className="ml-[0.5rem]">Bridge</span>
                 </Button>
-                <Button className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]">
-                  <span
-                    className="ml-[0.5rem]"
-                    onClick={() => {
-                      verifyDepositModal.onOpen();
-                    }}
-                  >
-                    Verify
-                  </span>
+                <Button
+                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                  onClick={() => {
+                    verifyDepositModal.onOpen();
+                  }}
+                >
+                  <span className="ml-[0.5rem]">Verify</span>
                 </Button>
               </div>
             </CardBox>
@@ -500,7 +597,11 @@ export default function SoftKYC() {
           {/* Submit for user bind */}
           <div className="flex justify-center w-full px-[4.8125rem] ">
             <CardBox
-              className="mx-auto mt-[1rem] py-[1.25rem] w-full text-center cursor-pointer"
+              className={`mx-auto mt-[1rem] py-[1.25rem] w-full text-center ${
+                !submitStatus
+                  ? "opacity-40 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
               onClick={handleSubmit}
             >
               <StepItem>
@@ -526,7 +627,7 @@ export default function SoftKYC() {
         isOpen={verifyDepositModal.isOpen}
         onOpenChange={verifyDepositModal.onOpenChange}
       >
-        <ModalContent>
+        <ModalContent className="p-2">
           <ModalHeader>Verify your deposit</ModalHeader>
           <ModalBody>
             <div className="flex items-center gap-6">
@@ -571,16 +672,34 @@ export default function SoftKYC() {
               <Input
                 variant="underlined"
                 placeholder="Please enter your tx hash"
+                value={depositTxHash}
+                onChange={(e) => setDepositTxHash(e.target.value)}
               />
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button
-              className="gradient-btn w-full block"
-              onClick={verifyDepositHash}
-            >
-              Verify
-            </Button>
+            <div className="w-full">
+              <Button
+                className="gradient-btn w-full rounded-full mt-5"
+                onClick={verifyDepositHash}
+                disabled={isReVerifyDeposit}
+              >
+                {isReVerifyDeposit ? "Re-verify(in 60s)" : "Verify"}
+              </Button>
+
+              {depositStatus === VerifyResult.SUCCESS && (
+                <p className="text-[#03D498] py-4 text-[1rem]">
+                  Your deposit is still processing; you will have to wait
+                  approximately 5 minutes.
+                </p>
+              )}
+              {depositStatus === VerifyResult.FAILED && (
+                <p className="text-[#C57D10] py-4 text-[1rem]">
+                  Invalid tx hash, please check the tx hash and network. Also
+                  your wallet.
+                </p>
+              )}
+            </div>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -13,8 +13,10 @@ export interface airdropState {
   invite: Invite | null;
   depositL1TxHash: string;
   campaignStart: boolean;
-  isDashboardLoading: boolean;
   isActiveUser: boolean;
+
+  depositChainId: string | number;
+  depositTx: string;
 }
 
 const initialState: airdropState = {
@@ -29,8 +31,10 @@ const initialState: airdropState = {
   invite: null,
   depositL1TxHash: "",
   campaignStart: false,
-  isDashboardLoading: false,
-  isActiveUser: false
+  isActiveUser: false,
+
+  depositChainId: "",
+  depositTx: "",
 };
 
 export const airdrop = createSlice({
@@ -70,11 +74,14 @@ export const airdrop = createSlice({
     setCampaignStart(state, action: PayloadAction<boolean>) {
       state.campaignStart = action.payload;
     },
-    setIsDashboardLoading(state, action: PayloadAction<boolean>) {
-      state.isDashboardLoading = action.payload;
-    },
     setIsActiveUser(state, action: PayloadAction<boolean>) {
       state.isActiveUser = action.payload;
+    },
+    setDepositChainId(state, action: PayloadAction<string>) {
+      state.depositChainId = action.payload;
+    },
+    setDepositTx(state, action: PayloadAction<string>) {
+      state.depositTx = action.payload;
     },
   },
 });
@@ -91,7 +98,8 @@ export const {
   setDepositStatus,
   setDepositL1TxHash,
   setCampaignStart,
-  setIsDashboardLoading,
-  setIsActiveUser
+  setIsActiveUser,
+  setDepositChainId,
+  setDepositTx,
 } = airdrop.actions;
 export default airdrop.reducer;
