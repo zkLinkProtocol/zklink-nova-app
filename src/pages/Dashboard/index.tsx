@@ -494,20 +494,23 @@ export default function Dashboard() {
                 className="text-center block mx-auto h-full rounded-[1rem]"
               />
             </div>
-            <GradientButton
-              onClick={handleMintNow}
-              className={classNames(
-                "w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
-                nft ? "opacity-40 " : "opacity-100",
-                nft ? "cursor-default" : "cursor-pointer"
-              )}
-            >
-              <span>{nft ? "Upgrade" : "Mint Now"}</span>
-              <img
-                src="/img/icon-info.svg"
-                className="w-[0.875rem] h-[0.875rem]"
-              />
-            </GradientButton>
+            <Tooltip content={nft ? 'coming soon' : ""}>
+              <GradientButton
+                onClick={handleMintNow}
+                className={classNames(
+                  "w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
+                  nft ? "opacity-40 " : "opacity-100",
+                  nft ? "cursor-default" : "cursor-pointer"
+                )}
+              >
+                <span>{nft ? "Upgrade" : "Mint Now"}</span>
+                {nft ? (<img
+                  src="/img/icon-info.svg"
+                  className="w-[0.875rem] h-[0.875rem]"
+                />) : ""}
+                
+              </GradientButton>
+            </Tooltip>
           </CardBox>
 
           <CardBox className="mt-[1.5rem] p-[1.5rem]">
@@ -655,7 +658,7 @@ export default function Dashboard() {
                         In the later phase, we might consider raising the spots
                         to the referral code; it is crucial to have the cap here
                         at the start to allow all participants an equal chance
-                        of of growing their group's size.
+                        of growing their group's size.
                       </p>
                     }
                   >
@@ -775,12 +778,18 @@ export default function Dashboard() {
             {tabsActive === 1 && (
               <CardBox className="flex flex-col justify-center items-center mt-[2rem] py-[10rem]">
                 <p className="text-[1rem] text-center mb-[1rem] font-[700]">
-                  Rarible Market Coming Soon
+                  Coming Soon
                 </p>
-                <img
-                  src="/img/icon-placeholder.svg"
+                <div className="flex">
+                <img style={{width: 80}}
+                  src="/img/logoAlien.svg"
+                  className="w-[9.375rem] h-[9.375rem] mr-[2rem]"
+                />
+                <img style={{width: 80}}
+                  src="/img/logoOK.svg"
                   className="w-[9.375rem] h-[9.375rem]"
                 />
+                </div>
               </CardBox>
             )}
             {tabsActive === 2 && (
@@ -843,7 +852,7 @@ export default function Dashboard() {
             ))}
           </div>
           <p className="text-[#A0A5AD] text-xs my-6">
-            Upon collecting your SBT, you can upgrade it into an ERC7221 NFT
+            Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
             through collecting 4 different types of trademark NFT through our
             referral program.
           </p>

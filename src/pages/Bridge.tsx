@@ -29,7 +29,7 @@ const ActiveTypes = [
   { label: "NOVA NFT", value: "nft" },
 ];
 const UtilityList = [
-  "ZKL token",
+  "ZKL tokens",
   "ZKL Swags (Merchandise)",
   "Future NFT whitelist",
   "On-site Event Access",
@@ -106,17 +106,17 @@ export default function Bridge() {
           <img className="w-20 h-20 mr-6" src={"/img/nft-4.svg"} alt="" />
         </div>
         <p className="font-medium text-[16px] text-[#A0A5AD]">
-          Upon collecting your SBT, you can upgrade it into an ERC721 NFT
-          through collecting 4 different types of trademark NFT with our
+          Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
+          through collecting 4 different types of 100 NFT with our
           referral program.
         </p>
         <p className="font-medium text-[16px] text-[#A0A5AD]">
           You will get a trademark NFT airdrop for each 3 referrals <br />
-          Top 50 on the referral leader-board and 50 randon users are eligible
+          Top 100 on the referral leader-board and 50 Randon users are eligible
           to mint a Mystery Box every day.
         </p>
         <p className="font-medium text-[16px] mt-10">
-          Once you upgrade your Nova Lynks NFT , here are the Utility
+          Once you upgrade your SBT to Nova Lynks, here are the utilities.
         </p>
       </div>
       <div
@@ -143,7 +143,7 @@ export default function Bridge() {
       <div className="block lg:flex md:py-24 py-12">
         <div className="px-8 md:px-16 lg:px-32 lg:w-1/2">
           <h2 className="text-4xl mt-0 font-black">
-            Bridge to Nova to Earn EXTRA YIELD and token rewards on zkLink Nova.
+            Bridge To zkLink Nova To Earn Extra Yield & Token Rewards
           </h2>
           <div className="inline-flex items-center mt-7 bg-[#1E1F24] px-2 py-2 rounded-md">
             {ActiveTypes.map((item, index) => (
