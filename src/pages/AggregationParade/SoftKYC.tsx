@@ -373,13 +373,15 @@ export default function SoftKYC() {
       }
     } catch (error) {
       console.log(error);
-      handleSubmitError()
+      handleSubmitError();
     }
   };
 
   // TODO: Submit user bind form
   const handleSubmitError = () => {
-    toast.error("Verification Failed. Please re-check your invite code");
+    toast.error(
+      "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
+    );
     dispatch(setInviteCode(""));
     dispatch(setDepositTx(""));
     setTwitterAccessToken("");
@@ -525,8 +527,6 @@ export default function SoftKYC() {
             </CardBox>
           </div>
 
-          
-
           {/* Step 3: connect twitter */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox className={`${twitterAccessToken ? "successed" : ""}`}>
@@ -623,7 +623,7 @@ export default function SoftKYC() {
                 </Button>
                 <Button
                   className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                  disabled={Boolean(depositTx) || !isConnected}
+                  disabled={Boolean(depositTx)}
                   onClick={() => {
                     verifyDepositModal.onOpen();
                   }}
