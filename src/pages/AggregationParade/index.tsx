@@ -301,9 +301,12 @@ export default function AggregationParade() {
     }
   }, [searchParams]);
 
+  /**
+   * Check: Invite code
+   */
   useEffect(() => {
     if (inviteCode) {
-      setIsInviteCodeChecked(true);
+      enterInviteCode(inviteCode);
     }
   }, [inviteCode]);
 
