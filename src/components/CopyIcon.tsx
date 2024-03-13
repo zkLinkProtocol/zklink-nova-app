@@ -12,7 +12,7 @@ const CopyIcon = (props: IProps) => {
   return (
     <Tooltip content={isCopied ? "Copied!" : "Copy"} isDismissable={false}>
       <span
-        className="cursor-pointer w-4 h-4 ml-2"
+        className="cursor-pointer w-[24px] h-[24px] ml-2 text-[1.5rem]"
         onClick={() => {
           copyText(text);
           setIsCopied(true);

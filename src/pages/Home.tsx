@@ -335,11 +335,11 @@ export default function Home() {
 
       <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex items-center justify-between px-36 py-4">
         {/* Footer: total tvl data */}
-        {/* <div className="flex flex-col items-center">
-          <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
+        <div className="flex flex-col">
+          <span className="text-[1.25rem]">zkLink Nova Network TVL</span>
           <TotalTvlCard />
-        </div> */}
-        <TotalTvlCard />
+        </div>
+        {/* <TotalTvlCard /> */}
 
         {/* Footer: nav links */}
         <div className=" right-[6rem] bottom-[1rem] flex justify-end items-end">

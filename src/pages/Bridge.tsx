@@ -44,7 +44,13 @@ export default function Bridge() {
     <div className="text-base mt-8">
       <p className="font-normal">
         You can see the detail and formula of how we calculate Nova points{" "}
-        <a href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank" style={{color: '#03d498'}}>here</a>
+        <a
+          href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+          target="_blank"
+          style={{ color: "#03d498" }}
+        >
+          here
+        </a>
       </p>
       <p className="mt-6 font-bold">Minimal Entry: </p>
       <ul className="list mb-8">
@@ -53,12 +59,12 @@ export default function Bridge() {
       </ul>
       <p className="mt-6">
         <span className="font-bold">Deposit / Bridge Assets to Nova: </span>
-        Bridging any supported assets to Nova can instantly earn
-        Nova points.
+        Bridging any supported assets to Nova can instantly earn Nova points.
       </p>
       <p className="mt-6">
         <span className="font-bold"> Holding assets on Nova: </span>
-        Holding any supported assets on Nova allows you to accrue Nova points every 8 hours until the final Nova Point computation date.
+        Holding any supported assets on Nova allows you to accrue Nova points
+        every 8 hours until the final Nova Point computation date.
       </p>
       <p className="mt-6">
         <span className="font-bold"> Referral Rewards: </span>
@@ -70,7 +76,8 @@ export default function Bridge() {
         <span className="font-bold">Multiplier: </span>
         <br />
         <span className="font-bold">Early Bird Multiplier: </span>
-        During Phase 1 of the Nova Aggregation Parade, withdrawals are temporarily restricted for a Maximum of 30 days. 
+        During Phase 1 of the Nova Aggregation Parade, withdrawals are
+        temporarily restricted for a Maximum of 30 days.
       </p>
       <p className="mt-6">
         <span className="font-bold">Token Multiplier: </span>
@@ -79,11 +86,15 @@ export default function Bridge() {
       </p>
       <p className="mt-6">
         <span className="font-bold"> Deposit Multiplier: </span>
-        Nova Points are distributed every 8 hours, and you will receive points equal to 10 distributions after a valid deposit.
+        Nova Points are distributed every 8 hours, and you will receive points
+        equal to 10 distributions after a valid deposit.
       </p>
       <p className="mt-6">
         <span className="font-bold"> Group Multiplier: </span>
-        You, along with the users you've referred and their subsequent referrals, will be placed into the same group. This group has the potential to unlock Group Booster by achieving the following Milestones. 
+        You, along with the users you've referred and their subsequent
+        referrals, will be placed into the same group. This group has the
+        potential to unlock Group Booster by achieving the following
+        Milestones. 
       </p>
     </div>
   );
@@ -103,8 +114,8 @@ export default function Bridge() {
         </div>
         <p className="font-medium text-[16px] text-[#A0A5AD]">
           Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
-          through collecting 4 different types of 100 NFT with our
-          referral program.
+          through collecting 4 different types of 100 NFT with our referral
+          program.
         </p>
         <p className="font-medium text-[16px] text-[#A0A5AD]">
           You will get a trademark NFT airdrop for each 3 referrals <br />
@@ -159,6 +170,7 @@ export default function Bridge() {
         </div>
         <div className="relative px-8 md:px-16 lg:px-32 lg:w-1/2">
           <BridgeComponent isFirstDeposit={true} />
+
           <div className="absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32">
             <FooterTvlText className="mb-[0.5rem] text-right">
               TVL

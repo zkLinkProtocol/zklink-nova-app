@@ -56,6 +56,7 @@ import VerifyTxHashModal from "./VerifyTxHashModal";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
+import { Link } from "react-router-dom";
 
 const ModalSelectItem = styled.div`
   &:hover {
@@ -723,37 +724,79 @@ export default function Bridge(props: IBridgeComponentProps) {
         )}
       </Container>
       {address && txhashes[address]?.[0] && (
-        <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-[16px]">
-          <div className="flex items-center justify-between font-normal text-[14px] mb-2 text-[#A0A5AD]">
-            <span>Latest tx hash:</span>
-            <span>
-              You can use this tx hash to verify in Aggregation Parade page
-            </span>
+        <div>
+          <Link to="/aggregation-parade?flag=1" className="text-[1rem]">
+            <div className="mt-[1.5rem] px-[1.5rem] py-[1rem] flex items-center justify-between bg-[rgba(0,0,0,0.4)] rounded-[12px] border-1 border-[#03D498]">
+              Click to verify your transaction.
+              <span>{">"}</span>
+            </div>
+          </Link>
+
+          <div className="mt-[1.5rem] text-[1rem] text-[#A0A5AD]">
+            Latest tx hash
           </div>
-          <div className="flex items-center ">
-            <img
-              src={
-                FromList.find(
-                  (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
-                )?.icon
-              }
-              className="w-6 h-6 mr-1 rounded-full"
-            />
-            <span className="text-[12px] font-semibold">
+
+          <div className="mt-[0.5rem] flex justify-between items-center">
+            <div className="flex items-center gap-[0.25rem]">
+              <img
+                src={
+                  FromList.find(
+                    (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
+                  )?.icon
+                }
+                className="w-6 h-6 mr-1 rounded-full"
+              />
+              <span className="text-[1rem]">
+                {txhashes[address][0]?.txhash}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-[1rem]">
+              <CopyIcon text={txhashes[address][0].txhash} />
               <a
-                href={getTxHashExplorerLink(
-                  txhashes[address][0]?.rpcUrl,
-                  txhashes[address][0]?.txhash
-                )}
+                href={
+                  FromList.find(
+                    (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
+                  )?.explorerUrl
+                }
                 target="_blank"
-                className="hover:underline"
               >
-                {formatTxHash(txhashes[address][0]?.txhash)}
+                <img src="/img/icon-explorer.svg" />
               </a>
-            </span>
-            <CopyIcon text={txhashes[address][0].txhash} />
+            </div>
           </div>
         </div>
+        // <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-[16px]">
+        //   <div className="flex items-center justify-between font-normal text-[14px] mb-2 text-[#A0A5AD]">
+        //     <span>Latest tx hash:</span>
+        //     <span>
+        //       You can use this tx hash to verify in Aggregation Parade page
+        //     </span>
+        //   </div>
+        //   <div className="flex items-center ">
+        //     <img
+        //       src={
+        //         FromList.find(
+        //           (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
+        //         )?.icon
+        //       }
+        //       className="w-6 h-6 mr-1 rounded-full"
+        //     />
+        //     <span className="text-[12px] font-semibold">
+        //       <a
+        //         href={getTxHashExplorerLink(
+        //           txhashes[address][0]?.rpcUrl,
+        //           txhashes[address][0]?.txhash
+        //         )}
+        //         target="_blank"
+        //         className="hover:underline"
+        //       >
+        //         {formatTxHash(txhashes[address][0]?.txhash)}
+        //       </a>
+        //     </span>
+        //     <CopyIcon text={txhashes[address][0].txhash} />
+        //   </div>
+        // </div>
       )}
       <Modal
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}

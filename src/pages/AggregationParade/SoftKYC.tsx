@@ -164,7 +164,6 @@ export default function SoftKYC() {
   const [isReVerifyDeposit, setIsReVerifyDeposit] = useState(false);
   const { txhashes } = useVerifyStore();
 
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { signMessage } = useSignMessage();
@@ -338,13 +337,16 @@ export default function SoftKYC() {
       });
   };
 
-  // TODO: Verify deposit hash
+  /**
+   * TODO: Verify deposit hash
+   */
   const verifyDepositHash = async () => {
     setDepositStatus("");
     setIsReVerifyDeposit(true);
     console.log(selectedChainId, depositTxHash);
     try {
       const res = await getTxByTxHash(depositTxHash, selectedChainId);
+      // TODO: response will return a field (as status: "PENDING") to show process ...
       console.log("verifyDepositHash", res);
       if (res?.isValid) {
         setDepositStatus(VerifyResult.SUCCESS);
@@ -419,7 +421,23 @@ export default function SoftKYC() {
   useEffect(() => {
     const code = searchParams.get("code");
     const error = searchParams.get("error");
-    const flag = searchParams.get('flag')
+    const flag = searchParams.get("flag");
+
+    // if after deposit to link here, show verify tx modal
+    if (flag && address) {
+      const txs = txhashes[address];
+
+      console.log("txhashes", txhashes[address]);
+      if (txs.length > 0) {
+        const { txhash, rpcUrl } = txs[0];
+        const chainId = fromList.find(
+          (item) => item.rpcUrl === rpcUrl
+        )?.chainId;
+        setSelectedChainId(String(chainId));
+        setDepositTxHash(txhash);
+      }
+      verifyDepositModal.onOpen();
+    }
 
     if (error) {
       toast.error("Could not connect to Twitter. Try again.");
@@ -430,16 +448,6 @@ export default function SoftKYC() {
       getTwitterAPI(code);
       setSearchParams("");
     }
-
-    if (flag) {
-      console.log('txhashes', txhashes)
-      if (txhashes.length > 0) {
-        txhashes[0]
-      }
-      verifyDepositModal.onOpen()
-    }
-
-    
   }, [searchParams]);
 
   // const checkInviteCode = async (code: string) => {
