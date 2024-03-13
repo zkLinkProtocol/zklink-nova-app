@@ -37,10 +37,6 @@ import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  bindInviteCodeWithAddress,
-  getInvite,
-  checkInviteCode,
-  getTokenPrice,
   getDepositETHThreshold,
 } from "@/api";
 import { RootState } from "@/store";
@@ -221,10 +217,7 @@ export interface IBridgeComponentProps {
   onClose?: () => void;
   bridgeToken?: string;
 }
-const InviteCodeTypes = [
-  { label: "Join Group", value: "join" },
-  { label: "Create Group", value: "create" },
-];
+
 const ContentForMNTDeposit =
   "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
@@ -241,14 +234,11 @@ export default function Bridge(props: IBridgeComponentProps) {
   const { switchChain } = useSwitchChain();
   const { sendDepositTx, loading } = useBridgeTx();
   const [amount, setAmount] = useState(0);
-  const [inviteCodeType, setInviteCodeType] = useState(
-    InviteCodeTypes[0].value
-  );
+
   const [url, setUrl] = useState("");
   const { inviteCode, signature, twitterAccessToken, invite } = useSelector(
     (store: RootState) => store.airdrop
   );
-  const [inputInviteCode, setInputInviteCode] = useState("");
 
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
@@ -275,11 +265,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     return () => clearInterval(timer);
   }, [refreshTokenBalanceList]);
 
-  useEffect(() => {
-    if (inviteCode) {
-      setInputInviteCode(inviteCode);
-    }
-  }, [inviteCode, setInputInviteCode]);
 
   useEffect(() => {
     (async () => {
@@ -505,22 +490,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     if (!amount) {
       return;
     }
-    if (isFirstDeposit && inviteCodeType === "join") {
-      if (!inputInviteCode) {
-        toast.error("Please enter invite code to join group.");
-        dismissToast();
-        return;
-      } else {
-        //TODO check invite code
-        const result = await checkInviteCode(inputInviteCode);
-        console.log("check code result: ", result);
-        if (!result || !result.result) {
-          toast.error("Invalid invite code");
-          dismissToast();
-          return;
-        }
-      }
-    }
 
     transLoadModal.onOpen();
     let time = setTimeout(() => {}, 100);
@@ -528,11 +497,6 @@ export default function Bridge(props: IBridgeComponentProps) {
       clearTimeout(i);
     }
     try {
-      // const l2Hash = await getDepositL2TxHash(
-      //   "0x131b99bf3466ecb1353c059bbfc8a6c1700e98f0e057f452bf17367ee2999b2d"
-      // );
-      // console.log("l2TxHash: ", l2Hash);
-      // return;
       const hash = await sendDepositTx(
         tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))
@@ -574,70 +538,17 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
 
     refreshTokenBalanceList();
-    // if (isFirstDeposit && !showNoPointsTip) {
-    //   const data = {
-    //     address,
-    //     code: inviteCodeType === "join" ? inputInviteCode : "",
-    //     siganture: signature,
-    //     accessToken: twitterAccessToken,
-    //   };
-    //   try {
-    //     const resBind = await bindInviteCodeWithAddress({
-    //       ...data,
-    //     });
-
-    //     if (resBind?.error) {
-    //       toast.error(resBind.message);
-    //       return;
-    //     }
-
-    //     const res = await getInvite(address);
-    //     if (res?.result && !showNoPointsTip) {
-    //       dispatch(setInvite(res?.result));
-    //     }
-    //   } catch (e) {
-    //     console.log(e);
-    //     if (e.message === "Invalid code") {
-    //       toast.error("Invalid invite code");
-    //     } else if (e.message === "The invitation limit has been reached") {
-    //       //TODO can not invite more
-    //       toast.error("The invitation limit has been reached");
-    //       if (data.code && !showNoPointsTip) {
-    //         // dispatch(
-    //         //   setInvite({
-    //         //     ...data,
-    //         //   })
-    //         // );
-    //       }
-    //     } else if (
-    //       e.message === "Has been invited, can not repeat the association"
-    //     ) {
-    //       toast.error(e.message);
-    //       if (data.code && !showNoPointsTip) {
-    //         // dispatch(
-    //         //   setInvite({
-    //         //     ...data,
-    //         //   })
-    //         // );
-    //       }
-    //     }
-    //   }
-    // }
 
     onClose?.();
   }, [
     address,
     invalidChain,
     amount,
-    isFirstDeposit,
-    inviteCodeType,
     transLoadModal,
     refreshTokenBalanceList,
-    showNoPointsTip,
     onClose,
     switchChain,
     fromActive,
-    inputInviteCode,
     sendDepositTx,
     tokenFiltered,
     tokenActive,
@@ -646,8 +557,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     transSuccModal,
     networkKey,
     transFailModal,
-    signature,
-    twitterAccessToken,
   ]);
 
   return (
@@ -752,56 +661,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               )}
             </div>
           </div>
-          {isFirstDeposit && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <div className="flex items-center">
-                <span>Invite Code</span>
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "max-w-[300px] p-4",
-                  }}
-                  content="Each wallet user can only join one team, you can either choose to join an existing team or you can choose to create your own team."
-                >
-                  <img
-                    src={"/img/icon-tooltip.png"}
-                    className="w-[14px] cursor-pointer ml-1"
-                  />
-                </Tooltip>
-              </div>
-              <div className="flex items-center">
-                {inviteCodeType === "join" && (
-                  <Input
-                    classNames={{
-                      inputWrapper: "w-[120px] h-[38px] bg-[#313841] mr-2",
-                    }}
-                    size="sm"
-                    value={inputInviteCode}
-                    onValueChange={setInputInviteCode}
-                    placeholder="Invite code"
-                  />
-                )}
-                <Select
-                  classNames={{
-                    trigger: "w-[140px] min-h-[38px] h-[38px] bg-[#313841]",
-                  }}
-                  className="max-w-xs w-[140px] h-[38px]"
-                  value={inviteCodeType}
-                  onChange={(e) => {
-                    setInviteCodeType(e.target.value);
-                  }}
-                  size="sm"
-                  selectedKeys={[inviteCodeType]}
-                >
-                  {InviteCodeTypes.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-              </div>
-            </div>
-          )}
+
           {networkKey && NexusEstimateArrivalTimes[networkKey] && (
             <div className="flex items-center justify-between mb-2 points-box">
               <span>Estimated Time of Arrival</span>
