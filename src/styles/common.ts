@@ -46,6 +46,10 @@ export const CardBox = styled.div`
     border-radius: 1rem;
     background: rgba(0, 0, 0, 0.40);
     backdrop-filter: blur(15.800000190734863px);
+
+    &.successed {
+        background: #1D4138 !important;
+    }
 `
 
 export const TableBox = styled.div`

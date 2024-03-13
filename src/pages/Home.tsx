@@ -13,7 +13,6 @@ import { FooterTvlText } from "@/styles/common";
 import "@/styles/otp-input.css";
 import { checkInviteCode } from "@/api";
 import toast from "react-hot-toast";
-import { STATUS_CODE } from ".";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { RootState } from "@/store";
 import { useStartTimerStore } from "@/hooks/useStartTimer";
@@ -73,7 +72,7 @@ const TotalTvlBox = styled.div`
   transform: translate(-50%, 0);
 `;
 
-export default function Landing() {
+export default function Home() {
   const web3Modal = useWeb3Modal();
   const dispatch = useDispatch();
   const { isConnected } = useAccount();
@@ -100,21 +99,15 @@ export default function Landing() {
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
     if (!otp || otp.length !== 6 || !campaignStart) return;
-    const res = await checkInviteCode(otp);
-    if (!res?.result) {
-      toast.error("Invalid invite code. Try another.", { duration: 3000 });
-      return;
-    }
-    dispatch(setViewStatus(STATUS_CODE.softKYC));
-    dispatch(setTwitterAccessToken(""));
+    // const res = await checkInviteCode(otp);
+    // if (!res?.result) {
+    //   toast.error("Invalid invite code. Try another.", { duration: 3000 });
+    //   return;
+    // }
+
     dispatch(setInviteCode(otp));
-    dispatch(setViewStatus(STATUS_CODE.softKYC));
     navigator("/aggregation-parade");
   };
-
-  useEffect(() => {
-    dispatch(setViewStatus(STATUS_CODE.softKYC));
-  }, []);
 
   // useEffect(() => {
   //   if (isConnected && signature) {
@@ -164,9 +157,7 @@ export default function Landing() {
           <div>
             <Button
               className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] `}
-              disabled={
-                !otp || otp.length !== 6 || !campaignStart 
-              }
+              disabled={!otp || otp.length !== 6 || !campaignStart}
               onClick={enterInviteCode}
             >
               ENTER INVITE CODE

@@ -7,7 +7,7 @@ import {
   setTwitterAccessToken,
 } from "@/store/modules/airdrop";
 import { CardBox } from "@/styles/common";
-import { postData } from "@/utils";
+import { postData, showAccount } from "@/utils";
 import { Button } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import qs from "qs";
@@ -112,16 +112,20 @@ const InviteInput = styled.input`
 
 export default function SoftKYC() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { address, isConnected, isDisconnected, isConnecting } = useAccount();
+  const { address, isConnected, isConnecting } = useAccount();
   const web3Modal = useWeb3Modal();
-  const { inviteCode, signature, twitterAccessToken } = useSelector(
+  const { signature, twitterAccessToken } = useSelector(
     (store: RootState) => store.airdrop
   );
-  const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
+  const [inviteCodeValue, setInviteCodeValue] = useState("");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
+  const [isInviteCodeChecked, setIsInviteCodeChecked] = useState(false);
+  const [isSigned, setIsSigned] = useState(false);
+
   const [twitterLoading, setTwitterLoading] = useState(false);
   const dispatch = useDispatch();
   const { signMessage } = useSignMessage();
+  const navigate = useNavigate();
 
   const validInviteCode = (code: string) => {
     return code && code.length === 6 ? true : false;
@@ -133,9 +137,12 @@ export default function SoftKYC() {
     const res = await checkInviteCode(code);
     setIsInviteCodeLoading(false);
     if (!res?.result) {
+      setIsInviteCodeChecked(false);
       toast.error("Invalid invite code. Try another.");
       return;
     }
+
+    setIsInviteCodeChecked(true);
 
     dispatch(setInviteCode(code));
   };
@@ -160,6 +167,10 @@ export default function SoftKYC() {
   };
 
   const handleSign = async () => {
+    if (!isConnected) {
+      web3Modal.open({ view: "Connect" });
+      return;
+    }
     await signMessage(
       {
         message: SIGN_MESSAGE,
@@ -168,6 +179,7 @@ export default function SoftKYC() {
         onSuccess(data, variables, context) {
           console.log(data, variables, context);
           dispatch(setSignature(data));
+          setIsSigned(true);
         },
         onError(error, variables, context) {
           console.log(error, variables, context);
@@ -269,6 +281,13 @@ export default function SoftKYC() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!isConnected) {
+      setIsSigned(false);
+      dispatch(setSignature(""));
+    }
+  }, [isConnected]);
+
   // const navigator = useNavigate();
   // useEffect(() => {
   //   console.log("isConnected", isConnected);
@@ -276,6 +295,11 @@ export default function SoftKYC() {
   //     navigator("/");
   //   }
   // }, [isConnected]);
+
+  const onChangeInviteCode = (value: string) => {
+    setInviteCodeValue(value);
+    setIsInviteCodeChecked(false);
+  };
 
   return (
     <BgBox>
@@ -286,10 +310,14 @@ export default function SoftKYC() {
         </div>
         <div className="mt-[3.5rem]">
           <div className="flex justify-center gap-[0.5rem]">
-            <CardBox>
+            <CardBox className={`${isInviteCodeChecked ? "successed" : ""}`}>
               <StepNum>01</StepNum>
             </CardBox>
-            <CardBox className="flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]">
+            <CardBox
+              className={`flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem] ${
+                isInviteCodeChecked ? "successed" : ""
+              }`}
+            >
               <StepItem>
                 <p className="step-title">
                   Enter Invite Code or Create Your Team
@@ -305,32 +333,32 @@ export default function SoftKYC() {
                   placeholder="Invite Code"
                   value={inviteCodeValue}
                   className={`max-w-[120px] ${
-                    validInviteCode(inviteCode)
-                      ? "bg-[#1D4138] cursor-not-allowed"
+                    isInviteCodeChecked
+                      ? "bg-[#1D4138]"
                       : "bg-[rgba(0, 0, 0, 0.5)]"
                   }`}
-                  readOnly={validInviteCode(inviteCode)}
                   // disabled={validInviteCode(inviteCode)}
                   maxLength={6}
-                  onChange={(e) => setInviteCodeValue(e.target.value)}
+                  onChange={(e) => onChangeInviteCode(e.target.value)}
                 />
-                {validInviteCode(inviteCode) ? (
+
+                <Button
+                  className={`gradient-btn px-[1rem] py-[0.5rem] text-[1rem] ${
+                    !validInviteCode(inviteCodeValue) ? "disabled" : ""
+                  }`}
+                  isLoading={isInviteCodeLoading}
+                  disabled={!validInviteCode(inviteCodeValue)}
+                  onClick={() => enterInviteCode(inviteCodeValue)}
+                >
+                  <span className="ml-[0.5rem]">Verify</span>
+                </Button>
+
+                {/* {isInviteCodeChecked && (
                   <img
                     src="/img/icon-right.svg"
                     className="w-[1.5rem] h-[1.5rem]"
                   />
-                ) : (
-                  <Button
-                    className={`gradient-btn px-[1rem] py-[0.5rem] text-[1rem] ${
-                      !validInviteCode(inviteCodeValue) ? "disabled" : ""
-                    }`}
-                    isLoading={isInviteCodeLoading}
-                    disabled={!validInviteCode(inviteCodeValue)}
-                    onClick={() => enterInviteCode(inviteCodeValue)}
-                  >
-                    <span className="ml-[0.5rem]">Confirm</span>
-                  </Button>
-                )}
+                )} */}
               </div>
             </CardBox>
           </div>
@@ -338,6 +366,33 @@ export default function SoftKYC() {
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox>
               <StepNum>02</StepNum>
+            </CardBox>
+            <CardBox className="flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]">
+              <StepItem>
+                <p className="step-title">Bridge and Earn</p>
+                <p className="step-sub-title mt-[0.25rem]">
+                  {"Minimum deposit amount >= 0.1 ETH or equivalent"}
+                </p>
+              </StepItem>
+              <div className="flex items-center gap-[0.5rem]">
+                <Button
+                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                  onClick={() => {
+                    navigate("/bridge");
+                  }}
+                >
+                  <span className="ml-[0.5rem]">Bridge</span>
+                </Button>
+                <Button className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]">
+                  <span className="ml-[0.5rem]">Verify</span>
+                </Button>
+              </div>
+            </CardBox>
+          </div>
+
+          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
+            <CardBox>
+              <StepNum>03</StepNum>
             </CardBox>
             <CardBox className="flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]">
               <StepItem>
@@ -366,32 +421,40 @@ export default function SoftKYC() {
           </div>
 
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox>
-              <StepNum>03</StepNum>
+            <CardBox className={isSigned ? "successed" : ""}>
+              <StepNum>04</StepNum>
             </CardBox>
-            <CardBox className="flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem]">
+            <CardBox
+              className={`flex justify-between items-center p-[1.5rem] w-[40.125rem] h-[6.25rem] ${
+                isSigned ? "successed" : ""
+              }`}
+            >
               <StepItem>
                 <p className="step-title">Connect your wallet</p>
                 <p className="step-sub-title mt-[0.25rem]">
                   Connect your Web3 wallet to continue
                 </p>
               </StepItem>
-              <div>
-                {isConnected && signature ? (
-                  <img
-                    src="/img/icon-right.svg"
-                    className="w-[1.5rem] h-[1.5rem]"
-                  />
-                ) : (
-                  <Button
-                    className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem]"
-                    isLoading={isConnecting}
-                    onClick={handleConnectWallet}
-                  >
-                    <span className="ml-[0.5rem]">Connect Your Wallet</span>
-                  </Button>
-                )}
+              <div className="flex items-center gap-[0.5rem]">
+                {isConnected && <span>{showAccount(address)}</span>}
+
+                <Button
+                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem]"
+                  onClick={handleSign}
+                >
+                  <span className="ml-[0.5rem]">Sign</span>
+                </Button>
               </div>
+            </CardBox>
+          </div>
+
+          <div className="flex justify-center">
+            <CardBox className="mx-auto px-[8rem] py-[1.5rem] mt-[1rem] cursor-pointer">
+              <StepItem>
+                <p className="step-title">
+                  Participate zkLink Aggregation Parade
+                </p>
+              </StepItem>
             </CardBox>
           </div>
         </div>

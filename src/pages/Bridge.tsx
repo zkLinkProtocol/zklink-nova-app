@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import classnames from "classnames";
-import OTPInput from "react-otp-input";
 import "@/styles/otp-input.css";
 import BridgeComponent from "@/components/Bridge";
 import { Button } from "@nextui-org/react";
@@ -9,8 +8,6 @@ import { FooterTvlText } from "@/styles/common";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
-import { setViewStatus } from "@/store/modules/airdrop";
-import { STATUS_CODE } from ".";
 import { useNavigate } from "react-router-dom";
 
 const BgBox = styled.div`
@@ -43,7 +40,6 @@ const Link = styled.span`
 
 export default function Bridge() {
   const [activeType, setActiveType] = useState(ActiveTypes[0].value);
-  const { isConnected } = useAccount();
   const NovaPoints = () => (
     <div className="text-base mt-8">
       <p className="font-normal text-[24px]">
@@ -141,16 +137,6 @@ export default function Bridge() {
       </div>
     </>
   );
-
-  const dispatch = useDispatch();
-  const navigator = useNavigate();
-
-  useEffect(() => {
-    if (!isConnected) {
-      // dispatch(setViewStatus(STATUS_CODE.landing));
-      navigator("/");
-    }
-  }, [isConnected]);
 
   return (
     <BgBox>

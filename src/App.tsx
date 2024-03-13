@@ -2,20 +2,22 @@ import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 
-// import Home from './pages/Home'
+import Home from "./pages/Home";
 import Toast from "./components/Toast";
-import AggregationParade from "./pages/AggregationParade";
-// const Home = lazy(() => import('@/pages/Home'))
-const Airdrop = lazy(() => import("@/pages/Airdrop"));
-// const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
-const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
-const AirdropBridge = lazy(() => import("@/pages/AggregationParade/Bridge"));
-const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
-const About = lazy(() => import("@/pages/About"));
-// const Bridge = lazy(() => import('@/pages/Bridge'))
 import Countdown from "@/components/Countdown";
 import styled from "styled-components";
-import Landing from "./pages/AggregationParade/Landing";
+import AggregationParade from "./pages/AggregationParade";
+import Bridge from "@/pages/Bridge";
+import Dashboard from "./pages/AggregationParade/Dashboard";
+import Leaderboard from "./pages/Leaderboard";
+import About from "./pages/About";
+
+// const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
+// const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
+// const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
+// const About = lazy(() => import("@/pages/About"));
+// const Bridge = lazy(() => import('@/pages/Bridge'))
+
 const HideBox = styled.div`
   position: absolute;
   left: -9999px;
@@ -33,7 +35,7 @@ export default function App() {
             path="/"
             element={
               <Suspense fallback="">
-                <Landing />
+                <Home />
               </Suspense>
             }
           />
@@ -53,14 +55,7 @@ export default function App() {
               </Suspense>
             }
           />
-          <Route
-            path="/aggregation-parade/bridge"
-            element={
-              <Suspense fallback="">
-                <AirdropBridge />
-              </Suspense>
-            }
-          />
+
           <Route
             path="/leaderboard"
             element={
@@ -75,6 +70,14 @@ export default function App() {
             element={
               <Suspense fallback="">
                 <About />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/bridge"
+            element={
+              <Suspense fallback="">
+                <Bridge />
               </Suspense>
             }
           />

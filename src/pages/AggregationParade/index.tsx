@@ -1,18 +1,13 @@
 import { RootState } from "@/store";
-import Landing from "./Landing";
 import SoftKYC from "./SoftKYC";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
-import {
-  setInvite,
-  setTwitterAccessToken,
-  setViewStatus,
-} from "@/store/modules/airdrop";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Bridge from "./Bridge";
+import { setInvite, setViewStatus } from "@/store/modules/airdrop";
+import { useSearchParams } from "react-router-dom";
 import { getInvite } from "@/api";
 import Dashboard from "./Dashboard";
+// import Dashboard from "./Dashboard";
 
 export const STATUS_CODE = {
   softKYC: 1,
@@ -67,7 +62,7 @@ export default function AggregationParade() {
   }, [viewStatus]);
 
   const getInviteFunc = async () => {
-    if(!address) return
+    if (!address) return;
     const res = await getInvite(address);
     if (res?.result) {
       dispatch(setInvite(res?.result));
@@ -77,12 +72,5 @@ export default function AggregationParade() {
     getInviteFunc();
   }, [address]);
 
-  return (
-    <>
-      {/* {viewStatus === STATUS_CODE.landing && <Landing />} */}
-      {viewStatus === STATUS_CODE.softKYC && <SoftKYC />}
-      {viewStatus === STATUS_CODE.deposit && <Bridge />}
-      {viewStatus === STATUS_CODE.dashboard && <Dashboard/>}
-    </>
-  );
+  return <>{invite?.code ? <Dashboard /> : <SoftKYC />}</>;
 }

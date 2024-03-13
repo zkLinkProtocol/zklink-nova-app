@@ -365,7 +365,7 @@ export default function Dashboard() {
       // dispatch(setInviteCode(''))
       dispatch(setTwitterAccessToken(""));
       // dispatch(setViewStatus(STATUS_CODE.landing));
-      navigator("/");
+      // navigator("/");
     }
   }, [isConnected]);
 

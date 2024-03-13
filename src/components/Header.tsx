@@ -26,9 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useSignMessage } from "wagmi";
 import { SIGN_MESSAGE } from "@/constants/sign";
-import { MdArrowOutward } from "react-icons/md";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { STATUS_CODE } from "@/pages/AggregationParade";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 const NavBox = styled.nav`
@@ -100,42 +98,8 @@ export default function Header() {
     })();
   }, [depositL1TxHash, getDepositL2TxHash, dispatch]);
 
-  const handleSign = async () => {
-    await signMessage(
-      {
-        message: SIGN_MESSAGE,
-      },
-      {
-        onSuccess(data, variables, context) {
-          console.log(data, variables, context);
-          dispatch(setSignature(data));
-        },
-        onError(error, variables, context) {
-          console.log(error, variables, context);
-          // handleSign()
-          toast.error("User reject signature. Try again.");
-          // disconnect()
-        },
-      }
-    );
-  };
-
-  useEffect(() => {
-    // console.log('isConnected', isConnected)
-    // console.log('signature', signature)
-
-    if (!isConnected) {
-      // console.log('disconnect')
-      dispatch(setSignature(""));
-      dispatch(setTwitterAccessToken(""));
-      dispatch(setInvite(null));
-    }
-    if (isConnected && !signature && !invite?.code) {
-      handleSign();
-    }
-  }, [isConnected, signature]);
-
   const [isHeaderTop, setIsHeaderTop] = useState(true);
+  
   const handleScroll = () => {
     if (window.scrollY > 0) {
       setIsHeaderTop(false);
@@ -145,16 +109,13 @@ export default function Header() {
   };
 
   useEffect(() => {
-    // const handleScroll = (event: any) => {
-    //     console.log('hello scroll listener', event)
-    // }
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   return (
     <>
       <Navbar
@@ -194,6 +155,9 @@ export default function Header() {
               </NavbarItem>
               <NavbarItem>
                 <NavLink to="/about">About</NavLink>
+              </NavbarItem>
+              <NavbarItem>
+                <NavLink to="/bridge">Bridge</NavLink>
               </NavbarItem>
               {/* <NavbarItem>
                 <a
