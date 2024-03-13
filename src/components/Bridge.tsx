@@ -861,7 +861,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         )}
       </Container>
       {txhashes[0] && (
-        <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-lg">
+        <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-[16px]">
           <div className="flex items-center justify-between font-normal text-[14px] mb-2 text-[#A0A5AD]">
             <span>Latest tx hash:</span>
             <span>
