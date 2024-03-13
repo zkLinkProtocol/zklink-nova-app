@@ -27,6 +27,7 @@ const FromListMainnet = [
     isEthGasToken: true,
     chainName: "Ethereum",
     explorerUrl: mainnet.blockExplorers.default.url,
+    rpcUrl: mainnet.rpcUrls.default.http[0],
   },
   {
     label: "Linea",
@@ -36,6 +37,7 @@ const FromListMainnet = [
     isEthGasToken: true,
     chainName: "Linea",
     explorerUrl: linea.blockExplorers.default.url,
+    rpcUrl: linea.rpcUrls.default.http[0],
   },
   {
     label: "Arbitrum",
@@ -45,6 +47,7 @@ const FromListMainnet = [
     isEthGasToken: true,
     chainName: "Arbitrum",
     explorerUrl: arbitrum.blockExplorers.default.url,
+    rpcUrl: arbitrum.rpcUrls.default.http[0],
   },
   {
     label: "zkSync",
@@ -54,6 +57,7 @@ const FromListMainnet = [
     isEthGasToken: true,
     chainName: "ZkSync",
     explorerUrl: zkSync.blockExplorers.default.url,
+    rpcUrl: zkSync.rpcUrls.default.http[0],
   },
   {
     label: "Manta",
@@ -63,6 +67,7 @@ const FromListMainnet = [
     isEthGasToken: true,
     chainName: "Manta",
     explorerUrl: manta.blockExplorers.default.url,
+    rpcUrl: manta.rpcUrls.default.http[0],
   },
   {
     label: "Mantle",
@@ -72,6 +77,7 @@ const FromListMainnet = [
     isEthGasToken: true,
     chainName: "Mantle",
     explorerUrl: mantle.blockExplorers.default.url,
+    rpcUrl: mantle.rpcUrls.default.http[0],
   },
 ];
 
@@ -84,6 +90,7 @@ const FromListGoerli = [
     isEthGasToken: true,
     chainName: "Goerli",
     explorerUrl: goerli.blockExplorers.default.url,
+    rpcUrl: goerli.rpcUrls.default.http[0],
   },
   {
     label: "Linea Goerli Testnet",
@@ -93,6 +100,7 @@ const FromListGoerli = [
     isEthGasToken: true,
     chainName: "Linea Goerli",
     explorerUrl: lineaTestnet.blockExplorers.default.url,
+    rpcUrl: lineaTestnet.rpcUrls.default.http[0],
   },
   {
     label: "Mantle Goerli Testnet",
@@ -102,6 +110,7 @@ const FromListGoerli = [
     isEthGasToken: false,
     chainName: "Mantle Goerli",
     explorerUrl: mantleTestnet.blockExplorers.default.url,
+    rpcUrl: mantleTestnet.rpcUrls.default.http[0],
   },
 ];
 

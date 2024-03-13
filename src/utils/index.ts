@@ -242,3 +242,25 @@ export const formatNumber = (
   });
   return formatter.format(number);
 };
+
+export const copyText = (text: string) => {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+
+  // Avoid scrolling to bottom
+  textArea.style.position = "fixed";
+  textArea.style.clip = "rect(0 0 0 0)";
+  textArea.style.top = "10px";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    const res = document.execCommand("copy");
+    console.log("copy res;", res);
+  } catch (err) {
+    console.error("Fallback: Oops, unable to copy", err);
+  } finally {
+    document.body.removeChild(textArea);
+  }
+};

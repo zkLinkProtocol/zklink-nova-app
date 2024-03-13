@@ -17,9 +17,14 @@ import {
 } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import { AiOutlineCheck, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import {
+  AiOutlineCheck,
+  AiOutlineDown,
+  AiOutlineUp,
+  AiOutlineCopy,
+} from "react-icons/ai";
 import toast from "react-hot-toast";
-import { debounce } from "lodash";
+import { debounce, has } from "lodash";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import BigNumber from "bignumber.js";
 import { useBridgeNetworkStore } from "@/hooks/useNetwork";
@@ -43,8 +48,10 @@ import {
 } from "@/store/modules/airdrop";
 import { parseUnits } from "viem";
 import { Token } from "@/hooks/useTokenList";
-import { isSameAddress } from "@/utils";
-
+import { copyText, isSameAddress } from "@/utils";
+import CopyIcon from "./CopyIcon";
+import VerifyTxHashModal from "./VerifyTxHashModal";
+import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -250,7 +257,12 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [category, setCategory] = useState(AssetTypes[0].value);
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
+  const [depositL1Hash, setDepositHash] = useState(
+    "0xc5ba6d8b4e2cdf62da775dfaa6a01741592927c748c5b0549ea737d44223330a"
+  );
   const dispatch = useDispatch();
+
+  const { addTxHash } = useVerifyStore();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -519,6 +531,10 @@ export default function Bridge(props: IBridgeComponentProps) {
       if (!hash) {
         return;
       }
+      //save tx hash
+      setDepositHash(hash);
+      addTxHash(hash);
+
       setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
       dispatch(setDepositL1TxHash(hash!));
       transLoadModal.onClose();
@@ -833,15 +849,18 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
-
-          <Button
-            className="w-full mt-4"
-            onClick={() => {
-              bindTwitter();
-            }}
-          >
-            Try Again
-          </Button>
+          {/* <div className="mt-6 flex flex-col text-lg">
+            <span>Transaction hash:</span>
+            <div className="flex items-center cursor-pointer">
+              <span className="text-xs">{depositL1Hash}</span>
+              <CopyIcon text={depositL1Hash} />
+            </div>
+            <VerifyTxHashModal
+              onVerifyResult={(res) => {
+                console.log(res);
+              }}
+            />
+          </div> */}
         </div>
         {isFirstDeposit && showNoPointsTip && (
           <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
