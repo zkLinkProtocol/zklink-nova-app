@@ -1,21 +1,24 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { STORAGE_VERIFY_KEY } from "@/constants";
+import { STORAGE_VERIFY_TX_KEY } from "@/constants";
 
 export type VerifyState = {
-  txhashes: { txhash: string; rpcUrl: string }[];
-  addTxHash: (txhash: string, rpcUrl: string) => void;
+  txhashes: { [address: string]: { txhash: string; rpcUrl: string }[] };
+  addTxHash: (address: string, txhash: string, rpcUrl: string) => void;
 };
 
 export const useVerifyStore = create<VerifyState>()(
   persist(
     (set, get) => ({
-      txhashes: [],
-      addTxHash: (txhash: string, rpcUrl: string) =>
-        set({ txhashes: [{ txhash, rpcUrl }, ...get().txhashes] }),
+      txhashes: {},
+      addTxHash: (address: string, txhash: string, rpcUrl: string) => {
+        const addressTxhashes = get().txhashes[address] || [];
+        addressTxhashes.unshift({ txhash, rpcUrl });
+        set({ txhashes: { ...get().txhashes, [address]: addressTxhashes } });
+      },
     }),
     {
-      name: STORAGE_VERIFY_KEY, // name of the item in the storage (must be unique)
+      name: STORAGE_VERIFY_TX_KEY, // name of the item in the storage (must be unique)
     }
   )
 );

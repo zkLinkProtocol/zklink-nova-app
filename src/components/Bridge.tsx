@@ -511,7 +511,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       const rpcUrl = FromList.find(
         (item) => item.networkKey === networkKey
       )?.rpcUrl;
-      addTxHash(hash, rpcUrl!);
+      addTxHash(address, hash, rpcUrl!);
 
       setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
       dispatch(setDepositL1TxHash(hash!));
@@ -722,7 +722,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
         )}
       </Container>
-      {txhashes[0] && (
+      {address && txhashes[address]?.[0] && (
         <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-[16px]">
           <div className="flex items-center justify-between font-normal text-[14px] mb-2 text-[#A0A5AD]">
             <span>Latest tx hash:</span>
@@ -733,24 +733,25 @@ export default function Bridge(props: IBridgeComponentProps) {
           <div className="flex items-center ">
             <img
               src={
-                FromList.find((item) => item.rpcUrl === txhashes[0]?.rpcUrl)
-                  ?.icon
+                FromList.find(
+                  (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
+                )?.icon
               }
               className="w-6 h-6 mr-1 rounded-full"
             />
             <span className="text-[12px] font-semibold">
               <a
                 href={getTxHashExplorerLink(
-                  txhashes[0]?.rpcUrl,
-                  txhashes[0]?.txhash
+                  txhashes[address][0]?.rpcUrl,
+                  txhashes[address][0]?.txhash
                 )}
                 target="_blank"
                 className="hover:underline"
               >
-                {formatTxHash(txhashes[0]?.txhash)}
+                {formatTxHash(txhashes[address][0]?.txhash)}
               </a>
             </span>
-            <CopyIcon text={txhashes[0].txhash} />
+            <CopyIcon text={txhashes[address][0].txhash} />
           </div>
         </div>
       )}

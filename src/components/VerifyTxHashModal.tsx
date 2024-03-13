@@ -13,7 +13,7 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import FromList from "@/constants/fromChainList";
-
+import { useAccount } from "wagmi";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import useVerifyTxHash from "@/hooks/useVerifyTxHash";
 
@@ -28,6 +28,7 @@ interface IProps {
   onVerifyResult: (result: VerifyResult) => void;
 }
 const VerifyTxHashModal = (props: IProps) => {
+  const { address } = useAccount();
   const modal = useDisclosure();
   const [selectedRpc, setSelectedRpc] = useState(FromList[0].rpcUrl);
   const { onVerifyResult } = props;
@@ -74,12 +75,12 @@ const VerifyTxHashModal = (props: IProps) => {
   }, [modal.isOpen]);
 
   useEffect(() => {
-    if (modal.isOpen && txhashes.length > 0) {
-      setTxhash(txhashes[0].txhash);
+    if (modal.isOpen && address && txhashes[address]?.length > 0) {
+      setTxhash(txhashes[address][0]?.txhash);
       // @ts-expect-error invalid rpcUrl
-      setSelectedRpc(txhashes[0].rpcUrl);
+      setSelectedRpc(txhashes[address][0]?.rpcUrl);
     }
-  }, [txhashes, modal.isOpen]);
+  }, [txhashes, modal.isOpen, address]);
 
   return (
     <>
