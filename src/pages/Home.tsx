@@ -312,7 +312,7 @@ export default function Home() {
             disabled={!otp || otp.length !== 6 || !campaignStart}
             onClick={enterInviteCode}
           >
-            SUBMITE
+            SUBMIT
           </Button>
         </div>
 
