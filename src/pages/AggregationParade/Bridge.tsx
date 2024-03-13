@@ -45,8 +45,8 @@ export default function Bridge() {
   const [activeType, setActiveType] = useState(ActiveTypes[0].value);
   const { isConnected } = useAccount();
   const NovaPoints = () => (
-    <div className="text-base mt-10">
-      <p>
+    <div className="text-base mt-8">
+      <p className="font-normal text-[24px]">
         You could see the detail and formula of how we calculate Nova points{" "}
         <Link>here</Link>
       </p>
@@ -98,28 +98,28 @@ export default function Bridge() {
 
   const NovaNFT = () => (
     <>
-      <div className="text-base mt-10">
-        <p>
+      <div className="text-base mt-8">
+        <p className="font-normal text-[24px]">
           You will be able to mint one of the four Nova SBT once you bridge a
           minimal worth of 0.1 ETH.
         </p>
-        <div className="flex items-center mt-12 mb-12">
+        <div className="flex items-center mt-8 mb-8">
           <img className="w-20 h-20 mr-6" src={"/img/nft-1.svg"} alt="" />
           <img className="w-20 h-20 mr-6" src={"/img/nft-2.svg"} alt="" />
           <img className="w-20 h-20 mr-6" src={"/img/nft-3.svg"} alt="" />
           <img className="w-20 h-20 mr-6" src={"/img/nft-4.svg"} alt="" />
         </div>
-        <p>
+        <p className="font-medium text-[16px] text-[#A0A5AD]">
           Upon collecting your SBT, you can upgrade it into an ERC721 NFT
           through collecting 4 different types of trademark NFT with our
           referral program.
         </p>
-        <p>
+        <p className="font-medium text-[16px] text-[#A0A5AD]">
           You will get a trademark NFT airdrop for each 3 referrals <br />
           Top 50 on the referral leader-board and 50 randon users are eligible
           to mint a Mystery Box every day.
         </p>
-        <p className="mt-8">
+        <p className="font-medium text-[16px] mt-10">
           Once you upgrade your Nova Lynks NFT , here are the Utility
         </p>
       </div>
@@ -156,18 +156,17 @@ export default function Bridge() {
     <BgBox>
       <div className="block lg:flex md:py-24 py-12">
         <div className="px-8 md:px-16 lg:px-32 lg:w-1/2">
-          <h2 className="text-4xl mt-6">
+          <h2 className="text-4xl mt-0 font-black">
             Bridge to Nova to Earn EXTRA YIELD and token rewards on zkLink Nova.
           </h2>
-          <div className="flex items-center mt-10">
-            {ActiveTypes.map((item) => (
+          <div className="inline-flex items-center mt-7 bg-[#1E1F24] px-2 py-2 rounded-md">
+            {ActiveTypes.map((item, index) => (
               <Button
                 onClick={() => setActiveType(item.value)}
                 className={classnames(
-                  activeType === item.value
-                    ? "gradient-btn"
-                    : "gradient-secondary-btn",
-                  " px-[1rem] py-[0.5rem] text-[1rem] mr-4"
+                  activeType === item.value ? "gradient-btn" : "default-btn",
+                  " px-[1rem] py-[0.5rem] text-[1rem] ",
+                  index === 0 ? "mr-4" : 0
                 )}
               >
                 {item.label}

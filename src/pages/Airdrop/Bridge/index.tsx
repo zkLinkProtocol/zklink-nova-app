@@ -51,7 +51,8 @@ export default function Bridge() {
       </ul>
       <p className="mt-6">
         <span className="font-bold">Deposit / Bridge Assets to Nova: </span>
-        Bridging any <Link>supported assets</Link> to Nova can instantly earn Nova points.
+        Bridging any <Link>supported assets</Link> to Nova can instantly earn
+        Nova points.
       </p>
       <p className="mt-6">
         <span className="font-bold"> Holding assets on Nova: </span>
@@ -64,12 +65,12 @@ export default function Bridge() {
         throughout the duration of the Aggregation Parade.
       </p>
 
-
       <p className="mt-6">
-      <span className="font-bold">Multiplier: </span><br />
+        <span className="font-bold">Multiplier: </span>
+        <br />
         <span className="font-bold">Early Bird Multiplier: </span>
-        During Phase 1 of the Nova Campaign,
-        you can earn additional Nova Points, though withdrawals are temporarily
+        During Phase 1 of the Nova Campaign, you can earn additional Nova
+        Points, though withdrawals are temporarily
       </p>
       <p className="mt-6">
         <span className="font-bold">Token Multiplier: </span>
@@ -93,29 +94,14 @@ export default function Bridge() {
     <>
       <div className="text-base mt-10">
         <p>
-          You will be able to mint one of the four Nova SBT once you bridge a minimal worth of 0.1 ETH.
+          You will be able to mint one of the four Nova SBT once you bridge a
+          minimal worth of 0.1 ETH.
         </p>
         <div className="flex items-center mt-12 mb-12">
-          <img
-              className="w-20 h-20 mr-6"
-              src={"/img/nft-1.svg"}
-              alt=""
-            />
-            <img
-              className="w-20 h-20 mr-6"
-              src={"/img/nft-2.svg"}
-              alt=""
-            />
-            <img
-              className="w-20 h-20 mr-6"
-              src={"/img/nft-3.svg"}
-              alt=""
-            />
-            <img
-              className="w-20 h-20 mr-6"
-              src={"/img/nft-4.svg"}
-              alt=""
-            />
+          <img className="w-20 h-20 mr-6" src={"/img/nft-1.svg"} alt="" />
+          <img className="w-20 h-20 mr-6" src={"/img/nft-2.svg"} alt="" />
+          <img className="w-20 h-20 mr-6" src={"/img/nft-3.svg"} alt="" />
+          <img className="w-20 h-20 mr-6" src={"/img/nft-4.svg"} alt="" />
         </div>
         <p>
           Upon collecting your SBT, you can upgrade it into an ERC721 NFT
@@ -124,7 +110,8 @@ export default function Bridge() {
         </p>
         <p>
           You will get a trademark NFT airdrop for each 3 referrals <br />
-          Top 50 on the referral leader-board and 50 randon users are eligible to mint a Mystery Box every day.
+          Top 50 on the referral leader-board and 50 randon users are eligible
+          to mint a Mystery Box every day.
         </p>
         <p className="mt-8">
           Once you upgrade your Nova Lynks NFT , here are the Utility
@@ -145,9 +132,7 @@ export default function Bridge() {
             {item}
           </p>
         ))}
-
       </div>
-
     </>
   );
 
@@ -158,14 +143,12 @@ export default function Bridge() {
           <h2 className="text-4xl mt-6">
             Bridge to Nova to Earn EXTRA YIELD and token rewards on zkLink Nova.
           </h2>
-          <div className="flex items-center mt-10">
+          <div className="inline-flex items-center mt-10 background-[#1E1F24] px-2 py-2">
             {ActiveTypes.map((item) => (
               <Button
                 onClick={() => setActiveType(item.value)}
                 className={classnames(
-                  activeType === item.value
-                    ? "gradient-btn"
-                    : "gradient-secondary-btn",
+                  activeType === item.value ? "gradient-btn" : "default-btn",
                   " px-[1rem] py-[0.5rem] text-[1rem] mr-4"
                 )}
               >
@@ -177,10 +160,12 @@ export default function Bridge() {
         </div>
         <div className="relative px-8 md:px-16 lg:px-32 lg:w-1/2">
           <BridgeComponent isFirstDeposit={true} />
-          <div className='absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32'>
-            <FooterTvlText className='mb-[0.5rem] text-right'>TVL</FooterTvlText>
-              <TotalTvlCard />
-          </div>   
+          <div className="absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32">
+            <FooterTvlText className="mb-[0.5rem] text-right">
+              TVL
+            </FooterTvlText>
+            <TotalTvlCard />
+          </div>
         </div>
       </div>
     </BgBox>

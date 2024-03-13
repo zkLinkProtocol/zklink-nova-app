@@ -44,6 +44,21 @@
     cursor: not-allowed;
 }
 
+.default-btn {
+    border-radius: 6px;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+    color: #A0A5AD;
+    background: #1E1F24;
+    border:none;
+
+}
+.default-btn:hover {
+    background-color: #2F313A;
+}
+
 .not-active:first-child {
     background-color: red;
 }
