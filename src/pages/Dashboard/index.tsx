@@ -42,13 +42,7 @@ import { NOVA_CHAIN_ID } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setInvite,
-  setInviteCode,
-  setTwitterAccessToken,
-  setViewStatus,
-} from "@/store/modules/airdrop";
-import { STATUS_CODE } from "..";
+import { setInvite, setTwitterAccessToken } from "@/store/modules/airdrop";
 import { useNavigate } from "react-router-dom";
 // import { AiFillQuestionCircle } from 'react-icons/ai'
 
@@ -262,7 +256,7 @@ export default function Dashboard() {
 
   const handleCopy = () => {
     if (!invite?.code) return;
-    window.navigator.clipboard.writeText(invite?.code);
+    navigator.clipboard.writeText(invite?.code);
     toast.success("Copied", { duration: 2000 });
   };
 
@@ -357,15 +351,10 @@ export default function Dashboard() {
 
   const [progressList, setProgressList] = useState<any[]>([]);
 
-  const dispatch = useDispatch();
-  const navigator = useNavigate();
+  const navigatorTo = useNavigate();
   useEffect(() => {
-    if (!isConnected) {
-      dispatch(setInvite(null));
-      // dispatch(setInviteCode(''))
-      dispatch(setTwitterAccessToken(""));
-      // dispatch(setViewStatus(STATUS_CODE.landing));
-      // navigator("/");
+    if (!isConnected || !invite?.code) {
+      navigatorTo("/");
     }
   }, [isConnected]);
 
@@ -483,6 +472,13 @@ export default function Dashboard() {
     mintType,
     mintModal,
   ]);
+
+  useEffect(() => {
+    console.log("isActive", invite?.code, isConnected);
+    // if (!invite?.code || !isConnected) {
+    //   navigatorTo("/");
+    // }
+  }, [invite, isConnected]);
 
   return (
     <BgBox>

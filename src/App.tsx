@@ -1,5 +1,11 @@
 import { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useSearchParams,
+} from "react-router-dom";
 import Header from "./components/Header";
 
 import Home from "./pages/Home";
@@ -8,9 +14,11 @@ import Countdown from "@/components/Countdown";
 import styled from "styled-components";
 import AggregationParade from "./pages/AggregationParade";
 import Bridge from "@/pages/Bridge";
-import Dashboard from "./pages/AggregationParade/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About";
+import { useDispatch } from "react-redux";
+import { setInviteCode } from "./store/modules/airdrop";
 
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
@@ -23,6 +31,7 @@ const HideBox = styled.div`
   left: -9999px;
   top: -9999px;
 `;
+
 export default function App() {
   return (
     <main className="main dark text-foreground bg-background header">
@@ -48,7 +57,7 @@ export default function App() {
             }
           />
           <Route
-            path="/aggregation-parade/dashboard"
+            path="/dashboard"
             element={
               <Suspense fallback="">
                 <Dashboard />

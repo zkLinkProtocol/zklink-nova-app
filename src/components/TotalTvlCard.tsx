@@ -1,4 +1,5 @@
 import { getExplorerTokenTvl, getTotalTvl } from "@/api";
+import numeral from "numeral";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -17,6 +18,12 @@ const TvlBox = styled.div`
     font-style: normal;
     font-weight: 700;
     text-align: center;
+    &.comma {
+      width: auto;
+      font-weight: 400;
+      background: none;
+      backdrop-filter: none;
+    }
   }
 `;
 
@@ -46,7 +53,7 @@ export default function TotalTvlCard() {
   };
 
   useEffect(() => {
-    let arr = getTvlArr("$" + totalTvl);
+    let arr = getTvlArr("$" + numeral(totalTvl).format("0,0"));
     setTvlArr(arr);
   }, [totalTvl]);
 
@@ -57,7 +64,10 @@ export default function TotalTvlCard() {
   return (
     <TvlBox className="flex items-center gap-[0.5rem]">
       {tvlArr.map((item, index) => (
-        <span key={index} className="tvl-num-item">
+        <span
+          key={index}
+          className={`tvl-num-item ${item === "," ? "comma" : ""}`}
+        >
           {item}
         </span>
       ))}

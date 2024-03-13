@@ -179,7 +179,7 @@ export default function Home() {
 
       <TotalTvlBox className="w-full">
         <div className="flex flex-col items-center">
-          <FooterTvlText className="mb-[0.1rem] text-center">TVL</FooterTvlText>
+          <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
           <TotalTvlCard />
         </div>
 

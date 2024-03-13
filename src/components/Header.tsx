@@ -7,12 +7,12 @@ import {
   Avatar,
   Tooltip,
 } from "@nextui-org/react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import styled from "styled-components";
 import { showAccount } from "@/utils";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   setInvite,
   setSignature,
@@ -21,12 +21,14 @@ import {
   setDepositL1TxHash,
   setViewStatus,
   setTwitterAccessToken,
+  setInviteCode,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useSignMessage } from "wagmi";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
+import { getInvite } from "@/api";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 const NavBox = styled.nav`
@@ -76,6 +78,20 @@ export default function Header() {
   const { getDepositL2TxHash } = useBridgeTx();
   const { signMessage } = useSignMessage();
   const dispatch = useDispatch();
+  console.log("depositL1TxHash: ", depositL1TxHash);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const isActive = useCallback(() => {
+    return isConnected && invite?.code !== "";
+  }, [isConnected, invite]);
+
+  useEffect(() => {
+    const inviteCode = searchParams.get("inviteCode");
+    console.log("inviteCode", inviteCode);
+    if (inviteCode && inviteCode.length === 6) {
+      dispatch(setInviteCode(inviteCode));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     (async () => {
@@ -99,12 +115,19 @@ export default function Header() {
   }, [depositL1TxHash, getDepositL2TxHash, dispatch]);
 
   const [isHeaderTop, setIsHeaderTop] = useState(true);
-  
+
   const handleScroll = () => {
     if (window.scrollY > 0) {
       setIsHeaderTop(false);
     } else {
       setIsHeaderTop(true);
+    }
+  };
+  const getInviteFunc = async () => {
+    if (!address) return;
+    const res = await getInvite(address);
+    if (res?.result) {
+      dispatch(setInvite(res?.result));
     }
   };
 
@@ -115,6 +138,16 @@ export default function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    getInviteFunc();
+  }, [address, isConnected]);
+
+  useEffect(() => {
+    if (!isConnected) {
+      dispatch(setSignature(""));
+    }
+  }, [isConnected]);
 
   return (
     <>
@@ -149,9 +182,20 @@ export default function Header() {
                 </NavLink>
               </NavbarItem>
               <NavbarItem>
-                <NavLink to="/leaderboard" aria-disabled>
-                  Leaderboard
-                </NavLink>
+                {isActive() ? (
+                  <NavLink to="/dashboard" className="nav-link">
+                    Dashboard
+                  </NavLink>
+                ) : (
+                  <Tooltip content="Not Active">
+                    <span className="nav-link cursor-not-allowed opacity-40">
+                      Dashboard
+                    </span>
+                  </Tooltip>
+                )}
+              </NavbarItem>
+              <NavbarItem>
+                <NavLink to="/leaderboard">Leaderboard</NavLink>
               </NavbarItem>
               <NavbarItem>
                 <NavLink to="/about">About</NavLink>
