@@ -40,6 +40,7 @@ import styled from "styled-components";
 import { useAccount, useSignMessage } from "wagmi";
 import fromList from "@/constants/fromChainList";
 import Loading from "@/components/Loading";
+import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
@@ -161,6 +162,8 @@ export default function SoftKYC() {
   const [submitStatus, setSubmitStatus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isReVerifyDeposit, setIsReVerifyDeposit] = useState(false);
+  const { txhashes } = useVerifyStore();
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -416,6 +419,7 @@ export default function SoftKYC() {
   useEffect(() => {
     const code = searchParams.get("code");
     const error = searchParams.get("error");
+    const flag = searchParams.get('flag')
 
     if (error) {
       toast.error("Could not connect to Twitter. Try again.");
@@ -426,6 +430,16 @@ export default function SoftKYC() {
       getTwitterAPI(code);
       setSearchParams("");
     }
+
+    if (flag) {
+      console.log('txhashes', txhashes)
+      if (txhashes.length > 0) {
+        txhashes[0]
+      }
+      verifyDepositModal.onOpen()
+    }
+
+    
   }, [searchParams]);
 
   // const checkInviteCode = async (code: string) => {

@@ -97,7 +97,6 @@ const TitleBox = styled.div`
     // backdrop-filter: blur(15.800000190734863px);
     overflow: hidden;
     padding: 2px 16px;
-    margin-left: 30px;
     position: relative;
     // animation-name: width;
     // animation-duration: 10s;
