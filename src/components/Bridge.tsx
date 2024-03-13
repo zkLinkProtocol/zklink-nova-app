@@ -750,20 +750,12 @@ export default function Bridge(props: IBridgeComponentProps) {
                 {formatTxHash(txhashes[0]?.txhash)}
               </a>
             </span>
-            <Popover placement="top" triggerScaleOnOpen={false}>
-              <PopoverTrigger onClick={() => copyText(txhashes[0].txhash)}>
-                <img
+            <img
                   src={"/img/icon-copy.png"}
                   alt=""
                   className="w-6 h-6 ml-auto hover:opacity-85 cursor-pointer"
+                  onClick={() => copyText(txhashes[0].txhash)}
                 />
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="px-1 py-2">
-                  <div className="text-small font-bold">Copied!</div>
-                </div>
-              </PopoverContent>
-            </Popover>
           </div>
         </div>
       )}
