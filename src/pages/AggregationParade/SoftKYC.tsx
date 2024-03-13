@@ -12,6 +12,7 @@ import {
   setDepositTx,
   setInvite,
   setInviteCode,
+  setIsCheckedInviteCode,
   setSignature,
 } from "@/store/modules/airdrop";
 import { CardBox, FooterTvlText } from "@/styles/common";
@@ -140,13 +141,16 @@ export default function SoftKYC() {
   const verifyDepositModal = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();
   const { address, isConnected } = useAccount();
-  const { signature, inviteCode, depositTx, depositChainId } = useSelector(
-    (store: RootState) => store.airdrop
-  );
+  const {
+    signature,
+    inviteCode,
+    depositTx,
+    depositChainId,
+    isCheckedInviteCode,
+  } = useSelector((store: RootState) => store.airdrop);
 
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
-  const [isInviteCodeChecked, setIsInviteCodeChecked] = useState(false);
   const [twitterAccessToken, setTwitterAccessToken] = useState("");
   const [twitterLoading, setTwitterLoading] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<string>(
@@ -168,26 +172,35 @@ export default function SoftKYC() {
 
   const onChangeInviteCode = (value: string) => {
     setInviteCodeValue(value);
-    setIsInviteCodeChecked(false);
+    dispatch(setIsCheckedInviteCode(false));
+
     dispatch(setInviteCode(""));
   };
 
   const enterInviteCode = async (code: string) => {
+    // setIsInviteCodeChecked(false);
+
     if (!code || code.length !== 6) return;
-    dispatch(setInviteCode(code));
-
     setIsInviteCodeLoading(true);
-    const res = await checkInviteCode(code);
-    setIsInviteCodeLoading(false);
+    dispatch(setInviteCode(code));
+    try {
+      const res = await checkInviteCode(code);
 
-    if (!res?.result) {
-      setIsInviteCodeChecked(false);
-      dispatch(setInviteCode(""));
-      toast.error("Invalid invite code. Try another.");
-      return;
+      if (!res?.result) {
+        setIsInviteCodeLoading(false);
+        // dispatch(setInviteCode(""));
+        toast.error("Invalid invite code. Try another.");
+        return;
+      }
+      setIsInviteCodeLoading(false);
+      dispatch(setIsCheckedInviteCode(true));
+    } catch (error) {
+      console.log(error);
+      setIsInviteCodeLoading(false);
+      dispatch(setIsCheckedInviteCode(false));
+    } finally {
+      setIsInviteCodeLoading(false);
     }
-
-    setIsInviteCodeChecked(true);
   };
 
   const getTwitterClientId = () => {
@@ -401,14 +414,18 @@ export default function SoftKYC() {
     }
   }, [searchParams]);
 
-  /**
-   * Check: Invite code
-   */
+  // const checkInviteCode = async (code: string) => {
+
+  // };
+
+  // /**
+  //  * Check: Invite code
+  //  */
   // useEffect(() => {
   //   if (inviteCode) {
-  //     enterInviteCode(inviteCode);
+  //     checkInviteCode(inviteCode);
   //   }
-  // }, [inviteCode]);
+  // }, []);
 
   useEffect(() => {
     if (
@@ -435,12 +452,12 @@ export default function SoftKYC() {
         <div className="mt-[3rem] mx-auto max-w-[720px]">
           {/* Setp 1: invite code */}
           <div className="flex justify-center gap-[0.5rem]">
-            <CardBox className={`${isInviteCodeChecked ? "successed" : ""}`}>
+            <CardBox className={`${isCheckedInviteCode ? "successed" : ""}`}>
               <StepNum>01</StepNum>
             </CardBox>
             <CardBox
               className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                isInviteCodeChecked ? "successed" : ""
+                isCheckedInviteCode ? "successed" : ""
               }`}
             >
               <StepItem>
@@ -458,7 +475,7 @@ export default function SoftKYC() {
                   placeholder="Invite Code"
                   value={inviteCodeValue}
                   className={`max-w-[120px] ${
-                    isInviteCodeChecked
+                    isCheckedInviteCode
                       ? "bg-[#1D4138]"
                       : "bg-[rgba(0, 0, 0, 0.5)]"
                   }`}
@@ -472,7 +489,9 @@ export default function SoftKYC() {
                     !validInviteCode(inviteCodeValue) ? "disabled" : ""
                   }`}
                   isLoading={isInviteCodeLoading}
-                  disabled={!validInviteCode(inviteCodeValue)}
+                  disabled={
+                    !validInviteCode(inviteCodeValue) || isCheckedInviteCode
+                  }
                   onClick={() => enterInviteCode(inviteCodeValue)}
                 >
                   <span className="ml-[0.5rem]">Verify</span>
@@ -515,6 +534,7 @@ export default function SoftKYC() {
                 </Button>
                 <Button
                   className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                  disabled={Boolean(depositTx)}
                   onClick={() => {
                     verifyDepositModal.onOpen();
                   }}
@@ -585,7 +605,7 @@ export default function SoftKYC() {
 
                 <Button
                   className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem]"
-                  disabled={signature !== ""}
+                  disabled={isConnected && Boolean(signature)}
                   onClick={handleSign}
                 >
                   <span className="ml-[0.5rem]">Connect and Verify</span>

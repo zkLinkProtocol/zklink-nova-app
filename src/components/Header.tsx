@@ -22,6 +22,7 @@ import {
   setTwitterAccessToken,
   setInviteCode,
   setIsActiveUser,
+  setDepositTx,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
@@ -168,6 +169,9 @@ export default function Header() {
   useEffect(() => {
     if (!isConnected) {
       dispatch(setSignature(""));
+      dispatch(setDepositTx(""));
+      // dispatch(setTwitterAccessToken(''));
+      dispatch(setInvite(null));
     }
   }, [isConnected]);
 
