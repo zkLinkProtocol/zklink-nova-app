@@ -14,6 +14,9 @@ import {
   Tooltip,
   Tabs,
   Tab,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
@@ -54,6 +57,7 @@ import VerifyTxHashModal from "./VerifyTxHashModal";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
+
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -259,11 +263,10 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [category, setCategory] = useState(AssetTypes[0].value);
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
-  const [depositL1Hash, setDepositHash] = useState("");
 
   const dispatch = useDispatch();
 
-  const { addTxHash } = useVerifyStore();
+  const { addTxHash, txhashes } = useVerifyStore();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -539,7 +542,6 @@ export default function Bridge(props: IBridgeComponentProps) {
         return;
       }
       //save tx hash
-      setDepositHash(hash);
       const rpcUrl = FromList.find(
         (item) => item.networkKey === networkKey
       )?.rpcUrl;
@@ -639,36 +641,14 @@ export default function Bridge(props: IBridgeComponentProps) {
     sendDepositTx,
     tokenFiltered,
     tokenActive,
+    addTxHash,
     dispatch,
     transSuccModal,
+    networkKey,
     transFailModal,
     signature,
     twitterAccessToken,
   ]);
-
-  const bindTwitter = async () => {
-    if (!address) return;
-    console.log("inviteCodeType-----", inviteCodeType);
-    const data = {
-      address,
-      code: inviteCodeType === "join" ? inputInviteCode : "",
-      siganture: signature,
-      accessToken: twitterAccessToken,
-    };
-    const resBind = await bindInviteCodeWithAddress({
-      ...data,
-    });
-
-    if (resBind?.error) {
-      toast.error(resBind.message);
-      return;
-    }
-
-    const res = await getInvite(address);
-    if (res?.result) {
-      dispatch(setInvite(res?.result));
-    }
-  };
 
   return (
     <>
@@ -865,18 +845,6 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
-          <div className="mt-6 flex flex-col text-lg">
-            <span>Transaction hash:</span>
-            <div className="flex items-center cursor-pointer">
-              <span className="text-xs">{depositL1Hash}</span>
-              <CopyIcon text={depositL1Hash} />
-            </div>
-            <VerifyTxHashModal
-              onVerifyResult={(res) => {
-                console.log("onVerifyResult: ", res);
-              }}
-            />
-          </div>
         </div>
         {isFirstDeposit && showNoPointsTip && (
           <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
@@ -892,6 +860,42 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
         )}
       </Container>
+      {txhashes[0] && (
+        <Popover placement="top" triggerScaleOnOpen={false}>
+          <PopoverTrigger onClick={() => copyText(txhashes[0].txhash)}>
+            <div className="mt-8 flex flex-col text-lg cursor-pointer bg-[#000000] bg-opacity-40 px-4 py-3 rounded-lg">
+              <div className="flex items-center justify-between font-normal text-[14px] mb-2">
+                <span>Latest tx hash:</span>
+                <span>
+                  You can use this tx hash to verify in Aggregation Parade page
+                </span>
+              </div>
+              <div className="flex items-center ">
+                <img
+                  src={
+                    FromList.find((item) => item.rpcUrl === txhashes[0]?.rpcUrl)
+                      ?.icon
+                  }
+                  className="w-6 h-6 mr-1"
+                />
+                <span className="text-[12px] font-semibold">
+                  {txhashes[0]?.txhash}
+                </span>
+                <img
+                  src={"/img/icon-copy.png"}
+                  alt=""
+                  className="w-6 h-6 ml-auto"
+                />
+              </div>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="px-1 py-2">
+              <div className="text-small font-bold">Copied!</div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      )}
       <Modal
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
