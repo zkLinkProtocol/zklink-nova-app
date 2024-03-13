@@ -574,56 +574,56 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
 
     refreshTokenBalanceList();
-    if (isFirstDeposit && !showNoPointsTip) {
-      const data = {
-        address,
-        code: inviteCodeType === "join" ? inputInviteCode : "",
-        siganture: signature,
-        accessToken: twitterAccessToken,
-      };
-      try {
-        const resBind = await bindInviteCodeWithAddress({
-          ...data,
-        });
+    // if (isFirstDeposit && !showNoPointsTip) {
+    //   const data = {
+    //     address,
+    //     code: inviteCodeType === "join" ? inputInviteCode : "",
+    //     siganture: signature,
+    //     accessToken: twitterAccessToken,
+    //   };
+    //   try {
+    //     const resBind = await bindInviteCodeWithAddress({
+    //       ...data,
+    //     });
 
-        if (resBind?.error) {
-          toast.error(resBind.message);
-          return;
-        }
+    //     if (resBind?.error) {
+    //       toast.error(resBind.message);
+    //       return;
+    //     }
 
-        const res = await getInvite(address);
-        if (res?.result && !showNoPointsTip) {
-          dispatch(setInvite(res?.result));
-        }
-      } catch (e) {
-        console.log(e);
-        if (e.message === "Invalid code") {
-          toast.error("Invalid invite code");
-        } else if (e.message === "The invitation limit has been reached") {
-          //TODO can not invite more
-          toast.error("The invitation limit has been reached");
-          if (data.code && !showNoPointsTip) {
-            // dispatch(
-            //   setInvite({
-            //     ...data,
-            //   })
-            // );
-          }
-        } else if (
-          e.message === "Has been invited, can not repeat the association"
-        ) {
-          toast.error(e.message);
-          if (data.code && !showNoPointsTip) {
-            // dispatch(
-            //   setInvite({
-            //     ...data,
-            //   })
-            // );
-          }
-        }
-      }
-    }
-    //TODO call api to save referel data
+    //     const res = await getInvite(address);
+    //     if (res?.result && !showNoPointsTip) {
+    //       dispatch(setInvite(res?.result));
+    //     }
+    //   } catch (e) {
+    //     console.log(e);
+    //     if (e.message === "Invalid code") {
+    //       toast.error("Invalid invite code");
+    //     } else if (e.message === "The invitation limit has been reached") {
+    //       //TODO can not invite more
+    //       toast.error("The invitation limit has been reached");
+    //       if (data.code && !showNoPointsTip) {
+    //         // dispatch(
+    //         //   setInvite({
+    //         //     ...data,
+    //         //   })
+    //         // );
+    //       }
+    //     } else if (
+    //       e.message === "Has been invited, can not repeat the association"
+    //     ) {
+    //       toast.error(e.message);
+    //       if (data.code && !showNoPointsTip) {
+    //         // dispatch(
+    //         //   setInvite({
+    //         //     ...data,
+    //         //   })
+    //         // );
+    //       }
+    //     }
+    //   }
+    // }
+
     onClose?.();
   }, [
     address,
