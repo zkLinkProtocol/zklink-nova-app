@@ -316,7 +316,7 @@ export default function Home() {
           </Button>
         </div>
 
-        {!isConnected && (
+        {!isConnected && campaignStart && (
           <div className="mt-4">
             <ConnectWalletText
               className="cursor-pointer text-[1rem]"
