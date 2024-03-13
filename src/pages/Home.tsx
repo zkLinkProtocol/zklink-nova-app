@@ -26,19 +26,19 @@ const BgBox = styled.div`
 `;
 
 const CardBox = styled.div`
-border-radius: 16px;
-background: rgba(0, 0, 0, 0.40);
-backdrop-filter: blur(15.800000190734863px);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15.800000190734863px);
 `;
 const TitleBox = styled.div`
   // h2{
   //   margin-left: 120px;
   // }
-  .headTitle{
+  .headTitle {
     justify-content: center;
     margin-bottom: 20px;
   }
-  .flexBox{
+  .flexBox {
     justify-content: center;
   }
   .title {
@@ -87,7 +87,7 @@ const TitleBox = styled.div`
       width: 412px;
     }
   }
-  .box{
+  .box {
     width: 500px;
     height: 52px;
     border-radius: 8px;
@@ -114,28 +114,28 @@ const TitleBox = styled.div`
         top: -48px;
       }
       43% {
-        top: -96px
+        top: -96px;
       }
       56% {
-        top: -96px
+        top: -96px;
       }
       66% {
-        top: -144px
+        top: -144px;
       }
       79% {
-        top: -144px
+        top: -144px;
       }
       89% {
-        top: -192px
+        top: -192px;
       }
       95% {
-        top: -192px
+        top: -192px;
       }
       100% {
-        top: 0px
+        top: 0px;
       }
     }
-    .move{
+    .move {
       position: absolute;
       animation-name: move;
       animation-duration: 10s;
@@ -143,40 +143,40 @@ const TitleBox = styled.div`
       animation-iteration-count: infinite;
       top: 0;
     }
-    
-  @keyframes width1 {
-    0% {
-      width: 86px;
+
+    @keyframes width1 {
+      0% {
+        width: 86px;
+      }
+      9% {
+        width: 86px;
+      }
+      10% {
+        width: 264px;
+      }
+      34% {
+        width: 264px;
+      }
+      35% {
+        width: 100px;
+      }
+      59% {
+        width: 100px;
+      }
+      60% {
+        width: 104px;
+      }
+      84% {
+        width: 104px;
+      }
+      85% {
+        width: 380px;
+      }
+      100% {
+        width: 380px;
+      }
     }
-    9% {
-      width: 86px;
-    }
-    10% {
-      width: 264px;
-    }
-    34% {
-      width: 264px;
-    }
-    35% {
-      width: 100px;
-    }
-    59% {
-      width: 100px;
-    }
-    60% {
-      width: 104px;
-    }
-    84% {
-      width: 104px;
-    }
-    85% {
-      width: 380px;
-    }
-    100% {
-      width: 380px;
-    }
-  }
-    .inner{
+    .inner {
       width: 500px;
       font-family: Satoshi;
       font-size: 40px;
@@ -184,7 +184,7 @@ const TitleBox = styled.div`
       font-weight: 900;
       line-height: 48px; /* 140% */
       letter-spacing: 4px;
-      background: linear-gradient(90deg, #48ECAE 25%, #49CED7 75%);
+      background: linear-gradient(90deg, #48ecae 25%, #49ced7 75%);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -232,12 +232,10 @@ export default function Home() {
   const handleOTPChange = (otp: string) => {
     setConfig((prevConfig) => ({ ...prevConfig, otp }));
   };
-  const arr = [
-    'ETH', 'Stablecoins', 'LSTs', 'LRTs', 'L2 Native Assets'
-  ]
+  const arr = ["ETH", "Stablecoins", "LSTs", "LRTs", "L2 Native Assets"];
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
-    if (!otp || otp.length !== 6 || !campaignStart) return;
+    if (!otp || otp.length !== 6 ) return;
     // TODO: check invite code ?
     // const res = await checkInviteCode(otp);
     // if (!res?.result) {
@@ -255,22 +253,22 @@ export default function Home() {
       <TitleBox className="text-center">
         <div className="flex headTitle">
           <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
-          The ONLY Aggregated L3 with added yield for
+            The ONLY Aggregated L3 with added yield for
           </h2>
         </div>
         <div className="flex flexBox">
-        <div className="box">
-          <div className="move">
-            <div className="inner">ETH</div>
-            <div className="inner">Stablecoins</div>
-            <div className="inner">LSTs</div>
-            <div className="inner">LRTs</div>
-            <div className="inner">L2 Native Assets</div>
+          <div className="box">
+            <div className="move">
+              <div className="inner">ETH</div>
+              <div className="inner">Stablecoins</div>
+              <div className="inner">LSTs</div>
+              <div className="inner">LRTs</div>
+              <div className="inner">L2 Native Assets</div>
+            </div>
           </div>
         </div>
-        </div>
         <p className="sub-title mt-4 pl-6 pr-8 text-[1.5rem] leading-8">
-        Bridge to earn Mega Yield and $ZKL on zkLink Nova
+          Bridge to earn Mega Yield and $ZKL on zkLink Nova
         </p>
       </TitleBox>
 
@@ -281,7 +279,7 @@ export default function Home() {
             Enter Your Invite Code
           </h4>
           <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
-          To participate in the campaign
+            To participate in the campaign
           </p>
         </TitleBox>
 
@@ -302,7 +300,7 @@ export default function Home() {
         <div>
           <Button
             className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] `}
-            disabled={!otp || otp.length !== 6 || !campaignStart}
+            disabled={!otp || otp.length !== 6}
             onClick={enterInviteCode}
           >
             SUBMITE

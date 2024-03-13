@@ -473,7 +473,7 @@ export default function Dashboard() {
     /**
      * return home page if not active
      */
-    if (!isConnected || !invite?.code) {
+    if (!isConnected || !invite?.twitterHandler) {
       navigatorTo("/");
     }
   }, [isConnected, invite]);

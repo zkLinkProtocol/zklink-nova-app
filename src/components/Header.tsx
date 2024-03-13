@@ -95,7 +95,7 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { depositStatus, depositL1TxHash, invite } = useSelector(
+  const { depositStatus, depositL1TxHash, invite ,isActiveUser} = useSelector(
     (store: { airdrop: airdropState }) => store.airdrop
   );
   const { getDepositL2TxHash } = useBridgeTx();
@@ -172,14 +172,24 @@ export default function Header() {
   }, [isConnected]);
 
   useEffect(() => {
+    console.log(
+      "testt=----------",
+      isConnected,
+      invite,
+      invite?.twitterHandler,
+      Boolean(invite?.twitterHandler)
+    );
     if (isConnected && Boolean(invite?.twitterHandler)) {
       dispatch(setIsActiveUser(true));
     } else {
-      dispatch(setInvite(null));
-
+      // dispatch(setInvite(null));
       dispatch(setIsActiveUser(false));
     }
   }, [invite, isConnected, address]);
+
+  useEffect(() => {
+    console.log('isActiveUser', isActiveUser)
+  }, [invite])
 
   return (
     <>
