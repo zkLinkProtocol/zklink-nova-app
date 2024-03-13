@@ -1,5 +1,5 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OTPInput from "react-otp-input";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import { useAccount } from "wagmi";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import Countdown from "@/components/Countdown";
+import Loading from "@/components/Loading";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -217,7 +218,9 @@ const FooterBox = styled.div`
 export default function Home() {
   const web3Modal = useWeb3Modal();
   const { isConnected } = useAccount();
-  const { inviteCode } = useSelector((store: RootState) => store.airdrop);
+  const { inviteCode, isActiveUser } = useSelector(
+    (store: RootState) => store.airdrop
+  );
   const { campaignStart } = useStartTimerStore();
   const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] =
     useState({
@@ -248,8 +251,19 @@ export default function Home() {
     navigator("/aggregation-parade");
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    if (isActiveUser) {
+      setIsLoading(true);
+      setTimeout(() => {
+        navigator("/aggregation-parade");
+      }, 1000);
+    }
+  }, [isActiveUser]);
+
   return (
     <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">
+      {isLoading && <Loading />}
       {/* Title */}
       <TitleBox className="text-center">
         <div className="flex headTitle">
