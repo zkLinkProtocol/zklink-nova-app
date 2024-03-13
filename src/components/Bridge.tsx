@@ -52,6 +52,7 @@ import { copyText, isSameAddress } from "@/utils";
 import CopyIcon from "./CopyIcon";
 import VerifyTxHashModal from "./VerifyTxHashModal";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
+import { NexusEstimateArrivalTimes } from "@/constants";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -257,9 +258,8 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [category, setCategory] = useState(AssetTypes[0].value);
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
-  const [depositL1Hash, setDepositHash] = useState(
-    "0xc5ba6d8b4e2cdf62da775dfaa6a01741592927c748c5b0549ea737d44223330a"
-  );
+  const [depositL1Hash, setDepositHash] = useState("");
+
   const dispatch = useDispatch();
 
   const { addTxHash } = useVerifyStore();
@@ -810,6 +810,12 @@ export default function Bridge(props: IBridgeComponentProps) {
                   ))}
                 </Select>
               </div>
+            </div>
+          )}
+          {networkKey && NexusEstimateArrivalTimes[networkKey] && (
+            <div className="flex items-center justify-between mb-2 points-box">
+              <span>Estimated Time of Arrival</span>
+              <span>~ {NexusEstimateArrivalTimes[networkKey]} minuts</span>
             </div>
           )}
           {/* <div className="flex items-center justify-between mb-2 points-box">

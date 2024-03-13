@@ -1,6 +1,7 @@
+import { PRIMARY_CHAIN_KEY } from "./networks";
 export const STORAGE_NETWORK_KEY = "STORAGE_NETWORK_KEY";
 
-export const STORAGE_VERIFY_KEY = 'STORAGE_VERIFY_KEY'
+export const STORAGE_VERIFY_KEY = "STORAGE_VERIFY_KEY";
 
 export const ETH_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -19,4 +20,15 @@ export const NOVA_NFT_CONTRACT =
   nodeType === "nexus-goerli"
     ? "0xF2fe005206cF81C149EbB2D40A294F5Ac59D9E6D"
     : "0xE310c6595205252C73e9044f6740BA8775bf0Da0";
-export const NOVA_START_TIME = 1710257931067; //1710432000000;
+export const NOVA_START_TIME = 1710410400000; //1710410400000;
+
+export const NexusEstimateArrivalTimes: Record<string, number> = {
+  ethereum: 12.8,
+  [PRIMARY_CHAIN_KEY]: 1,
+  arbitrum: 1,
+  zksync: 1,
+  manta: 1,
+  mantle: 1,
+};
+
+export const NexusGoerliEstimateArrivalTimes = {};
