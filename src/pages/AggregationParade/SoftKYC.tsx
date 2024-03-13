@@ -373,12 +373,13 @@ export default function SoftKYC() {
       }
     } catch (error) {
       console.log(error);
+      handleSubmitError()
     }
   };
 
   // TODO: Submit user bind form
   const handleSubmitError = () => {
-    toast.error("");
+    toast.error("Verification Failed. Please re-check your invite code");
     dispatch(setInviteCode(""));
     dispatch(setDepositTx(""));
     setTwitterAccessToken("");
@@ -524,48 +525,12 @@ export default function SoftKYC() {
             </CardBox>
           </div>
 
-          {/* Step 2: Bridge  */}
-          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox className={`${depositTx ? "successed" : ""}`}>
-              <StepNum>02</StepNum>
-            </CardBox>
-            <CardBox
-              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                depositTx ? "successed" : ""
-              }`}
-            >
-              <StepItem>
-                <p className="step-title">Bridge and Earn</p>
-                <p className="step-sub-title mt-[0.25rem]">
-                  {"Minimum deposit amount ≥ 0.1 ETH or equivalent"}
-                </p>
-              </StepItem>
-              <div className="flex items-center gap-[0.5rem]">
-                <Button
-                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                  onClick={() => {
-                    navigate("/bridge");
-                  }}
-                >
-                  <span className="ml-[0.5rem]">Bridge</span>
-                </Button>
-                <Button
-                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                  disabled={Boolean(depositTx)}
-                  onClick={() => {
-                    verifyDepositModal.onOpen();
-                  }}
-                >
-                  <span className="ml-[0.5rem]">Verify</span>
-                </Button>
-              </div>
-            </CardBox>
-          </div>
+          
 
           {/* Step 3: connect twitter */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox className={`${twitterAccessToken ? "successed" : ""}`}>
-              <StepNum>03</StepNum>
+              <StepNum>02</StepNum>
             </CardBox>
             <CardBox
               className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
@@ -600,7 +565,7 @@ export default function SoftKYC() {
           {/* Step 4: connect wallet & sign */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox className={signature ? "successed" : ""}>
-              <StepNum>04</StepNum>
+              <StepNum>03</StepNum>
             </CardBox>
             <CardBox
               className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
@@ -631,14 +596,49 @@ export default function SoftKYC() {
             </CardBox>
           </div>
 
-          {/* Submit for user bind */}
-          <div className="flex justify-center w-full px-[4.8125rem] ">
+          {/* Step 2: Bridge  */}
+          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
+            <CardBox className={`${depositTx ? "successed" : ""}`}>
+              <StepNum>04</StepNum>
+            </CardBox>
             <CardBox
-              className={`mx-auto mt-[1rem] py-[1.25rem] w-full text-center ${
-                !submitStatus
-                  ? "opacity-40 cursor-not-allowed"
-                  : "cursor-pointer"
+              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+                depositTx ? "successed" : ""
               }`}
+            >
+              <StepItem>
+                <p className="step-title">Bridge and Earn</p>
+                <p className="step-sub-title mt-[0.25rem]">
+                  {"Minimum deposit amount ≥ 0.1 ETH or equivalent"}
+                </p>
+              </StepItem>
+              <div className="flex items-center gap-[0.5rem]">
+                <Button
+                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                  onClick={() => {
+                    navigate("/bridge");
+                  }}
+                >
+                  <span className="ml-[0.5rem]">Bridge</span>
+                </Button>
+                <Button
+                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                  disabled={Boolean(depositTx) || !isConnected}
+                  onClick={() => {
+                    verifyDepositModal.onOpen();
+                  }}
+                >
+                  <span className="ml-[0.5rem]">Verify</span>
+                </Button>
+              </div>
+            </CardBox>
+          </div>
+
+          {/* Submit for user bind */}
+          <div className="flex justify-center w-full px-[5rem] ">
+            <Button
+              className={`gradient-btn mx-auto mt-[1rem] py-[2rem] w-full text-center`}
+              disabled={!submitStatus}
               onClick={handleSubmit}
             >
               <StepItem>
@@ -646,7 +646,7 @@ export default function SoftKYC() {
                   Participate zkLink Aggregation Parade
                 </p>
               </StepItem>
-            </CardBox>
+            </Button>
           </div>
         </div>
       </div>
