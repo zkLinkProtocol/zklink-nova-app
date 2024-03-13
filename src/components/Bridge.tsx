@@ -750,12 +750,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 {formatTxHash(txhashes[0]?.txhash)}
               </a>
             </span>
-            <img
-                  src={"/img/icon-copy.png"}
-                  alt=""
-                  className="w-6 h-6 ml-auto hover:opacity-85 cursor-pointer"
-                  onClick={() => copyText(txhashes[0].txhash)}
-                />
+            <CopyIcon text={txhashes[0].txhash} />
           </div>
         </div>
       )}
