@@ -303,7 +303,7 @@ export default function Home() {
             disabled={!otp || otp.length !== 6}
             onClick={enterInviteCode}
           >
-            SUBMITE
+            SUBMIT
           </Button>
         </div>
 
