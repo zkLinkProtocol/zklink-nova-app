@@ -23,6 +23,7 @@ const useNovaNFT = () => {
   const [nft, setNFT] = useState<NOVA_NFT>();
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(false);
 
   const getNFTBalance = useCallback(async (address: string) => {
     const balance = await readContract(wagmiConfig, {
@@ -77,15 +78,22 @@ const useNovaNFT = () => {
 
   const getNFT = useCallback(
     async (address: string): Promise<NOVA_NFT | undefined> => {
-      const balance = await getNFTBalance(address);
-      if (BigNumber.from(balance).eq(0)) {
-        return;
+      try {
+        setFetchLoading(true);
+        const balance = await getNFTBalance(address);
+        if (BigNumber.from(balance).eq(0)) {
+          return;
+        }
+        const tokenId = await getTokenIdByIndex(address);
+        const tokenURI = await getTokenURIByTokenId(tokenId);
+        const nft = await fetchMetadataByURI(tokenURI);
+        setNFT(nft);
+        return nft as NOVA_NFT;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setFetchLoading(false);
       }
-      const tokenId = await getTokenIdByIndex(address);
-      const tokenURI = await getTokenURIByTokenId(tokenId);
-      const nft = await fetchMetadataByURI(tokenURI);
-      setNFT(nft);
-      return nft as NOVA_NFT;
     },
     [getNFTBalance, getTokenIdByIndex, getTokenURIByTokenId]
   );
@@ -150,6 +158,7 @@ const useNovaNFT = () => {
     sendMintTx,
     nft,
     loading,
+    fetchLoading,
   };
 };
 

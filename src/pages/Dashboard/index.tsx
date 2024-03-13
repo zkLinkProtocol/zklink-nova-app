@@ -235,7 +235,7 @@ export default function Dashboard() {
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
 
   const chainId = useChainId();
-  const { nft, loading: mintLoading, sendMintTx } = useNovaNFT();
+  const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
 
   const { switchChain } = useSwitchChain();
@@ -402,12 +402,12 @@ export default function Dashboard() {
   }, [ethUsdPrice, stakingUsdValue]);
 
   const handleMintNow = useCallback(() => {
-    if (nft) {
+    if (nft || fetchLoading) {
       return;
     } else {
       mintModal.onOpen();
     }
-  }, [mintModal, nft]);
+  }, [mintModal, nft, fetchLoading]);
 
   const handleMint = useCallback(async () => {
     if (!address) return;
@@ -507,10 +507,11 @@ export default function Dashboard() {
               />
             </div>
             <Tooltip content={nft ? "coming soon" : ""}>
-              <GradientButton
+              <Button
                 onClick={handleMintNow}
+                isLoading={fetchLoading || mintLoading}
                 className={classNames(
-                  "w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
+                  "gradient-btn w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
                   nft ? "opacity-40 " : "opacity-100",
                   nft ? "cursor-default" : "cursor-pointer"
                 )}
@@ -524,7 +525,7 @@ export default function Dashboard() {
                 ) : (
                   ""
                 )}
-              </GradientButton>
+              </Button>
             </Tooltip>
           </CardBox>
 
@@ -548,7 +549,11 @@ export default function Dashboard() {
                     <br />
                     Early Bird Booster: 2x <br />
                     <br />
-                    <a href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank" className="text-[#0bc48f]">
+                    <a
+                      href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+                      target="_blank"
+                      className="text-[#0bc48f]"
+                    >
                       Learn More
                     </a>
                   </p>
@@ -676,7 +681,11 @@ export default function Dashboard() {
                     <p className="text-[1rem]">
                       You will get a higher group booster if your group unlocks
                       higher TVL milestones.{" "}
-                      <a href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank" className="text-[#0bc48f]">
+                      <a
+                        href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+                        target="_blank"
+                        className="text-[#0bc48f]"
+                      >
                         Learn more.
                       </a>
                     </p>
