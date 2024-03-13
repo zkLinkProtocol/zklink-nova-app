@@ -404,11 +404,11 @@ export default function SoftKYC() {
   /**
    * Check: Invite code
    */
-  useEffect(() => {
-    if (inviteCode) {
-      enterInviteCode(inviteCode);
-    }
-  }, [inviteCode]);
+  // useEffect(() => {
+  //   if (inviteCode) {
+  //     enterInviteCode(inviteCode);
+  //   }
+  // }, [inviteCode]);
 
   useEffect(() => {
     if (
