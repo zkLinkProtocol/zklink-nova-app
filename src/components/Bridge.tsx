@@ -451,8 +451,9 @@ export default function Bridge(props: IBridgeComponentProps) {
       !invalidChain &&
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
-        tokenFiltered[tokenActive].balance! < 0 ||
-        Number(tokenFiltered[tokenActive].formatedBalance) < amount)
+        tokenFiltered[tokenActive].balance! <= 0 ||
+        Number(tokenFiltered[tokenActive].formatedBalance) < amount ||
+        Number(amount) <= 0)
     ) {
       return true;
     }
@@ -479,6 +480,12 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
   };
 
+  const dismissToast = () => {
+    setTimeout(() => {
+      toast.dismiss();
+    }, 3000);
+  };
+
   const handleAction = useCallback(async () => {
     if (!address) return;
     if (invalidChain) {
@@ -498,6 +505,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     if (isFirstDeposit && inviteCodeType === "join") {
       if (!inputInviteCode) {
         toast.error("Please enter invite code to join group.");
+        dismissToast();
         return;
       } else {
         //TODO check invite code
@@ -505,13 +513,11 @@ export default function Bridge(props: IBridgeComponentProps) {
         console.log("check code result: ", result);
         if (!result || !result.result) {
           toast.error("Invalid invite code");
+          dismissToast();
           return;
         }
       }
     }
-    setTimeout(() => {
-      toast.dismiss();
-    }, 3000);
 
     transLoadModal.onOpen();
     let time = setTimeout(() => {}, 100);
