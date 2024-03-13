@@ -527,45 +527,10 @@ export default function SoftKYC() {
             </CardBox>
           </div>
 
-          {/* Step 3: connect twitter */}
-          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox className={`${twitterAccessToken ? "successed" : ""}`}>
-              <StepNum>02</StepNum>
-            </CardBox>
-            <CardBox
-              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                twitterAccessToken ? "successed" : ""
-              }`}
-            >
-              <StepItem>
-                <p className="step-title">Connect Twitter</p>
-                <p className="step-sub-title mt-[0.25rem]">
-                  You can only bind your Twitter account with one wallet
-                </p>
-              </StepItem>
-              <div>
-                {twitterAccessToken ? (
-                  <img
-                    src="/img/icon-right.svg"
-                    className="w-[1.5rem] h-[1.5rem]"
-                  />
-                ) : (
-                  <Button
-                    className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                    isLoading={twitterLoading}
-                    onClick={handleConnectTwitter}
-                  >
-                    <span className="ml-[0.5rem]">Connect Twitter/X</span>
-                  </Button>
-                )}
-              </div>
-            </CardBox>
-          </div>
-
-          {/* Step 4: connect wallet & sign */}
+          {/* Step 2: connect wallet & sign */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox className={signature ? "successed" : ""}>
-              <StepNum>03</StepNum>
+              <StepNum>02</StepNum>
             </CardBox>
             <CardBox
               className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
@@ -596,10 +561,10 @@ export default function SoftKYC() {
             </CardBox>
           </div>
 
-          {/* Step 2: Bridge  */}
+          {/* Step 3: Bridge  */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox className={`${depositTx ? "successed" : ""}`}>
-              <StepNum>04</StepNum>
+              <StepNum>03</StepNum>
             </CardBox>
             <CardBox
               className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
@@ -630,6 +595,41 @@ export default function SoftKYC() {
                 >
                   <span className="ml-[0.5rem]">Verify</span>
                 </Button>
+              </div>
+            </CardBox>
+          </div>
+
+          {/* Step 4: connect twitter */}
+          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
+            <CardBox className={`${twitterAccessToken ? "successed" : ""}`}>
+              <StepNum>04</StepNum>
+            </CardBox>
+            <CardBox
+              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+                twitterAccessToken ? "successed" : ""
+              }`}
+            >
+              <StepItem>
+                <p className="step-title">Connect Twitter</p>
+                <p className="step-sub-title mt-[0.25rem]">
+                  You can only bind your Twitter account with one wallet
+                </p>
+              </StepItem>
+              <div>
+                {twitterAccessToken ? (
+                  <img
+                    src="/img/icon-right.svg"
+                    className="w-[1.5rem] h-[1.5rem]"
+                  />
+                ) : (
+                  <Button
+                    className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                    isLoading={twitterLoading}
+                    onClick={handleConnectTwitter}
+                  >
+                    <span className="ml-[0.5rem]">Connect Twitter/X</span>
+                  </Button>
+                )}
               </div>
             </CardBox>
           </div>

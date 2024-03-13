@@ -548,7 +548,7 @@ export default function Dashboard() {
                     <br />
                     Early Bird Booster: 2x <br />
                     <br />
-                    <a href="" className="text-[#0bc48f]">
+                    <a href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank" className="text-[#0bc48f]">
                       Learn More
                     </a>
                   </p>
@@ -676,7 +676,7 @@ export default function Dashboard() {
                     <p className="text-[1rem]">
                       You will get a higher group booster if your group unlocks
                       higher TVL milestones.{" "}
-                      <a href="" className="text-[#0bc48f]">
+                      <a href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank" className="text-[#0bc48f]">
                         Learn more.
                       </a>
                     </p>
