@@ -377,6 +377,14 @@ export default function SoftKYC() {
   };
 
   // TODO: Submit user bind form
+  const handleSubmitError = () => {
+    toast.error("");
+    dispatch(setInviteCode(""));
+    dispatch(setDepositTx(""));
+    setTwitterAccessToken("");
+    dispatch(setSignature(""));
+    dispatch(setInvite(null));
+  };
   const handleSubmit = async () => {
     if (!address || !submitStatus) return;
     try {
@@ -393,8 +401,11 @@ export default function SoftKYC() {
 
       if (+res?.status === 0) {
         getInviteFunc();
+      } else {
+        handleSubmitError();
       }
     } catch (error) {
+      handleSubmitError();
       console.log(error);
     }
   };
@@ -464,7 +475,13 @@ export default function SoftKYC() {
                 <p className="step-title">Enter Invite Code</p>
                 <p className="step-sub-title mt-[0.25rem]">
                   Search{" "}
-                  <span className="text-[#298EDB]">#zkLinkNovaAggParade</span>{" "}
+                  <a
+                    href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
+                    className="text-[#298EDB]"
+                    target="_blank"
+                  >
+                    #zkLinkNovaAggParade
+                  </a>{" "}
                   on Twitter
                 </p>
               </StepItem>
@@ -709,13 +726,15 @@ export default function SoftKYC() {
 
               {depositStatus === VerifyResult.SUCCESS && (
                 <p className="text-[#03D498] py-4 text-[1rem]">
-                  Your deposit is still being processed. The estimated remaining wait time is approximately x minutes.
+                  Your deposit is still being processed. The estimated remaining
+                  wait time is approximately x minutes.
                 </p>
               )}
               {depositStatus === VerifyResult.FAILED && (
                 <p className="text-[#C57D10] py-4 text-[1rem]">
-                  Invalid transaction hash, please check the transaction hash
-                  and network. Also, check the wallet you're connected to.
+                  This Tx Hash does not meet the requirements. Please check the
+                  deposit amount, network, wallet address, and the Tx Hash
+                  itself.
                 </p>
               )}
             </div>

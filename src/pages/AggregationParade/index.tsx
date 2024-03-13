@@ -9,7 +9,7 @@ export default function AggregationParade() {
     (store: { airdrop: airdropState }) => store.airdrop
   );
 
-  const [isLoading,setIsLoading] = useState(false)
+  // const [isLoading,setIsLoading] = useState(false)
   useEffect(() => {
     console.log('isActiveUserisActiveUserisActiveUser',isActiveUser)
   }, [isActiveUser]) 
