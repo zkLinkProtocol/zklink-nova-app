@@ -12,6 +12,7 @@ import { useStartTimerStore } from "@/hooks/useStartTimer";
 import { useAccount } from "wagmi";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import Countdown from "@/components/Countdown";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -26,19 +27,19 @@ const BgBox = styled.div`
 `;
 
 const CardBox = styled.div`
-border-radius: 16px;
-background: rgba(0, 0, 0, 0.40);
-backdrop-filter: blur(15.800000190734863px);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15.800000190734863px);
 `;
 const TitleBox = styled.div`
   // h2{
   //   margin-left: 120px;
   // }
-  .headTitle{
+  .headTitle {
     justify-content: center;
     margin-bottom: 20px;
   }
-  .flexBox{
+  .flexBox {
     justify-content: center;
   }
   .title {
@@ -87,7 +88,7 @@ const TitleBox = styled.div`
       width: 412px;
     }
   }
-  .box{
+  .box {
     width: 500px;
     height: 52px;
     border-radius: 8px;
@@ -114,28 +115,28 @@ const TitleBox = styled.div`
         top: -48px;
       }
       43% {
-        top: -96px
+        top: -96px;
       }
       56% {
-        top: -96px
+        top: -96px;
       }
       66% {
-        top: -144px
+        top: -144px;
       }
       79% {
-        top: -144px
+        top: -144px;
       }
       89% {
-        top: -192px
+        top: -192px;
       }
       95% {
-        top: -192px
+        top: -192px;
       }
       100% {
-        top: 0px
+        top: 0px;
       }
     }
-    .move{
+    .move {
       position: absolute;
       animation-name: move;
       animation-duration: 10s;
@@ -143,40 +144,40 @@ const TitleBox = styled.div`
       animation-iteration-count: infinite;
       top: 0;
     }
-    
-  @keyframes width1 {
-    0% {
-      width: 86px;
+
+    @keyframes width1 {
+      0% {
+        width: 86px;
+      }
+      9% {
+        width: 86px;
+      }
+      10% {
+        width: 264px;
+      }
+      34% {
+        width: 264px;
+      }
+      35% {
+        width: 100px;
+      }
+      59% {
+        width: 100px;
+      }
+      60% {
+        width: 104px;
+      }
+      84% {
+        width: 104px;
+      }
+      85% {
+        width: 380px;
+      }
+      100% {
+        width: 380px;
+      }
     }
-    9% {
-      width: 86px;
-    }
-    10% {
-      width: 264px;
-    }
-    34% {
-      width: 264px;
-    }
-    35% {
-      width: 100px;
-    }
-    59% {
-      width: 100px;
-    }
-    60% {
-      width: 104px;
-    }
-    84% {
-      width: 104px;
-    }
-    85% {
-      width: 380px;
-    }
-    100% {
-      width: 380px;
-    }
-  }
-    .inner{
+    .inner {
       width: 500px;
       font-family: Satoshi;
       font-size: 40px;
@@ -184,7 +185,7 @@ const TitleBox = styled.div`
       font-weight: 900;
       line-height: 48px; /* 140% */
       letter-spacing: 4px;
-      background: linear-gradient(90deg, #48ECAE 25%, #49CED7 75%);
+      background: linear-gradient(90deg, #48ecae 25%, #49ced7 75%);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -207,10 +208,10 @@ const ConnectWalletText = styled.span`
 `;
 
 const FooterBox = styled.div`
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translate(-50%, 0);
+  /* position: fixed; */
+  /* bottom: 2rem; */
+  /* left: 50%; */
+  /* transform: translate(-50%, 0); */
 `;
 
 export default function Home() {
@@ -232,9 +233,7 @@ export default function Home() {
   const handleOTPChange = (otp: string) => {
     setConfig((prevConfig) => ({ ...prevConfig, otp }));
   };
-  const arr = [
-    'ETH', 'Stablecoins', 'LSTs', 'LRTs', 'L2 Native Assets'
-  ]
+  const arr = ["ETH", "Stablecoins", "LSTs", "LRTs", "L2 Native Assets"];
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
     if (!otp || otp.length !== 6 || !campaignStart) return;
@@ -253,24 +252,32 @@ export default function Home() {
     <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">
       {/* Title */}
       <TitleBox className="text-center">
+        <div className="w-full flex items-center justify-center mt-10 mb-10">
+          <img
+            src={"/img/img-count-down.png"}
+            className="w-[410px] h-[36px] mr-4"
+            alt=""
+          />
+          <Countdown />
+        </div>
         <div className="flex headTitle">
           <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
-          The ONLY Aggregated L3 with added yield for
+            The ONLY Aggregated L3 with added yield for
           </h2>
         </div>
         <div className="flex flexBox">
-        <div className="box">
-          <div className="move">
-            <div className="inner">ETH</div>
-            <div className="inner">Stablecoins</div>
-            <div className="inner">LSTs</div>
-            <div className="inner">LRTs</div>
-            <div className="inner">L2 Native Assets</div>
+          <div className="box">
+            <div className="move">
+              <div className="inner">ETH</div>
+              <div className="inner">Stablecoins</div>
+              <div className="inner">LSTs</div>
+              <div className="inner">LRTs</div>
+              <div className="inner">L2 Native Assets</div>
+            </div>
           </div>
         </div>
-        </div>
         <p className="sub-title mt-4 pl-6 pr-8 text-[1.5rem] leading-8">
-        Bridge to earn Mega Yield and $ZKL on zkLink Nova
+          Bridge to earn Mega Yield and $ZKL on zkLink Nova
         </p>
       </TitleBox>
 
@@ -281,7 +288,7 @@ export default function Home() {
             Enter Your Invite Code
           </h4>
           <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
-          To participate in the campaign
+            To participate in the campaign
           </p>
         </TitleBox>
 
@@ -321,15 +328,16 @@ export default function Home() {
         )}
       </CardBox>
 
-      <FooterBox className="w-full">
+      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex items-center justify-between px-36 py-4">
         {/* Footer: total tvl data */}
-        <div className="flex flex-col items-center">
+        {/* <div className="flex flex-col items-center">
           <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
           <TotalTvlCard />
-        </div>
+        </div> */}
+        <TotalTvlCard />
 
         {/* Footer: nav links */}
-        <div className="absolute right-[6rem] bottom-[1rem] flex justify-end items-end">
+        <div className=" right-[6rem] bottom-[1rem] flex justify-end items-end">
           <div className="flex items-center gap-[1.25rem]">
             <a href="https://blog.zk.link/">
               <img

@@ -19,12 +19,29 @@ import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About";
 import { useDispatch } from "react-redux";
 import { setInviteCode } from "./store/modules/airdrop";
+import { useLocation, useNavigate } from "react-router-dom";
 
+import { useSelector } from "react-redux";
+import { airdropState } from "@/store/modules/airdrop";
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
 // const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 // const About = lazy(() => import("@/pages/About"));
 // const Bridge = lazy(() => import('@/pages/Bridge'))
+
+const AppRoute = (props) => {
+  const { campaignStart } = useSelector(
+    (store: { airdrop: airdropState }) => store.airdrop
+  );
+  const location = useLocation();
+  const navigator = useNavigate();
+  useEffect(() => {
+    if (!campaignStart) {
+      navigator("/");
+    }
+  }, [location, campaignStart, navigator]);
+  return <>{props.children}</>;
+};
 
 const HideBox = styled.div`
   position: absolute;
@@ -36,65 +53,67 @@ export default function App() {
   return (
     <main className="main dark text-foreground bg-background header">
       <BrowserRouter>
-        <Header />
+        <AppRoute>
+          <Header />
 
-        <Routes>
-          {/* <Route path="/" element={<Navigate to="/aggregation-parade" />} /> */}
-          <Route
-            path="/"
-            element={
-              <Suspense fallback="">
-                <Home />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/aggregation-parade"
-            element={
-              <Suspense fallback="">
-                <AggregationParade />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <Suspense fallback="">
-                <Dashboard />
-              </Suspense>
-            }
-          />
+          <Routes>
+            {/* <Route path="/" element={<Navigate to="/aggregation-parade" />} /> */}
+            <Route
+              path="/"
+              element={
+                <Suspense fallback="">
+                  <Home />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/aggregation-parade"
+              element={
+                <Suspense fallback="">
+                  <AggregationParade />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <Suspense fallback="">
+                  <Dashboard />
+                </Suspense>
+              }
+            />
 
-          <Route
-            path="/leaderboard"
-            element={
-              <Suspense fallback="">
-                <Leaderboard />
-              </Suspense>
-            }
-          />
+            <Route
+              path="/leaderboard"
+              element={
+                <Suspense fallback="">
+                  <Leaderboard />
+                </Suspense>
+              }
+            />
 
-          <Route
-            path="/about"
-            element={
-              <Suspense fallback="">
-                <About />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/bridge"
-            element={
-              <Suspense fallback="">
-                <Bridge />
-              </Suspense>
-            }
-          />
-        </Routes>
-        <Toast />
-        <HideBox className="">
-          <Countdown />
-        </HideBox>
+            <Route
+              path="/about"
+              element={
+                <Suspense fallback="">
+                  <About />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/bridge"
+              element={
+                <Suspense fallback="">
+                  <Bridge />
+                </Suspense>
+              }
+            />
+          </Routes>
+          <Toast />
+          <HideBox className="">
+            <Countdown />
+          </HideBox>
+        </AppRoute>
       </BrowserRouter>
     </main>
   );

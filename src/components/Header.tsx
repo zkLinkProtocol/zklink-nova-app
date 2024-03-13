@@ -28,25 +28,30 @@ import { getInvite } from "@/api";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 const NavNet = styled.div`
-background: #313841;
-border-radius: 5px;
-margin-left: 10px;
-div{
-  width: 79px;
-  height: 22px;
-  flex-shrink: 0;
-  font-family: Satoshi;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 22px;
-  letter-spacing: -0.5px;
-  background: linear-gradient(90deg, #48ECAE 0%, #606FF2 51.07%, #49CED7 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: center;
-}
+  background: #313841;
+  border-radius: 5px;
+  margin-left: 10px;
+  div {
+    width: 79px;
+    height: 22px;
+    flex-shrink: 0;
+    font-family: Satoshi;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(
+      90deg,
+      #48ecae 0%,
+      #606ff2 51.07%,
+      #49ced7 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+  }
 `;
 const NavBox = styled.nav`
   a {
@@ -89,7 +94,7 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { depositStatus, depositL1TxHash, invite } = useSelector(
+  const { depositStatus, depositL1TxHash, invite, campaignStart } = useSelector(
     (store: { airdrop: airdropState }) => store.airdrop
   );
   const { getDepositL2TxHash } = useBridgeTx();
@@ -169,7 +174,7 @@ export default function Header() {
     <>
       <Navbar
         // shouldHideOnScroll
-        className={`px-[1.5rem] py-[0.75rem] fixed`}
+        className={`px-[1.5rem] py-[0.75rem] fixed pt-0`}
         style={{
           // position: isHeaderTop ? 'fixed' : 'sticky',
           background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
@@ -180,26 +185,40 @@ export default function Header() {
         <NavbarBrand className="flex items-end">
           {/* <Logo /> */}
 
-          <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
+          <Link
+            to="/"
+            onClick={() => dispatch(setTwitterAccessToken(""))}
+            style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+          >
             <LogoBox className="relative">
               <img className="max-w-[145.431px] h-auto" src="/img/NOVA.svg" />
               {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
           </Link>
-          <NavNet><div>Mainnet Live</div></NavNet>
+          <NavNet>
+            <div>Mainnet Live</div>
+          </NavNet>
           <NavBox className="ml-[3.5rem]">
             <NavbarContent
               className="hidden sm:flex gap-[2.5rem]"
               justify="center"
             >
               <NavbarItem>
-                <NavLink to="/aggregation-parade" className="nav-link">
+                <NavLink
+                  to="/aggregation-parade"
+                  className="nav-link"
+                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+                >
                   Aggregation Parade
                 </NavLink>
               </NavbarItem>
               <NavbarItem>
                 {isActive() ? (
-                  <NavLink to="/dashboard" className="nav-link">
+                  <NavLink
+                    to="/dashboard"
+                    className="nav-link"
+                    style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+                  >
                     Dashboard
                   </NavLink>
                 ) : (
@@ -211,13 +230,28 @@ export default function Header() {
                 )}
               </NavbarItem>
               <NavbarItem>
-                <NavLink to="/leaderboard">Leaderboard</NavLink>
+                <NavLink
+                  to="/leaderboard"
+                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+                >
+                  Leaderboard
+                </NavLink>
               </NavbarItem>
               <NavbarItem>
-                <NavLink to="/about">About</NavLink>
+                <NavLink
+                  to="/about"
+                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+                >
+                  About
+                </NavLink>
               </NavbarItem>
               <NavbarItem>
-                <NavLink to="/bridge">Bridge</NavLink>
+                <NavLink
+                  to="/bridge"
+                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+                >
+                  Bridge
+                </NavLink>
               </NavbarItem>
               {/* <NavbarItem>
                 <a
@@ -237,9 +271,8 @@ export default function Header() {
           </NavBox>
         </NavbarBrand>
 
-        <NavbarContent justify="end">
+        {/* <NavbarContent justify="end">
           <NavbarItem className="hidden flex items-center gap-[1rem]">
-            {/* if the user has completed the invitation */}
             {false && (
               <div className="flex items-center gap-[0.5rem]">
                 <div className="text-right">
@@ -252,11 +285,7 @@ export default function Header() {
                 />
               </div>
             )}
-            {/* <Button
-                            className='bg-blue-950'
-                            onClick={() => web3Modal.open({ view: 'Networks' })}>
-                            Network
-                        </Button> */}
+
             {address && depositStatus && (
               <>
                 {depositStatus === "pending" && (
@@ -317,7 +346,7 @@ export default function Header() {
               </ButtonText>
             </Button>
           </NavbarItem>
-        </NavbarContent>
+        </NavbarContent> */}
       </Navbar>
     </>
   );

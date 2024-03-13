@@ -5,25 +5,29 @@ import { NOVA_START_TIME } from "@/constants";
 const CountdownBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 30px;
+
   .part-time {
-    border-radius: 66px;
-    border: 1px solid #2b2868;
-    background: #11102f;
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #fff;
+    font-family: Satoshi;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 62.5% */
+    letter-spacing: -0.5px;
   }
   .split {
     color: #fff;
     text-align: center;
     font-family: Poppins;
-    font-size: 16px;
+    font-size: 32px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 32px; /* 200% */
+    font-weight: 500;
+    line-height: 20px; /* 62.5% */
   }
 `;
 
@@ -69,13 +73,25 @@ const Countdown = () => {
 
   return (
     <CountdownBox>
-      <div className="part-time">{remainingTime?.days} Days</div>
+      {/* <div className="part-time">{remainingTime?.days} Days</div>
+      <div className="split">:</div> */}
+      <div className="part-time">
+        {remainingTime?.hours < 10
+          ? "0" + remainingTime?.hours
+          : remainingTime?.hours}
+      </div>
       <div className="split">:</div>
-      <div className="part-time">{remainingTime?.hours} Hours</div>
+      <div className="part-time">
+        {remainingTime?.minutes < 10
+          ? "0" + remainingTime?.minutes
+          : remainingTime?.minutes}
+      </div>
       <div className="split">:</div>
-      <div className="part-time">{remainingTime?.minutes} Minuts</div>
-      <div className="split">:</div>
-      <div className="part-time">{remainingTime?.seconds} Seconds</div>
+      <div className="part-time">
+        {remainingTime?.seconds < 10
+          ? "0" + remainingTime?.seconds
+          : remainingTime?.seconds}{" "}
+      </div>
     </CountdownBox>
   );
 };
