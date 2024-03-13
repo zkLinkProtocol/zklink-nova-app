@@ -8,8 +8,7 @@ import NovaNFT from "@/constants/abi/NovaNFT.json";
 import { BigNumber } from "ethers";
 import { wagmiConfig } from "@/constants/networks";
 import { zkSyncProvider } from "./zksyncProviders";
-import { Interface } from "ethers/lib/utils";
-import { ethers } from "ethers";
+
 import { encodeFunctionData } from "viem";
 export type NOVA_NFT_TYPE = "ISTP" | "ESFJ" | "INFJ" | "ENTP";
 export type NOVA_NFT = {
@@ -17,6 +16,7 @@ export type NOVA_NFT = {
   description: string;
   image: string;
 };
+const nodeType = import.meta.env.VITE_NODE_TYPE;
 const useNovaNFT = () => {
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
@@ -106,14 +106,16 @@ const useNovaNFT = () => {
         functionName: "safeMint",
         args: [type, signature],
       };
-      
+
       const txData = encodeFunctionData({
         abi: NovaNFT.abi,
         functionName: "safeMint",
         args: [type, signature],
       });
       const fee = await zkSyncProvider.attachEstimateFee(
-        "https://rpc.zklink.io"
+        nodeType === "nexus-goerli"
+          ? "https://goerli.rpc.zklink.io"
+          : "https://rpc.zklink.io"
       )({
         from: address as `0x${string}`,
         to: NOVA_NFT_CONTRACT,
