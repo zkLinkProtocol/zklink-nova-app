@@ -258,8 +258,8 @@ export default function SoftKYC() {
       grant_type: "authorization_code",
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
-      // client_id: clientId,
-      // redirect_uri: twitterCallbackURL,
+      client_id: clientId,
+      redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     })
       .then((res) => {
