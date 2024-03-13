@@ -15,6 +15,7 @@ import {
 import FromList from "@/constants/fromChainList";
 
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
+import useVerifyTxHash from "@/hooks/useVerifyTxHash";
 
 export const enum VerifyResult {
   "SUCCESS" = "SUCCESS",
@@ -34,11 +35,27 @@ const VerifyTxHashModal = (props: IProps) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   const { txhashes } = useVerifyStore();
+  const { verifyTxhash } = useVerifyTxHash();
   const handleAction = async () => {
-    setLoading(false);
-    onVerifyResult(VerifyResult.PENDING);
-    setStatus(VerifyResult.PENDING);
-    // modal.onClose();
+    try {
+      setLoading(true);
+      const tx = await verifyTxhash(selectedRpc, txhash);
+      console.log("verify txhash: ", tx);
+      onVerifyResult(VerifyResult.SUCCESS);
+      modal.onClose();
+    } catch (e) {
+      console.error(e);
+      if (
+        e.messsage === "tx hash not found" ||
+        e.message.includes("invalid hash")
+      ) {
+        setStatus(VerifyResult.INVALID);
+      } else if (e.message === "deposit not found") {
+        setStatus(VerifyResult.PENDING);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const actionBtnDisabled = useMemo(() => {
@@ -58,7 +75,9 @@ const VerifyTxHashModal = (props: IProps) => {
 
   useEffect(() => {
     if (modal.isOpen && txhashes.length > 0) {
-      setTxhash(txhashes[0]);
+      setTxhash(txhashes[0].txhash);
+      // @ts-expect-error invalid rpcUrl
+      setSelectedRpc(txhashes[0].rpcUrl);
     }
   }, [txhashes, modal.isOpen]);
 

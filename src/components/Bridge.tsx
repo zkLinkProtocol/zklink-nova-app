@@ -53,6 +53,7 @@ import CopyIcon from "./CopyIcon";
 import VerifyTxHashModal from "./VerifyTxHashModal";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { NexusEstimateArrivalTimes } from "@/constants";
+import FromList from "@/constants/fromChainList";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -533,7 +534,10 @@ export default function Bridge(props: IBridgeComponentProps) {
       }
       //save tx hash
       setDepositHash(hash);
-      addTxHash(hash);
+      const rpcUrl = FromList.find(
+        (item) => item.networkKey === networkKey
+      )?.rpcUrl;
+      addTxHash(hash, rpcUrl!);
 
       setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
       dispatch(setDepositL1TxHash(hash!));
@@ -855,7 +859,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
-          {/* <div className="mt-6 flex flex-col text-lg">
+          <div className="mt-6 flex flex-col text-lg">
             <span>Transaction hash:</span>
             <div className="flex items-center cursor-pointer">
               <span className="text-xs">{depositL1Hash}</span>
@@ -863,10 +867,10 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
             <VerifyTxHashModal
               onVerifyResult={(res) => {
-                console.log(res);
+                console.log("onVerifyResult: ", res);
               }}
             />
-          </div> */}
+          </div>
         </div>
         {isFirstDeposit && showNoPointsTip && (
           <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
