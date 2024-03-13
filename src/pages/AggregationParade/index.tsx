@@ -301,6 +301,12 @@ export default function AggregationParade() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (inviteCode) {
+      setIsInviteCodeChecked(true);
+    }
+  }, [inviteCode]);
+
   return (
     <BgBox>
       <div>
