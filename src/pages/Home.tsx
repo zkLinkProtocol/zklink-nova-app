@@ -1,18 +1,11 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import OTPInput from "react-otp-input";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setInviteCode,
-  setTwitterAccessToken,
-  setViewStatus,
-} from "@/store/modules/airdrop";
-// import { useNavigate } from 'react-router-dom'
+import { setInviteCode } from "@/store/modules/airdrop";
 import { FooterTvlText } from "@/styles/common";
 import "@/styles/otp-input.css";
-import { checkInviteCode } from "@/api";
-import toast from "react-hot-toast";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { RootState } from "@/store";
 import { useStartTimerStore } from "@/hooks/useStartTimer";
@@ -65,7 +58,7 @@ const ConnectWalletText = styled.span`
   letter-spacing: -0.03125rem;
 `;
 
-const TotalTvlBox = styled.div`
+const FooterBox = styled.div`
   position: absolute;
   bottom: 2rem;
   left: 50%;
@@ -74,13 +67,8 @@ const TotalTvlBox = styled.div`
 
 export default function Home() {
   const web3Modal = useWeb3Modal();
-  const dispatch = useDispatch();
   const { isConnected } = useAccount();
-  // const navigate = useNavigate()
-  // const [activeUsers, setActiveUsers] = useState(0)
-  const { inviteCode, invite, signature } = useSelector(
-    (store: RootState) => store.airdrop
-  );
+  const { inviteCode } = useSelector((store: RootState) => store.airdrop);
   const { campaignStart } = useStartTimerStore();
   const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] =
     useState({
@@ -90,7 +78,9 @@ export default function Home() {
       placeholder: "",
       inputType: "text" as const,
     });
+
   const navigator = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOTPChange = (otp: string) => {
     setConfig((prevConfig) => ({ ...prevConfig, otp }));
@@ -99,6 +89,7 @@ export default function Home() {
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
     if (!otp || otp.length !== 6 || !campaignStart) return;
+    // TODO: check invite code ?
     // const res = await checkInviteCode(otp);
     // if (!res?.result) {
     //   toast.error("Invalid invite code. Try another.", { duration: 3000 });
@@ -109,80 +100,74 @@ export default function Home() {
     navigator("/aggregation-parade");
   };
 
-  // useEffect(() => {
-  //   if (isConnected && signature) {
-  //     navigator("/aggregation-parade");
-  //   }
-  // }, [isConnected]);
-
   return (
     <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">
-      <div className="">
-        <TitleBox className="text-center">
-          <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
-            Bridge to Mega Yield and token rewards on zkLink Nova
-          </h2>
-          <p className="sub-title mt-4 pl-6 pr-8 text-[1.5rem] leading-8">
-            The only Ethereum L3 with native yield for ETH Stablecoins. The
-            Aggreagation Parade is now live.
+      {/* Title */}
+      <TitleBox className="text-center">
+        <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
+          Bridge to Mega Yield and token rewards on zkLink Nova
+        </h2>
+        <p className="sub-title mt-4 pl-6 pr-8 text-[1.5rem] leading-8">
+          The only Ethereum L3 with native yield for ETH Stablecoins. The
+          Aggreagation Parade is now live.
+        </p>
+      </TitleBox>
+
+      {/* Form: Invite code */}
+      <CardBox className="mt-[2.5rem] py-8 px-[1rem] mx-auto flex flex-col items-center text-center w-[26rem]">
+        <TitleBox>
+          <h4 className="title text-[1.5rem] leading-[2rem]">
+            Enter Your Invite Code
+          </h4>
+          <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
+            Enter your invite code to participate in the campaign
           </p>
         </TitleBox>
-      </div>
 
-      <div className="mt-[2.5rem]">
-        <CardBox className="py-8 px-[1rem] mx-auto flex flex-col items-center text-center w-[26rem]">
-          <TitleBox>
-            <h4 className="title text-[1.5rem] leading-[2rem]">
-              Enter Your Invite Code
-            </h4>
-            <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
-              Enter your invite code to participate in the campaign
-            </p>
-          </TitleBox>
+        <div className="my-8">
+          <OTPInput
+            inputStyle="inputStyle"
+            numInputs={numInputs}
+            onChange={handleOTPChange}
+            renderSeparator={<span>{separator}</span>}
+            value={otp}
+            placeholder={placeholder}
+            inputType={inputType}
+            renderInput={(props) => <input {...props} />}
+            shouldAutoFocus
+          />
+        </div>
 
-          <div className="my-8">
-            <OTPInput
-              inputStyle="inputStyle"
-              numInputs={numInputs}
-              onChange={handleOTPChange}
-              renderSeparator={<span>{separator}</span>}
-              value={otp}
-              placeholder={placeholder}
-              inputType={inputType}
-              renderInput={(props) => <input {...props} />}
-              shouldAutoFocus
-            />
-          </div>
+        <div>
+          <Button
+            className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] `}
+            disabled={!otp || otp.length !== 6 || !campaignStart}
+            onClick={enterInviteCode}
+          >
+            ENTER INVITE CODE
+          </Button>
+        </div>
 
-          <div>
-            <Button
-              className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] `}
-              disabled={!otp || otp.length !== 6 || !campaignStart}
-              onClick={enterInviteCode}
+        {!isConnected && (
+          <div className="mt-4">
+            <ConnectWalletText
+              className="cursor-pointer text-[1rem]"
+              onClick={() => web3Modal.open()}
             >
-              ENTER INVITE CODE
-            </Button>
+              Connect Wallet
+            </ConnectWalletText>
           </div>
+        )}
+      </CardBox>
 
-          {!isConnected && (
-            <div className="mt-4">
-              <ConnectWalletText
-                className="cursor-pointer text-[1rem]"
-                onClick={() => web3Modal.open()}
-              >
-                Connect Wallet
-              </ConnectWalletText>
-            </div>
-          )}
-        </CardBox>
-      </div>
-
-      <TotalTvlBox className="w-full">
+      <FooterBox className="w-full">
+        {/* Footer: total tvl data */}
         <div className="flex flex-col items-center">
           <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
           <TotalTvlCard />
         </div>
 
+        {/* Footer: nav links */}
         <div className="absolute right-[6rem] bottom-[1rem] flex justify-end items-end">
           <div className="flex items-center gap-[1.25rem]">
             <a href="https://blog.zk.link/">
@@ -211,8 +196,7 @@ export default function Home() {
             </a>
           </div>
         </div>
-        {/* <FooterText className='mt-4'>TOTAL USERS / {activeUsers}</FooterText> */}
-      </TotalTvlBox>
+      </FooterBox>
     </BgBox>
   );
 }

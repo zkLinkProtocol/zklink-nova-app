@@ -1,4 +1,4 @@
-import { checkInviteCode, validTwitter } from "@/api";
+import { checkInviteCode } from "@/api";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { RootState } from "@/store";
@@ -63,13 +63,6 @@ const SubTitleText = styled.p`
   letter-spacing: -0.03125rem;
 `;
 
-const ContentBox = styled.div`
-  position: relative;
-  margin: 0 auto;
-  width: 58.875rem;
-  z-index: 10;
-`;
-
 const StepNum = styled.div`
   width: 4.3125rem;
   height: 6.25rem;
@@ -121,13 +114,15 @@ const InviteInput = styled.input`
 `;
 
 export default function AggregationParade() {
+  const web3Modal = useWeb3Modal();
+  const verifyDepositModal = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();
   const { address, isConnected } = useAccount();
-  const web3Modal = useWeb3Modal();
   const { signature, inviteCode } = useSelector(
     (store: RootState) => store.airdrop
   );
-  const [inviteCodeValue, setInviteCodeValue] = useState("");
+
+  const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
   const [isInviteCodeChecked, setIsInviteCodeChecked] = useState(false);
   const [twitterAccessToken, setTwitterAccessToken] = useState("");
@@ -135,29 +130,37 @@ export default function AggregationParade() {
   const [selectedChainId, setSelectedChainId] = useState<string>(
     String(fromList[0].chainId)
   );
-  const verifyDepositModal = useDisclosure();
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { signMessage } = useSignMessage();
-  const navigate = useNavigate();
 
   const validInviteCode = (code: string) => {
     return code && code.length === 6 ? true : false;
   };
 
+  const onChangeInviteCode = (value: string) => {
+    setInviteCodeValue(value);
+    setIsInviteCodeChecked(false);
+    dispatch(setInviteCode(""));
+  };
+
   const enterInviteCode = async (code: string) => {
     if (!code || code.length !== 6) return;
+    dispatch(setInviteCode(code));
+
     setIsInviteCodeLoading(true);
     const res = await checkInviteCode(code);
     setIsInviteCodeLoading(false);
+
     if (!res?.result) {
       setIsInviteCodeChecked(false);
+      dispatch(setInviteCode(""));
       toast.error("Invalid invite code. Try another.");
       return;
     }
 
     setIsInviteCodeChecked(true);
-
-    dispatch(setInviteCode(code));
   };
 
   const handleConnectTwitter = () => {
@@ -246,9 +249,10 @@ export default function AggregationParade() {
                 setTwitterLoading(false);
                 setTwitterAccessToken(access_token);
               } else {
-                toastTwitterError()
+                toastTwitterError();
               }
 
+              // TODO: valid twitter ?
               // if (data?.username) {
               //   console.log(data?.username);
               //   const res = await validTwitter(data?.username, address);
@@ -276,6 +280,12 @@ export default function AggregationParade() {
       });
   };
 
+  // TODO: Verify deposit hash
+  const verifyDepositHash = () => {};
+
+  // TODO: Submit user bind form
+  const handleSubmit = () => {};
+
   useEffect(() => {
     const code = searchParams.get("code");
     const error = searchParams.get("error");
@@ -291,26 +301,17 @@ export default function AggregationParade() {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    if (inviteCode) {
-      setInviteCodeValue(inviteCode);
-      dispatch(setInviteCode(""));
-    }
-  }, [inviteCode]);
-
-  const onChangeInviteCode = (value: string) => {
-    setInviteCodeValue(value);
-    setIsInviteCodeChecked(false);
-  };
-
   return (
     <BgBox>
       <div>
+        {/* Title */}
         <div className="mt-[1rem]">
           <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
           <TitleText>To join the zkLink Aggregation Parade</TitleText>
         </div>
+
         <div className="mt-[3rem] mx-auto max-w-[720px]">
+          {/* Setp 1: invite code */}
           <div className="flex justify-center gap-[0.5rem]">
             <CardBox className={`${isInviteCodeChecked ? "successed" : ""}`}>
               <StepNum>01</StepNum>
@@ -367,6 +368,7 @@ export default function AggregationParade() {
             </CardBox>
           </div>
 
+          {/* Step 2: Bridge  */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox>
               <StepNum>02</StepNum>
@@ -401,6 +403,7 @@ export default function AggregationParade() {
             </CardBox>
           </div>
 
+          {/* Step 3: connect twitter */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox className={`${twitterAccessToken ? "successed" : ""}`}>
               <StepNum>03</StepNum>
@@ -435,6 +438,7 @@ export default function AggregationParade() {
             </CardBox>
           </div>
 
+          {/* Step 4: connect wallet & sign */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox className={signature ? "successed" : ""}>
               <StepNum>04</StepNum>
@@ -468,8 +472,12 @@ export default function AggregationParade() {
             </CardBox>
           </div>
 
+          {/* Submit for user bind */}
           <div className="flex justify-center w-full px-[4.8125rem] ">
-            <CardBox className="mx-auto mt-[1rem] py-[1.25rem] w-full text-center cursor-pointer">
+            <CardBox
+              className="mx-auto mt-[1rem] py-[1.25rem] w-full text-center cursor-pointer"
+              onClick={handleSubmit}
+            >
               <StepItem>
                 <p className="step-title">
                   Participate zkLink Aggregation Parade
@@ -480,11 +488,13 @@ export default function AggregationParade() {
         </div>
       </div>
 
+      {/* Total tvl */}
       <div className="flex flex-col justify-center items-center w-full py-[2.5rem]">
         <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
         <TotalTvlCard />
       </div>
 
+      {/* Verify deposit modal */}
       <Modal
         style={{ minHeight: "14rem" }}
         size="xl"
@@ -492,56 +502,61 @@ export default function AggregationParade() {
         onOpenChange={verifyDepositModal.onOpenChange}
       >
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Verify your deposit</ModalHeader>
-              <ModalBody>
-                <div className="flex items-center gap-6">
-                  <Select
-                    className="max-w-[9.5rem]"
-                    items={fromList}
-                    value={selectedChainId}
-                    selectedKeys={[selectedChainId]}
-                    size="sm"
-                    renderValue={(items) => {
-                      return items.map((item) => (
-                        <div key={item.key} className="flex items-center gap-2">
-                          <Avatar
-                            className="flex-shrink-0"
-                            size="sm"
-                            src={item.data?.icon}
-                          />
-                          <span>{item.data?.label}</span>
-                        </div>
-                      ));
-                    }}
-                    onChange={(e) => setSelectedChainId(e.target.value)}
-                  >
-                    {(chain) => (
-                      <SelectItem key={chain.chainId} value={chain.chainId}>
-                        <div className="flex gap-2 items-center">
-                          <Avatar
-                            className="flex-shrink-0"
-                            size="sm"
-                            src={chain.icon}
-                          />
-                          <span className="text-small">{chain.label}</span>
-                        </div>
-                      </SelectItem>
-                    )}
-                  </Select>
+          <ModalHeader>Verify your deposit</ModalHeader>
+          <ModalBody>
+            <div className="flex items-center gap-6">
+              <Select
+                className="max-w-[9.5rem]"
+                items={fromList.map((item) => ({
+                  label: item.label,
+                  icon: item.icon,
+                  chainId: item.chainId,
+                }))}
+                value={selectedChainId}
+                selectedKeys={[selectedChainId]}
+                size="sm"
+                renderValue={(items) => {
+                  return items.map((item) => (
+                    <div key={item.key} className="flex items-center gap-2">
+                      <Avatar
+                        className="flex-shrink-0"
+                        size="sm"
+                        src={item.data?.icon}
+                      />
+                      <span>{item.data?.label}</span>
+                    </div>
+                  ));
+                }}
+                onChange={(e) => setSelectedChainId(e.target.value)}
+              >
+                {(chain) => (
+                  <SelectItem key={chain.chainId} value={chain.chainId}>
+                    <div className="flex gap-2 items-center">
+                      <Avatar
+                        className="flex-shrink-0"
+                        size="sm"
+                        src={chain.icon}
+                      />
+                      <span className="text-small">{chain.label}</span>
+                    </div>
+                  </SelectItem>
+                )}
+              </Select>
 
-                  <Input
-                    variant="underlined"
-                    placeholder="Please enter your tx hash"
-                  />
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button className="gradient-btn w-full block">Verify</Button>
-              </ModalFooter>
-            </>
-          )}
+              <Input
+                variant="underlined"
+                placeholder="Please enter your tx hash"
+              />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              className="gradient-btn w-full block"
+              onClick={verifyDepositHash}
+            >
+              Verify
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </BgBox>

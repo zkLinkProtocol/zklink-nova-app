@@ -43,7 +43,6 @@ import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { AiFillQuestionCircle } from 'react-icons/ai'
 
 const GradientButton = styled.span`
   border-radius: 0.5rem;
@@ -209,12 +208,11 @@ export type AccountTvlItem = {
 };
 
 export default function Dashboard() {
-  const { invite } = useSelector((store: RootState) => store.airdrop);
   const { address, isConnected } = useAccount();
-  // const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F";
+  const { invite } = useSelector((store: RootState) => store.airdrop);
+  // const address = "0xF50087B8663177Ea50e7C5428f7d0908cddB4f8F"; // mainnet account for test
 
   const [tabsActive, setTabsActive] = useState(0);
-
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [stakingUsdValue, setStakingUsdValue] = useState(0);
   const [stakingEthValue, setStakingEthValue] = useState(0);
@@ -223,6 +221,7 @@ export default function Dashboard() {
     novaPoint: 0,
     referPoint: 0,
   });
+  const [progressList, setProgressList] = useState<any[]>([]);
   const [referrersTvlList, setReferrersTvl] = useState([]);
   const [bridgeToken, setBridgeToken] = useState("");
   const bridgeModal = useDisclosure();
@@ -232,10 +231,14 @@ export default function Dashboard() {
   const [totalTvl, setTotalTvl] = useState(0);
   const [referralTvl, setReferralTvl] = useState(0);
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
+  const [ethUsdPrice, setEthUsdPrice] = useState(0);
+
   const chainId = useChainId();
   const { nft, loading: mintLoading, sendMintTx } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
+
   const { switchChain } = useSwitchChain();
+  const navigatorTo = useNavigate();
 
   const { data: nativeTokenBalance } = useBalance({
     address: address as `0x${string}`,
@@ -348,15 +351,6 @@ export default function Dashboard() {
     setTotalTvl(res?.result || 0);
   };
 
-  const [progressList, setProgressList] = useState<any[]>([]);
-
-  const navigatorTo = useNavigate();
-  useEffect(() => {
-    if (!isConnected || !invite?.code) {
-      navigatorTo("/");
-    }
-  }, [isConnected]);
-
   useEffect(() => {
     let isShow = false;
     let isShowIndex = 0;
@@ -383,8 +377,6 @@ export default function Dashboard() {
     setProgressList(arr);
   }, [groupTvl]);
 
-  const [ethUsdPrice, setEthUsdPrice] = useState(0);
-
   const getEthUsdPrice = async () => {
     const tokenList = await getExplorerTokenTvl(true);
 
@@ -406,19 +398,6 @@ export default function Dashboard() {
     console.log("stakingEth", ethValue, stakingUsdValue, ethUsdPrice);
     setStakingEthValue(ethValue);
   }, [ethUsdPrice, stakingUsdValue]);
-
-  useEffect(() => {
-    getEthUsdPrice();
-    getSupportTokensFunc();
-    getTotalTvlByTokenFunc();
-    getAccountPointFunc();
-    getAccountRefferalsTVLFunc();
-    getAccounTvlFunc();
-    getAccountTvlFunc();
-    getGroupTvlFunc();
-    getReferralTvlFunc();
-    getTotalTvlFunc();
-  }, [address]);
 
   const handleMintNow = useCallback(() => {
     if (nft) {
@@ -472,17 +451,36 @@ export default function Dashboard() {
     mintModal,
   ]);
 
+  /**
+   * Init: Get data from server
+   */
   useEffect(() => {
-    console.log("isActive", invite?.code, isConnected);
-    // if (!invite?.code || !isConnected) {
-    //   navigatorTo("/");
-    // }
-  }, [invite, isConnected]);
+    getEthUsdPrice();
+    getSupportTokensFunc();
+    getTotalTvlByTokenFunc();
+    getAccountPointFunc();
+    getAccountRefferalsTVLFunc();
+    getAccounTvlFunc();
+    getAccountTvlFunc();
+    getGroupTvlFunc();
+    getReferralTvlFunc();
+    getTotalTvlFunc();
+  }, [address]);
+
+  useEffect(() => {
+    /**
+     * return home page if not active
+     */
+    if (!isConnected || !invite?.code) {
+      navigatorTo("/");
+    }
+  }, [isConnected, invite]);
 
   return (
     <BgBox>
       <BgCoverImg />
       <div className="relative flex gap-[1.5rem] px-[4.75rem] z-[1]">
+        {/* Left: nova points ... data */}
         <div className="w-[27.125rem]">
           <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
             <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
@@ -544,6 +542,7 @@ export default function Dashboard() {
                 </GreenTag>
               </Tooltip>
             </div>
+            {/* TODO: Est. in next epoch */}
             {/* <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
               +{accountPoint.referPoint}
             </p>
@@ -585,6 +584,7 @@ export default function Dashboard() {
             </GradientButton>
           </CardBox>
         </div>
+
         <div className="w-full" style={{ maxWidth: "calc(100% - 30rem)" }}>
           <div className="flex gap-[1.5rem]">
             <CardBox className="flex justify-around  py-[3rem] w-1/2">
@@ -604,30 +604,6 @@ export default function Dashboard() {
                   Group TVL
                 </p>
               </div>
-              {/* <div>
-                                <p className='text-[1.5rem] leading-[2rem] text-center'>{getBooster(groupTvl)}</p>
-                                <p className='mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.25rem]'>
-                                    <span>Group 24h Growth/Boost Rate</span>
-                                    <Tooltip
-                                        className='p-[1rem]'
-                                        content={
-                                            <p className='text-[1rem]'>
-                                                Your group’s Growth Booster is dependent on your group’s cumulative TVL growth rate over the past 24
-                                                hours.{' '}
-                                                <a
-                                                    href=''
-                                                    className='text-[#0bc48f]'>
-                                                    Learn more.
-                                                </a>
-                                            </p>
-                                        }>
-                                        <img
-                                            src='/img/icon-info.svg'
-                                            className='w-[0.875rem] h-[0.875rem] opacity-40'
-                                        />
-                                    </Tooltip>
-                                </p>
-                            </div> */}
             </CardBox>
             <CardBox className="flex justify-around py-[3rem] w-1/2">
               <div>
@@ -672,6 +648,7 @@ export default function Dashboard() {
             </CardBox>
           </div>
 
+          {/* Group Milestone */}
           <div className="mt-[2rem]">
             <div className="flex justify-between items-center leading-[2rem] font-[700]">
               <div className="flex items-center gap-[0.37rem]">
@@ -737,6 +714,7 @@ export default function Dashboard() {
           </div>
 
           <div className="mt-[2rem]">
+            {/* Tabs: Assets | Trademark NFTs | Referral  */}
             <TabsBox className="flex items-center gap-[1.5rem]">
               <span
                 className={`tab-item ${tabsActive === 0 ? "active" : ""}`}
@@ -758,13 +736,6 @@ export default function Dashboard() {
                 onClick={() => setTabsActive(2)}
               >
                 <span>Referral</span>
-
-                {/* <span
-                                    className='referral-info'
-                                    data-tooltip-id='referral-tooltip'
-                                    data-tooltip-content='For every 3 referrals you made; you are eligible to mint a trademark NFT'>
-                                    <AiFillQuestionCircle />
-                                </span> */}
               </div>
             </TabsBox>
 
