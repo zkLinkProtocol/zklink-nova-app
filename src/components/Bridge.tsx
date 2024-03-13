@@ -861,40 +861,41 @@ export default function Bridge(props: IBridgeComponentProps) {
         )}
       </Container>
       {txhashes[0] && (
-        <Popover placement="top" triggerScaleOnOpen={false}>
-          <PopoverTrigger onClick={() => copyText(txhashes[0].txhash)}>
-            <div className="mt-8 flex flex-col text-lg cursor-pointer bg-[#000000] bg-opacity-40 px-4 py-3 rounded-lg">
-              <div className="flex items-center justify-between font-normal text-[14px] mb-2">
-                <span>Latest tx hash:</span>
-                <span>
-                  You can use this tx hash to verify in Aggregation Parade page
-                </span>
-              </div>
-              <div className="flex items-center ">
-                <img
-                  src={
-                    FromList.find((item) => item.rpcUrl === txhashes[0]?.rpcUrl)
-                      ?.icon
-                  }
-                  className="w-6 h-6 mr-1"
-                />
-                <span className="text-[12px] font-semibold">
-                  {txhashes[0]?.txhash}
-                </span>
+        <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-lg">
+          <div className="flex items-center justify-between font-normal text-[14px] mb-2 text-[#A0A5AD]">
+            <span>Latest tx hash:</span>
+            <span>
+              You can use this tx hash to verify in Aggregation Parade page
+            </span>
+          </div>
+          <div className="flex items-center ">
+            <img
+              src={
+                FromList.find((item) => item.rpcUrl === txhashes[0]?.rpcUrl)
+                  ?.icon
+              }
+              className="w-6 h-6 mr-1 rounded-full"
+            />
+            <span className="text-[12px] font-semibold">
+              {txhashes[0]?.txhash}
+            </span>
+            <Popover placement="top" triggerScaleOnOpen={false}>
+              <PopoverTrigger>
                 <img
                   src={"/img/icon-copy.png"}
                   alt=""
-                  className="w-6 h-6 ml-auto"
+                  className="w-6 h-6 ml-auto hover:opacity-85 cursor-pointer"
+                  onClick={() => copyText(txhashes[0].txhash)}
                 />
-              </div>
-            </div>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="px-1 py-2">
-              <div className="text-small font-bold">Copied!</div>
-            </div>
-          </PopoverContent>
-        </Popover>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="px-1 py-2">
+                  <div className="text-small font-bold">Copied!</div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
       )}
       <Modal
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}
