@@ -334,7 +334,7 @@ export default function Home() {
           </div>
         )}
       </CardBox>
-      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-36 py-4">
+      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-10 lg:px-36 py-4">
         {/* Footer: total tvl data */}
         {/* <div className="flex flex-col items-center">
           <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>

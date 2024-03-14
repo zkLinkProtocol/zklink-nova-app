@@ -191,7 +191,7 @@ export default function Header() {
         <NavbarContent>
           {/* mobile toggle button */}
           <NavbarMenuToggle
-            className="sm:hidden mr-6"
+            className="md:hidden mr-6"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           />
           {/* <Logo /> */}
@@ -209,7 +209,7 @@ export default function Header() {
             <div>Mainnet Live</div>
           </NavNet>
         </NavbarContent>
-        <NavbarContent className="hidden sm:flex gap-[2.5rem]" justify="center">
+        <NavbarContent className="hidden md:flex gap-[2.5rem]" justify="center">
           <NavbarItem>
             <NavLink
               to="/aggregation-parade"
