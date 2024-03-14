@@ -321,7 +321,7 @@ export default function Home() {
           </Button>
         </div>
 
-        {!isConnected && (
+        {/* {!isConnected && (
           <div className="mt-4">
             <ConnectWalletText
               className="cursor-pointer text-[1rem]"
@@ -330,7 +330,7 @@ export default function Home() {
               Connect Wallet
             </ConnectWalletText>
           </div>
-        )}
+        )} */}
       </CardBox>
 
       <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex items-center justify-between px-36 py-4">
