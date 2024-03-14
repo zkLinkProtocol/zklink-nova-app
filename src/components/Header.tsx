@@ -103,6 +103,7 @@ export default function Header() {
     invite,
     isActiveUser,
     signatureAddress,
+    inviteCode,
   } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
   const { getDepositL2TxHash } = useBridgeTx();
   const dispatch = useDispatch();
@@ -114,12 +115,17 @@ export default function Header() {
   }, [isConnected, invite]);
 
   useEffect(() => {
-    const inviteCode = searchParams.get("inviteCode");
-    console.log("inviteCode", inviteCode);
-    if (inviteCode && inviteCode.length === 6) {
-      dispatch(setInviteCode(inviteCode));
+    const queryInviteCode = searchParams.get("inviteCode");
+
+    console.log("queryInviteCode", queryInviteCode);
+    if (queryInviteCode && queryInviteCode.length === 6) {
+      dispatch(setInviteCode(queryInviteCode));
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    console.log("inviteCode", inviteCode);
+  }, [inviteCode]);
 
   useEffect(() => {
     (async () => {
@@ -263,9 +269,14 @@ export default function Header() {
                 <NavLink to="/bridge">Bridge</NavLink>
               </NavbarItem>
               <NavbarItem>
-                <a href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7" target="_blank">User Guide</a>
+                <a
+                  href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
+                  target="_blank"
+                >
+                  User Guide
+                </a>
               </NavbarItem>
-              
+
               {/* <NavbarItem>
                 <a
                   href={

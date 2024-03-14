@@ -513,6 +513,7 @@ export default function SoftKYC() {
 
     // if after deposit to link here, show verify tx modal
     if (flag && address) {
+      setSearchParams("");
       const txs = txhashes[address];
 
       console.log("txhashes", txhashes[address]);
@@ -542,14 +543,11 @@ export default function SoftKYC() {
 
   // };
 
-  // /**
-  //  * Check: Invite code
-  //  */
-  // useEffect(() => {
-  //   if (inviteCode) {
-  //     checkInviteCode(inviteCode);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (validInviteCode(inviteCode)) {
+      setInviteCodeValue(inviteCode);
+    }
+  }, [inviteCode]);
 
   useEffect(() => {
     if (
@@ -707,7 +705,7 @@ export default function SoftKYC() {
                 </Button>
                 <Button
                   className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                  disabled={Boolean(depositTx)}
+                  disabled={Boolean(depositTx) || !address}
                   onClick={() => {
                     verifyDepositModal.onOpen();
                   }}
