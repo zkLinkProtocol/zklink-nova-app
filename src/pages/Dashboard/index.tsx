@@ -38,7 +38,7 @@ import {
 } from "@/api";
 import { useAccount, useChainId, useBalance, useSwitchChain } from "wagmi";
 import toast from "react-hot-toast";
-import { NOVA_CHAIN_ID } from "@/constants";
+import { NOVA_CHAIN_ID, TWEET_SHARE_TEXT } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
@@ -680,15 +680,20 @@ export default function Dashboard() {
                 </p>
               </div>
               <div>
-                <p
-                  className="text-[1.5rem] leading-[2rem] text-center flex items-center gap-[0.38rem] cursor-pointer"
-                  onClick={() => handleCopy()}
-                >
+                <p className="text-[1.5rem] leading-[2rem] text-center flex items-center gap-[0.38rem] ">
                   <span>{invite?.code || "-"}</span>
                   <img
                     src="/img/icon-copy.svg"
-                    className="w-[1.1875rem] h-[1.1875rem]"
+                    className="w-[1.1875rem] h-[1.1875rem] cursor-pointer"
+                    onClick={() => handleCopy()}
                   />
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=https://app.zklink.io/invite/${invite?.code}&via=zkLink_Official&text=${TWEET_SHARE_TEXT}`}
+                    className="twitter-hashtag-button"
+                    data-show-count="false"
+                  >
+                    Tweet
+                  </a>
                 </p>
                 <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.5rem]">
                   Your Invite Code (Remaining {invite?.canInviteNumber || 0})

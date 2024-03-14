@@ -10,7 +10,7 @@ import {
   Avatar,
   Tooltip,
 } from "@nextui-org/react";
-import { Link, NavLink, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import styled from "styled-components";
@@ -114,6 +114,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
 
+  const location = useLocation();
   const isActive = useCallback(() => {
     return isConnected && Boolean(invite?.twitterHandler);
   }, [isConnected, invite]);
@@ -124,7 +125,18 @@ export default function Header() {
     if (queryInviteCode && queryInviteCode.length === 6) {
       dispatch(setInviteCode(queryInviteCode));
     }
-  }, [searchParams]);
+  }, [dispatch, searchParams]);
+
+  useEffect(() => {
+    if (location.pathname.includes("invite")) {
+      const code = location.pathname.substring(
+        location.pathname.lastIndexOf("/") + 1
+      );
+      if (code && code.length === 6) {
+        dispatch(setInviteCode(code));
+      }
+    }
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
     (async () => {
