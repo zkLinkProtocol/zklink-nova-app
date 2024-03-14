@@ -183,7 +183,6 @@ export default function Header() {
     }
   }, [signatureAddress, address]);
 
-
   useEffect(() => {
     if (!isConnected) {
       dispatch(setSignature(""));
@@ -225,18 +224,25 @@ export default function Header() {
         }}
         maxWidth="full"
         isBlurred={false}
+        isMenuOpen={isMenuOpen}
         onMenuOpenChange={setIsMenuOpen}
       >
         <NavbarContent>
           {/* mobile toggle button */}
           <NavbarMenuToggle
-            className="mr-2 md:hidden md:mr-6 focus:outline-none"
+            className="mr-2 md:hidden md:mr-6"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           />
+
           {/* <Logo /> */}
 
           <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
-            <LogoBox className="relative">
+            <LogoBox
+              className="relative"
+              onClick={() => {
+                setIsMenuOpen(false);
+              }}
+            >
               <img
                 className="max-w-[120px] md:max-w-[145.431px] h-auto"
                 src="/img/NOVA.svg"
@@ -382,7 +388,11 @@ export default function Header() {
             </Button>
           </NavbarItem>
         </NavbarContent>
-        <NavbarMenu>
+        <NavbarMenu
+          onClick={() => {
+            setIsMenuOpen(false);
+          }}
+        >
           <NavbarMenuItem>
             <NavLink to="/aggregation-parade" className="nav-link">
               Aggregation Parade
