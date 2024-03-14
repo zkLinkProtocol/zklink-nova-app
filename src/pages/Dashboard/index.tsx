@@ -436,6 +436,8 @@ export default function Dashboard() {
       if (e.message) {
         if (e.message.includes("User rejected the request")) {
           toast.error("User rejected the request");
+        } else if (e.message.includes("You already have a character")) {
+          toast.error("You can mint SBT only once.");
         } else {
           toast.error(e.message);
         }
@@ -573,11 +575,45 @@ export default function Dashboard() {
             </p> */}
 
             <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-              <span>Earned By Your Deposit</span>
+              <div className="flex items-center gap-[0.5rem]">
+                <span>Earned By Your Deposit</span>
+
+                <Tooltip
+                  className="p-[1rem]"
+                  content={
+                    <p className="text-[1rem] max-w-[25rem] gap-[0.5rem]">
+                      This includes the initial deposit rewards as well as the
+                      ongoing rewards for holding (snapshot every 8 hours).
+                    </p>
+                  }
+                >
+                  <img
+                    src="/img/icon-info.svg"
+                    className="w-[0.875rem] h-[0.875rem] opacity-40"
+                  />
+                </Tooltip>
+              </div>
               <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
             </p>
             <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-              <span>Earned By Referring Friends</span>
+              <div className="flex items-center gap-[0.5rem]">
+                <span>Earned By Referring Friends</span>
+
+                <Tooltip
+                  className="p-[1rem]"
+                  content={
+                    <p className="text-[1rem] max-w-[25rem] gap-[0.5rem]">
+                      The referral rewards will be updated every 8 hours along
+                      with the deposit rewards.
+                    </p>
+                  }
+                >
+                  <img
+                    src="/img/icon-info.svg"
+                    className="w-[0.875rem] h-[0.875rem] opacity-40"
+                  />
+                </Tooltip>
+              </div>
               <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
             </p>
           </CardBox>

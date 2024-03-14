@@ -8,10 +8,17 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  getKeyValue,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+
+type DataItem = {
+  novaPoint: number;
+  referPoint: number;
+  rank: number;
+  inviteBy: string | null;
+  address: string;
+};
 
 export default function PointsLeaderboard() {
   const columns: TableColumnItem[] = [
@@ -37,57 +44,24 @@ export default function PointsLeaderboard() {
     },
   ];
 
-  const rows = [
-    {
-      key: "1",
-      rank: 6400,
-      name: "0x1234567...12345",
-      invitedBy: "0x1234567...12345",
-      stakingPts: "1,234",
-    },
-    {
-      key: "2",
-      rank: 1,
-      name: "0x1234567...12345",
-      invitedBy: "0x1234567...12345",
-      stakingPts: "1,234",
-    },
-    {
-      key: "3",
-      rank: 2,
-      name: "0x1234567...12345",
-      invitedBy: "0x1234567...12345",
-      stakingPts: "1,234",
-    },
-    {
-      key: "4",
-      rank: 3,
-      name: "0x1234567...12345",
-      invitedBy: "0x1234567...12345",
-      stakingPts: "1,234",
-    },
-  ];
-
-  const [data, setData] = useState<any[]>([]);
-
-  const getAccountsRankFunc = async () => {
-    const res = await getAccountsRank();
-    if (res?.result) {
-      setData(res?.result);
-    }
-  };
+  const [data, setData] = useState<DataItem[]>([]);
 
   const { address } = useAccount();
 
-  const getAccountRankFunc = async () => {
-    if (!address) return;
-    const res = await getAccountRank(address);
+  const getAccountsRankFunc = async () => {
+    let arr: DataItem[] = [];
+    const res = await getAccountsRank();
     if (res?.result) {
-      // setData(res?.result)
-      let arr = [res?.result, ...data];
-
-      setData(arr);
+      arr = res.result;
     }
+
+    if (address) {
+      const accountRankRes = await getAccountRank(address);
+      if (accountRankRes?.result) {
+        arr.unshift(accountRankRes.result);
+      }
+    }
+    setData(arr);
   };
 
   const showAccount = (acc: any) => {
@@ -97,8 +71,7 @@ export default function PointsLeaderboard() {
 
   useEffect(() => {
     getAccountsRankFunc();
-    // getAccountRankFunc()
-  }, []);
+  }, [address]);
 
   return (
     <Table
@@ -109,10 +82,12 @@ export default function PointsLeaderboard() {
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
+
       <TableBody items={data}>
-        {data.map((item: any, index: number) => {
-          return (
-            <TableRow key={index} className="py-5">
+        {data.map((item: any, index: number) =>
+          index === 0 &&
+          item?.address?.toLowerCase() === address?.toLowerCase() ? (
+            <TableRow key={index} className="border-b-1 border-slate-600">
               <TableCell>{item.rank}</TableCell>
               <TableCell>{showAccount(item.address)}</TableCell>
               <TableCell>{showAccount(item.inviteBy)}</TableCell>
@@ -122,8 +97,19 @@ export default function PointsLeaderboard() {
                 )}
               </TableCell>
             </TableRow>
-          );
-        })}
+          ) : (
+            <TableRow key={index}>
+              <TableCell>{item.rank}</TableCell>
+              <TableCell>{showAccount(item.address)}</TableCell>
+              <TableCell>{showAccount(item.inviteBy)}</TableCell>
+              <TableCell>
+                {formatNumberWithUnit(
+                  (+item?.novaPoint || 0) + (+item?.referPoint || 0)
+                )}
+              </TableCell>
+            </TableRow>
+          )
+        )}
       </TableBody>
     </Table>
   );

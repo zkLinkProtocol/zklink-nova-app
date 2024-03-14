@@ -63,17 +63,22 @@ const useNovaNFT = () => {
 
   //ipfs://QmYY5RWPzGEJEjRYhGvBhycYhZxRMxCSkHNTxtVrrjUzQf/ISTP
   const fetchMetadataByURI = async (uri: string) => {
-    if (uri.startsWith("ipfs://")) {
-      uri = uri.substring(7);
-    }
-    const res = await fetch(`https://ipfs.io/ipfs/${uri}`);
-    const json = await res.json();
-    const result = { ...json };
-    if (json.image && json.image.startsWith("ipfs://")) {
-      const type = uri.substr(-4);
-      result.image = `/img/${type}.svg`;
-      //   result.image = `https://ipfs.io/ipfs/${json.image.substring(7)}`;
-    }
+    //fix: some user may fail for access IPFS fail
+    // if (uri.startsWith("ipfs://")) {
+    //   uri = uri.substring(7);
+    // }
+    // const res = await fetch(`https://ipfs.io/ipfs/${uri}`);
+    // const json = await res.json();
+    // const result = { ...json };
+    // if (json.image && json.image.startsWith("ipfs://")) {
+    //   const type = uri.substr(-4);
+    //   result.image = `/img/${type}.svg`;
+    //   //   result.image = `https://ipfs.io/ipfs/${json.image.substring(7)}`;
+    // }
+    const type = uri.substr(-4);
+    const result = {
+      image: `/img/${type}.svg`,
+    };
     return result;
   };
 
@@ -145,7 +150,8 @@ const useNovaNFT = () => {
       await getNFT(address);
     } catch (e) {
       console.error(e);
-      if (e.message && e.message?.includes("not found")) { //viewm not found. try getNFT again
+      if (e.message && e.message?.includes("not found")) {
+        //viewm not found. try getNFT again
         await getNFT(address);
         return;
       }
