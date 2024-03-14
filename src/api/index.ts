@@ -179,12 +179,14 @@ export type TxHashResponse = {
   isValid: boolean;
 };
 
-export const getTxByTxHash = (
-  txHash: string,
-  chainId: string
-): Promise<TxHashResponse> =>
+export type TxHashParams = {
+  txHash: string;
+  chainId: string;
+  address?: string;
+};
+export const getTxByTxHash = (params: TxHashParams): Promise<TxHashResponse> =>
   http.get(`${BASE_URL_API}/invite/getTxByTxHash`, {
-    params: { txHash, chainId },
+    params,
   });
 
 export type RegisterAccountParams = {

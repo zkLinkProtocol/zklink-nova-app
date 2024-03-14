@@ -86,6 +86,7 @@ const VerifyTxHashModal = (props: IProps) => {
     <>
       <Button onClick={() => modal.onOpen()}>Verify</Button>
       <Modal
+        classNames={{closeButton: 'text-[1.5rem]'}}
         style={{ width: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
         isOpen={modal.isOpen}

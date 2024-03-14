@@ -164,6 +164,7 @@ export default function Header() {
 
   useEffect(() => {
     getInviteFunc();
+    dispatch(setSignature(''))
   }, [address, isConnected]);
 
   useEffect(() => {
@@ -194,6 +195,8 @@ export default function Header() {
   useEffect(() => {
     console.log('isActiveUser', isActiveUser)
   }, [invite])
+
+  
 
   return (
     <>

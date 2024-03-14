@@ -205,16 +205,16 @@ export default function SoftKYC() {
       const res = await checkInviteCode(code);
 
       if (!res?.result) {
-        setIsInviteCodeLoading(false);
-        // dispatch(setInviteCode(""));
+        // setIsInviteCodeLoading(false);
+        dispatch(setIsCheckedInviteCode(false));
         toast.error("Invalid invite code. Try another.");
         return;
       }
-      setIsInviteCodeLoading(false);
+      // setIsInviteCodeLoading(false);
       dispatch(setIsCheckedInviteCode(true));
     } catch (error) {
       console.log(error);
-      setIsInviteCodeLoading(false);
+      // setIsInviteCodeLoading(false);
       dispatch(setIsCheckedInviteCode(false));
     } finally {
       setIsInviteCodeLoading(false);
@@ -405,7 +405,11 @@ export default function SoftKYC() {
     setIsReVerifyDeposit(true);
     console.log(selectedChainId, depositTxHash);
     try {
-      const res = await getTxByTxHash(depositTxHash, selectedChainId);
+      const res = await getTxByTxHash({
+        txHash: depositTxHash,
+        chainId: selectedChainId,
+        address,
+      });
       // TODO: response will return a field (as status: "PENDING") to show process ...
       console.log("verifyDepositHash", res);
       if (res?.isValid) {
@@ -427,10 +431,10 @@ export default function SoftKYC() {
   const getInviteFunc = async () => {
     if (!address) return;
     try {
+      setIsLoading(true);
       const res = await getInvite(address);
       console.log("getInviteFunc", res);
       if (res?.result) {
-        setIsLoading(true);
         setTimeout(() => {
           setIsLoading(false);
           dispatch(setInvite(res?.result));
@@ -438,23 +442,36 @@ export default function SoftKYC() {
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
       handleSubmitError();
     }
   };
 
   // TODO: Submit user bind form
-  const handleSubmitError = () => {
+  const handleSubmitError = (message?: string) => {
     toast.error(
-      "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
+      message
+        ? message
+        : "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
     );
     dispatch(setInviteCode(""));
     dispatch(setDepositTx(""));
     setTwitterAccessToken("");
     dispatch(setSignature(""));
-    dispatch(setInvite(null));
+    // dispatch(setInvite(null));
   };
   const handleSubmit = async () => {
     if (!address || !submitStatus) return;
+    setIsLoading(true);
+
+    const inviteCodeRes = await checkInviteCode(inviteCodeValue);
+    if (!inviteCodeRes?.result) {
+      dispatch(setIsCheckedInviteCode(false));
+      setIsLoading(false);
+      toast.error("Invalid invite code. Try another.");
+      return;
+    }
+
     try {
       const res = await registerAccount({
         address: address,
@@ -470,11 +487,13 @@ export default function SoftKYC() {
       if (+res?.status === 0) {
         getInviteFunc();
       } else {
-        handleSubmitError();
+        handleSubmitError(res?.message);
       }
     } catch (error) {
       handleSubmitError();
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -744,6 +763,7 @@ export default function SoftKYC() {
 
       {/* Verify deposit modal */}
       <Modal
+        classNames={{closeButton: 'text-[1.5rem]'}}
         style={{ minHeight: "14rem" }}
         size="xl"
         isOpen={verifyDepositModal.isOpen}
