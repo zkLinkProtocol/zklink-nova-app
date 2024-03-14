@@ -16,7 +16,8 @@ export interface airdropState {
   isActiveUser: boolean;
   depositChainId: string | number;
   depositTx: string;
-  isCheckedInviteCode: boolean
+  isCheckedInviteCode: boolean,
+  signatureAddress: string
 }
 
 const initialState: airdropState = {
@@ -35,7 +36,8 @@ const initialState: airdropState = {
 
   depositChainId: "",
   depositTx: "",
-  isCheckedInviteCode: false
+  isCheckedInviteCode: false,
+  signatureAddress: ''
 };
 
 export const airdrop = createSlice({
@@ -87,6 +89,9 @@ export const airdrop = createSlice({
     setIsCheckedInviteCode(state, action: PayloadAction<boolean>) {
       state.isCheckedInviteCode = action.payload;
     },
+    setSignatureAddress(state, action: PayloadAction<string>) {
+      state.signatureAddress = action.payload;
+    }
   },
 });
 
@@ -105,6 +110,7 @@ export const {
   setIsActiveUser,
   setDepositChainId,
   setDepositTx,
-  setIsCheckedInviteCode
+  setIsCheckedInviteCode,
+  setSignatureAddress
 } = airdrop.actions;
 export default airdrop.reducer;

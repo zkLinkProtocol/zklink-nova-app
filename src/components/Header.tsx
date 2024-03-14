@@ -23,6 +23,7 @@ import {
   setInviteCode,
   setIsActiveUser,
   setDepositTx,
+  setSignatureAddress,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
@@ -96,9 +97,13 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { depositStatus, depositL1TxHash, invite ,isActiveUser} = useSelector(
-    (store: { airdrop: airdropState }) => store.airdrop
-  );
+  const {
+    depositStatus,
+    depositL1TxHash,
+    invite,
+    isActiveUser,
+    signatureAddress,
+  } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
   const { getDepositL2TxHash } = useBridgeTx();
   const dispatch = useDispatch();
   console.log("depositL1TxHash: ", depositL1TxHash);
@@ -164,8 +169,13 @@ export default function Header() {
 
   useEffect(() => {
     getInviteFunc();
-    dispatch(setSignature(''))
-  }, [address, isConnected]);
+    if (!!signatureAddress && !!address && address !== signatureAddress) {
+      console.log(signatureAddress, address);
+
+      dispatch(setSignature(""));
+      dispatch(setSignatureAddress(""));
+    }
+  }, [signatureAddress, address]);
 
   useEffect(() => {
     if (!isConnected) {
@@ -193,10 +203,8 @@ export default function Header() {
   }, [invite, isConnected, address]);
 
   useEffect(() => {
-    console.log('isActiveUser', isActiveUser)
-  }, [invite])
-
-  
+    console.log("isActiveUser", isActiveUser);
+  }, [invite]);
 
   return (
     <>
