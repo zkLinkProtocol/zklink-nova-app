@@ -426,8 +426,11 @@ export default function SoftKYC() {
       } else {
         setDepositStatus(VerifyResult.FAILED);
       }
-    } catch (e) {
+    } catch (e:any) {
       console.log(e);
+      if(e?.message) {
+        toast.error(e.message)
+      }
       setDepositStatus(VerifyResult.FAILED);
     } finally {
       setIsReVerifyDeposit(false);
