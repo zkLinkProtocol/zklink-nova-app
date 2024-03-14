@@ -195,6 +195,19 @@ const TitleBox = styled.div`
       // animation-iteration-count: infinite;
     }
   }
+  @media (max-width: 768px) {
+    .box {
+      margin-left: 0;
+      .move {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .inner {
+        width: 100%;
+        font-size: 30px;
+      }
+    }
+  }
 `;
 
 const ConnectWalletText = styled.span`
@@ -266,17 +279,17 @@ export default function Home() {
   }, [inviteCode])
 
   return (
-    <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">
+    <BgBox className="relative pt-[4.5rem] pb-[8.5rem] md:pt-[7.5rem] md:pb-[8.5rem]">
       {isLoading && <Loading />}
       {/* Title */}
       <TitleBox className="text-center">
         <div className="flex headTitle">
-          <h2 className="title pl-[1.56rem] text-[2.5rem] leading-[3.5rem]">
+          <h2 className="title pl-1 pr-2 md:pl-[1.56rem] text-[1.8rem] md:text-[2.5rem] leading-[3.5rem]">
             The ONLY Aggregated L3 with added yield for
           </h2>
         </div>
         <div className="flex flexBox">
-          <div className="box">
+          <div className="box mr-0 md:mr-[30px]">
             <div className="move">
               <div className="inner">ETH</div>
               <div className="inner">Stablecoins</div>
@@ -286,7 +299,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <p className="sub-title mt-4 pl-6 pr-8 text-[1.5rem] leading-8">
+        <p className="sub-title mt-4 pl-6 pr-8 text-[1rem] md:text-[1.5rem] leading-8">
           Bridge to earn Mega Yield and $ZKL on zkLink Nova
         </p>
       </TitleBox>
@@ -338,9 +351,9 @@ export default function Home() {
         )} */}
       </CardBox>
 
-      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex items-center justify-between px-36 py-4">
+      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-10 lg:px-36 py-4">
         {/* Footer: total tvl data */}
-        <div className="flex flex-col">
+        <div className="flex flex-col mb-8">
           <span className="text-[1.25rem]">zkLink Nova Network TVL</span>
           <TotalTvlCard />
         </div>

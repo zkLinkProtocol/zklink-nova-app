@@ -3,6 +3,9 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
   Button,
   Avatar,
   Tooltip,
@@ -97,6 +100,7 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
+
   const {
     depositStatus,
     depositL1TxHash,
@@ -105,6 +109,7 @@ export default function Header() {
     signatureAddress,
     inviteCode,
   } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
+
   const { getDepositL2TxHash } = useBridgeTx();
   const dispatch = useDispatch();
   console.log("depositL1TxHash: ", depositL1TxHash);
@@ -175,6 +180,7 @@ export default function Header() {
 
   useEffect(() => {
     getInviteFunc();
+
     if (!!signatureAddress && !!address && address !== signatureAddress) {
       console.log(signatureAddress, address);
 
@@ -211,42 +217,59 @@ export default function Header() {
   useEffect(() => {
     console.log("isActiveUser", isActiveUser);
   }, [invite]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
       <Navbar
         // shouldHideOnScroll
-        className={`px-[1.5rem] py-[0.75rem] fixed`}
+        className={`md:px-[1.5rem] py-[0.75rem] fixed pt-0`}
         style={{
           // position: isHeaderTop ? 'fixed' : 'sticky',
           background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
         }}
         maxWidth="full"
         isBlurred={false}
+        isMenuOpen={isMenuOpen}
+        onMenuOpenChange={setIsMenuOpen}
       >
-        <NavbarBrand className="flex items-end">
+        <NavbarContent>
+          {/* mobile toggle button */}
+          <NavbarMenuToggle
+            className="mr-2 md:hidden md:mr-6"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          />
+
           {/* <Logo /> */}
 
           <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
-            <LogoBox className="relative">
-              <img className="max-w-[145.431px] h-auto" src="/img/NOVA.svg" />
+            <LogoBox
+              className="relative"
+              onClick={() => {
+                setIsMenuOpen(false);
+              }}
+            >
+              <img
+                className="max-w-[120px] md:max-w-[145.431px] h-auto"
+                src="/img/NOVA.svg"
+              />
               {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
           </Link>
-          <NavNet>
+          <NavNet className="hidden md:flex">
             <div>Mainnet Live</div>
           </NavNet>
-          <NavBox className="ml-[3.5rem]">
-            <NavbarContent
-              className="hidden sm:flex gap-[2.5rem]"
-              justify="center"
-            >
-              <NavbarItem>
-                <NavLink to="/aggregation-parade" className="nav-link">
-                  Aggregation Parade
-                </NavLink>
-              </NavbarItem>
-              {/* <NavbarItem>
+          {/* <NavBox className="ml-[3.5rem]"> */}
+          <NavbarContent
+            className="hidden md:flex gap-[2.5rem]"
+            justify="center"
+          >
+            <NavbarItem>
+              <NavLink to="/aggregation-parade" className="nav-link">
+                Aggregation Parade
+              </NavLink>
+            </NavbarItem>
+            {/* <NavbarItem>
                 {isActive() ? (
                   <NavLink to="/dashboard" className="nav-link">
                     Dashboard
@@ -259,25 +282,25 @@ export default function Header() {
                   </Tooltip>
                 )}
               </NavbarItem> */}
-              <NavbarItem>
-                <NavLink to="/leaderboard">Leaderboard</NavLink>
-              </NavbarItem>
-              <NavbarItem>
-                <NavLink to="/about">About</NavLink>
-              </NavbarItem>
-              <NavbarItem>
-                <NavLink to="/bridge">Bridge</NavLink>
-              </NavbarItem>
-              <NavbarItem>
-                <a
-                  href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
-                  target="_blank"
-                >
-                  User Guide
-                </a>
-              </NavbarItem>
+            <NavbarItem>
+              <NavLink to="/leaderboard">Leaderboard</NavLink>
+            </NavbarItem>
+            <NavbarItem>
+              <NavLink to="/about">About</NavLink>
+            </NavbarItem>
+            <NavbarItem>
+              <NavLink to="/bridge">Bridge</NavLink>
+            </NavbarItem>
+            <NavbarItem>
+              <a
+                href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
+                target="_blank"
+              >
+                User Guide
+              </a>
+            </NavbarItem>
 
-              {/* <NavbarItem>
+            {/* <NavbarItem>
                 <a
                   href={
                     nodeType === "nexus-goerli"
@@ -291,9 +314,9 @@ export default function Header() {
                   <MdArrowOutward className="size-[1.75rem]" />
                 </a>
               </NavbarItem> */}
-            </NavbarContent>
-          </NavBox>
-        </NavbarBrand>
+          </NavbarContent>
+          {/* </NavBox> */}
+        </NavbarContent>
 
         <NavbarContent justify="end">
           <NavbarItem className="hidden flex items-center gap-[1rem]">
@@ -360,7 +383,7 @@ export default function Header() {
             </a>
             {address && !depositStatus && (
               <Button
-                className="border-solid border-1 border-[#03D498] text-[#03D498] bg-transparent font-bold"
+                className="hidden md:block border-solid border-1 border-[#03D498] text-[#03D498] bg-transparent font-bold"
                 onClick={() =>
                   window.open(
                     nodeType === "nexus-goerli"
@@ -380,11 +403,62 @@ export default function Header() {
             >
               <img width={20} height={20} src="/img/icon-wallet.svg" />
               <ButtonText>
-                {isConnected ? showAccount(address) : "Connect Wallet"}
+                {isConnected ? (
+                  showAccount(address)
+                ) : (
+                  <span className="hidden md:block">Connect Wallet</span>
+                )}
               </ButtonText>
             </Button>
           </NavbarItem>
         </NavbarContent>
+        <NavbarMenu
+          onClick={() => {
+            setIsMenuOpen(false);
+          }}
+        >
+          <NavbarMenuItem>
+            <NavLink to="/aggregation-parade" className="nav-link">
+              Aggregation Parade
+            </NavLink>
+          </NavbarMenuItem>
+          {/* <NavbarMenuItem>
+                {isActive() ? (
+                  <NavLink to="/dashboard" className="nav-link">
+                    Dashboard
+                  </NavLink>
+                ) : (
+                  <Tooltip content="Not Active">
+                    <span className="nav-link cursor-not-allowed opacity-40">
+                      Dashboard
+                    </span>
+                  </Tooltip>
+                )}
+              </NavbarMenuItem> */}
+          <NavbarMenuItem>
+            <NavLink to="/leaderboard">Leaderboard</NavLink>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <NavLink to="/about">About</NavLink>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <NavLink to="/bridge">Bridge</NavLink>
+          </NavbarMenuItem>
+          {/* <NavbarMenuItem>
+                <a
+                  href={
+                    nodeType === "nexus-goerli"
+                      ? "https://goerli.portal.zklink.io/bridge/"
+                      : "https://portal.zklink.io/bridge/"
+                  }
+                  target="_blank"
+                  className="flex items-center"
+                >
+                  <span>Bridge</span>
+                  <MdArrowOutward className="size-[1.75rem]" />
+                </a>
+              </NavbarMenuItem> */}
+        </NavbarMenu>
       </Navbar>
     </>
   );
