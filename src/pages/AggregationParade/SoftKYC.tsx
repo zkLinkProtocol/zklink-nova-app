@@ -14,6 +14,7 @@ import {
   setInviteCode,
   setIsCheckedInviteCode,
   setSignature,
+  setSignatureAddress,
 } from "@/store/modules/airdrop";
 import { CardBox, FooterTvlText } from "@/styles/common";
 import {
@@ -241,10 +242,10 @@ export default function SoftKYC() {
     const clientId = getTwitterClientId();
     const params = {
       response_type: "code",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
+      // client_id: clientId,
+      // redirect_uri: twitterCallbackURL,
+      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      redirect_uri: "http://localhost:3000/aggregation-parade",
       scope: "tweet.read%20users.read%20follows.read%20follows.write",
       state: "state",
       code_challenge: "challenge",
@@ -257,12 +258,13 @@ export default function SoftKYC() {
   };
 
   const handleConnectAndSign = async () => {
-    if (!isConnected) {
+    if (!isConnected || !address) {
       setIsHandleSign(true);
       web3Modal.open({ view: "Connect" });
       return;
     }
     setSignLoading(true);
+
     await signMessage(
       {
         message: SIGN_MESSAGE,
@@ -270,7 +272,9 @@ export default function SoftKYC() {
       {
         onSuccess(data, variables, context) {
           console.log(data, variables, context);
+          console.log("signature", data);
           dispatch(setSignature(data));
+          dispatch(setSignatureAddress(address));
           setSignLoading(false);
           setIsHandleSign(false);
         },
@@ -333,10 +337,10 @@ export default function SoftKYC() {
     postData("/twitter/2/oauth2/token", {
       code,
       grant_type: "authorization_code",
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
+      client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      redirect_uri: "http://localhost:3000/aggregation-parade",
+      // client_id: clientId,
+      // redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     })
       .then((res) => {
@@ -456,10 +460,12 @@ export default function SoftKYC() {
         ? message
         : "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
     );
+    dispatch(setIsCheckedInviteCode(false));
     dispatch(setInviteCode(""));
     dispatch(setDepositTx(""));
     setTwitterAccessToken("");
     dispatch(setSignature(""));
+
     // dispatch(setInvite(null));
   };
   const handleSubmit = async () => {
@@ -491,8 +497,9 @@ export default function SoftKYC() {
       } else {
         handleSubmitError(res?.message);
       }
-    } catch (error) {
-      handleSubmitError();
+    } catch (error: any) {
+      // TODO: error type
+      handleSubmitError(error?.message);
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -509,7 +516,7 @@ export default function SoftKYC() {
       const txs = txhashes[address];
 
       console.log("txhashes", txhashes[address]);
-      if (txs.length > 0) {
+      if (txs?.length > 0) {
         const { txhash, rpcUrl } = txs[0];
         const chainId = verifyFromList.find(
           (item) => item.rpcUrl === rpcUrl
@@ -555,7 +562,12 @@ export default function SoftKYC() {
       setSubmitStatus(true);
     }
   }, [inviteCodeValue, twitterAccessToken, depositTx, isConnected, signature]);
-  
+
+  useEffect(() => {
+    if (!inviteCodeValue || inviteCodeValue?.length !== 6) {
+      dispatch(setIsCheckedInviteCode(false));
+    }
+  }, [inviteCodeValue]);
 
   return (
     <BgBox>
@@ -766,7 +778,7 @@ export default function SoftKYC() {
 
       {/* Verify deposit modal */}
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "14rem" }}
         size="xl"
         isOpen={verifyDepositModal.isOpen}
