@@ -205,16 +205,16 @@ export default function SoftKYC() {
       const res = await checkInviteCode(code);
 
       if (!res?.result) {
-        setIsInviteCodeLoading(false);
-        // dispatch(setInviteCode(""));
+        // setIsInviteCodeLoading(false);
+        dispatch(setIsCheckedInviteCode(false));
         toast.error("Invalid invite code. Try another.");
         return;
       }
-      setIsInviteCodeLoading(false);
+      // setIsInviteCodeLoading(false);
       dispatch(setIsCheckedInviteCode(true));
     } catch (error) {
       console.log(error);
-      setIsInviteCodeLoading(false);
+      // setIsInviteCodeLoading(false);
       dispatch(setIsCheckedInviteCode(false));
     } finally {
       setIsInviteCodeLoading(false);
@@ -443,18 +443,30 @@ export default function SoftKYC() {
   };
 
   // TODO: Submit user bind form
-  const handleSubmitError = () => {
+  const handleSubmitError = (message?: string) => {
     toast.error(
-      "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
+      message
+        ? message
+        : "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
     );
     dispatch(setInviteCode(""));
     dispatch(setDepositTx(""));
     setTwitterAccessToken("");
     dispatch(setSignature(""));
-    dispatch(setInvite(null));
+    // dispatch(setInvite(null));
   };
   const handleSubmit = async () => {
     if (!address || !submitStatus) return;
+    setIsLoading(true);
+
+    const inviteCodeRes = await checkInviteCode(inviteCodeValue);
+    if (!inviteCodeRes?.result) {
+      dispatch(setIsCheckedInviteCode(false));
+      setIsLoading(false);
+      toast.error("Invalid invite code. Try another.");
+      return;
+    }
+
     try {
       const res = await registerAccount({
         address: address,
@@ -470,11 +482,13 @@ export default function SoftKYC() {
       if (+res?.status === 0) {
         getInviteFunc();
       } else {
-        handleSubmitError();
+        handleSubmitError(res?.message);
       }
     } catch (error) {
       handleSubmitError();
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -534,6 +548,7 @@ export default function SoftKYC() {
       setSubmitStatus(true);
     }
   }, [inviteCodeValue, twitterAccessToken, depositTx, isConnected, signature]);
+  
 
   return (
     <BgBox>
