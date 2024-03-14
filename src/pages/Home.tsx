@@ -14,6 +14,7 @@ import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import Countdown from "@/components/Countdown";
 import Loading from "@/components/Loading";
+import { formatNumberWithUnit } from "@/utils";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -344,25 +345,25 @@ export default function Home() {
         {/* Footer: nav links */}
         <div className=" right-[6rem] bottom-[1rem] flex justify-end items-end">
           <div className="flex items-center gap-[1.25rem]">
-            <a href="https://blog.zk.link/">
+            <a href="https://blog.zk.link/" target="_blank">
               <img
                 src="/img/icon-medium.svg"
                 className="w-[1.5rem] h-[1.5rem]"
               />
             </a>
-            <a href="https://discord.com/invite/zklink">
+            <a href="https://discord.com/invite/zklink" target="_blank">
               <img src="/img/icon-dc.svg" className="w-[1.5rem] h-[1.5rem]" />
             </a>
             <a href="https://t.me/zkLinkorg">
               <img src="/img/icon-tg.svg" className="w-[1.5rem] h-[1.5rem]" />
             </a>
-            <a href="https://twitter.com/zkLink_Official">
+            <a href="https://twitter.com/zkLink_Official" target="_blank">
               <img
                 src="/img/icon-twitter.svg"
                 className="w-[1.25rem] h-[1.25rem]"
               />
             </a>
-            <a href="https://github.com/zkLinkProtocol">
+            <a href="https://github.com/zkLinkProtocol" target="_blank">
               <img
                 src="/img/icon-github.svg"
                 className="w-[1.5rem] h-[1.5rem]"
