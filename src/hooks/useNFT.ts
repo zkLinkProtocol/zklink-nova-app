@@ -10,6 +10,7 @@ import { wagmiConfig } from "@/constants/networks";
 import { zkSyncProvider } from "./zksyncProviders";
 
 import { encodeFunctionData } from "viem";
+import { sleep } from "@/utils";
 export type NOVA_NFT_TYPE = "ISTP" | "ESFJ" | "INFJ" | "ENTP";
 export type NOVA_NFT = {
   name: string;
@@ -136,11 +137,18 @@ const useNovaNFT = () => {
       tx.maxPriorityFeePerGas = fee.maxPriorityFeePerGas.toBigInt();
       tx.gas = fee.gasLimit.toBigInt();
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
-      const res = await publicClient?.waitForTransactionReceipt({ hash });
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
       console.log(res);
       await getNFT(address);
     } catch (e) {
       console.error(e);
+      if (e.message && e.message?.includes("not found")) { //viewm not found. try getNFT again
+        await getNFT(address);
+        return;
+      }
       return Promise.reject(e);
     } finally {
       setLoading(false);
