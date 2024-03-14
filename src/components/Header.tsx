@@ -338,10 +338,10 @@ export default function Header() {
                 )}
               </>
             )}
-            <a href="https://discord.com/invite/zklink">
+            <a href="https://discord.com/invite/zklink" target="_blank">
               <img src="/img/icon-dc.svg" className="w-[1.5rem] h-[1.5rem]" />
             </a>
-            <a href="https://twitter.com/zkLink_Official">
+            <a href="https://twitter.com/zkLink_Official" target="_blank">
               <img
                 src="/img/icon-twitter.svg"
                 className="w-[1.25rem] h-[1.25rem]"

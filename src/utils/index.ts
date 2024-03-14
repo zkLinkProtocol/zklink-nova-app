@@ -166,7 +166,21 @@ export function getRandomNumber(min: number, max: number) {
   return Math.round(Math.random() * (max - min)) + min;
 }
 
+export function formatNumber2(value: number) {
+  let arr = String(value).split(".");
+  if (arr.length === 2) {
+    arr[1] = arr[1].substring(0, 2);
+
+    return arr.join(".");
+  }
+
+  return value;
+}
+
 export function formatNumberWithUnit(value: number | string, symbol?: string) {
+  value = formatNumber2(Number(value));
+
+  console.log("format number", value);
   let format = symbol === "$" ? "$0" : `0 ${symbol ? symbol : ""}`;
 
   if (+value && !isNaN(+value)) {
@@ -238,7 +252,7 @@ export const formatNumber = (
 ) => {
   const formatter = new Intl.NumberFormat(locales ?? "en-US", {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 6,
+    maximumFractionDigits: 2,
     ...ops,
   });
   return formatter.format(number);
