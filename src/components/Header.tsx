@@ -124,7 +124,7 @@ export default function Header() {
   useEffect(() => {
     (async () => {
       if (!depositL1TxHash) {
-        // dispatch(setDepositStatus(""));
+        dispatch(setDepositStatus(""));
         return;
       } else {
         dispatch(setDepositStatus("pending"));
