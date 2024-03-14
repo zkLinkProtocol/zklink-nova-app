@@ -32,3 +32,5 @@ export const NexusEstimateArrivalTimes: Record<string, number> = {
 };
 
 export const NexusGoerliEstimateArrivalTimes = {};
+
+export const IS_MAINNET = nodeType === "nexus";

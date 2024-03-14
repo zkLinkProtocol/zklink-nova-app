@@ -281,3 +281,15 @@ export const getTxHashExplorerLink = (rpcUrl: string, txhash: string) => {
     }
   }
 };
+
+const providers: Record<string, ethers.providers.JsonRpcProvider> = {};
+export const getProviderWithRpcUrl = (rpcUrl: string) => {
+  if (providers[rpcUrl]) {
+    return providers[rpcUrl];
+  }
+  const provider = new ethers.providers.JsonRpcBatchProvider(rpcUrl);
+  if (!providers[rpcUrl]) {
+    providers[rpcUrl] = provider;
+  }
+  return provider;
+};

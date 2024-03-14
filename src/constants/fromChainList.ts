@@ -1,4 +1,8 @@
-import { PRIMARY_CHAIN_KEY } from "@/constants/networks";
+import {
+  PRIMARY_CHAIN_KEY,
+  nexusGoerliNode,
+  nexusNode,
+} from "@/constants/networks";
 import lineaIcon from "../assets/img/linea.svg";
 import ethereumIcon from "../assets/img/ethereum.svg";
 import mantleIcon from "../assets/img/mantle.svg";
@@ -16,7 +20,30 @@ import {
   mantle,
   arbitrum,
 } from "wagmi/chains";
+
 const nodeType = import.meta.env.VITE_NODE_TYPE;
+
+export const NOVA_NETWORK = {
+  label: nexusNode[0].name,
+  icon: '/img/nova.png',
+  chainId: nexusNode[0].id,
+  networkKey: "nova",
+  isEthGasToken: true,
+  chainName: nexusNode[0].name,
+  explorerUrl: nexusNode[0].blockExplorerUrl,
+  rpcUrl: nexusNode[0].rpcUrl,
+};
+
+export const NOVA_GOERLI_NETWORK = {
+  label: nexusGoerliNode[0].name,
+  icon: '/img/nova.png',
+  chainId: nexusGoerliNode[0].id,
+  networkKey: "nova",
+  isEthGasToken: true,
+  chainName: nexusGoerliNode[0].name,
+  explorerUrl: nexusGoerliNode[0].blockExplorerUrl,
+  rpcUrl: nexusGoerliNode[0].rpcUrl,
+};
 
 const FromListMainnet = [
   {
