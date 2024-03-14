@@ -673,7 +673,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               <span className="text-white">
                 {showNoPointsTip
                   ? 0
-                  : points < 0.01
+                  : points < 0.01 && points > 0
                   ? "< 0.01"
                   : points.toFixed(2)}
               </span>
@@ -822,7 +822,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         // </div>
       )}
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
         isOpen={fromModal.isOpen}
@@ -852,7 +852,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       </Modal>
 
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
         isOpen={tokenModal.isOpen}
@@ -906,7 +906,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         </ModalContent>
       </Modal>
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         size="xl"
         isOpen={transLoadModal.isOpen}
@@ -932,7 +932,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         </ModalContent>
       </Modal>
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         size="xl"
         isOpen={transSuccModal.isOpen}
@@ -961,7 +961,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         </ModalContent>
       </Modal>
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         size="xl"
         isOpen={transFailModal.isOpen}
