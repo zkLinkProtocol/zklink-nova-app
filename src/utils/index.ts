@@ -180,7 +180,6 @@ export function formatNumber2(value: number) {
 export function formatNumberWithUnit(value: number | string, symbol?: string) {
   value = formatNumber2(Number(value));
 
-  console.log("format number", value);
   let format = symbol === "$" ? "$0" : `0 ${symbol ? symbol : ""}`;
 
   if (+value && !isNaN(+value)) {

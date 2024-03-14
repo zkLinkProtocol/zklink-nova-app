@@ -4,8 +4,7 @@ import NFTLuckWinner from "./components/NFTLuckWinner";
 import styled from "styled-components";
 import { useState } from "react";
 import { BgBox, BgCoverImg, TableBox } from "@/styles/common";
-import { Tooltip } from "@nextui-org/react";
-
+import { Tooltip as ReactTooltip } from "react-tooltip";
 const TabItem = styled.div`
   border-radius: 1rem;
   background: rgba(51, 51, 51, 0.4);
@@ -42,25 +41,27 @@ export default function Leaderboard() {
             Points Leaderboard
           </TabItem>
 
-          <Tooltip content="coming soon">
-            <TabItem
-              className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed ${
-                tabsActive === 1 ? "active" : ""
-              }`}
-            >
-              Referral Leaderboard
-            </TabItem>
-          </Tooltip>
-          <Tooltip content="coming soon">
-            <TabItem
-              className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed ${
-                tabsActive === 2 ? "active" : ""
-              }`}
-            >
-              Mystery Box Winners
-            </TabItem>
-          </Tooltip>
+          {/* <Tooltip content="coming soon"> */}
+          <TabItem
+            data-tooltip-id="coming-soon"
+            className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed`}
+          >
+            Referral Leaderboard
+          </TabItem>
+          <TabItem
+            data-tooltip-id="coming-soon"
+            className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed`}
+          >
+            Mystery Box Winners
+          </TabItem>
         </div>
+
+        <ReactTooltip
+          id="coming-soon"
+          place="top"
+          style={{fontSize: '14px'}}
+          content="coming soon"
+        />
 
         {/* Content: tab views */}
         <TableBox className="mt-[2rem]">
