@@ -37,6 +37,7 @@ const AppRoute = (props) => {
   const navigator = useNavigate();
   useEffect(() => {
     if (!campaignStart) {
+      //avoid repeat
       if (location.pathname !== "/") {
         navigator("/");
       }
