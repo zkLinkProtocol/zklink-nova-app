@@ -555,6 +555,7 @@ export default function SoftKYC() {
       setSubmitStatus(true);
     }
   }, [inviteCodeValue, twitterAccessToken, depositTx, isConnected, signature]);
+  
 
   return (
     <BgBox>
