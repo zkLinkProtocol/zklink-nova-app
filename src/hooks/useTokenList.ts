@@ -185,6 +185,7 @@ export const useTokenBalanceList = () => {
     tokenList,
     refreshTokenBalanceList,
     allTokens,
+    nativeTokenBalance: nativeTokenBalance?.value
   };
 };
 

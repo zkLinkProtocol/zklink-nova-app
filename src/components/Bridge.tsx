@@ -218,7 +218,6 @@ const AssetTypes = [
   },
 ];
 export interface IBridgeComponentProps {
-  isFirstDeposit: boolean;
   onClose?: () => void;
   bridgeToken?: string;
 }
@@ -226,7 +225,7 @@ export interface IBridgeComponentProps {
 const ContentForMNTDeposit =
   "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
-  const { isFirstDeposit, onClose, bridgeToken } = props;
+  const { onClose, bridgeToken } = props;
   const web3Modal = useWeb3Modal();
   const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
@@ -238,17 +237,19 @@ export default function Bridge(props: IBridgeComponentProps) {
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const { sendDepositTx, loading } = useBridgeTx();
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
 
   const [url, setUrl] = useState("");
-  const { inviteCode, signature, twitterAccessToken, invite } = useSelector(
-    (store: RootState) => store.airdrop
-  );
+  const { isActiveUser } = useSelector((store: RootState) => store.airdrop);
+
+  const isFirstDeposit = useMemo(() => {
+    return !isActiveUser;
+  }, [isActiveUser]);
 
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
   const { setNetworkKey, networkKey } = useBridgeNetworkStore();
-  const { tokenList, refreshTokenBalanceList, allTokens } =
+  const { tokenList, refreshTokenBalanceList, allTokens, nativeTokenBalance } =
     useTokenBalanceList();
 
   const [points, setPoints] = useState(0);
@@ -305,7 +306,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       return;
     }
     if (tokenFiltered[tokenActive]?.address === ETH_ADDRESS) {
-      if (Number(amount) < minDepositValue) {
+      if (Number(amount) < minDepositValue && isFirstDeposit) {
         setShowNoPointsTip(true);
       } else {
         setShowNoPointsTip(false);
@@ -325,7 +326,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           .multipliedBy(amount)
           .div(ethPriceInfo.usdPrice)
           .toNumber();
-        if (ethValue < minDepositValue) {
+        if (ethValue < minDepositValue && isFirstDeposit) {
           setShowNoPointsTip(true);
         } else {
           setShowNoPointsTip(false);
@@ -336,7 +337,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           .multipliedBy(tokenFiltered[tokenActive].multiplier)
           .multipliedBy(amount)
           .div(ethPriceInfo.usdPrice)
-          .toFixed(2);
+          .toNumber();
         setPoints(Number(points));
       }
     } catch (e) {
@@ -444,7 +445,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
         tokenFiltered[tokenActive].balance! <= 0 ||
-        Number(tokenFiltered[tokenActive].formatedBalance) < amount ||
+        Number(tokenFiltered[tokenActive].formatedBalance) < Number(amount) ||
         Number(amount) <= 0)
     ) {
       return true;
@@ -459,10 +460,17 @@ export default function Bridge(props: IBridgeComponentProps) {
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
-    } else {
-      return "Continue";
+    } else if (
+      amount &&
+      tokenFiltered[tokenActive] &&
+      tokenFiltered[tokenActive].formatedBalance
+    ) {
+      if (Number(amount) > Number(tokenFiltered[tokenActive].formatedBalance)) {
+        return "Insufficient balance";
+      }
     }
-  }, [invalidChain]);
+    return "Continue";
+  }, [invalidChain, amount, tokenActive, tokenFiltered]);
 
   const handleInputValue = (v: string) => {
     if (!v) {
@@ -504,7 +512,8 @@ export default function Bridge(props: IBridgeComponentProps) {
       const hash = await sendDepositTx(
         tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))
-        parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals)
+        parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals),
+        nativeTokenBalance ?? 0
       );
       if (!hash) {
         return;
@@ -526,8 +535,11 @@ export default function Bridge(props: IBridgeComponentProps) {
     } catch (e) {
       transLoadModal.onClose();
       dispatch(setDepositStatus(""));
+
       if (e.message) {
-        if (e.message.includes("User rejected the request")) {
+        if (e.message.includes("Insufficient balance")) {
+          setFailMessage("Insufficient balance");
+        } else if (e.message.includes("User rejected the request")) {
           setFailMessage("User rejected the request");
         } else {
           setFailMessage(e.message);
@@ -556,6 +568,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     sendDepositTx,
     tokenFiltered,
     tokenActive,
+    nativeTokenBalance,
     addTxHash,
     dispatch,
     transSuccModal,
@@ -622,7 +635,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content=" Nova Points are distributed every 8 hours, and you will receive points equal to 10 distributions after a valid deposit."
+                content="By depositing into zkLink Nova, you will instantly receive Nova Points equivalent to 10 distributions.- Nova Points are distributed every 8 hours. "
               >
                 <img
                   src={"/img/icon-tooltip.png"}
@@ -657,7 +670,13 @@ export default function Bridge(props: IBridgeComponentProps) {
               )}
             </div>
             <div className="flex items-center">
-              <span className="text-white">{showNoPointsTip ? 0 : points}</span>
+              <span className="text-white">
+                {showNoPointsTip
+                  ? 0
+                  : points < 0.01
+                  ? "< 0.01"
+                  : points.toFixed(2)}
+              </span>
               {loyalPoints > 0 && (
                 <div className="ml-1">
                   + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
@@ -669,7 +688,9 @@ export default function Bridge(props: IBridgeComponentProps) {
           {networkKey && NexusEstimateArrivalTimes[networkKey] && (
             <div className="flex items-center justify-between mb-2 points-box">
               <span>Estimated Time of Arrival</span>
-              <span className="text-white">~ {NexusEstimateArrivalTimes[networkKey]} minutes</span>
+              <span className="text-white">
+                ~ {NexusEstimateArrivalTimes[networkKey]} minutes
+              </span>
             </div>
           )}
           {/* <div className="flex items-center justify-between mb-2 points-box">
@@ -724,7 +745,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
         )}
       </Container>
-      {address && txhashes[address]?.[0] && (
+      {isFirstDeposit && address && txhashes[address]?.[0] && (
         <div>
           <Link
             to="/aggregation-parade?flag=1"
@@ -765,7 +786,6 @@ export default function Bridge(props: IBridgeComponentProps) {
 
             <div className="flex items-center gap-[1rem]">
               <CopyIcon text={txhashes[address][0].txhash} />
-             
             </div>
           </div>
         </div>
