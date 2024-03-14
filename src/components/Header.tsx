@@ -171,7 +171,6 @@ export default function Header() {
     getInviteFunc();
     if (!!signatureAddress && !!address && address !== signatureAddress) {
       console.log(signatureAddress, address);
-      debugger;
 
       dispatch(setSignature(""));
       dispatch(setSignatureAddress(""));
@@ -180,8 +179,6 @@ export default function Header() {
 
   useEffect(() => {
     if (!isConnected) {
-      debugger;
-
       dispatch(setSignature(""));
       dispatch(setDepositTx(""));
       // dispatch(setTwitterAccessToken(''));
