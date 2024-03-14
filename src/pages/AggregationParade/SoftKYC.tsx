@@ -305,6 +305,7 @@ export default function SoftKYC() {
           if (index > -1) {
             const winnerNetwork = verifyFromList[index];
             setSelectedChainId(String(winnerNetwork.chainId));
+            setDepositStatus("");
           }
         } catch (e) {
           console.log(e);
