@@ -444,6 +444,14 @@ export default function Header() {
           <NavbarMenuItem>
             <NavLink to="/bridge">Bridge</NavLink>
           </NavbarMenuItem>
+          <NavbarMenuItem>
+            <a
+              href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
+              target="_blank"
+            >
+              User Guide
+            </a>
+          </NavbarMenuItem>
           {/* <NavbarMenuItem>
                 <a
                   href={
