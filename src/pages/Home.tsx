@@ -261,6 +261,10 @@ export default function Home() {
     }
   }, [isActiveUser]);
 
+  useEffect(() => {
+    handleOTPChange(inviteCode)
+  }, [inviteCode])
+
   return (
     <BgBox className="relative pt-[7.5rem] pb-[7.5rem]">
       {isLoading && <Loading />}
