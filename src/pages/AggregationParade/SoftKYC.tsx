@@ -163,6 +163,8 @@ export default function SoftKYC() {
   const [isLoading, setIsLoading] = useState(false);
   const [isReVerifyDeposit, setIsReVerifyDeposit] = useState(false);
   const { txhashes } = useVerifyStore();
+  const [isHandleSign, setIsHandleSign] = useState(false);
+  const [signLoading, setSignLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -238,11 +240,13 @@ export default function SoftKYC() {
     window.location.href = url.href;
   };
 
-  const handleSign = async () => {
+  const handleConnectAndSign = async () => {
     if (!isConnected) {
+      setIsHandleSign(true);
       web3Modal.open({ view: "Connect" });
       return;
     }
+    setSignLoading(true);
     await signMessage(
       {
         message: SIGN_MESSAGE,
@@ -251,14 +255,28 @@ export default function SoftKYC() {
         onSuccess(data, variables, context) {
           console.log(data, variables, context);
           dispatch(setSignature(data));
+          setSignLoading(false);
+          setIsHandleSign(false);
         },
         onError(error, variables, context) {
           console.log(error, variables, context);
+          setSignLoading(false);
+
           toast.error("User reject signature. Try again.");
         },
       }
     );
   };
+  useEffect(() => {
+    console.log("is Handle Sign", isConnected, isHandleSign);
+    if (isConnected && isHandleSign) {
+      handleConnectAndSign();
+    }
+  }, [isConnected, isHandleSign]);
+
+  useEffect(() => {
+    console.log("signLoading", signLoading);
+  }, [signLoading]);
 
   const toastTwitterError = (text?: string) => {
     toast.error(text || "Could not connect to Twitter. Try again.");
@@ -575,9 +593,12 @@ export default function SoftKYC() {
                 <Button
                   className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem]"
                   disabled={isConnected && Boolean(signature)}
-                  onClick={handleSign}
+                  onClick={handleConnectAndSign}
+                  isLoading={signLoading}
                 >
-                  <span className="ml-[0.5rem]">Connect and Verify</span>
+                  <span className="ml-[0.5rem]">
+                    {isConnected && !signature ? "Sign" : "Connect and Verify"}
+                  </span>
                 </Button>
               </div>
             </CardBox>

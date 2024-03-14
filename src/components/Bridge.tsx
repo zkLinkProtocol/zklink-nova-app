@@ -726,7 +726,11 @@ export default function Bridge(props: IBridgeComponentProps) {
       </Container>
       {address && txhashes[address]?.[0] && (
         <div>
-          <Link to="/aggregation-parade?flag=1" className="text-[1rem]">
+          <Link
+            to="/aggregation-parade?flag=1"
+            target="_blank"
+            className="text-[1rem]"
+          >
             <div className="mt-[1.5rem] px-[1.5rem] py-[1rem] flex items-center justify-between bg-[rgba(0,0,0,0.4)] rounded-[12px] border-1 border-[#03D498]">
               <span>Click to verify your transaction.</span>
               <AiOutlineRight />
@@ -747,19 +751,25 @@ export default function Bridge(props: IBridgeComponentProps) {
                 }
                 className="w-6 h-6 mr-1 rounded-full"
               />
-              <span className="text-[1rem]">
-                {txhashes[address][0]?.txhash}
-              </span>
+              <a
+                href={getTxHashExplorerLink(
+                  txhashes[address][0]?.rpcUrl,
+                  txhashes[address][0]?.txhash
+                )}
+                target="_blank"
+                className="hover:underline"
+              >
+                {formatTxHash(txhashes[address][0]?.txhash)}
+              </a>
             </div>
 
             <div className="flex items-center gap-[1rem]">
               <CopyIcon text={txhashes[address][0].txhash} />
               <a
-                href={
-                  FromList.find(
-                    (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
-                  )?.explorerUrl
-                }
+                href={getTxHashExplorerLink(
+                  txhashes[address][0]?.rpcUrl,
+                  txhashes[address][0]?.txhash
+                )}
                 target="_blank"
               >
                 <img src="/img/icon-explorer.svg" />
