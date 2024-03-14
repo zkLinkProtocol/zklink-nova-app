@@ -16,7 +16,12 @@ import {
   setSignature,
 } from "@/store/modules/airdrop";
 import { CardBox, FooterTvlText } from "@/styles/common";
-import { getRandomNumber, postData, showAccount } from "@/utils";
+import {
+  getProviderWithRpcUrl,
+  getRandomNumber,
+  postData,
+  showAccount,
+} from "@/utils";
 import {
   Avatar,
   Button,
@@ -38,10 +43,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAccount, useSignMessage } from "wagmi";
-import fromList from "@/constants/fromChainList";
+import fromList, {
+  NOVA_GOERLI_NETWORK,
+  NOVA_NETWORK,
+} from "@/constants/fromChainList";
 import Loading from "@/components/Loading";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
+import { IS_MAINNET } from "@/constants";
 
+const verifyFromList = [
+  ...fromList,
+  IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
+];
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 
@@ -165,6 +178,7 @@ export default function SoftKYC() {
   const { txhashes } = useVerifyStore();
   const [isHandleSign, setIsHandleSign] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
+  const [accessRpcLoading, setAccessRpcLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -273,6 +287,33 @@ export default function SoftKYC() {
       handleConnectAndSign();
     }
   }, [isConnected, isHandleSign]);
+
+  useEffect(() => {
+    (async () => {
+      if (depositTxHash.length === 66 && depositTxHash.startsWith("0x")) {
+        try {
+          const providers = verifyFromList.map((item) =>
+            getProviderWithRpcUrl(item.rpcUrl)
+          );
+          setAccessRpcLoading(true);
+          const results = await Promise.all(
+            providers.map((provider) =>
+              provider.getTransactionReceipt(depositTxHash)
+            )
+          );
+          const index = results.findIndex((item) => item !== null);
+          if (index > -1) {
+            const winnerNetwork = verifyFromList[index];
+            setSelectedChainId(String(winnerNetwork.chainId));
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setAccessRpcLoading(false);
+        }
+      }
+    })();
+  }, [depositTxHash]);
 
   useEffect(() => {
     console.log("signLoading", signLoading);
@@ -448,7 +489,7 @@ export default function SoftKYC() {
       console.log("txhashes", txhashes[address]);
       if (txs.length > 0) {
         const { txhash, rpcUrl } = txs[0];
-        const chainId = fromList.find(
+        const chainId = verifyFromList.find(
           (item) => item.rpcUrl === rpcUrl
         )?.chainId;
         setSelectedChainId(String(chainId));
@@ -718,7 +759,7 @@ export default function SoftKYC() {
             <div className="flex items-center gap-6">
               <Select
                 className="max-w-[9.5rem]"
-                items={fromList.map((item) => ({
+                items={verifyFromList.map((item) => ({
                   label: item.label,
                   icon: item.icon,
                   chainId: item.chainId,
@@ -767,7 +808,8 @@ export default function SoftKYC() {
               <Button
                 className="gradient-btn w-full rounded-full mt-5"
                 onClick={verifyDepositHash}
-                disabled={isReVerifyDeposit}
+                disabled={isReVerifyDeposit || accessRpcLoading}
+                isLoading={isReVerifyDeposit || accessRpcLoading}
               >
                 {isReVerifyDeposit ? "Re-verify(in 60s)" : "Verify"}
               </Button>
