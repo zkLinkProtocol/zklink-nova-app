@@ -406,6 +406,8 @@ export default function SoftKYC() {
   /**
    * TODO: Verify deposit hash
    */
+
+  const [verifyDepositError, setVerifyDepositError] = useState("");
   const verifyDepositHash = async () => {
     setDepositStatus("");
     setIsReVerifyDeposit(true);
@@ -426,10 +428,11 @@ export default function SoftKYC() {
       } else {
         setDepositStatus(VerifyResult.FAILED);
       }
-    } catch (e:any) {
+    } catch (e: any) {
       console.log(e);
-      if(e?.message) {
-        toast.error(e.message)
+      if (e?.message) {
+        // toast.error(e.message)
+        setVerifyDepositError(e.message);
       }
       setDepositStatus(VerifyResult.FAILED);
     } finally {
@@ -859,9 +862,9 @@ export default function SoftKYC() {
               )}
               {depositStatus === VerifyResult.FAILED && (
                 <p className="text-[#C57D10] py-4 text-[1rem]">
-                  This Tx Hash does not meet the requirements. Please check the
-                  deposit amount, network, wallet address, and the Tx Hash
-                  itself.
+                  {verifyDepositError
+                    ? verifyDepositError
+                    : "This Tx Hash does not meet the requirements. Please check the deposit amount, network, wallet address, and the Tx Hash itself."}
                 </p>
               )}
             </div>
