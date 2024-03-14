@@ -218,7 +218,6 @@ const AssetTypes = [
   },
 ];
 export interface IBridgeComponentProps {
-  isFirstDeposit: boolean;
   onClose?: () => void;
   bridgeToken?: string;
 }
@@ -226,7 +225,7 @@ export interface IBridgeComponentProps {
 const ContentForMNTDeposit =
   "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
-  const { isFirstDeposit, onClose, bridgeToken } = props;
+  const { onClose, bridgeToken } = props;
   const web3Modal = useWeb3Modal();
   const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
@@ -241,9 +240,11 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [amount, setAmount] = useState("");
 
   const [url, setUrl] = useState("");
-  const { inviteCode, signature, twitterAccessToken, invite } = useSelector(
-    (store: RootState) => store.airdrop
-  );
+  const { isActiveUser } = useSelector((store: RootState) => store.airdrop);
+
+  const isFirstDeposit = useMemo(() => {
+    return !isActiveUser;
+  }, [isActiveUser]);
 
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
@@ -738,7 +739,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
         )}
       </Container>
-      {address && txhashes[address]?.[0] && (
+      {isFirstDeposit && address && txhashes[address]?.[0] && (
         <div>
           <Link
             to="/aggregation-parade?flag=1"
