@@ -51,10 +51,12 @@ import Loading from "@/components/Loading";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { IS_MAINNET } from "@/constants";
 
-const verifyFromList = [
-  ...fromList,
-  IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
-];
+// const verifyFromList = [
+//   ...fromList,
+//   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
+// ];
+
+const verifyFromList = [...fromList];
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 
