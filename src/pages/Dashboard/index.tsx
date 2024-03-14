@@ -730,7 +730,7 @@ export default function Dashboard() {
                     )}
                     <div className="progress-points">
                       {/* <div>{groupTvl}  {item.value} {groupTvl / item.value}</div> */}
-                      <div className="points-top">{item.booster}</div>
+                      <div className="points-top">{item.booster}x</div>
                       <div className="points-bottom">{item.value} ETH</div>
                     </div>
                   </div>
@@ -740,7 +740,7 @@ export default function Dashboard() {
           </div>
 
           <div className="mt-[2rem]">
-            {/* Tabs: Assets | Trademark NFTs | Referral  */}
+            {/* Tabs btn: Assets | Trademark NFTs | Referral  */}
             <TabsBox className="flex items-center gap-[1.5rem]">
               <span
                 className={`tab-item ${tabsActive === 0 ? "active" : ""}`}
@@ -765,6 +765,7 @@ export default function Dashboard() {
               </div>
             </TabsBox>
 
+            {/* Tabs view: Assets */}
             {tabsActive === 0 && (
               <AssetsTable
                 supportTokens={supportTokens}
@@ -772,6 +773,7 @@ export default function Dashboard() {
                 accountTvlData={accountTvlData}
               />
             )}
+            {/* Tabs view: Trademark NFTs */}
             {tabsActive === 1 && (
               <CardBox className="flex flex-col justify-center items-center mt-[2rem] py-[10rem]">
                 <p className="text-[1rem] text-center mb-[1rem] font-[700]">
@@ -785,12 +787,13 @@ export default function Dashboard() {
                   />
                   <img
                     style={{ width: 80 }}
-                    src="/img/logoOK.svg"
+                    src="/img/icon-okx-web3.svg"
                     className="w-[9.375rem] h-[9.375rem]"
                   />
                 </div>
               </CardBox>
             )}
+            {/* Tabs view: Referral */}
             {tabsActive === 2 && (
               <CardBox className="mt-[2rem] min-h-[30rem]">
                 <ReferralList
@@ -803,6 +806,7 @@ export default function Dashboard() {
         </div>
       </div>
       <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px" }}
         size="2xl"
         isOpen={bridgeModal.isOpen}
@@ -813,17 +817,14 @@ export default function Dashboard() {
             <>
               <ModalHeader>Bridge</ModalHeader>
               <ModalBody className="pb-8">
-                <BridgeComponent
-                  isFirstDeposit={false}
-                  bridgeToken={bridgeToken}
-                  onClose={onClose}
-                />
+                <BridgeComponent bridgeToken={bridgeToken} onClose={onClose} />
               </ModalBody>
             </>
           )}
         </ModalContent>
       </Modal>
       <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
         size="4xl"
         isOpen={mintModal.isOpen}
         onOpenChange={mintModal.onOpenChange}

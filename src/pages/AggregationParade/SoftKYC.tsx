@@ -405,7 +405,11 @@ export default function SoftKYC() {
     setIsReVerifyDeposit(true);
     console.log(selectedChainId, depositTxHash);
     try {
-      const res = await getTxByTxHash(depositTxHash, selectedChainId);
+      const res = await getTxByTxHash({
+        txHash: depositTxHash,
+        chainId: selectedChainId,
+        address,
+      });
       // TODO: response will return a field (as status: "PENDING") to show process ...
       console.log("verifyDepositHash", res);
       if (res?.isValid) {
@@ -427,10 +431,10 @@ export default function SoftKYC() {
   const getInviteFunc = async () => {
     if (!address) return;
     try {
+      setIsLoading(true);
       const res = await getInvite(address);
       console.log("getInviteFunc", res);
       if (res?.result) {
-        setIsLoading(true);
         setTimeout(() => {
           setIsLoading(false);
           dispatch(setInvite(res?.result));
@@ -438,6 +442,7 @@ export default function SoftKYC() {
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
       handleSubmitError();
     }
   };
@@ -548,7 +553,6 @@ export default function SoftKYC() {
       setSubmitStatus(true);
     }
   }, [inviteCodeValue, twitterAccessToken, depositTx, isConnected, signature]);
-  
 
   return (
     <BgBox>
@@ -759,6 +763,7 @@ export default function SoftKYC() {
 
       {/* Verify deposit modal */}
       <Modal
+        classNames={{closeButton: 'text-[1.5rem]'}}
         style={{ minHeight: "14rem" }}
         size="xl"
         isOpen={verifyDepositModal.isOpen}

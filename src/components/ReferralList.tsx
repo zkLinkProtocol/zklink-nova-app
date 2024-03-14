@@ -54,7 +54,7 @@ export default function ReferralList(props: IReferralListProps) {
     <>
       <div className="px-[1.5rem] py-[0.5rem] flex justify-between text-[#7E7E7E] text-[1rem] leading-[1.5rem]">
         <span>Name</span>
-        <span>Staking Value</span>
+        <span>Holding Value</span>
       </div>
 
       {data.map((item, index) => (

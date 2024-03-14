@@ -169,7 +169,7 @@ export default function Bridge() {
           {activeType === "nft" ? <NovaNFT /> : <NovaPoints />}
         </div>
         <div className="relative px-8 md:px-16 lg:px-32 lg:w-1/2">
-          <BridgeComponent isFirstDeposit={true} />
+          <BridgeComponent />
 
           <div className="absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32">
             <FooterTvlText className="mb-[0.5rem] text-right">

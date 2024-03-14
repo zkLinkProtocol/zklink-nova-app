@@ -547,6 +547,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
       </TableBox>
 
       <Modal
+        classNames={{closeButton: 'text-[1.5rem]'}}
         style={{ minHeight: "600px" }}
         size="2xl"
         isOpen={bridgeModal.isOpen}
@@ -558,7 +559,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
               <ModalHeader>Bridge</ModalHeader>
               <ModalBody className="pb-8">
                 <BridgeComponent
-                  isFirstDeposit={false}
                   bridgeToken={bridgeToken}
                   onClose={onClose}
                 />
