@@ -40,6 +40,7 @@ import { suggestMaxPriorityFee } from "@rainbow-me/fee-suggestions";
 import { WRAPPED_MNT } from "@/constants";
 
 import { zkSyncProvider, LineaProvider } from "./zksyncProviders";
+import BigNum from "bignumber.js";
 import { IL1BridgeFactory } from "@/constants/typechain";
 // const networkKey: string = "goerli"; //TODO get from store
 const nodeType = import.meta.env.VITE_NODE_TYPE;
@@ -426,7 +427,11 @@ export const useBridgeTx = () => {
     }
   };
 
-  const sendDepositTx = async (token: Address, amount: BigNumberish) => {
+  const sendDepositTx = async (
+    token: Address,
+    amount: BigNumberish,
+    nativeBalance: BigNumberish
+  ) => {
     const network = nodeConfig.find((item) => item.key === networkKey);
     if (!address || !network) {
       return;
@@ -605,6 +610,9 @@ export const useBridgeTx = () => {
         tx.gasPrice = overrides.gasPrice;
       } else {
         tx.gas = overrides.gasLimit;
+      }
+      if (new BigNum(tx.value.toString()).gt(nativeBalance.toString())) {
+        return Promise.reject(new Error("Insufficient balance"));
       }
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       try {

@@ -238,7 +238,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const { sendDepositTx, loading } = useBridgeTx();
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
 
   const [url, setUrl] = useState("");
   const { inviteCode, signature, twitterAccessToken, invite } = useSelector(
@@ -248,7 +248,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
   const { setNetworkKey, networkKey } = useBridgeNetworkStore();
-  const { tokenList, refreshTokenBalanceList, allTokens } =
+  const { tokenList, refreshTokenBalanceList, allTokens, nativeTokenBalance } =
     useTokenBalanceList();
 
   const [points, setPoints] = useState(0);
@@ -444,7 +444,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
         tokenFiltered[tokenActive].balance! <= 0 ||
-        Number(tokenFiltered[tokenActive].formatedBalance) < amount ||
+        Number(tokenFiltered[tokenActive].formatedBalance) < Number(amount) ||
         Number(amount) <= 0)
     ) {
       return true;
@@ -459,10 +459,17 @@ export default function Bridge(props: IBridgeComponentProps) {
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
-    } else {
-      return "Continue";
+    } else if (
+      amount &&
+      tokenFiltered[tokenActive] &&
+      tokenFiltered[tokenActive].formatedBalance
+    ) {
+      if (Number(amount) > Number(tokenFiltered[tokenActive].formatedBalance)) {
+        return "Insufficient balance";
+      }
     }
-  }, [invalidChain]);
+    return "Continue";
+  }, [invalidChain, amount, tokenActive, tokenFiltered]);
 
   const handleInputValue = (v: string) => {
     if (!v) {
@@ -504,7 +511,8 @@ export default function Bridge(props: IBridgeComponentProps) {
       const hash = await sendDepositTx(
         tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))
-        parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals)
+        parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals),
+        nativeTokenBalance ?? 0
       );
       if (!hash) {
         return;
@@ -526,8 +534,11 @@ export default function Bridge(props: IBridgeComponentProps) {
     } catch (e) {
       transLoadModal.onClose();
       dispatch(setDepositStatus(""));
+
       if (e.message) {
-        if (e.message.includes("User rejected the request")) {
+        if (e.message.includes("Insufficient balance")) {
+          setFailMessage("Insufficient balance");
+        } else if (e.message.includes("User rejected the request")) {
           setFailMessage("User rejected the request");
         } else {
           setFailMessage(e.message);
@@ -556,6 +567,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     sendDepositTx,
     tokenFiltered,
     tokenActive,
+    nativeTokenBalance,
     addTxHash,
     dispatch,
     transSuccModal,
@@ -669,7 +681,9 @@ export default function Bridge(props: IBridgeComponentProps) {
           {networkKey && NexusEstimateArrivalTimes[networkKey] && (
             <div className="flex items-center justify-between mb-2 points-box">
               <span>Estimated Time of Arrival</span>
-              <span className="text-white">~ {NexusEstimateArrivalTimes[networkKey]} minutes</span>
+              <span className="text-white">
+                ~ {NexusEstimateArrivalTimes[networkKey]} minutes
+              </span>
             </div>
           )}
           {/* <div className="flex items-center justify-between mb-2 points-box">
@@ -765,7 +779,6 @@ export default function Bridge(props: IBridgeComponentProps) {
 
             <div className="flex items-center gap-[1rem]">
               <CopyIcon text={txhashes[address][0].txhash} />
-             
             </div>
           </div>
         </div>
