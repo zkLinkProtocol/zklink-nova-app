@@ -57,6 +57,7 @@ import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
+import { AiOutlineRight } from "react-icons/ai";
 
 const ModalSelectItem = styled.div`
   &:hover {
@@ -727,8 +728,8 @@ export default function Bridge(props: IBridgeComponentProps) {
         <div>
           <Link to="/aggregation-parade?flag=1" className="text-[1rem]">
             <div className="mt-[1.5rem] px-[1.5rem] py-[1rem] flex items-center justify-between bg-[rgba(0,0,0,0.4)] rounded-[12px] border-1 border-[#03D498]">
-              Click to verify your transaction.
-              <span>{">"}</span>
+              <span>Click to verify your transaction.</span>
+              <AiOutlineRight />
             </div>
           </Link>
 
