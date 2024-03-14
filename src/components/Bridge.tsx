@@ -657,7 +657,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               )}
             </div>
             <div className="flex items-center">
-              <span>{showNoPointsTip ? 0 : points}</span>
+              <span className="text-white">{showNoPointsTip ? 0 : points}</span>
               {loyalPoints > 0 && (
                 <div className="ml-1">
                   + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
@@ -669,7 +669,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           {networkKey && NexusEstimateArrivalTimes[networkKey] && (
             <div className="flex items-center justify-between mb-2 points-box">
               <span>Estimated Time of Arrival</span>
-              <span>~ {NexusEstimateArrivalTimes[networkKey]} minuts</span>
+              <span className="text-white">~ {NexusEstimateArrivalTimes[networkKey]} minutes</span>
             </div>
           )}
           {/* <div className="flex items-center justify-between mb-2 points-box">
@@ -757,7 +757,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                   txhashes[address][0]?.txhash
                 )}
                 target="_blank"
-                className="hover:underline"
+                className="hover:underline text-[1rem]"
               >
                 {formatTxHash(txhashes[address][0]?.txhash)}
               </a>
@@ -765,15 +765,7 @@ export default function Bridge(props: IBridgeComponentProps) {
 
             <div className="flex items-center gap-[1rem]">
               <CopyIcon text={txhashes[address][0].txhash} />
-              <a
-                href={getTxHashExplorerLink(
-                  txhashes[address][0]?.rpcUrl,
-                  txhashes[address][0]?.txhash
-                )}
-                target="_blank"
-              >
-                <img src="/img/icon-explorer.svg" />
-              </a>
+             
             </div>
           </div>
         </div>
