@@ -34,3 +34,5 @@ export const NexusEstimateArrivalTimes: Record<string, number> = {
 export const NexusGoerliEstimateArrivalTimes = {};
 
 export const IS_MAINNET = nodeType === "nexus";
+
+export const TWEET_SHARE_TEXT = 'ZkLink Nova Campaign blablablablabla'
