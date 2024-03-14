@@ -436,6 +436,8 @@ export default function Dashboard() {
       if (e.message) {
         if (e.message.includes("User rejected the request")) {
           toast.error("User rejected the request");
+        } else if (e.message.includes("You already have a character")) {
+          toast.error("You can mint SBT only once.");
         } else {
           toast.error(e.message);
         }
