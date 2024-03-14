@@ -262,6 +262,10 @@ export default function Header() {
               <NavbarItem>
                 <NavLink to="/bridge">Bridge</NavLink>
               </NavbarItem>
+              <NavbarItem>
+                <a href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7" target="_blank">User Guide</a>
+              </NavbarItem>
+              
               {/* <NavbarItem>
                 <a
                   href={
@@ -334,6 +338,15 @@ export default function Header() {
                 )}
               </>
             )}
+            <a href="https://discord.com/invite/zklink">
+              <img src="/img/icon-dc.svg" className="w-[1.5rem] h-[1.5rem]" />
+            </a>
+            <a href="https://twitter.com/zkLink_Official">
+              <img
+                src="/img/icon-twitter.svg"
+                className="w-[1.25rem] h-[1.25rem]"
+              />
+            </a>
             {address && !depositStatus && (
               <Button
                 className="border-solid border-1 border-[#03D498] text-[#03D498] bg-transparent font-bold"
