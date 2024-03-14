@@ -6,21 +6,17 @@ import styled from "styled-components";
 const TvlBox = styled.div`
   .tvl-num-item {
     /* padding: 0 0.2rem; */
-    width: 2.8rem;
-    height: 3.875rem;
     line-height: 3.875rem;
     border-radius: 1rem;
     /* background: rgba(0, 0, 0, 0.4); */
     /* backdrop-filter: blur(15.800000190734863px); */
     color: #fff;
     font-family: Satoshi;
-    font-size: 3rem;
     font-style: normal;
-  font-weight: 700;
+    font-weight: 700;
     text-align: center;
     color: #fff;
     font-family: Satoshi;
-    font-size: 48px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -68,13 +64,15 @@ export default function TotalTvlCard() {
   }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mb-8">
       <span className="text-[1.25rem]">zkLink Nova Network TVL</span>
       <TvlBox className="flex items-center gap-[0.5rem]">
         {tvlArr.map((item, index) => (
           <span
             key={index}
-            className={`tvl-num-item ${item === "," ? "comma" : ""}`}
+            className={`tvl-num-item w-[1.5rem] h-[1.5rem] md:w-[2.8rem] md:h-[3.875rem] text-[28px] md:text-[48px] ${
+              item === "," ? "comma" : ""
+            }`}
           >
             {item}
           </span>

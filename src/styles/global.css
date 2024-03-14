@@ -1,65 +1,63 @@
-@import './reset.min.css';
-@import './tailwind.css';
+@import "./reset.min.css";
+@import "./tailwind.css";
 
 .text-sub-title {
-    color: #999;
+  color: #999;
 }
 
 .main {
-    position: relative;
-    width: 100%;
-    min-width: 1080px;
-    min-height: 100vh;
-    overflow: auto;
-    font-family: 'Satoshi';
+  position: relative;
+  width: 100%;
+  /* min-width: 1080px; */
+  min-height: 100vh;
+  overflow: auto;
+  font-family: "Satoshi";
 }
 
 .gradient-btn {
-    background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
-    color: #fff;
-    border-radius: 6px;
-    font-family: Satoshi;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: left;
-    border: none;
+  background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
+  color: #fff;
+  border-radius: 6px;
+  font-family: Satoshi;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  border: none;
 }
 .gradient-btn:disabled {
-    cursor:not-allowed;
-    opacity: 0.4 !important;
+  cursor: not-allowed;
+  opacity: 0.4 !important;
 }
 .gradient-secondary-btn {
-    border: 1px solid transparent;
+  border: 1px solid transparent;
   border-radius: 8px;
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
-  background-image: linear-gradient(to right, #222, #222), linear-gradient(90deg, #8F41E9, #578AEF);
-
+  background-image: linear-gradient(to right, #222, #222),
+    linear-gradient(90deg, #8f41e9, #578aef);
 }
 .gradient-secondary-btn:disabled {
-    cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .default-btn {
-    border-radius: 6px;
-    font-family: Satoshi;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: left;
-    color: #A0A5AD;
-    background: #1E1F24;
-    border:none;
-
+  border-radius: 6px;
+  font-family: Satoshi;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  color: #a0a5ad;
+  background: #1e1f24;
+  border: none;
 }
 .default-btn:hover {
-    background-color: #2F313A;
+  background-color: #2f313a;
 }
 
 .not-active:first-child {
-    background-color: red;
+  background-color: red;
 }
 
 .not-active-1:first-child .bar {
-        display: none;
-
+  display: none;
 }

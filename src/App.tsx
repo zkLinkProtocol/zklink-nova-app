@@ -51,7 +51,7 @@ const HideBox = styled.div`
 
 export default function App() {
   return (
-    <main className="main dark text-foreground bg-background header">
+    <main className="main dark text-foreground bg-background header lg:min-w-[1080px]">
       <BrowserRouter>
         <AppRoute>
           <Header />

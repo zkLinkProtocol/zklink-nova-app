@@ -3,10 +3,14 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
   Button,
   Avatar,
   Tooltip,
 } from "@nextui-org/react";
+
 import { Link, NavLink, useSearchParams } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
@@ -169,22 +173,28 @@ export default function Header() {
       dispatch(setSignature(""));
     }
   }, [isConnected]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
       <Navbar
         // shouldHideOnScroll
-        className={`px-[1.5rem] py-[0.75rem] fixed pt-0`}
+        className={`md:px-[1.5rem] py-[0.75rem] fixed pt-0`}
         style={{
           // position: isHeaderTop ? 'fixed' : 'sticky',
           background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
         }}
-        maxWidth="full"
+        maxWidth="2xl"
         isBlurred={false}
+        onMenuOpenChange={setIsMenuOpen}
       >
-        <NavbarBrand className="flex items-end">
+        <NavbarContent>
+          {/* mobile toggle button */}
+          <NavbarMenuToggle
+            className="sm:hidden mr-6"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          />
           {/* <Logo /> */}
-
           <Link
             to="/"
             onClick={() => dispatch(setTwitterAccessToken(""))}
@@ -198,29 +208,26 @@ export default function Header() {
           <NavNet>
             <div>Mainnet Live</div>
           </NavNet>
-          <NavBox className="ml-[3.5rem]">
-            <NavbarContent
-              className="hidden sm:flex gap-[2.5rem]"
-              justify="center"
+        </NavbarContent>
+        <NavbarContent className="hidden sm:flex gap-[2.5rem]" justify="center">
+          <NavbarItem>
+            <NavLink
+              to="/aggregation-parade"
+              className="nav-link"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
             >
-              <NavbarItem>
-                <NavLink
-                  to="/aggregation-parade"
-                  className="nav-link"
-                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
-                >
-                  Aggregation Parade
-                </NavLink>
-              </NavbarItem>
-              <NavbarItem>
-                <NavLink
-                  to="/dashboard"
-                  className="nav-link"
-                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
-                >
-                  Dashboard
-                </NavLink>
-                {/* {isActive() ? (
+              Aggregation Parade
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NavLink
+              to="/dashboard"
+              className="nav-link"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              Dashboard
+            </NavLink>
+            {/* {isActive() ? (
                   <NavLink
                     to="/dashboard"
                     className="nav-link"
@@ -235,32 +242,32 @@ export default function Header() {
                     </span>
                   </Tooltip>
                 )} */}
-              </NavbarItem>
-              <NavbarItem>
-                <NavLink
-                  to="/leaderboard"
-                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
-                >
-                  Leaderboard
-                </NavLink>
-              </NavbarItem>
-              <NavbarItem>
-                <NavLink
-                  to="/about"
-                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
-                >
-                  About
-                </NavLink>
-              </NavbarItem>
-              <NavbarItem>
-                <NavLink
-                  to="/bridge"
-                  style={{ pointerEvents: campaignStart ? "auto" : "none" }}
-                >
-                  Bridge
-                </NavLink>
-              </NavbarItem>
-              {/* <NavbarItem>
+          </NavbarItem>
+          <NavbarItem>
+            <NavLink
+              to="/leaderboard"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              Leaderboard
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NavLink
+              to="/about"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              About
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NavLink
+              to="/bridge"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              Bridge
+            </NavLink>
+          </NavbarItem>
+          {/* <NavbarItem>
                 <a
                   href={
                     nodeType === "nexus-goerli"
@@ -274,10 +281,7 @@ export default function Header() {
                   <MdArrowOutward className="size-[1.75rem]" />
                 </a>
               </NavbarItem> */}
-            </NavbarContent>
-          </NavBox>
-        </NavbarBrand>
-
+        </NavbarContent>
         {/* <NavbarContent justify="end">
           <NavbarItem className="hidden flex items-center gap-[1rem]">
             {false && (
@@ -354,6 +358,66 @@ export default function Header() {
             </Button>
           </NavbarItem>
         </NavbarContent> */}
+        {/* mobile menu */}
+        <NavbarMenu>
+          <NavbarMenuItem>
+            <NavLink
+              to="/aggregation-parade"
+              className="nav-link"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              Aggregation Parade
+            </NavLink>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <NavLink
+              to="/dashboard"
+              className="nav-link"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              Dashboard
+            </NavLink>
+            {/* {isActive() ? (
+                  <NavLink
+                    to="/dashboard"
+                    className="nav-link"
+                    style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+                  >
+                    Dashboard
+                  </NavLink>
+                ) : (
+                  <Tooltip content="Not Active">
+                    <span className="nav-link cursor-not-allowed opacity-40">
+                      Dashboard
+                    </span>
+                  </Tooltip>
+                )} */}
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <NavLink
+              to="/leaderboard"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              Leaderboard
+            </NavLink>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <NavLink
+              to="/about"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              About
+            </NavLink>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <NavLink
+              to="/bridge"
+              style={{ pointerEvents: campaignStart ? "auto" : "none" }}
+            >
+              Bridge
+            </NavLink>
+          </NavbarMenuItem>
+        </NavbarMenu>
       </Navbar>
     </>
   );
