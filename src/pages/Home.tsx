@@ -197,6 +197,10 @@ const TitleBox = styled.div`
   @media (max-width: 768px) {
     .box {
       margin-left: 0;
+      .move {
+        left: 50%;
+        transform: translateX(-50%);
+      }
       .inner {
         width: 100%;
         font-size: 30px;
