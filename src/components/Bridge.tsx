@@ -14,12 +14,20 @@ import {
   Tooltip,
   Tabs,
   Tab,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import { AiOutlineCheck, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import {
+  AiOutlineCheck,
+  AiOutlineDown,
+  AiOutlineUp,
+  AiOutlineCopy,
+} from "react-icons/ai";
 import toast from "react-hot-toast";
-import { debounce } from "lodash";
+import { debounce, has } from "lodash";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import BigNumber from "bignumber.js";
 import { useBridgeNetworkStore } from "@/hooks/useNetwork";
@@ -28,13 +36,7 @@ import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  bindInviteCodeWithAddress,
-  getInvite,
-  checkInviteCode,
-  getTokenPrice,
-  getDepositETHThreshold,
-} from "@/api";
+import { getDepositETHThreshold } from "@/api";
 import { RootState } from "@/store";
 import {
   setInvite,
@@ -43,7 +45,19 @@ import {
 } from "@/store/modules/airdrop";
 import { parseUnits } from "viem";
 import { Token } from "@/hooks/useTokenList";
-import { isSameAddress } from "@/utils";
+import {
+  copyText,
+  formatTxHash,
+  getTxHashExplorerLink,
+  isSameAddress,
+} from "@/utils";
+import CopyIcon from "./CopyIcon";
+import VerifyTxHashModal from "./VerifyTxHashModal";
+import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
+import { NexusEstimateArrivalTimes } from "@/constants";
+import FromList from "@/constants/fromChainList";
+import { Link } from "react-router-dom";
+import { AiOutlineRight } from "react-icons/ai";
 
 const ModalSelectItem = styled.div`
   &:hover {
@@ -204,18 +218,14 @@ const AssetTypes = [
   },
 ];
 export interface IBridgeComponentProps {
-  isFirstDeposit: boolean;
   onClose?: () => void;
   bridgeToken?: string;
 }
-const InviteCodeTypes = [
-  { label: "Join Group", value: "join" },
-  { label: "Create Group", value: "create" },
-];
+
 const ContentForMNTDeposit =
   "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
-  const { isFirstDeposit, onClose, bridgeToken } = props;
+  const { onClose, bridgeToken } = props;
   const web3Modal = useWeb3Modal();
   const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
@@ -226,37 +236,40 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [failMessage, setFailMessage] = useState("");
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const { sendDepositTx, loading, getDepositL2TxHash } = useBridgeTx();
-  const [amount, setAmount] = useState(0);
-  const [inviteCodeType, setInviteCodeType] = useState(
-    InviteCodeTypes[0].value
-  );
+  const { sendDepositTx, loading } = useBridgeTx();
+  const [amount, setAmount] = useState("");
+
   const [url, setUrl] = useState("");
-  const { inviteCode, signature, twitterAccessToken, invite } = useSelector(
-    (store: RootState) => store.airdrop
-  );
-  const [inputInviteCode, setInputInviteCode] = useState("");
+  const { isActiveUser } = useSelector((store: RootState) => store.airdrop);
+
+  const isFirstDeposit = useMemo(() => {
+    return !isActiveUser;
+  }, [isActiveUser]);
 
   const [fromActive, setFromActive] = useState(0);
   const [tokenActive, setTokenActive] = useState(0);
   const { setNetworkKey, networkKey } = useBridgeNetworkStore();
-  const { tokenList, refreshTokenBalanceList } = useTokenBalanceList();
+  const { tokenList, refreshTokenBalanceList, allTokens, nativeTokenBalance } =
+    useTokenBalanceList();
 
   const [points, setPoints] = useState(0);
   const [showNoPointsTip, setShowNoPointsTip] = useState(false);
   const [minDepositValue, setMinDepositValue] = useState(0.1);
   const [loyalPoints, setLoyalPoints] = useState(0);
-  const [priceApiFailed, setPriceApiFailed] = useState(false);
   const [category, setCategory] = useState(AssetTypes[0].value);
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
+
   const dispatch = useDispatch();
 
+  const { addTxHash, txhashes } = useVerifyStore();
+
   useEffect(() => {
-    if (inviteCode) {
-      setInputInviteCode(inviteCode);
-    }
-  }, [inviteCode, setInputInviteCode]);
+    const timer = setInterval(() => {
+      refreshTokenBalanceList();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [refreshTokenBalanceList]);
 
   useEffect(() => {
     (async () => {
@@ -286,29 +299,34 @@ export default function Bridge(props: IBridgeComponentProps) {
     })();
   }, []);
 
-  const computePoints = debounce(async () => {
+  const computePoints = debounce(() => {
     if (!amount || !tokenFiltered[tokenActive]) {
       setShowNoPointsTip(false);
+      setPoints(0);
       return;
     }
     if (tokenFiltered[tokenActive]?.address === ETH_ADDRESS) {
-      if (Number(amount) < minDepositValue) {
+      if (Number(amount) < minDepositValue && isFirstDeposit) {
         setShowNoPointsTip(true);
       } else {
         setShowNoPointsTip(false);
       }
     }
     try {
-      const [priceInfo, ethPriceInfo] = await Promise.all([
-        getTokenPrice(tokenFiltered[tokenActive]?.address),
-        getTokenPrice(ETH_ADDRESS),
-      ]);
+      const priceInfo = allTokens.find(
+        (item) => item.symbol === tokenFiltered[tokenActive].symbol
+      );
+      const ethPriceInfo = allTokens.find((item) => item.symbol === "ETH");
+      // const [priceInfo, ethPriceInfo] = await Promise.all([
+      //   getTokenPrice(tokenFiltered[tokenActive]?.address),
+      //   getTokenPrice(ETH_ADDRESS),
+      // ]);
       if (priceInfo?.usdPrice && ethPriceInfo?.usdPrice) {
         const ethValue = new BigNumber(priceInfo.usdPrice)
           .multipliedBy(amount)
           .div(ethPriceInfo.usdPrice)
           .toNumber();
-        if (ethValue < minDepositValue) {
+        if (ethValue < minDepositValue && isFirstDeposit) {
           setShowNoPointsTip(true);
         } else {
           setShowNoPointsTip(false);
@@ -319,20 +337,25 @@ export default function Bridge(props: IBridgeComponentProps) {
           .multipliedBy(tokenFiltered[tokenActive].multiplier)
           .multipliedBy(amount)
           .div(ethPriceInfo.usdPrice)
-          .toFixed(2);
+          .toNumber();
         setPoints(Number(points));
       }
     } catch (e) {
       console.log(e);
-      setPriceApiFailed(true);
     }
-    setPriceApiFailed(false);
   }, 500);
 
   useEffect(() => {
     //TODO compute eth value, if less than minDepositValue, show 0 points
     computePoints();
-  }, [tokenActive, tokenList, amount, minDepositValue, computePoints]);
+  }, [
+    tokenActive,
+    tokenList,
+    amount,
+    minDepositValue,
+    computePoints,
+    allTokens,
+  ]);
 
   useEffect(() => {
     if (isFirstDeposit) {
@@ -421,8 +444,9 @@ export default function Bridge(props: IBridgeComponentProps) {
       !invalidChain &&
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
-        tokenFiltered[tokenActive].balance! < 0 ||
-        Number(tokenFiltered[tokenActive].formatedBalance) < amount)
+        tokenFiltered[tokenActive].balance! <= 0 ||
+        Number(tokenFiltered[tokenActive].formatedBalance) < Number(amount) ||
+        Number(amount) <= 0)
     ) {
       return true;
     }
@@ -436,10 +460,31 @@ export default function Bridge(props: IBridgeComponentProps) {
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
-    } else {
-      return "Continue";
+    } else if (
+      amount &&
+      tokenFiltered[tokenActive] &&
+      tokenFiltered[tokenActive].formatedBalance
+    ) {
+      if (Number(amount) > Number(tokenFiltered[tokenActive].formatedBalance)) {
+        return "Insufficient balance";
+      }
     }
-  }, [invalidChain]);
+    return "Continue";
+  }, [invalidChain, amount, tokenActive, tokenFiltered]);
+
+  const handleInputValue = (v: string) => {
+    if (!v) {
+      setAmount(v);
+    } else if (/^[0-9]*\.?[0-9]*$/.test(v)) {
+      setAmount(v);
+    }
+  };
+
+  const dismissToast = () => {
+    setTimeout(() => {
+      toast.dismiss();
+    }, 3000);
+  };
 
   const handleAction = useCallback(async () => {
     if (!address) return;
@@ -457,23 +502,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     if (!amount) {
       return;
     }
-    if (isFirstDeposit && inviteCodeType === "join") {
-      if (!inputInviteCode) {
-        toast.error("Please enter invite code to join group.");
-        return;
-      } else {
-        //TODO check invite code
-        const result = await checkInviteCode(inputInviteCode);
-        console.log("check code result: ", result);
-        if (!result || !result.result) {
-          toast.error("Invalid invite code");
-          return;
-        }
-      }
-    }
-    setTimeout(() => {
-      toast.dismiss();
-    }, 3000);
 
     transLoadModal.onOpen();
     let time = setTimeout(() => {}, 100);
@@ -481,19 +509,21 @@ export default function Bridge(props: IBridgeComponentProps) {
       clearTimeout(i);
     }
     try {
-      // const l2Hash = await getDepositL2TxHash(
-      //   "0x131b99bf3466ecb1353c059bbfc8a6c1700e98f0e057f452bf17367ee2999b2d"
-      // );
-      // console.log("l2TxHash: ", l2Hash);
-      // return;
       const hash = await sendDepositTx(
         tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))
-        parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals)
+        parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals),
+        nativeTokenBalance ?? 0
       );
       if (!hash) {
         return;
       }
+      //save tx hash
+      const rpcUrl = FromList.find(
+        (item) => item.networkKey === networkKey
+      )?.rpcUrl;
+      addTxHash(address, hash, rpcUrl!);
+
       setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
       dispatch(setDepositL1TxHash(hash!));
       transLoadModal.onClose();
@@ -505,8 +535,11 @@ export default function Bridge(props: IBridgeComponentProps) {
     } catch (e) {
       transLoadModal.onClose();
       dispatch(setDepositStatus(""));
+
       if (e.message) {
-        if (e.message.includes("User rejected the request")) {
+        if (e.message.includes("Insufficient balance")) {
+          setFailMessage("Insufficient balance");
+        } else if (e.message.includes("User rejected the request")) {
           setFailMessage("User rejected the request");
         } else {
           setFailMessage(e.message);
@@ -521,76 +554,26 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
 
     refreshTokenBalanceList();
-    if (isFirstDeposit && !showNoPointsTip && !priceApiFailed) {
-      const data = {
-        address,
-        code: inviteCodeType === "join" ? inputInviteCode : "",
-        siganture: signature,
-        accessToken: twitterAccessToken,
-      };
-      try {
-        const resBind = await bindInviteCodeWithAddress({
-          ...data,
-        });
 
-        if (resBind?.error) {
-          toast.error(resBind.message);
-          return;
-        }
-
-        const res = await getInvite(address);
-        if (res?.result && !showNoPointsTip && !priceApiFailed) {
-          dispatch(setInvite(res?.result));
-        }
-      } catch (e) {
-        console.log(e);
-        if (e.message === "Invalid code") {
-          toast.error("Invalid invite code");
-        } else if (e.message === "The invitation limit has been reached") {
-          //TODO can not invite more
-          toast.error("The invitation limit has been reached");
-          if (data.code && !showNoPointsTip && !priceApiFailed) {
-            // dispatch(
-            //   setInvite({
-            //     ...data,
-            //   })
-            // );
-          }
-        } else if (
-          e.message === "Has been invited, can not repeat the association"
-        ) {
-          toast.error(e.message);
-          if (data.code && !showNoPointsTip && !priceApiFailed) {
-            // dispatch(
-            //   setInvite({
-            //     ...data,
-            //   })
-            // );
-          }
-        }
-      }
-    }
-    //TODO call api to save referel data
     onClose?.();
   }, [
-    isFirstDeposit,
-    inviteCodeType,
     address,
     invalidChain,
     amount,
+    transLoadModal,
     refreshTokenBalanceList,
-    showNoPointsTip,
-    priceApiFailed,
     onClose,
-    inputInviteCode,
     switchChain,
     fromActive,
     sendDepositTx,
     tokenFiltered,
     tokenActive,
-    signature,
-    twitterAccessToken,
+    nativeTokenBalance,
+    addTxHash,
     dispatch,
+    transSuccModal,
+    networkKey,
+    transFailModal,
   ]);
 
   return (
@@ -603,14 +586,14 @@ export default function Bridge(props: IBridgeComponentProps) {
               className="selector flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer"
               onClick={() => fromModal.onOpen()}
             >
-              <Avatar
+              <img
                 src={fromList[fromActive].icon}
-                style={{ width: 24, height: 24 }}
+                className="w-6 h-6 rounded-full"
               />
               <span>{fromList[fromActive].label}</span>
               {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
-            <div>
+            <div className="ml-auto">
               Balance:{" "}
               <span>{tokenFiltered[tokenActive]?.formatedBalance}</span>
             </div>
@@ -619,11 +602,13 @@ export default function Bridge(props: IBridgeComponentProps) {
             <Input
               classNames={{ input: "text-4xl" }}
               size="lg"
-              type="number"
+              // type="number"
               placeholder="0"
               variant={"underlined"}
               value={String(amount)}
-              onValueChange={setAmount}
+              onValueChange={handleInputValue}
+              onWheel={(e) => e.preventDefault()}
+              errorMessage=""
             />
 
             <div
@@ -650,7 +635,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content="You would receive Nova Points once your deposit is verified. "
+                content="By depositing into zkLink Nova, you will instantly receive Nova Points equivalent to 10 distributions.- Nova Points are distributed every 8 hours. "
               >
                 <img
                   src={"/img/icon-tooltip.png"}
@@ -685,7 +670,13 @@ export default function Bridge(props: IBridgeComponentProps) {
               )}
             </div>
             <div className="flex items-center">
-              <span>{points}</span>
+              <span className="text-white">
+                {showNoPointsTip
+                  ? 0
+                  : points < 0.01 && points > 0
+                  ? "< 0.01"
+                  : points.toFixed(2)}
+              </span>
               {loyalPoints > 0 && (
                 <div className="ml-1">
                   + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
@@ -693,54 +684,13 @@ export default function Bridge(props: IBridgeComponentProps) {
               )}
             </div>
           </div>
-          {isFirstDeposit && (
+
+          {networkKey && NexusEstimateArrivalTimes[networkKey] && (
             <div className="flex items-center justify-between mb-2 points-box">
-              <div className="flex items-center">
-                <span>Invite Code</span>
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "max-w-[300px] p-4",
-                  }}
-                  content="Each wallet user can only join one team, you can either choose to join an existing team or you can choose to create your own team."
-                >
-                  <img
-                    src={"/img/icon-tooltip.png"}
-                    className="w-[14px] cursor-pointer ml-1"
-                  />
-                </Tooltip>
-              </div>
-              <div className="flex items-center">
-                {inviteCodeType === "join" && (
-                  <Input
-                    classNames={{
-                      inputWrapper: "w-[120px] h-[38px] bg-[#313841] mr-2",
-                    }}
-                    size="sm"
-                    value={inputInviteCode}
-                    onValueChange={setInputInviteCode}
-                    placeholder="Invite code"
-                  />
-                )}
-                <Select
-                  classNames={{
-                    trigger: "w-[140px] min-h-[38px] h-[38px] bg-[#313841]",
-                  }}
-                  className="max-w-xs w-[140px] h-[38px]"
-                  value={inviteCodeType}
-                  onChange={(e) => {
-                    setInviteCodeType(e.target.value);
-                  }}
-                  size="sm"
-                  selectedKeys={[inviteCodeType]}
-                >
-                  {InviteCodeTypes.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-              </div>
+              <span>Estimated Time of Arrival</span>
+              <span className="text-white">
+                ~ {NexusEstimateArrivalTimes[networkKey]} minutes
+              </span>
             </div>
           )}
           {/* <div className="flex items-center justify-between mb-2 points-box">
@@ -795,7 +745,84 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
         )}
       </Container>
+      {isFirstDeposit && address && txhashes[address]?.[0] && (
+        <div>
+          <Link
+            to="/aggregation-parade?flag=1"
+            target="_blank"
+            className="text-[1rem]"
+          >
+            <div className="mt-[1.5rem] px-[1.5rem] py-[1rem] flex items-center justify-between bg-[rgba(0,0,0,0.4)] rounded-[12px] border-1 border-[#03D498]">
+              <span>Click to verify your transaction.</span>
+              <AiOutlineRight />
+            </div>
+          </Link>
+
+          <div className="mt-[1.5rem] text-[1rem] text-[#A0A5AD]">
+            Latest tx hash
+          </div>
+
+          <div className="mt-[0.5rem] flex justify-between items-center">
+            <div className="flex items-center gap-[0.25rem]">
+              <img
+                src={
+                  FromList.find(
+                    (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
+                  )?.icon
+                }
+                className="w-6 h-6 mr-1 rounded-full"
+              />
+              <a
+                href={getTxHashExplorerLink(
+                  txhashes[address][0]?.rpcUrl,
+                  txhashes[address][0]?.txhash
+                )}
+                target="_blank"
+                className="hover:underline text-[1rem]"
+              >
+                {formatTxHash(txhashes[address][0]?.txhash)}
+              </a>
+            </div>
+
+            <div className="flex items-center gap-[1rem]">
+              <CopyIcon text={txhashes[address][0].txhash} />
+            </div>
+          </div>
+        </div>
+        // <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-[16px]">
+        //   <div className="flex items-center justify-between font-normal text-[14px] mb-2 text-[#A0A5AD]">
+        //     <span>Latest tx hash:</span>
+        //     <span>
+        //       You can use this tx hash to verify in Aggregation Parade page
+        //     </span>
+        //   </div>
+        //   <div className="flex items-center ">
+        //     <img
+        //       src={
+        //         FromList.find(
+        //           (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
+        //         )?.icon
+        //       }
+        //       className="w-6 h-6 mr-1 rounded-full"
+        //     />
+        //     <span className="text-[12px] font-semibold">
+        //       <a
+        //         href={getTxHashExplorerLink(
+        //           txhashes[address][0]?.rpcUrl,
+        //           txhashes[address][0]?.txhash
+        //         )}
+        //         target="_blank"
+        //         className="hover:underline"
+        //       >
+        //         {formatTxHash(txhashes[address][0]?.txhash)}
+        //       </a>
+        //     </span>
+        //     <CopyIcon text={txhashes[address][0].txhash} />
+        //   </div>
+        // </div>
+      )}
       <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
         isOpen={fromModal.isOpen}
@@ -825,6 +852,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       </Modal>
 
       <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
         isOpen={tokenModal.isOpen}
@@ -878,6 +906,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         </ModalContent>
       </Modal>
       <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         size="xl"
         isOpen={transLoadModal.isOpen}
@@ -903,6 +932,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         </ModalContent>
       </Modal>
       <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         size="xl"
         isOpen={transSuccModal.isOpen}
@@ -931,6 +961,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         </ModalContent>
       </Modal>
       <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         size="xl"
         isOpen={transFailModal.isOpen}

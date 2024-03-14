@@ -280,6 +280,9 @@ const createEraChain = (network: ZkSyncNetwork) => {
 // Create wagmiConfig
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
+export const NetworkConfig =
+  nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
+
 export const wagmiConfig = defaultWagmiConfig({
   chains:
     nodeType === "nexus-goerli"

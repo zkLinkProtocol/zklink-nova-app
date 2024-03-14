@@ -8,6 +8,7 @@ import { ETH_ADDRESS, L2_ETH_TOKEN_ADDRESS } from "@/constants";
 import { BOOST_LIST } from "@/constants/boost";
 import numeral from "numeral";
 import { nexusGoerliNode, nexusNode } from "@/constants/networks";
+import FromList from "@/constants/fromChainList";
 
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -161,7 +162,7 @@ export function scaleGasLimit(gasLimit: BigNumber): BigNumber {
     .div(L1_FEE_ESTIMATION_COEF_DENOMINATOR);
 }
 
-export function random(min: number, max: number) {
+export function getRandomNumber(min: number, max: number) {
   return Math.round(Math.random() * (max - min)) + min;
 }
 
@@ -229,3 +230,66 @@ export async function addNovaChain() {
     blockExplorerUrls: [network.blockExplorerUrl ?? ""],
   });
 }
+
+export const formatNumber = (
+  number: number,
+  locales?: string,
+  ops?: Intl.NumberFormatOptions
+) => {
+  const formatter = new Intl.NumberFormat(locales ?? "en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6,
+    ...ops,
+  });
+  return formatter.format(number);
+};
+
+export const copyText = (text: string) => {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+
+  // Avoid scrolling to bottom
+  textArea.style.position = "fixed";
+  textArea.style.clip = "rect(0 0 0 0)";
+  textArea.style.top = "10px";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    const res = document.execCommand("copy");
+    console.log("copy res;", res);
+  } catch (err) {
+    console.error("Fallback: Oops, unable to copy", err);
+  } finally {
+    document.body.removeChild(textArea);
+  }
+};
+
+export const formatTxHash = (hash: string) => {
+  if (hash) {
+    return hash.substring(0, 12) + "..." + hash.substr(-12);
+  }
+  return "";
+};
+
+export const getTxHashExplorerLink = (rpcUrl: string, txhash: string) => {
+  if (rpcUrl && txhash) {
+    const network = FromList.find((item) => item.rpcUrl === rpcUrl);
+    if (network) {
+      return `${network.explorerUrl}/tx/${txhash}`;
+    }
+  }
+};
+
+const providers: Record<string, ethers.providers.JsonRpcProvider> = {};
+export const getProviderWithRpcUrl = (rpcUrl: string) => {
+  if (providers[rpcUrl]) {
+    return providers[rpcUrl];
+  }
+  const provider = new ethers.providers.JsonRpcBatchProvider(rpcUrl);
+  if (!providers[rpcUrl]) {
+    providers[rpcUrl] = provider;
+  }
+  return provider;
+};

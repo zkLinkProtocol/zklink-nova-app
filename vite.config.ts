@@ -14,7 +14,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 3000,
     proxy: {
       "/twitter": {
@@ -23,12 +23,12 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/twitter/, ""),
       },
       "/api": {
-        target: "https://app.zklink.io",
+        target: "https://test.app.zklink.io",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/api"),
       },
       "/points": {
-        target: "https://app.zklink.io",
+        target: "https://test.app.zklink.io",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/points/, "/points"),
       },

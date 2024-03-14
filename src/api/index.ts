@@ -163,10 +163,49 @@ export const getExplorerTokenTvl = (
     params: { isall },
   });
 
-export const validTwitter = (twitterHandler: string): Promise<Response> => {
-  return http.get(`${BASE_URL_API}/invite/validTwitter`, {
+export const validTwitter = (
+  twitterHandler: string,
+  address?: string
+): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/validTwitter2`, {
     params: {
       twitterHandler,
+      address,
     },
+  });
+};
+
+export type TxHashResponse = {
+  isValid: boolean;
+};
+
+export type TxHashParams = {
+  txHash: string;
+  chainId: string;
+  address?: string;
+};
+export const getTxByTxHash = (params: TxHashParams): Promise<TxHashResponse> =>
+  http.get(`${BASE_URL_API}/invite/getTxByTxHash`, {
+    params,
+  });
+
+export type RegisterAccountParams = {
+  address: string;
+  code?: string | null;
+  siganture: string;
+  accessToken: string;
+  chainId: string | number;
+  txHash: string;
+};
+
+export const registerAccount = (
+  data: RegisterAccountParams
+): Promise<Response> => {
+  console.log(data);
+  if (!data.code) {
+    delete data.code;
+  }
+  return http.post(`${BASE_URL_API}/invite/register/account`, {
+    ...data,
   });
 };

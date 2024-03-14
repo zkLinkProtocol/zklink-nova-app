@@ -115,7 +115,7 @@ const BannerText = styled.div`
 export default function About() {
   return (
     <BgBox className="relative pb-[3rem]">
-      <div className="pt-[8.5rem] px-[252px] min-w-[1176px] box-content ">
+      <div className="pt-[8.5rem] px-[252px] box-content ">
         <div className="flex relative ">
           <img src="/img/about-banner.png" className="banner" />
 
@@ -151,11 +151,11 @@ export default function About() {
         </div>
         <div className="paragraph1 title big">How to earn Nova points?</div>
         <div className="paragraph">
-          You could see the detail and formula of how we calculate Nova points{" "}
-          <span className="jump">here</span>.
+          You can see the detail and formula of how we calculate Nova points{" "}
+          <a className="jump" href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank">here</a>.
         </div>
         <div>
-          <img src="/img/img-about-rules.svg" className="w-full" />
+          <img src="/img/image4.svg" className="w-full" />
         </div>
         <div className="paragraph">
           <div className="title mt-4">Minimal Entry:</div>
@@ -171,24 +171,29 @@ export default function About() {
           <ul>
             <li className="before">Deposit Value </li>
             <li className="before">Token Multiplier</li>
-            <li className="before">Deposit multiplier </li>
+            <li className="before">Deposit Multiplier</li>
           </ul>
-        </div>
-        <div className="paragraph title">
-          To join the Aggregation Parade, make sure your deposit surpasses the
-          Minimum Entry.
+          <div className="title">
+            To join the Aggregation Parade, make sure your deposit surpasses the
+            Minimum Entry.
+          </div>
         </div>
         <div className="paragraph">
           <div className="title">Holding assets on Nova</div>
           <div>
-            Holding any <a className="jump">supported assets</a> on Nova allows
-            you to accrue Nova points until the final Nova Point computation
-            date. Check how your Nova points are computed by holding Value{" "}
-            <a className="jump">here</a>.
+            Holding any supported assets on Nova allows you to accrue Nova points every 8 hours until the final Nova Point computation date. Check how your Nova points are computed by holding Value <a className="jump" href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank">here</a>.
           </div>
-          <div className="before title">
-            Nova points update will be computed every 8 hours
+          <img src="/img/image2.svg" className="w-full" />
+        </div>
+        <div className="paragraph">
+          <div>
+            Tokens are categorized into three classes, with higher liquidity tokens receiving more Nova Points.
           </div>
+          <ul>
+            <li className="before">Class I: Multiplier 2x</li>
+            <li className="before">Class II: Multiplier 1.5x</li>
+            <li className="before">Class III: Multiplier 1x</li>
+          </ul>
         </div>
         <div className="paragraph">
           <div className="title">Referral Rewards</div>
@@ -202,7 +207,7 @@ export default function About() {
         <div className="paragraph">
           <div className="title">Multiplier</div>
           <div>
-            <span className="title">Early Bird Multiplier:</span>During Phase 1
+            <span className="title">Early Bird Multiplier: </span>During Phase 1
             of the Nova Campaign, withdrawals are temporarily restricted for a{" "}
             <span className="title">Maximum</span> of 30 days.
           </div>
@@ -221,23 +226,10 @@ export default function About() {
             categorized into three tiers, with higher liquidity tokens receiving
             more Nova Points.
           </div>
-          <ul>
-            <li className="before marginLeft">
-              2x Multiplier for token in category: Native, Stablecoin
-            </li>
-            <li className="before marginLeft">
-              1.5x Multiplier for token in category: L2 Native, RWA, LST
-            </li>
-            <li className="before marginLeft">
-              1x Multiplier for token in category: LRT
-            </li>
-          </ul>
         </div>
         <div className="paragraph">
           <div>
-            <span className="title">INITIAL ONE- TIME BOOST: </span> You will
-            receive 10 times Nova points for EACH deposit/ bridging action that
-            occurs.
+            <span className="title">Deposit Multiplier:</span> After making a valid deposit, you will instantly receive Nova Points equivalent to holding assets for more than 3 days. Nova Points are distributed every 8 hours, and you will receive points equal to 10 distributions.
           </div>
         </div>
         <div className="paragraph">
@@ -247,99 +239,9 @@ export default function About() {
             into the same group. This group has the potential to unlock Group
             Booster by achieving the following Milestones.
           </div>
-          <div>
-            Group Booster = Group Holding Value Booster (In the Early Phase)
-          </div>
         </div>
         <div className="paragraph">
-          <div className="tr th">
-            <div className="td whitespace-nowrap">Group Tier</div>
-            <div className="td whitespace-nowrap">
-              Group Holding Value （ETH）
-            </div>
-            <div className="td whitespace-nowrap">
-              Group Holding Value （ETH）
-            </div>
-            <div className="td whitespace-nowrap">Holding Value Booster</div>
-          </div>
-          <div className="tr">
-            <div className="td">1</div>
-            <div className="td">{">"}20</div>
-            <div className="td">0.1x</div>
-          </div>
-          <div className="tr">
-            <div className="td">2</div>
-            <div className="td">{">"}100</div>
-            <div className="td">0.2x</div>
-          </div>
-          <div className="tr">
-            <div className="td">3</div>
-            <div className="td">{">"}500</div>
-            <div className="td">0.3x</div>
-          </div>
-          <div className="tr">
-            <div className="td">4</div>
-            <div className="td">{">"}1000</div>
-            <div className="td">0.4x</div>
-          </div>
-          <div className="tr last">
-            <div className="td">5</div>
-            <div className="td">{">"}5000</div>
-            <div className="td">0.5x</div>
-          </div>
-        </div>
-        <div className="paragraph">
-          <div>
-            <span className="title">Deposit Multiplier:</span> You will receive
-            10 times Nova points for EACH deposit/ bridging action that occurs.
-          </div>
-        </div>
-        <div className="paragraph">
-          <div>
-            <span className="title">Group Booster:</span> You, along with the
-            users you've referred and their subsequent referrals, will be placed
-            into the same group. This group has the potential to unlock Group
-            Booster by achieving the following Milestones.
-          </div>
-          <div>
-            Group Booster = Group Holding Value Booster (In the Early Phase)
-          </div>
-        </div>
-        <div className="paragraph">
-          <div className="tr th">
-            <div className="td whitespace-nowrap">Group Tier</div>
-            <div className="td whitespace-nowrap">
-              Group Holding Value （ETH）
-            </div>
-            <div className="td whitespace-nowrap">
-              Group Holding Value Booster
-            </div>
-          </div>
-          <div className="tr">
-            <div className="td">1</div>
-            <div className="td">{">"}20</div>
-            <div className="td">0.1x</div>
-          </div>
-          <div className="tr">
-            <div className="td">2</div>
-            <div className="td">{">"}100</div>
-            <div className="td">0.2x</div>
-          </div>
-          <div className="tr">
-            <div className="td">3</div>
-            <div className="td">{">"}500</div>
-            <div className="td">0.3x</div>
-          </div>
-          <div className="tr">
-            <div className="td">4</div>
-            <div className="td">{">"}1000</div>
-            <div className="td">0.4x</div>
-          </div>
-          <div className="tr last">
-            <div className="td">5</div>
-            <div className="td">{">"}5000</div>
-            <div className="td">0.5x</div>
-          </div>
+          <img src="/img/image3.svg" className="w-full" />
         </div>
         <div className="paragraph title big">How to earn Nova NFTs?</div>
         <div className="paragraph">
@@ -357,16 +259,16 @@ export default function About() {
                     <img src="/img/1.png" alt="" className='person'/>
                 </div> */}
         <div className="mb-[1rem]">
-          <img src="/img/img-about-info.png" className="w-full" />
+          <img src="/img/image5.svg" className="w-full" />
         </div>
         <div className="paragraph">
           <div>
-            After obtaining your SBT, you can upgrade it into an ERC721 NFT
+            After obtaining your SBT, you can upgrade it into an ERC-721 NFT
             through collecting ONE OF EACH of the four different types of
             trademark NFT through our referral program.
           </div>
           <div className="before">
-            You will get a trademark NFT airdrop for each 3 referral.
+            You will get a trademark NFT airdrop for each 3 referrals.
           </div>
           <div className="before">
             Top 100 referrer on the referral leader-board will be airdrop a
@@ -389,7 +291,7 @@ export default function About() {
         <div className="paragraph">
           <div className="title">Phase 1: Aggregation phase 3/24</div>
           <div className="before">
-            Deposit all accepted token types onto NOVA to earn Nova points
+            Deposit all accepted tokens onto NOVA to earn Nova points
           </div>
         </div>
         <div className="paragraph">
@@ -408,6 +310,9 @@ export default function About() {
           <div className="before">
             More to be revealed after bitcoin halving
           </div>
+        </div>
+        <div className="paragraph">
+          <img src="/img/image1.svg" className="w-full" />
         </div>
         <div className="paragraph title big">About zkLink Nova Network</div>
         <div className="paragraph3">

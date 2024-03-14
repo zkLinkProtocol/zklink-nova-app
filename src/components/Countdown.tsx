@@ -73,7 +73,7 @@ const Countdown = () => {
       <div className="split">:</div>
       <div className="part-time">{remainingTime?.hours} Hours</div>
       <div className="split">:</div>
-      <div className="part-time">{remainingTime?.minutes} Minuts</div>
+      <div className="part-time">{remainingTime?.minutes} Minutes</div>
       <div className="split">:</div>
       <div className="part-time">{remainingTime?.seconds} Seconds</div>
     </CountdownBox>

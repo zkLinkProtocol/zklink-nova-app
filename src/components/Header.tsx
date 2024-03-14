@@ -7,27 +7,55 @@ import {
   Avatar,
   Tooltip,
 } from "@nextui-org/react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import styled from "styled-components";
 import { showAccount } from "@/utils";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   setInvite,
   setSignature,
   setDepositStatus,
   airdropState,
   setDepositL1TxHash,
+  setTwitterAccessToken,
+  setInviteCode,
+  setIsActiveUser,
+  setDepositTx,
+  setSignatureAddress,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
-import { useSignMessage } from "wagmi";
-import { SIGN_MESSAGE } from "@/constants/sign";
-import { MdArrowOutward } from "react-icons/md";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
+import { getInvite } from "@/api";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
+const NavNet = styled.div`
+  background: #313841;
+  border-radius: 5px;
+  margin-left: 10px;
+  div {
+    width: 79px;
+    height: 22px;
+    flex-shrink: 0;
+    font-family: Satoshi;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(
+      90deg,
+      #48ecae 0%,
+      #606ff2 51.07%,
+      #49ced7 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+  }
+`;
 const NavBox = styled.nav`
   a {
     color: #9ccbbd;
@@ -69,21 +97,37 @@ const ButtonText = styled.span`
 export default function Header() {
   const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { signature, depositStatus, depositL1TxHash } = useSelector(
-    (store: { airdrop: airdropState }) => store.airdrop
-  );
+  const {
+    depositStatus,
+    depositL1TxHash,
+    invite,
+    isActiveUser,
+    signatureAddress,
+  } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
   const { getDepositL2TxHash } = useBridgeTx();
-  const { signMessage } = useSignMessage();
   const dispatch = useDispatch();
   console.log("depositL1TxHash: ", depositL1TxHash);
+  const [searchParams] = useSearchParams();
+
+  const isActive = useCallback(() => {
+    return isConnected && Boolean(invite?.twitterHandler);
+  }, [isConnected, invite]);
+
+  useEffect(() => {
+    const inviteCode = searchParams.get("inviteCode");
+    console.log("inviteCode", inviteCode);
+    if (inviteCode && inviteCode.length === 6) {
+      dispatch(setInviteCode(inviteCode));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     (async () => {
       if (!depositL1TxHash) {
-        dispatch(setDepositStatus(""));
-
+        // dispatch(setDepositStatus(""));
         return;
       } else {
+        dispatch(setDepositStatus("pending"));
         const l2hash = await getDepositL2TxHash(
           depositL1TxHash as `0x${string}`
         );
@@ -98,41 +142,8 @@ export default function Header() {
     })();
   }, [depositL1TxHash, getDepositL2TxHash, dispatch]);
 
-  const handleSign = async () => {
-    await signMessage(
-      {
-        message: SIGN_MESSAGE,
-      },
-      {
-        onSuccess(data, variables, context) {
-          console.log(data, variables, context);
-          dispatch(setSignature(data));
-        },
-        onError(error, variables, context) {
-          console.log(error, variables, context);
-          // handleSign()
-          toast.error("User reject signature. Try again.");
-          // disconnect()
-        },
-      }
-    );
-  };
-
-  useEffect(() => {
-    // console.log('isConnected', isConnected)
-    // console.log('signature', signature)
-
-    if (!isConnected) {
-      // console.log('disconnect')
-      dispatch(setSignature(""));
-      dispatch(setInvite(null));
-    }
-    if (isConnected && (!signature || signature === "")) {
-      handleSign();
-    }
-  }, [isConnected, signature]);
-
   const [isHeaderTop, setIsHeaderTop] = useState(true);
+
   const handleScroll = () => {
     if (window.scrollY > 0) {
       setIsHeaderTop(false);
@@ -140,18 +151,61 @@ export default function Header() {
       setIsHeaderTop(true);
     }
   };
+  const getInviteFunc = async () => {
+    if (!address) return;
+    const res = await getInvite(address);
+    if (res?.result) {
+      dispatch(setInvite(res?.result));
+    }
+  };
 
   useEffect(() => {
-    // const handleScroll = (event: any) => {
-    //     console.log('hello scroll listener', event)
-    // }
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    getInviteFunc();
+    if (!!signatureAddress && !!address && address !== signatureAddress) {
+      console.log(signatureAddress, address);
+
+      dispatch(setSignature(""));
+      dispatch(setSignatureAddress(""));
+    }
+  }, [signatureAddress, address]);
+
+  useEffect(() => {
+    if (!isConnected) {
+      dispatch(setSignature(""));
+      dispatch(setDepositTx(""));
+      // dispatch(setTwitterAccessToken(''));
+      dispatch(setInvite(null));
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    console.log(
+      "testt=----------",
+      isConnected,
+      invite,
+      invite?.twitterHandler,
+      Boolean(invite?.twitterHandler)
+    );
+    if (isConnected && Boolean(invite?.twitterHandler)) {
+      dispatch(setIsActiveUser(true));
+    } else {
+      // dispatch(setInvite(null));
+      dispatch(setIsActiveUser(false));
+    }
+  }, [invite, isConnected, address]);
+
+  useEffect(() => {
+    console.log("isActiveUser", isActiveUser);
+  }, [invite]);
+
   return (
     <>
       <Navbar
@@ -167,13 +221,15 @@ export default function Header() {
         <NavbarBrand className="flex items-end">
           {/* <Logo /> */}
 
-          <a href="https://zklink.io/">
+          <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
             <LogoBox className="relative">
               <img className="max-w-[145.431px] h-auto" src="/img/NOVA.svg" />
               {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
-          </a>
-
+          </Link>
+          <NavNet>
+            <div>Mainnet Live</div>
+          </NavNet>
           <NavBox className="ml-[3.5rem]">
             <NavbarContent
               className="hidden sm:flex gap-[2.5rem]"
@@ -184,13 +240,27 @@ export default function Header() {
                   Aggregation Parade
                 </NavLink>
               </NavbarItem>
+              {/* <NavbarItem>
+                {isActive() ? (
+                  <NavLink to="/dashboard" className="nav-link">
+                    Dashboard
+                  </NavLink>
+                ) : (
+                  <Tooltip content="Not Active">
+                    <span className="nav-link cursor-not-allowed opacity-40">
+                      Dashboard
+                    </span>
+                  </Tooltip>
+                )}
+              </NavbarItem> */}
               <NavbarItem>
-                <NavLink to="/leaderboard" aria-disabled>
-                  Leaderboard
-                </NavLink>
+                <NavLink to="/leaderboard">Leaderboard</NavLink>
               </NavbarItem>
               <NavbarItem>
                 <NavLink to="/about">About</NavLink>
+              </NavbarItem>
+              <NavbarItem>
+                <NavLink to="/bridge">Bridge</NavLink>
               </NavbarItem>
               {/* <NavbarItem>
                 <a
@@ -266,7 +336,7 @@ export default function Header() {
             )}
             {address && !depositStatus && (
               <Button
-                className="border-solid border-1 border-[#fff] text-[#fff]"
+                className="border-solid border-1 border-[#03D498] text-[#03D498] bg-transparent font-bold"
                 onClick={() =>
                   window.open(
                     nodeType === "nexus-goerli"

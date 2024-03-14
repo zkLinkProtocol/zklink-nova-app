@@ -13,10 +13,15 @@ export interface airdropState {
   invite: Invite | null;
   depositL1TxHash: string;
   campaignStart: boolean;
+  isActiveUser: boolean;
+  depositChainId: string | number;
+  depositTx: string;
+  isCheckedInviteCode: boolean,
+  signatureAddress: string
 }
 
 const initialState: airdropState = {
-  viewStatus: 0,
+  viewStatus: 1,
   inviteCode: "",
   isGroupLeader: false,
   signature: "",
@@ -27,6 +32,12 @@ const initialState: airdropState = {
   invite: null,
   depositL1TxHash: "",
   campaignStart: false,
+  isActiveUser: false,
+
+  depositChainId: "",
+  depositTx: "",
+  isCheckedInviteCode: false,
+  signatureAddress: ''
 };
 
 export const airdrop = createSlice({
@@ -66,6 +77,21 @@ export const airdrop = createSlice({
     setCampaignStart(state, action: PayloadAction<boolean>) {
       state.campaignStart = action.payload;
     },
+    setIsActiveUser(state, action: PayloadAction<boolean>) {
+      state.isActiveUser = action.payload;
+    },
+    setDepositChainId(state, action: PayloadAction<string>) {
+      state.depositChainId = action.payload;
+    },
+    setDepositTx(state, action: PayloadAction<string>) {
+      state.depositTx = action.payload;
+    },
+    setIsCheckedInviteCode(state, action: PayloadAction<boolean>) {
+      state.isCheckedInviteCode = action.payload;
+    },
+    setSignatureAddress(state, action: PayloadAction<string>) {
+      state.signatureAddress = action.payload;
+    }
   },
 });
 
@@ -81,5 +107,10 @@ export const {
   setDepositStatus,
   setDepositL1TxHash,
   setCampaignStart,
+  setIsActiveUser,
+  setDepositChainId,
+  setDepositTx,
+  setIsCheckedInviteCode,
+  setSignatureAddress
 } = airdrop.actions;
 export default airdrop.reducer;

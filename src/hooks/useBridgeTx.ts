@@ -40,6 +40,7 @@ import { suggestMaxPriorityFee } from "@rainbow-me/fee-suggestions";
 import { WRAPPED_MNT } from "@/constants";
 
 import { zkSyncProvider, LineaProvider } from "./zksyncProviders";
+import BigNum from "bignumber.js";
 import { IL1BridgeFactory } from "@/constants/typechain";
 // const networkKey: string = "goerli"; //TODO get from store
 const nodeType = import.meta.env.VITE_NODE_TYPE;
@@ -426,7 +427,11 @@ export const useBridgeTx = () => {
     }
   };
 
-  const sendDepositTx = async (token: Address, amount: BigNumberish) => {
+  const sendDepositTx = async (
+    token: Address,
+    amount: BigNumberish,
+    nativeBalance: BigNumberish
+  ) => {
     const network = nodeConfig.find((item) => item.key === networkKey);
     if (!address || !network) {
       return;
@@ -585,7 +590,7 @@ export const useBridgeTx = () => {
           });
           console.log("linea fee for ERC20", fee);
           // TODO will use the gas price data from @rainbow-me/fee-suggestions
-          overrides.gasLimit = fee.gasLimit;
+          overrides.gasLimit = fee.gasLimit.mul(110).div(100);
           delete overrides.maxFeePerGas;
           delete overrides.maxPriorityFeePerGas;
         }
@@ -606,6 +611,9 @@ export const useBridgeTx = () => {
       } else {
         tx.gas = overrides.gasLimit;
       }
+      if (new BigNum(tx.value.toString()).gt(nativeBalance.toString())) {
+        return Promise.reject(new Error("Insufficient balance"));
+      }
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       try {
         const res = await publicClient?.waitForTransactionReceipt({ hash });
@@ -624,130 +632,142 @@ export const useBridgeTx = () => {
     }
   };
 
-  const getDepositL2TransactionHash = async (l1TransactionHash: string) => {
-    const transaction = await publicClient?.waitForTransactionReceipt({
-      hash: l1TransactionHash as Hash,
-    });
-    for (const log of transaction?.logs ?? []) {
-      try {
-        const { args, eventName } = decodeEventLog({
-          abi: IZkSync.abi,
-          data: log.data,
-          topics: log.topics,
-        });
-        if (eventName === "NewPriorityRequest") {
-          return (args as unknown as { txHash: Hash }).txHash;
+  const getDepositL2TransactionHash = useCallback(
+    async (l1TransactionHash: string) => {
+      const transaction = await publicClient?.waitForTransactionReceipt({
+        hash: l1TransactionHash as Hash,
+      });
+      for (const log of transaction?.logs ?? []) {
+        try {
+          const { args, eventName } = decodeEventLog({
+            abi: IZkSync.abi,
+            data: log.data,
+            topics: log.topics,
+          });
+          if (eventName === "NewPriorityRequest") {
+            return (args as unknown as { txHash: Hash }).txHash;
+          }
+        } catch {
+          // ignore failed decoding
         }
-      } catch {
-        // ignore failed decoding
       }
-    }
-    throw new Error("No L2 transaction hash found");
-  };
-
-  const getCanonicalTxHash = async (
-    forwardHash: Hash
-  ): Promise<Hash | undefined> => {
-    const primaryNetwork = nodeConfig.find(
-      (item) => item.key === PRIMARY_CHAIN_KEY
-    );
-    const web3Provider = new ethers.providers.Web3Provider(
-      getPublicClient(wagmiConfig, {
-        chainId: primaryNetwork!.l1Network?.id,
-      }) as any,
-      "any"
-    );
-    const voidSigner = new VoidSigner(address || ETH_ADDRESS, web3Provider);
-
-    // const l2Provider = new Provider(primaryNetwork!.rpcUrl);
-    const l1Provider = voidSigner.provider;
-    const contractAddress = primaryNetwork!.mainContract;
-    const iface = new Interface(primaryGetterAbi.abi);
-    const tx: ethers.providers.TransactionRequest = {
-      to: contractAddress,
-      data: iface.encodeFunctionData("getCanonicalTxHash", [forwardHash]),
-    };
-    const ctx = (await l1Provider!.call(tx)) as Hash;
-
-    if (
-      ctx ==
-      "0x0000000000000000000000000000000000000000000000000000000000000000"
-    ) {
-      return undefined;
-    }
-    return ctx;
-  };
-
-  const getDepositL2TransactionHashForSecondary = async (
-    l1TransactionHash: string
-  ): Promise<Hash> => {
-    const transaction = await publicClient?.waitForTransactionReceipt({
-      hash: l1TransactionHash as Hash,
-    });
-    console.log("getDepositL2TransactionHashForSecondary", l1TransactionHash);
-    let forwardL2Request: ForwardL2Request | undefined;
-    for (const log of transaction?.logs ?? []) {
-      try {
-        const { args, eventName } = decodeEventLog({
-          abi: secondaryAbi.abi,
-          data: log.data,
-          topics: log.topics,
-        });
-        if (eventName === "NewPriorityRequest") {
-          forwardL2Request = (
-            args as unknown as { l2Request: ForwardL2Request }
-          ).l2Request;
-        }
-      } catch {
-        // ignore failed decoding
-      }
-    }
-
-    if (!forwardL2Request) {
       throw new Error("No L2 transaction hash found");
-    }
+    },
+    [publicClient]
+  );
 
-    const abicoder = new ethers.utils.AbiCoder();
-    const encodedata = abicoder.encode(
-      [
-        "(bytes32,address,bool,address,uint256,address,uint256,bytes32,uint256,uint256,bytes32,address)",
-      ],
-      [
+  const getCanonicalTxHash = useCallback(
+    async (forwardHash: Hash): Promise<Hash | undefined> => {
+      const primaryNetwork = nodeConfig.find(
+        (item) => item.key === PRIMARY_CHAIN_KEY
+      );
+      const web3Provider = new ethers.providers.Web3Provider(
+        getPublicClient(wagmiConfig, {
+          chainId: primaryNetwork!.l1Network?.id,
+        }) as any,
+        "any"
+      );
+      const voidSigner = new VoidSigner(address || ETH_ADDRESS, web3Provider);
+
+      // const l2Provider = new Provider(primaryNetwork!.rpcUrl);
+      const l1Provider = voidSigner.provider;
+      const contractAddress = primaryNetwork!.mainContract;
+      const iface = new Interface(primaryGetterAbi.abi);
+      const tx: ethers.providers.TransactionRequest = {
+        to: contractAddress,
+        data: iface.encodeFunctionData("getCanonicalTxHash", [forwardHash]),
+      };
+      const ctx = (await l1Provider!.call(tx)) as Hash;
+
+      if (
+        ctx ==
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ) {
+        return undefined;
+      }
+      return ctx;
+    },
+    [address]
+  );
+
+  const getDepositL2TransactionHashForSecondary = useCallback(
+    async (l1TransactionHash: string): Promise<Hash> => {
+      const transaction = await publicClient?.waitForTransactionReceipt({
+        hash: l1TransactionHash as Hash,
+      });
+      console.log("getDepositL2TransactionHashForSecondary", l1TransactionHash);
+      let forwardL2Request: ForwardL2Request | undefined;
+      for (const log of transaction?.logs ?? []) {
+        try {
+          const { args, eventName } = decodeEventLog({
+            abi: secondaryAbi.abi,
+            data: log.data,
+            topics: log.topics,
+          });
+          if (eventName === "NewPriorityRequest") {
+            forwardL2Request = (
+              args as unknown as { l2Request: ForwardL2Request }
+            ).l2Request;
+          }
+        } catch {
+          // ignore failed decoding
+        }
+      }
+
+      if (!forwardL2Request) {
+        throw new Error("No L2 transaction hash found");
+      }
+
+      const abicoder = new ethers.utils.AbiCoder();
+      const encodedata = abicoder.encode(
         [
-          "0xe0aaca1722ef50bb0c9b032e5b16ce2b79fa9f23638835456b27fd6894f8292c",
-          forwardL2Request.gateway,
-          forwardL2Request.isContractCall,
-          forwardL2Request.sender,
-          forwardL2Request.txId,
-          forwardL2Request.contractAddressL2,
-          forwardL2Request.l2Value,
-          ethers.utils.keccak256(forwardL2Request.l2CallData),
-          forwardL2Request.l2GasLimit,
-          forwardL2Request.l2GasPricePerPubdata,
-          ethers.utils.keccak256(
-            abicoder.encode(["bytes[]"], [forwardL2Request.factoryDeps])
-          ),
-          forwardL2Request.refundRecipient,
+          "(bytes32,address,bool,address,uint256,address,uint256,bytes32,uint256,uint256,bytes32,address)",
         ],
-      ]
-    );
-    const forwardHash = ethers.utils.keccak256(encodedata) as Hash;
-    console.log(forwardHash);
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const canonicalTxHash = await getCanonicalTxHash(forwardHash);
-      if (canonicalTxHash) return canonicalTxHash;
-      await sleep(5000);
-    }
-  };
+        [
+          [
+            "0xe0aaca1722ef50bb0c9b032e5b16ce2b79fa9f23638835456b27fd6894f8292c",
+            forwardL2Request.gateway,
+            forwardL2Request.isContractCall,
+            forwardL2Request.sender,
+            forwardL2Request.txId,
+            forwardL2Request.contractAddressL2,
+            forwardL2Request.l2Value,
+            ethers.utils.keccak256(forwardL2Request.l2CallData),
+            forwardL2Request.l2GasLimit,
+            forwardL2Request.l2GasPricePerPubdata,
+            ethers.utils.keccak256(
+              abicoder.encode(["bytes[]"], [forwardL2Request.factoryDeps])
+            ),
+            forwardL2Request.refundRecipient,
+          ],
+        ]
+      );
+      const forwardHash = ethers.utils.keccak256(encodedata) as Hash;
+      console.log(forwardHash);
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        const canonicalTxHash = await getCanonicalTxHash(forwardHash);
+        if (canonicalTxHash) return canonicalTxHash;
+        await sleep(5000);
+      }
+    },
+    [getCanonicalTxHash, publicClient]
+  );
 
-  const getDepositL2TxHash = async (l1TransactionHash: Hash) => {
-    if (networkKey === PRIMARY_CHAIN_KEY) {
-      return getDepositL2TransactionHash(l1TransactionHash);
-    } else {
-      return getDepositL2TransactionHashForSecondary(l1TransactionHash);
-    }
-  };
+  const getDepositL2TxHash = useCallback(
+    async (l1TransactionHash: Hash) => {
+      if (networkKey === PRIMARY_CHAIN_KEY) {
+        return getDepositL2TransactionHash(l1TransactionHash);
+      } else {
+        return getDepositL2TransactionHashForSecondary(l1TransactionHash);
+      }
+    },
+    [
+      getDepositL2TransactionHash,
+      getDepositL2TransactionHashForSecondary,
+      networkKey,
+    ]
+  );
 
   return {
     sendDepositTx,

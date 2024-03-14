@@ -52,13 +52,22 @@ export const useTokenBalanceList = () => {
   const { networkKey } = useBridgeNetworkStore();
   const { address: walletAddress } = useAccount();
   const [allTokens, setAllTokens] = useState<
-    { l1Address: string; iconURL: string }[]
+    { l1Address: string; iconURL: string; usdPrice: number; symbol: string }[]
   >([]);
 
   useEffect(() => {
     fetch("https://explorer-api.zklink.io/tokens/tvl?isall=true").then((res) =>
       res.json().then((all) => setAllTokens(all))
     );
+    const timer = setInterval(() => {
+      fetch("https://explorer-api.zklink.io/tokens/tvl?isall=true").then(
+        (res) => res.json().then((all) => setAllTokens(all))
+      );
+    }, 1000 * 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -112,6 +121,7 @@ export const useTokenBalanceList = () => {
     address: walletAddress as `0x${string}`,
     chainId: selectedChainId,
     token: undefined,
+    query: { queryClient: queryClient },
   });
   console.log("nativeBalance: ", selectedChainId, nativeTokenBalance);
 
@@ -130,7 +140,8 @@ export const useTokenBalanceList = () => {
     config: wagmiConfig,
     contracts: erc20Contracts,
     query: {
-      queryClient,
+      queryClient: queryClient,
+      // refetchInterval: 5000, //not working
       // select: (data) => data.map((item) => item.result),
     },
   });
@@ -173,6 +184,8 @@ export const useTokenBalanceList = () => {
     loading: queryClient.isFetching,
     tokenList,
     refreshTokenBalanceList,
+    allTokens,
+    nativeTokenBalance: nativeTokenBalance?.value
   };
 };
 
