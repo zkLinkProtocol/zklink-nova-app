@@ -5,16 +5,13 @@ import styled from "styled-components";
 
 const TvlBox = styled.div`
   .tvl-num-item {
-    padding: 0 0.5rem;
-    width: 3.125rem;
-    height: 3.875rem;
+    // padding: 0 0.5rem;
     line-height: 3.875rem;
     border-radius: 1rem;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15.800000190734863px);
     color: #fff;
     font-family: Satoshi;
-    font-size: 3rem;
     font-style: normal;
     font-weight: 700;
     text-align: center;
@@ -66,7 +63,9 @@ export default function TotalTvlCard() {
       {tvlArr.map((item, index) => (
         <span
           key={index}
-          className={`tvl-num-item ${item === "," ? "comma" : ""}`}
+          className={`tvl-num-item w-[1.5rem] h-[1.5rem] md:w-[2.8rem] md:h-[3.875rem] text-[28px] md:text-[48px] ${
+            item === "," ? "comma" : ""
+          }`}
         >
           {item}
         </span>
