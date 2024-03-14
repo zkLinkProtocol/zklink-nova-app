@@ -306,7 +306,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       return;
     }
     if (tokenFiltered[tokenActive]?.address === ETH_ADDRESS) {
-      if (Number(amount) < minDepositValue) {
+      if (Number(amount) < minDepositValue && isFirstDeposit) {
         setShowNoPointsTip(true);
       } else {
         setShowNoPointsTip(false);
@@ -326,7 +326,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           .multipliedBy(amount)
           .div(ethPriceInfo.usdPrice)
           .toNumber();
-        if (ethValue < minDepositValue) {
+        if (ethValue < minDepositValue && isFirstDeposit) {
           setShowNoPointsTip(true);
         } else {
           setShowNoPointsTip(false);
@@ -337,7 +337,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           .multipliedBy(tokenFiltered[tokenActive].multiplier)
           .multipliedBy(amount)
           .div(ethPriceInfo.usdPrice)
-          .toFixed(2);
+          .toNumber();
         setPoints(Number(points));
       }
     } catch (e) {
@@ -635,7 +635,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content=" Nova Points are distributed every 8 hours, and you will receive points equal to 10 distributions after a valid deposit."
+                content="By depositing into zkLink Nova, you will instantly receive Nova Points equivalent to 10 distributions.- Nova Points are distributed every 8 hours. "
               >
                 <img
                   src={"/img/icon-tooltip.png"}
@@ -670,7 +670,13 @@ export default function Bridge(props: IBridgeComponentProps) {
               )}
             </div>
             <div className="flex items-center">
-              <span className="text-white">{showNoPointsTip ? 0 : points}</span>
+              <span className="text-white">
+                {showNoPointsTip
+                  ? 0
+                  : points < 0.01
+                  ? "< 0.01"
+                  : points.toFixed(2)}
+              </span>
               {loyalPoints > 0 && (
                 <div className="ml-1">
                   + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
