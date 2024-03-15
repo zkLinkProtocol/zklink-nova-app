@@ -9,7 +9,8 @@ import { Provider } from "react-redux";
 import { persistor, store } from "@/store";
 import { PersistGate } from "redux-persist/integration/react";
 import "./styles/global.css";
-
+import Maintenance from "./components/Maintenance.tsx";
+const isMaintenance = import.meta.env.VITE_IS_MAINTENANCE;
 // Setup queryClient for WAGMIv2
 const queryClient = new QueryClient();
 
@@ -36,7 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <NextUIProvider>
-            <App />
+            {+isMaintenance ? <Maintenance /> : <App />}
           </NextUIProvider>
         </QueryClientProvider>
       </WagmiProvider>

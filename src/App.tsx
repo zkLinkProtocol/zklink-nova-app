@@ -61,8 +61,7 @@ export default function App() {
             path="/dashboard"
             element={
               <Suspense fallback="">
-                {/* <Dashboard /> */}
-                <Maintenance />
+                <Dashboard />
               </Suspense>
             }
           />
