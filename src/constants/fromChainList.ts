@@ -21,7 +21,7 @@ import {
   mantle,
   arbitrum,
 } from "@wagmi/core/chains";
-
+import { blast } from "./networks";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 export const NOVA_NETWORK = {
@@ -114,8 +114,8 @@ const FromListMainnet = [
     networkKey: "blast",
     isEthGasToken: true,
     chainName: "Blast",
-    explorerUrl: mantle.blockExplorers.default.url,
-    rpcUrl: mantle.rpcUrls.default.http[0],
+    explorerUrl: blast.blockExplorers.default.url ?? "https://blastscan.io",
+    rpcUrl: blast.rpcUrls.default.http[0] ?? "https://rpc.blast.io",
   },
 ];
 
