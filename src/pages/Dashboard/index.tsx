@@ -710,7 +710,7 @@ export default function Dashboard() {
                     onClick={() => handleCopy()}
                   />
                   <a
-                    href={`https://twitter.com/intent/tweet?url=https://app.zklink.io&text=${getTweetShareText(
+                    href={`https://twitter.com/intent/tweet?text=${getTweetShareText(
                       invite?.code ?? ""
                     )}`}
                     className="twitter-hashtag-button gradient-btn px-4 ml-6 hover:opacity-85"
