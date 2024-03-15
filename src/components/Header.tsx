@@ -292,6 +292,14 @@ export default function Header() {
                 User Guide
               </a>
             </NavbarItem>
+            <NavbarItem>
+              <a
+                href="https://explorer.zklink.io/"
+                target="_blank"
+              >
+                Explorer
+              </a>
+            </NavbarItem>
 
             {/* <NavbarItem>
                 <a
@@ -443,6 +451,14 @@ export default function Header() {
               target="_blank"
             >
               User Guide
+            </a>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <a
+              href="https://explorer.zklink.io/"
+              target="_blank"
+            >
+              Explorer
             </a>
           </NavbarMenuItem>
           {/* <NavbarMenuItem>
