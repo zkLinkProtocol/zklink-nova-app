@@ -1,4 +1,5 @@
 import styled from "styled-components";
+const maintenanceTips = import.meta.env.VITE_MAINTENANCE_TIPS;
 
 const BgBox = styled.div`
   position: relative;
@@ -81,7 +82,7 @@ export default function Maintenance() {
       <TipsBox className="flex flex-col items-center justify-center">
         <h4 className="title">We'll be back soon!</h4>
         <p className="desc mt-[1rem]">
-          The website is currently under maintenance.
+          {maintenanceTips || "The website is currently under maintenance."}
         </p>
       </TipsBox>
 
