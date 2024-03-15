@@ -771,8 +771,7 @@ export default function SoftKYC() {
           <ModalHeader>Verify your deposit</ModalHeader>
           <ModalBody>
             <p className="text-[1rem] text-[#A0A5AD]">
-              Enter your deposit transaction hash and select the network on
-              which you made the deposit.
+            Enter your deposit tx hash, and we'll automatically select the network for you.
             </p>
 
             <div className="flex items-center gap-6">
