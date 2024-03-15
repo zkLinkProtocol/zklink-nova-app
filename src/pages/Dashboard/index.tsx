@@ -625,9 +625,9 @@ export default function Dashboard() {
                 Est. in next epoch
               </p> */}
 
-            <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-              <div className="flex items-center gap-[0.5rem]">
-                <span>Earned By Your Deposit</span>
+              <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
+                <div className="flex items-center gap-[0.5rem]">
+                  <span>Earned By Your Deposit</span>
 
                 <Tooltip
                   className="p-[1rem]"
