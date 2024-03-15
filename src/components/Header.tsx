@@ -108,11 +108,10 @@ export default function Header() {
     isActiveUser,
     signatureAddress,
     inviteCode,
-  } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
+  } = useSelector((store: { airdrop: airdropState }) => store.airdrop)
 
   const { getDepositL2TxHash } = useBridgeTx();
   const dispatch = useDispatch();
-  console.log("depositL1TxHash: ", depositL1TxHash);
   const [searchParams] = useSearchParams();
 
   const isActive = useCallback(() => {
@@ -122,15 +121,10 @@ export default function Header() {
   useEffect(() => {
     const queryInviteCode = searchParams.get("inviteCode");
 
-    console.log("queryInviteCode", queryInviteCode);
     if (queryInviteCode && queryInviteCode.length === 6) {
       dispatch(setInviteCode(queryInviteCode));
     }
   }, [searchParams]);
-
-  useEffect(() => {
-    console.log("inviteCode", inviteCode);
-  }, [inviteCode]);
 
   useEffect(() => {
     (async () => {
@@ -182,10 +176,9 @@ export default function Header() {
     getInviteFunc();
 
     if (!!signatureAddress && !!address && address !== signatureAddress) {
-      console.log(signatureAddress, address);
-
       dispatch(setSignature(""));
       dispatch(setSignatureAddress(""));
+      dispatch(setTwitterAccessToken(""));
     }
   }, [signatureAddress, address]);
 
@@ -193,30 +186,18 @@ export default function Header() {
     if (!isConnected) {
       dispatch(setSignature(""));
       dispatch(setDepositTx(""));
-      // dispatch(setTwitterAccessToken(''));
       dispatch(setInvite(null));
     }
   }, [isConnected]);
 
   useEffect(() => {
-    console.log(
-      "testt=----------",
-      isConnected,
-      invite,
-      invite?.twitterHandler,
-      Boolean(invite?.twitterHandler)
-    );
     if (isConnected && Boolean(invite?.twitterHandler)) {
       dispatch(setIsActiveUser(true));
     } else {
-      // dispatch(setInvite(null));
       dispatch(setIsActiveUser(false));
     }
   }, [invite, isConnected, address]);
 
-  useEffect(() => {
-    console.log("isActiveUser", isActiveUser);
-  }, [invite]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
