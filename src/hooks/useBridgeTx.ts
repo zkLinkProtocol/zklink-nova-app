@@ -111,6 +111,10 @@ export const useBridgeTx = () => {
     return networkKey === "manta";
   }, [networkKey]);
 
+  const isBlast = useMemo(() => {
+    return networkKey === "blast";
+  }, [networkKey]);
+
   const isMantle = useMemo(() => {
     return networkKey === "mantle";
   }, [networkKey]);
@@ -526,7 +530,7 @@ export const useBridgeTx = () => {
             overrides.gasLimit = fee.gasLimit;
           }
 
-          if (isArbitrum || isManta || isMantle) {
+          if (isArbitrum || isManta || isMantle || isBlast) {
             const provider = walletClientToProvider(walletClient!);
             const gasPrice = await provider.getGasPrice();
             overrides.gasPrice = gasPrice;
