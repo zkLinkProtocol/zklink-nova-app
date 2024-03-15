@@ -9,6 +9,7 @@ import mantleIcon from "../assets/img/mantle.svg";
 import mantaIcon from "../assets/img/manta.jpg";
 import arbIcon from "../assets/img/arbitrum.svg";
 import zkscyncIcon from "../assets/img/zksync.svg";
+import blastIcon from "../assets/img/blast.svg";
 import {
   goerli,
   lineaTestnet,
@@ -19,13 +20,13 @@ import {
   manta,
   mantle,
   arbitrum,
-} from "wagmi/chains";
+} from "@wagmi/core/chains";
 
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 export const NOVA_NETWORK = {
   label: nexusNode[0].name,
-  icon: '/img/nova.png',
+  icon: "/img/nova.png",
   chainId: nexusNode[0].id,
   networkKey: "nova",
   isEthGasToken: true,
@@ -36,7 +37,7 @@ export const NOVA_NETWORK = {
 
 export const NOVA_GOERLI_NETWORK = {
   label: nexusGoerliNode[0].name,
-  icon: '/img/nova.png',
+  icon: "/img/nova.png",
   chainId: nexusGoerliNode[0].id,
   networkKey: "nova",
   isEthGasToken: true,
@@ -67,7 +68,7 @@ const FromListMainnet = [
     rpcUrl: linea.rpcUrls.default.http[0],
   },
   {
-    label: "Arbitrum",
+    label: "Arbitrum One",
     icon: arbIcon,
     chainId: arbitrum.id,
     networkKey: "arbitrum",
@@ -77,7 +78,7 @@ const FromListMainnet = [
     rpcUrl: arbitrum.rpcUrls.default.http[0],
   },
   {
-    label: "zkSync",
+    label: "zkSync Era",
     icon: zkscyncIcon,
     chainId: zkSync.id,
     networkKey: "zksync",
@@ -87,7 +88,7 @@ const FromListMainnet = [
     rpcUrl: zkSync.rpcUrls.default.http[0],
   },
   {
-    label: "Manta",
+    label: "Manta Pacific",
     icon: mantaIcon,
     chainId: manta.id,
     networkKey: "manta",
@@ -103,6 +104,16 @@ const FromListMainnet = [
     networkKey: "mantle",
     isEthGasToken: true,
     chainName: "Mantle",
+    explorerUrl: mantle.blockExplorers.default.url,
+    rpcUrl: mantle.rpcUrls.default.http[0],
+  },
+  {
+    label: "Blast",
+    icon: blastIcon,
+    chainId: 81457,
+    networkKey: "blast",
+    isEthGasToken: true,
+    chainName: "Blast",
     explorerUrl: mantle.blockExplorers.default.url,
     rpcUrl: mantle.rpcUrls.default.http[0],
   },
