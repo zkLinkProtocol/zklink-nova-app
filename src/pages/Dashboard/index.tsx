@@ -19,6 +19,7 @@ import {
   getNextMilestone,
   formatBalance,
   addNovaChain,
+  getTweetShareText,
 } from "@/utils";
 import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
@@ -647,7 +648,9 @@ export default function Dashboard() {
                     onClick={() => handleCopy()}
                   />
                   <a
-                    href={`https://twitter.com/intent/tweet?url=https://app.zklink.io/invite/${invite?.code}&via=zkLink_Official&text=${TWEET_SHARE_TEXT}`}
+                    href={`https://twitter.com/intent/tweet?url=https://app.zklink.io&text=${getTweetShareText(
+                      invite?.code ?? ""
+                    )}`}
                     className="twitter-hashtag-button"
                     data-show-count="false"
                   >
