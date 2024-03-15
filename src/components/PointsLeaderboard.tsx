@@ -89,7 +89,7 @@ export default function PointsLeaderboard() {
           item?.address?.toLowerCase() === address?.toLowerCase() ? (
             <TableRow key={index} className="border-b-1 border-slate-600">
               <TableCell>{item.rank}</TableCell>
-              <TableCell>{showAccount(item.address)}</TableCell>
+              <TableCell>{showAccount(item.address)} <span className="ml-[0.5rem]">(Your Address)</span></TableCell>
               <TableCell>{showAccount(item.inviteBy)}</TableCell>
               <TableCell>
                 {formatNumberWithUnit(
