@@ -54,6 +54,9 @@ export const CardBox = styled.div`
   &.successed {
     background: #1d4138 !important;
   }
+  &.bg {
+    background-image: url('/img/bg-nova-points.png');
+  }
 `;
 
 export const TableBox = styled.div`
