@@ -392,14 +392,21 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const ethValue =
+    let ethValue =
       +stakingUsdValue !== 0 && +ethUsdPrice !== 0
         ? stakingUsdValue / ethUsdPrice
         : 0;
 
-    console.log("stakingEth", ethValue, stakingUsdValue, ethUsdPrice);
+    if (
+      accountTvlData.length === 1 &&
+      accountTvlData[0].symbol.toLocaleUpperCase() === "ETH"
+    ) {
+      ethValue = +accountTvlData[0].amount;
+    }
+
+    // console.log("stakingEth", ethValue, stakingUsdValue, ethUsdPrice);
     setStakingEthValue(ethValue);
-  }, [ethUsdPrice, stakingUsdValue]);
+  }, [ethUsdPrice, stakingUsdValue, accountTvlData]);
 
   const handleMintNow = useCallback(() => {
     if (nft || fetchLoading) {
@@ -475,9 +482,9 @@ export default function Dashboard() {
     /**
      * return home page if not active
      */
-    if (!isConnected || !invite?.twitterHandler) {
-      navigatorTo("/");
-    }
+    // if (!isConnected || !invite?.twitterHandler) {
+    //   navigatorTo("/");
+    // }
   }, [isConnected, invite]);
 
   const [isLoading, setIsLoading] = useState(false);
