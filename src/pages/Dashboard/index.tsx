@@ -651,10 +651,10 @@ export default function Dashboard() {
                     href={`https://twitter.com/intent/tweet?url=https://app.zklink.io&text=${getTweetShareText(
                       invite?.code ?? ""
                     )}`}
-                    className="twitter-hashtag-button"
+                    className="twitter-hashtag-button gradient-btn px-4 ml-6 hover:opacity-85"
                     data-show-count="false"
                   >
-                    Tweet
+                    Share on Twitter
                   </a>
                 </p>
                 <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.5rem]">
