@@ -19,6 +19,7 @@ import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About";
 import { useDispatch } from "react-redux";
 import { setInviteCode } from "./store/modules/airdrop";
+import Maintenance from "./components/Maintenance";
 
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));

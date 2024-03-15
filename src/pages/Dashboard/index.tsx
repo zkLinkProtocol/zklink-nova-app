@@ -568,11 +568,11 @@ export default function Dashboard() {
             </div>
             {/* TODO: Est. in next epoch */}
             {/* <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-              +{accountPoint.referPoint}
-            </p>
-            <p className="text-[1rem] text-[#919192] font-[400]">
-              Est. in next epoch
-            </p> */}
+            +{accountPoint.referPoint}
+          </p>
+          <p className="text-[1rem] text-[#919192] font-[400]">
+            Est. in next epoch
+          </p> */}
 
             <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
               <div className="flex items-center gap-[0.5rem]">
@@ -741,9 +741,9 @@ export default function Dashboard() {
                 </GradientText>
 
                 {/* <img
-                                    src='/img/icon-info.svg'
-                                    className='ml-[0.38rem] w-[0.875rem] h-[0.875rem]'
-                                /> */}
+                                  src='/img/icon-info.svg'
+                                  className='ml-[0.38rem] w-[0.875rem] h-[0.875rem]'
+                              /> */}
               </div>
             </div>
 
