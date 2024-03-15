@@ -485,9 +485,9 @@ export default function Dashboard() {
     /**
      * return home page if not active
      */
-    if (!isConnected || !invite?.twitterHandler) {
-      navigatorTo("/");
-    }
+    // if (!isConnected || !invite?.twitterHandler) {
+    //   navigatorTo("/");
+    // }
   }, [isConnected, invite]);
 
   const [isLoading, setIsLoading] = useState(false);
