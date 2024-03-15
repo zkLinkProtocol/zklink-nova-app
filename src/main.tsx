@@ -32,15 +32,19 @@ createWeb3Modal({
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>
-          <NextUIProvider>
-            {+isMaintenance ? <Maintenance /> : <App />}
-          </NextUIProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </PersistGate>
-  </Provider>
+  +isMaintenance ? (
+    <Maintenance />
+  ) : (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <WagmiProvider config={wagmiConfig}>
+          <QueryClientProvider client={queryClient}>
+            <NextUIProvider>
+              <App />
+            </NextUIProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </PersistGate>
+    </Provider>
+  )
 );
