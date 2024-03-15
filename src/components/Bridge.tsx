@@ -142,7 +142,6 @@ const Trans = styled.div`
 
 const Container = styled.div`
   background: #313841;
-  padding: 32px;
   border-radius: 12px;
 `;
 const SelectBox = styled.div`
@@ -259,6 +258,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [category, setCategory] = useState(AssetTypes[0].value);
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
+  const [openTooltip, setOpenTooltip] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -578,8 +578,8 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   return (
     <>
-      <Container className="">
-        <SelectBox className="px-6 py-6 ">
+      <Container className="px-4 py-6 md:px-8 md:py-8">
+        <SelectBox className="px-4 py-6 md:px-6">
           <div className="flex items-center gap-4">
             <span className="font-bold">From</span>
             <div
@@ -625,7 +625,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
         </SelectBox>
 
-        <SelectBox className="mt-4 px-6 py-6">
+        <SelectBox className="mt-4 px-4 md:px-6 py-6">
           <div className="flex items-center justify-between mb-2 points-box">
             <div className="flex items-center">
               <span>Nova Points</span>
@@ -827,9 +827,10 @@ export default function Bridge(props: IBridgeComponentProps) {
         size="2xl"
         isOpen={fromModal.isOpen}
         onOpenChange={fromModal.onOpenChange}
+        scrollBehavior="inside"
       >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1 text-3xl">
+          <ModalHeader className="flex flex-col gap-1 text-[1.25rem] md:text-3xl">
             From
           </ModalHeader>
           <ModalBody className="pb-8">
@@ -840,7 +841,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 onClick={() => handleFrom(index)}
               >
                 <div className="flex items-center">
-                  <Avatar src={item.icon} className="w-12 h-12" />
+                  <Avatar src={item.icon} className="w-8 h-8 md:w-12 md:h-12" />
                   <span className="text-xl ml-4">{item.label}</span>
                 </div>
 
@@ -859,7 +860,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         onOpenChange={tokenModal.onOpenChange}
       >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1 text-3xl">
+          <ModalHeader className="flex flex-col gap-1 text-[1.25rem] md:text-3xl">
             Choose Token
           </ModalHeader>
           <ModalBody className="pb-8">
@@ -886,7 +887,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 <Tab key={item.value} title={item.label}></Tab>
               ))}
             </Tabs>
-            <div className="h-[500px] overflow-scroll">
+            <div className="h-[370px] md:h-[500px] overflow-scroll">
               {tokenFiltered.map((item, index) => (
                 <ModalSelectItem
                   className="flex items-center justify-between p-4 cursor-pointer"

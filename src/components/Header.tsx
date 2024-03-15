@@ -223,7 +223,7 @@ export default function Header() {
     <>
       <Navbar
         // shouldHideOnScroll
-        className={`md:px-[1.5rem] py-[0.75rem] fixed pt-0`}
+        className={`bg-navBackground md: md:px-[1.5rem] py-[0.75rem] fixed pt-0`}
         style={{
           // position: isHeaderTop ? 'fixed' : 'sticky',
           background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
@@ -372,7 +372,7 @@ export default function Header() {
                 )}
               </>
             )}
-            <a href="https://discord.com/invite/zklink" target="_blank">
+            {/* <a href="https://discord.com/invite/zklink" target="_blank">
               <img src="/img/icon-dc.svg" className="w-[1.5rem] h-[1.5rem]" />
             </a>
             <a href="https://twitter.com/zkLink_Official" target="_blank">
@@ -380,7 +380,7 @@ export default function Header() {
                 src="/img/icon-twitter.svg"
                 className="w-[1.25rem] h-[1.25rem]"
               />
-            </a>
+            </a> */}
             {address && !depositStatus && (
               <Button
                 className="hidden md:block border-solid border-1 border-[#03D498] text-[#03D498] bg-transparent font-bold"
@@ -413,6 +413,11 @@ export default function Header() {
           </NavbarItem>
         </NavbarContent>
         <NavbarMenu
+          className={`md:px-[1.5rem] py-[0.75rem] fixed pt-4`}
+          style={{
+            background: "rgba(0, 0, 0, 0.08)",
+            backdropFilter: "blur(15.800000190734863px)",
+          }}
           onClick={() => {
             setIsMenuOpen(false);
           }}
@@ -466,6 +471,35 @@ export default function Header() {
                   <MdArrowOutward className="size-[1.75rem]" />
                 </a>
               </NavbarMenuItem> */}
+          {/* Footer: nav links */}
+          <div className="absolute right-[6rem] bottom-[3rem] flex justify-end items-end">
+            <div className="flex items-center gap-[1.25rem]">
+              <a href="https://blog.zk.link/" target="_blank">
+                <img
+                  src="/img/icon-medium.svg"
+                  className="w-[1.5rem] h-[1.5rem]"
+                />
+              </a>
+              <a href="https://discord.com/invite/zklink" target="_blank">
+                <img src="/img/icon-dc.svg" className="w-[1.5rem] h-[1.5rem]" />
+              </a>
+              <a href="https://t.me/zkLinkorg">
+                <img src="/img/icon-tg.svg" className="w-[1.5rem] h-[1.5rem]" />
+              </a>
+              <a href="https://twitter.com/zkLink_Official" target="_blank">
+                <img
+                  src="/img/icon-twitter.svg"
+                  className="w-[1.25rem] h-[1.25rem]"
+                />
+              </a>
+              <a href="https://github.com/zkLinkProtocol" target="_blank">
+                <img
+                  src="/img/icon-github.svg"
+                  className="w-[1.5rem] h-[1.5rem]"
+                />
+              </a>
+            </div>
+          </div>
         </NavbarMenu>
       </Navbar>
     </>

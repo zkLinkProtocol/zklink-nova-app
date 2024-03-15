@@ -107,10 +107,26 @@ export default function Bridge() {
           minimal worth of 0.1 ETH.
         </p>
         <div className="flex items-center mt-8 mb-8">
-          <img className="w-20 h-20 mr-6" src={"/img/nft-1.svg"} alt="" />
-          <img className="w-20 h-20 mr-6" src={"/img/nft-2.svg"} alt="" />
-          <img className="w-20 h-20 mr-6" src={"/img/nft-3.svg"} alt="" />
-          <img className="w-20 h-20 mr-6" src={"/img/nft-4.svg"} alt="" />
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-1.svg"}
+            alt=""
+          />
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-2.svg"}
+            alt=""
+          />
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-3.svg"}
+            alt=""
+          />
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-4.svg"}
+            alt=""
+          />
         </div>
         <p className="font-medium text-[16px] text-[#A0A5AD]">
           Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
@@ -147,9 +163,9 @@ export default function Bridge() {
 
   return (
     <BgBox>
-      <div className="block lg:flex md:py-24 py-12">
-        <div className="px-8 md:px-16 lg:px-32 lg:w-1/2">
-          <h2 className="text-4xl mt-0 font-black">
+      <div className="block lg:flex md:py-24 pb-24 pt-6">
+        <div className="px-6 pb-6 md:px-16 lg:px-32 lg:w-1/2">
+          <h2 className="text-[32px] md:text-4xl mt-0 font-black leading-10">
             Bridge To zkLink Nova To Earn Extra Yield & Token Rewards
           </h2>
           <div className="inline-flex items-center mt-7 bg-[#1E1F24] px-2 py-2 rounded-md">
@@ -168,11 +184,11 @@ export default function Bridge() {
           </div>
           {activeType === "nft" ? <NovaNFT /> : <NovaPoints />}
         </div>
-        <div className="relative px-8 md:px-16 lg:px-32 lg:w-1/2">
+        <div className="relative px-6 md:px-16 lg:px-32 lg:w-1/2">
           <BridgeComponent />
 
-          <div className="absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32">
-            <FooterTvlText className="mb-[0.5rem] text-right">
+          <div className="md:absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32">
+            <FooterTvlText className="mt-4 md:mt-0 mb-[0.5rem] text-right">
               TVL
             </FooterTvlText>
             <TotalTvlCard />
