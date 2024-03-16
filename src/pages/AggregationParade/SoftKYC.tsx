@@ -62,6 +62,7 @@ const verifyFromList = [...fromList];
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 const env = import.meta.env.VITE_ENV;
+const isTwitterAccessValid = import.meta.env.VITE_IS_TWITTER_ACCESS_VALID;
 
 const BgBox = styled.div`
   position: relative;
@@ -251,7 +252,7 @@ export default function SoftKYC() {
       redirect_uri: twitterCallbackURL,
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
-      scope: "tweet.read%20users.read%20follows.read%20follows.write",
+      scope: "tweet.read%20tweet.write%20users.read%20follows.read%20follows.write",
       state: "state",
       code_challenge: "challenge",
       code_challenge_method: "plain",
@@ -363,7 +364,9 @@ export default function SoftKYC() {
                 dispatch(setTwitter(data));
                 setTwitterAccessToken(access_token);
               } else {
-                toastTwitterError();
+                if (isTwitterAccessValid) {
+                  toastTwitterError();
+                }
               }
 
               // TODO: valid twitter ?
@@ -391,7 +394,9 @@ export default function SoftKYC() {
       })
       .catch((error) => {
         console.error(error);
-        toastTwitterError();
+        if (isTwitterAccessValid) {
+          toastTwitterError();
+        }
       });
   };
 
@@ -519,6 +524,7 @@ export default function SoftKYC() {
 
     if (error) {
       toast.error("Could not connect to Twitter. Try again.");
+      setSearchParams("");
       return;
     }
 

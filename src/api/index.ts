@@ -11,6 +11,7 @@ type Response = {
 export const BASE_URL_API = "/api";
 export const BASE_URL_POINTS = "/points";
 export const BASE_URL_TOKENS = "/tokens";
+export const BASE_URL_TWITTER = "/twitter";
 
 export type BindInviteCodeWithAddressParams = {
   address: string;
@@ -209,3 +210,5 @@ export const registerAccount = (
     ...data,
   });
 };
+
+export const getTwitterAccessToken = () => {};
