@@ -3,13 +3,11 @@ import NFTLeaderboard from "./components/NFTLeaderboard";
 import NFTLuckWinner from "./components/NFTLuckWinner";
 import styled from "styled-components";
 import { useState } from "react";
-import { BgBox, BgCoverImg, TableBox } from "@/styles/common";
+import { BgBox, BgCoverImg, TableBoxs } from "@/styles/common";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 const TabItem = styled.div`
   border-radius: 1rem;
-  background: rgba(51, 51, 51, 0.4);
   backdrop-filter: blur(15.800000190734863px);
-  color: #7b8ea0;
   font-family: Satoshi;
   font-size: 1rem;
   font-style: normal;
@@ -22,6 +20,10 @@ const TabItem = styled.div`
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15.800000190734863px);
   }
+  .gradient-btn{
+    background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
+    color: #fff;
+  }
 `;
 
 export default function Leaderboard() {
@@ -29,11 +31,11 @@ export default function Leaderboard() {
   return (
     <BgBox>
       <BgCoverImg />
-      <div className="px-[10.44rem] mt-[3rem] min-h-[50rem] overflow-auto z-[10]">
+      <div className="md:px-[10.44rem] md:mt-[3rem] min-h-[50rem] overflow-auto z-[10] px-[1rem] mt-[1rem]">
         {/* Tab btns */}
-        <div className="flex items-center gap-[2rem]">
+        <div className="flex items-center md:gap-[2rem] gap-[1rem]">
           <TabItem
-            className={`px-[2rem] py-[1rem] cursor-pointer ${
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap gradient-btn ${
               tabsActive === 0 ? "active" : ""
             }`}
             onClick={() => setTabsActive(0)}
@@ -44,13 +46,13 @@ export default function Leaderboard() {
           {/* <Tooltip content="coming soon"> */}
           <TabItem
             data-tooltip-id="coming-soon"
-            className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed`}
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500`}
           >
             Referral Leaderboard
           </TabItem>
           <TabItem
             data-tooltip-id="coming-soon"
-            className={`px-[2rem] py-[1rem] opacity-40 cursor-not-allowed`}
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500`}
           >
             Mystery Box Winners
           </TabItem>
@@ -64,11 +66,11 @@ export default function Leaderboard() {
         />
 
         {/* Content: tab views */}
-        <TableBox className="mt-[2rem]">
+        <TableBoxs className="mt-[2rem]">
           {tabsActive === 0 && <PointsLeaderboard />}
           {tabsActive === 1 && <NFTLeaderboard />}
           {tabsActive === 2 && <NFTLuckWinner />}
-        </TableBox>
+        </TableBoxs>
       </div>
     </BgBox>
   );

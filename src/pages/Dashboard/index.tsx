@@ -476,7 +476,7 @@ export default function Dashboard() {
      * return home page if not active
      */
     if (!isConnected || !invite?.twitterHandler) {
-      navigatorTo("/");
+    navigatorTo("/");
     }
   }, [isConnected, invite]);
 
