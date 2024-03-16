@@ -485,7 +485,7 @@ export default function Dashboard() {
      * return home page if not active
      */
     if (!isConnected || !invite?.twitterHandler) {
-      navigatorTo("/");
+      // navigatorTo("/");
     }
   }, [isConnected, invite]);
 
@@ -720,6 +720,7 @@ export default function Dashboard() {
                     )}`}
                     className="gradient-btn px-4 ml-6 hover:opacity-85"
                     data-show-count="false"
+                    target="_blank"
                   >
                     Share on Twitter
                   </a>
