@@ -24,6 +24,9 @@
   text-align: left;
   border: none;
 }
+.gradient-btn.default {
+  background:rgba(0, 0, 0, 0.40);
+}
 .gradient-btn:disabled {
   cursor: not-allowed;
   opacity: 0.4 !important;
@@ -61,6 +64,24 @@
 .not-active-1:first-child .bar {
   display: none;
 }
+
+ @media (max-width: 768px) {
+.btn-default{
+  min-width: auto;
+  padding: 0 10px;
+  gap:0;
+  border-radius: 8px;
+  background: linear-gradient(to right, #48ECAE, #3E52FC, #49CED7);
+}
+.bg-mobile{
+  background: rgba(0,0,0,0.9) !important; 
+  }
+.navbar-menu{
+  background-color: rgba(0,0,0,0.9);
+  
+}
+  
+ }
 .bg-skeleto-gray {
   background-color: gray !important;
 }

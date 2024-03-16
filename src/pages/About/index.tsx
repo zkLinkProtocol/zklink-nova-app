@@ -84,6 +84,12 @@ const BgBox = styled.div`
     background: url(<path-to-image>), lightgray 50% / cover no-repeat;
     margin-right: 55px;
   }
+
+  @media (max-width: 768px) {
+    .big {
+      font-size: 28px;
+    }
+  }
 `;
 
 const BannerText = styled.div`
@@ -110,12 +116,18 @@ const BannerText = styled.div`
     text-transform: capitalize;
     white-space: nowrap;
   }
+
+  @media (max-width: 768px) {
+    .text {
+      font-size: 26px;
+    }
+  }
 `;
 
 export default function About() {
   return (
     <BgBox className="relative pb-[3rem]">
-      <div className="pt-[8.5rem] px-[252px] box-content ">
+      <div className="md:pt-[8.5rem] pt-[5rem] md:px-[252px] px-[20px] box-content ">
         <div className="flex relative ">
           <img src="/img/about-banner.png" className="banner" />
 

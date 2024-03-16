@@ -55,7 +55,6 @@ const TitleBox = styled.div`
     color: #c6d3dd;
     font-family: Satoshi;
     font-style: normal;
-    line-height: 2rem; /* 133.333% */
     letter-spacing: -0.03125rem;
   }
   @keyframes width {
@@ -205,6 +204,7 @@ const TitleBox = styled.div`
       .inner {
         width: 100%;
         font-size: 30px;
+        text-align: center;
       }
     }
   }
@@ -275,16 +275,16 @@ export default function Home() {
   }, [isActiveUser]);
 
   useEffect(() => {
-    handleOTPChange(inviteCode)
-  }, [inviteCode])
+    handleOTPChange(inviteCode);
+  }, [inviteCode]);
 
   return (
-    <BgBox className="relative pt-[4.5rem] pb-[8.5rem] md:pt-[7.5rem] md:pb-[8.5rem]">
+    <BgBox className="relative pt-[116px] pb-[7.5rem] md:pt-[7.5rem] md:pb-[8.5rem]">
       {isLoading && <Loading />}
       {/* Title */}
-      <TitleBox className="text-center">
-        <div className="flex headTitle">
-          <h2 className="title pl-1 pr-2 md:pl-[1.56rem] text-[1.8rem] md:text-[2.5rem] leading-[3.5rem]">
+      <TitleBox className="text-left md:text-center">
+        <div className="flex headTitle px-6">
+          <h2 className="title md:pl-[1.56rem] text-[1.8rem] md:text-[2.5rem]  leading-10 md:leading-[3.5rem]">
             The ONLY Aggregated L3 with added yield for
           </h2>
         </div>
@@ -299,15 +299,15 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <p className="sub-title mt-4 pl-6 pr-8 text-[1rem] md:text-[1.5rem] leading-8">
+        <p className="sub-title mt-4 pl-6 pr-6 lg:pr-8 text-[1rem] md:text-[1.5rem] leading-[2rem]">
           Bridge to earn Mega Yield and $ZKL on zkLink Nova
         </p>
       </TitleBox>
 
       {/* Form: Invite code */}
-      <CardBox className="mt-[2.5rem] py-8 px-[1rem] mx-auto flex flex-col items-center text-center w-[26rem]">
+      <CardBox className="mt-[2.5rem] mx-6 py-8 px-[1.375rem] md:px-[1rem] md:mx-auto flex flex-col items-center text-center w-auto md:w-[26rem]">
         <TitleBox>
-          <h4 className="title text-[1.5rem] leading-[2rem]">
+          <h4 className="title text-[1.5rem] leading-[1rem]">
             Enter Your Invite Code
           </h4>
           <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
@@ -331,7 +331,7 @@ export default function Home() {
 
         <div>
           <Button
-            className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] `}
+            className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] w-[15.97rem]`}
             disabled={!otp || otp.length !== 6}
             onClick={enterInviteCode}
           >
@@ -351,16 +351,18 @@ export default function Home() {
         )} */}
       </CardBox>
 
-      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-10 lg:px-36 py-4">
+      <FooterBox className="w-full fixed left-0 bottom-0 md:bg-black md:bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-10 lg:px-36 py-4">
         {/* Footer: total tvl data */}
         <div className="flex flex-col mb-8">
-          <span className="text-[1.25rem]">zkLink Nova Network TVL</span>
+          <span className="text-[1.25rem] text-center">
+            zkLink Nova Network TVL
+          </span>
           <TotalTvlCard />
         </div>
         {/* <TotalTvlCard /> */}
 
         {/* Footer: nav links */}
-        <div className=" right-[6rem] bottom-[1rem] flex justify-end items-end">
+        <div className="hidden right-[6rem] bottom-[1rem] flex justify-end items-end">
           <div className="flex items-center gap-[1.25rem]">
             <a href="https://blog.zk.link/" target="_blank">
               <img

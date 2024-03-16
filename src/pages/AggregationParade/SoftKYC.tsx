@@ -74,21 +74,79 @@ const BgBox = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
+  @media (max-width: 768px) {
+    background: linear-gradient(
+      0deg,
+      rgba(102, 154, 255, 0.56) 0%,
+      rgba(12, 14, 17, 0.56) 100%
+    );
+    .carBox {
+      width: 100%;
+      flex-direction: column;
+      height: auto;
+      padding: 1.5rem;
+      .input-wrap {
+        width: 100%;
+        flex-direction: column;
+      }
+      .input-item {
+        max-width: 100%;
+        width: 100%;
+      }
+      .gradient-btn {
+        width: 100%;
+      }
+      .btn-default {
+        background: rgba(0, 0, 0, 0.4);
+      }
+      .stepItem {
+        display: flex;
+      }
+      .step-num {
+        position: relative;
+        padding-right: 1.5rem;
+        margin-right: 1.5rem;
+        &::after {
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          content: "";
+          width: 1px;
+          height: 5rem;
+          opacity: 0.48;
+          background: linear-gradient(
+            180deg,
+            rgba(86, 88, 90, 0) 0%,
+            #85878b 48%,
+            rgba(183, 187, 192, 0) 100%
+          );
+        }
+      }
+    }
+  }
 `;
 
 const TitleText = styled.h4`
   color: #c2e2ff;
-  text-align: center;
+  // text-align: center;
   font-family: Satoshi;
   font-size: 2.5rem;
   font-style: normal;
   font-weight: 900;
   line-height: 2.5rem; /* 100% */
   letter-spacing: -0.03125rem;
+  @media (max-width: 768px) {
+    & {
+      font-size: 2rem;
+      line-height: 2rem;
+      margin-bottom: 1.5rem;
+    }
+  }
 `;
 const SubTitleText = styled.p`
   color: #c6d3dd;
-  text-align: center;
+  // text-align: center;
   font-family: Satoshi;
   font-size: 1rem;
   font-style: normal;
@@ -547,43 +605,54 @@ export default function SoftKYC() {
       {isLoading && <Loading />}
       <div>
         {/* Title */}
-        <div className="mt-[1rem]">
-          <SubTitleText>YOU’RE ALMOST THERE</SubTitleText>
-          <TitleText>To join the zkLink Aggregation Parade</TitleText>
+        <div className="px-6 flex flex-col-reverse md:flex-col mt-[1rem]">
+          <SubTitleText className="text-left md:text-center">
+            YOU’RE ALMOST THERE
+          </SubTitleText>
+          <TitleText className="text-left md:text-center">
+            To join the zkLink Aggregation Parade
+          </TitleText>
         </div>
 
-        <div className="mt-[3rem] mx-auto max-w-[720px]">
+        <div className="mt-[3rem] mx-[1.5rem] md:mx-auto max-w-[720px] ">
           {/* Setp 1: invite code */}
           <div className="flex justify-center gap-[0.5rem]">
-            <CardBox className={`${isCheckedInviteCode ? "successed" : ""}`}>
-              <StepNum>01</StepNum>
-            </CardBox>
             <CardBox
-              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+              className={`hidden md:block ${
                 isCheckedInviteCode ? "successed" : ""
               }`}
             >
-              <StepItem>
-                <p className="step-title">Enter Invite Code</p>
-                <p className="step-sub-title mt-[0.25rem]">
-                  Search{" "}
-                  <a
-                    href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
-                    className="text-[#298EDB]"
-                    target="_blank"
-                  >
-                    #zkLinkNovaAggParade
-                  </a>{" "}
-                  on Twitter
-                </p>
+              <StepNum>01</StepNum>
+            </CardBox>
+            <CardBox
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+                isCheckedInviteCode ? "successed" : ""
+              }`}
+            >
+              <StepItem className="stepItem">
+                <StepNum className="step-num md:hidden">01</StepNum>
+                <div>
+                  <p className="step-title">Enter Invite Code</p>
+                  <p className="step-sub-title mt-[0.25rem]">
+                    Search{" "}
+                    <a
+                      href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
+                      className="text-[#298EDB]"
+                      target="_blank"
+                    >
+                      #zkLinkNovaAggParade
+                    </a>{" "}
+                    on Twitter
+                  </p>
+                </div>
               </StepItem>
 
-              <div className="flex items-center gap-[0.5rem]">
+              <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
                 <InviteInput
                   type="text"
                   placeholder="Invite Code"
                   value={inviteCodeValue}
-                  className={`max-w-[120px] ${
+                  className={`input-item max-w-[120px] ${
                     isCheckedInviteCode
                       ? "bg-[#1D4138]"
                       : "bg-[rgba(0, 0, 0, 0.5)]"
@@ -618,24 +687,29 @@ export default function SoftKYC() {
 
           {/* Step 2: connect wallet & sign */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox className={signature ? "successed" : ""}>
+            <CardBox
+              className={`hidden md:block ${signature ? "successed" : ""}`}
+            >
               <StepNum>02</StepNum>
             </CardBox>
             <CardBox
-              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
                 signature ? "successed" : ""
               }`}
             >
-              <StepItem>
-                <p className="step-title">Connect your wallet</p>
-                <p className="step-sub-title mt-[0.25rem]">
-                  Prove your ownership of the address
-                </p>
+              <StepItem className="stepItem">
+                <StepNum className="step-num md:hidden">02</StepNum>
+                <div>
+                  <p className="step-title">Connect your wallet</p>
+                  <p className="step-sub-title mt-[0.25rem]">
+                    Prove your ownership of the address
+                  </p>
+                </div>
               </StepItem>
-              <div className="flex items-center gap-[0.5rem]">
+              <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
                 <StepItem>
                   {isConnected && (
-                    <span className="step-title">{showAccount(address)}</span>
+                    <span className="step-title ">{showAccount(address)}</span>
                   )}
                 </StepItem>
 
@@ -655,21 +729,26 @@ export default function SoftKYC() {
 
           {/* Step 3: Bridge  */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox className={`${depositTx ? "successed" : ""}`}>
+            <CardBox
+              className={`hidden md:block ${depositTx ? "successed" : ""}`}
+            >
               <StepNum>03</StepNum>
             </CardBox>
             <CardBox
-              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
                 depositTx ? "successed" : ""
               }`}
             >
-              <StepItem>
-                <p className="step-title">Bridge and Earn</p>
-                <p className="step-sub-title mt-[0.25rem]">
-                  {"Minimum deposit amount ≥ 0.1 ETH or equivalent"}
-                </p>
+              <StepItem className="stepItem">
+                <StepNum className="step-num md:hidden">03</StepNum>
+                <div>
+                  <p className="step-title">Bridge and Earn</p>
+                  <p className="step-sub-title mt-[0.25rem]">
+                    {"Minimum deposit amount ≥ 0.1 ETH or equivalent"}
+                  </p>
+                </div>
               </StepItem>
-              <div className="flex items-center gap-[0.5rem]">
+              <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
                 <Button
                   className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
                   onClick={() => {
@@ -693,21 +772,28 @@ export default function SoftKYC() {
 
           {/* Step 4: connect twitter */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox className={`${isCheckedTwitter ? "successed" : ""}`}>
-              <StepNum>04</StepNum>
-            </CardBox>
             <CardBox
-              className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+              className={`hidden md:block ${depositTx ? "successed" : ""}`}
+            >
+              <StepNum>03</StepNum>
+            </CardBox>
+
+            <CardBox
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
                 isCheckedTwitter ? "successed" : ""
               }`}
             >
-              <StepItem>
-                <p className="step-title">Connect Twitter</p>
-                <p className="step-sub-title mt-[0.25rem]">
-                  You can only bind your Twitter account with one wallet
-                </p>
+              <StepItem className="stepItem">
+                <StepNum className="step-num md:hidden">04</StepNum>
+                <div>
+                  <p className="step-title">Connect Twitter</p>
+                  <p className="step-sub-title mt-[0.25rem]">
+                    You can only bind your Twitter account with one wallet
+                  </p>
+                </div>
               </StepItem>
-              <div>
+
+              <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
                 {isCheckedTwitter ? (
                   <img
                     src="/img/icon-right.svg"
@@ -727,44 +813,47 @@ export default function SoftKYC() {
           </div>
 
           {/* Submit for user bind */}
-          <div className="flex justify-center w-full px-[5rem] ">
+          <div className="flex justify-center w-full md:px-[5rem] ">
             <Button
-              className={`gradient-btn mx-auto mt-[1rem] py-[2rem] w-full text-center`}
+              className={`gradient-btn bg- mx-auto mt-[1rem] md:py-[2rem] w-full text-center`}
               disabled={!submitStatus}
               onClick={handleSubmit}
             >
-              <StepItem>
+              <>
                 <p className="step-title">
                   Participate zkLink Aggregation Parade
                 </p>
-              </StepItem>
+              </>
             </Button>
           </div>
         </div>
       </div>
 
       {/* Total tvl */}
-      <div className="flex flex-col justify-center items-center w-full py-[2.5rem]">
-        <FooterTvlText className="mb-[0.5rem] text-center">TVL</FooterTvlText>
+      <div className="flex flex-col justify-center items-center w-full py-[2rem] md:py-[2.5rem]">
+        <FooterTvlText className="mb-[0.75rem] md:mb-[0.5rem] text-center">
+          TVL
+        </FooterTvlText>
         <TotalTvlCard />
       </div>
 
       {/* Verify deposit modal */}
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
-        style={{ minHeight: "14rem" }}
+        style={{ minHeight: "18rem" }}
         size="xl"
         isOpen={verifyDepositModal.isOpen}
         onOpenChange={verifyDepositModal.onOpenChange}
       >
-        <ModalContent className="p-2">
+        <ModalContent className="p-2 mb-20 md:mb-0">
           <ModalHeader>Verify your deposit</ModalHeader>
           <ModalBody>
             <p className="text-[1rem] text-[#A0A5AD]">
-            Enter your deposit tx hash, and we'll automatically select the network for you.
+              Enter your deposit tx hash, and we'll automatically select the
+              network for you.
             </p>
 
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center gap-6">
               <Select
                 className="max-w-[9.5rem]"
                 items={verifyFromList.map((item) => ({
