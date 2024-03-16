@@ -139,6 +139,17 @@ export default function Header() {
   }, [dispatch, location.pathname]);
 
   useEffect(() => {
+    if (location.pathname.includes("invite")) {
+      const code = location.pathname.substring(
+        location.pathname.lastIndexOf("/") + 1
+      );
+      if (code && code.length === 6) {
+        dispatch(setInviteCode(code));
+      }
+    }
+  }, [dispatch, location.pathname]);
+
+  useEffect(() => {
     (async () => {
       if (!depositL1TxHash) {
         // dispatch(setDepositStatus(""));
