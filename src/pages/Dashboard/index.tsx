@@ -718,7 +718,7 @@ export default function Dashboard() {
                     href={`https://twitter.com/intent/tweet?text=${getTweetShareText(
                       invite?.code ?? ""
                     )}`}
-                    className="twitter-hashtag-button gradient-btn px-4 ml-6 hover:opacity-85"
+                    className="gradient-btn px-4 ml-6 hover:opacity-85"
                     data-show-count="false"
                   >
                     Share on Twitter
