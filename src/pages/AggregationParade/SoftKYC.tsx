@@ -49,12 +49,12 @@ import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { IS_MAINNET } from "@/constants";
 import Toast from "@/components/Toast";
 
-// const verifyFromList = [
-//   ...fromList,
-//   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
-// ];
+const verifyFromList = [
+  ...fromList,
+  IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
+];
 
-const verifyFromList = [...fromList];
+// const verifyFromList = [...fromList];
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 const env = import.meta.env.VITE_ENV;
@@ -761,8 +761,7 @@ export default function SoftKYC() {
           <ModalHeader>Verify your deposit</ModalHeader>
           <ModalBody>
             <p className="text-[1rem] text-[#A0A5AD]">
-              Enter your deposit transaction hash and select the network on
-              which you made the deposit.
+            Enter your deposit tx hash, and we'll automatically select the network for you.
             </p>
 
             <div className="flex items-center gap-6">

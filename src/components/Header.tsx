@@ -108,7 +108,7 @@ export default function Header() {
     isActiveUser,
     signatureAddress,
     inviteCode,
-  } = useSelector((store: { airdrop: airdropState }) => store.airdrop)
+  } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
 
   const { getDepositL2TxHash } = useBridgeTx();
   const dispatch = useDispatch();
@@ -293,10 +293,7 @@ export default function Header() {
               </a>
             </NavbarItem>
             <NavbarItem>
-              <a
-                href="https://explorer.zklink.io/"
-                target="_blank"
-              >
+              <a href="https://explorer.zklink.io/" target="_blank">
                 Explorer
               </a>
             </NavbarItem>
@@ -454,10 +451,7 @@ export default function Header() {
             </a>
           </NavbarMenuItem>
           <NavbarMenuItem>
-            <a
-              href="https://explorer.zklink.io/"
-              target="_blank"
-            >
+            <a href="https://explorer.zklink.io/" target="_blank">
               Explorer
             </a>
           </NavbarMenuItem>
