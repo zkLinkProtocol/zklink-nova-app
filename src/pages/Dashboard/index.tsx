@@ -508,8 +508,8 @@ export default function Dashboard() {
     <BgBox>
       <BgCoverImg />
       <a href={`https://explorer.zklink.io/address/${address}`} target="_blank">
-        <div className="absolute top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
-          <span className="text-[#03d498]">Balance and Nova Points may update later. Click here to check your balance.</span>.
+        <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
+          <span className="text-[#03d498]">Balance and Nova Points may update later. Click here to check your balance.</span>
         </div>
       </a>
 
