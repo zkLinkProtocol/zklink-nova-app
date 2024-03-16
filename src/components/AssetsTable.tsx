@@ -553,7 +553,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         isOpen={bridgeModal.isOpen}
         onOpenChange={bridgeModal.onOpenChange}
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           {(onClose) => (
             <>
               <ModalHeader>Bridge</ModalHeader>
