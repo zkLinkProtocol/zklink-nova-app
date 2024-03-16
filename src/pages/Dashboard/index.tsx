@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Skeleton,
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
@@ -19,6 +20,7 @@ import {
   getNextMilestone,
   formatBalance,
   addNovaChain,
+  getTweetShareText,
 } from "@/utils";
 import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
@@ -392,14 +394,21 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const ethValue =
+    let ethValue =
       +stakingUsdValue !== 0 && +ethUsdPrice !== 0
         ? stakingUsdValue / ethUsdPrice
         : 0;
 
-    console.log("stakingEth", ethValue, stakingUsdValue, ethUsdPrice);
+    if (
+      accountTvlData.length === 1 &&
+      accountTvlData[0].symbol.toLocaleUpperCase() === "ETH"
+    ) {
+      ethValue = +accountTvlData[0].amount;
+    }
+
+    // console.log("stakingEth", ethValue, stakingUsdValue, ethUsdPrice);
     setStakingEthValue(ethValue);
-  }, [ethUsdPrice, stakingUsdValue]);
+  }, [ethUsdPrice, stakingUsdValue, accountTvlData]);
 
   const handleMintNow = useCallback(() => {
     if (nft || fetchLoading) {
@@ -492,10 +501,17 @@ export default function Dashboard() {
   return (
     <BgBox>
       <BgCoverImg />
+      <a href={`https://explorer.zklink.io/address/${address}`} target="_blank">
+        <div className="absolute top-[5rem] w-full py-[0.5rem] text-[1rem] bg-[#226959] z-10 px-[6.125rem]">
+          Our system updates every 8 hours and can take up more than 30 minutes
+          to reflect the latest deposit points. You can check your balance in
+          our <span className="text-[#03d498]">explorer</span>.
+        </div>
+      </a>
 
       {isLoading && <Loading />}
 
-      <div className="relative flex gap-[1.5rem] px-[4.75rem] z-[1]">
+      <div className="relative flex gap-[1.5rem] px-[4.75rem] z-[1] pt-[3rem]">
         {/* Left: nova points ... data */}
         <div className="w-[27.125rem]">
           <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -531,10 +547,28 @@ export default function Dashboard() {
             </Tooltip>
           </CardBox>
 
+          {/* // TODO update nova points style */}
+          {/* <CardBox className="mt-[1.5rem] p-[1.5rem] bg">
+              <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+                Nova Points
+              </p>
+              <div className="py-[0.7rem] ml-[4rem] text-[2.5rem] font-[700]">
+                {formatNumberWithUnit(
+                  (+accountPoint.novaPoint || 0) +
+                    (+accountPoint.referPoint || 0)
+                )}
+              </div>
+              <p className="text-[1rem] pr-4 opacity-60">
+                Don't worry, we are synchronizing Nova Points. Your Nova Points
+                will be updated after the syncing process has ended.
+              </p>
+            </CardBox> */}
+
           <CardBox className="mt-[1.5rem] p-[1.5rem]">
             <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
               Nova Points
             </p>
+
             <div className="flex items-center gap-[1rem]">
               <span className="text-[2.5rem] font-[700]">
                 {formatNumberWithUnit(
@@ -568,11 +602,11 @@ export default function Dashboard() {
             </div>
             {/* TODO: Est. in next epoch */}
             {/* <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-            +{accountPoint.referPoint}
-          </p>
-          <p className="text-[1rem] text-[#919192] font-[400]">
-            Est. in next epoch
-          </p> */}
+                +{accountPoint.referPoint}
+              </p>
+              <p className="text-[1rem] text-[#919192] font-[400]">
+                Est. in next epoch
+              </p> */}
 
             <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
               <div className="flex items-center gap-[0.5rem]">
@@ -673,15 +707,22 @@ export default function Dashboard() {
                 </p>
               </div>
               <div>
-                <p
-                  className="text-[1.5rem] leading-[2rem] text-center flex items-center gap-[0.38rem] cursor-pointer"
-                  onClick={() => handleCopy()}
-                >
+                <p className="text-[1.5rem] leading-[2rem] text-center flex items-center gap-[0.38rem] ">
                   <span>{invite?.code || "-"}</span>
                   <img
                     src="/img/icon-copy.svg"
-                    className="w-[1.1875rem] h-[1.1875rem]"
+                    className="w-[1.1875rem] h-[1.1875rem] cursor-pointer"
+                    onClick={() => handleCopy()}
                   />
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${getTweetShareText(
+                      invite?.code ?? ""
+                    )}`}
+                    className="twitter-hashtag-button gradient-btn px-4 ml-6 hover:opacity-85"
+                    data-show-count="false"
+                  >
+                    Share on Twitter
+                  </a>
                 </p>
                 <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.5rem]">
                   Your Invite Code (Remaining {invite?.canInviteNumber || 0})

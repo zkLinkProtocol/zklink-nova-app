@@ -50,6 +50,15 @@ export default function App() {
             }
           />
           <Route
+            path="/invite/:code"
+            element={
+              <Suspense fallback="">
+                <Home />
+              </Suspense>
+            }
+          ></Route>
+
+          <Route
             path="/aggregation-parade"
             element={
               <Suspense fallback="">

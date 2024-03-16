@@ -61,3 +61,6 @@
 .not-active-1:first-child .bar {
   display: none;
 }
+.bg-skeleto-gray {
+  background-color: gray !important;
+}
