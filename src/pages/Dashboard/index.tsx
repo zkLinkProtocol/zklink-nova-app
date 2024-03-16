@@ -497,36 +497,43 @@ export default function Dashboard() {
       setIsLoading(false);
     }, 1000);
   }, []);
-
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [showTooltip1, setShowTooltip1] = useState(false);
+  const [showTooltip2, setShowTooltip2] = useState(false);
+  const [showTooltip3, setShowTooltip3] = useState(false);
+  const [showTooltip4, setShowTooltip4] = useState(false);
+  const [showTooltip5, setShowTooltip5] = useState(false);
+  const [showTooltip6, setShowTooltip6] = useState(false);
   return (
     <BgBox>
       <BgCoverImg />
       <a href={`https://explorer.zklink.io/address/${address}`} target="_blank">
-        <div className="absolute top-[5rem] w-full py-[0.5rem] text-[1rem] bg-[#226959] z-10 px-[6.125rem]">
-          Our system updates every 8 hours and can take up more than 30 minutes
-          to reflect the latest deposit points. You can check your balance in
-          our <span className="text-[#03d498]">explorer</span>.
+        <div className="absolute top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
+          <span className="text-[#03d498]">Balance and Nova Points may update later. Click here to check your balance.</span>.
         </div>
       </a>
 
       {isLoading && <Loading />}
 
-      <div className="relative flex gap-[1.5rem] px-[4.75rem] z-[1] pt-[3rem]">
+      <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[3rem]">
         {/* Left: nova points ... data */}
-        <div className="w-[27.125rem]">
+        <div className="md:w-[27.125rem]">
           <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
             <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
               Your Nova Character
             </p>
-            <div className="w-[24rem] h-[18.75rem] bg-[#65E7E5] rounded-[1rem]">
+            <div className="md:w-[24rem] md:h-[18.75rem] bg-[#65E7E5] rounded-[1rem]">
               <img
                 src={nft?.image ?? "/img/img-mint-example.png"}
                 className="text-center block mx-auto h-full rounded-[1rem]"
               />
             </div>
-            <Tooltip content={nft ? "coming soon" : ""}>
+            <Tooltip content={nft ? "coming soon" : ""} isOpen={showTooltip1}>
               <Button
                 onClick={handleMintNow}
+                onMouseEnter={()=> nft && (setShowTooltip1(true))}
+                onMouseLeave={()=> nft && (setShowTooltip1(false))}
+                onTouchStart={()=> nft && (setShowTooltip1((prev) => !prev))}
                 isLoading={fetchLoading || mintLoading}
                 className={classNames(
                   "gradient-btn w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
@@ -578,6 +585,7 @@ export default function Dashboard() {
               </span>
               <Tooltip
                 className="p-[1rem]"
+                isOpen={showTooltip2}
                 content={
                   <p className="text-[1rem]">
                     {getBooster(groupTvl) !== 0 &&
@@ -595,7 +603,10 @@ export default function Dashboard() {
                   </p>
                 }
               >
-                <GreenTag className="py-[0.375rem] w-[5.625rem] text-[1rem]">
+                <GreenTag className="py-[0.375rem] w-[5.625rem] text-[1rem]"
+                    onMouseEnter={()=> setShowTooltip2(true)}
+                    onMouseLeave={()=> setShowTooltip2(false)}
+                    onTouchStart={()=> setShowTooltip2((prev) => !prev)}>
                   {getBooster(groupTvl) + 2}x
                 </GreenTag>
               </Tooltip>
@@ -614,6 +625,7 @@ export default function Dashboard() {
 
                 <Tooltip
                   className="p-[1rem]"
+                  isOpen={showTooltip}
                   content={
                     <p className="text-[1rem] max-w-[25rem] gap-[0.5rem]">
                       This includes the initial deposit rewards as well as the
@@ -623,6 +635,9 @@ export default function Dashboard() {
                 >
                   <img
                     src="/img/icon-info.svg"
+                    onMouseEnter={()=> setShowTooltip(true)}
+                    onMouseLeave={()=> setShowTooltip(false)}
+                    onTouchStart={()=> setShowTooltip((prev) => !prev)}
                     className="w-[0.875rem] h-[0.875rem] opacity-40"
                   />
                 </Tooltip>
@@ -635,6 +650,7 @@ export default function Dashboard() {
 
                 <Tooltip
                   className="p-[1rem]"
+                  isOpen={showTooltip3}
                   content={
                     <p className="text-[1rem] max-w-[25rem] gap-[0.5rem]">
                       The referral rewards will be updated every 8 hours along
@@ -643,6 +659,9 @@ export default function Dashboard() {
                   }
                 >
                   <img
+                    onMouseEnter={()=> setShowTooltip3(true)}
+                    onMouseLeave={()=> setShowTooltip3(false)}
+                    onTouchStart={()=> setShowTooltip3((prev) => !prev)}
                     src="/img/icon-info.svg"
                     className="w-[0.875rem] h-[0.875rem] opacity-40"
                   />
@@ -677,32 +696,32 @@ export default function Dashboard() {
           </CardBox>
         </div>
 
-        <div className="w-full" style={{ maxWidth: "calc(100% - 30rem)" }}>
-          <div className="flex gap-[1.5rem]">
-            <CardBox className="flex justify-around  py-[3rem] w-1/2">
-              <div>
-                <p className="text-[1.5rem] leading-[2rem] text-center">
+        <div className="md:w-full maxWid">
+          <div className="md:flex md:gap-[1.5rem]">
+            <CardBox className="md:flex md:justify-around  md:py-[3rem] md:px-0 md:w-1/2 md:my-0 my-[1rem] p-3">
+              <div className="mb-3  md:mb-0">
+                <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
                   {formatNumberWithUnit(totalTvl, "$")}
                 </p>
-                <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]">
+                <p className="mt-[1rem] text-[1rem] leading-[rem] md:text-center text-left text-[#7E7E7E]">
                   Nova Network TVL
                 </p>
               </div>
               <div>
-                <p className="text-[1.5rem] leading-[2rem] text-center">
+                <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
                   {formatNumberWithUnit(groupTvl, "ETH")}
                 </p>
-                <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]">
+                <p className="mt-[1rem] text-[1rem] leading-[rem] md:text-center text-left text-[#7E7E7E]">
                   Group TVL
                 </p>
               </div>
             </CardBox>
-            <CardBox className="flex justify-around py-[3rem] w-1/2">
-              <div>
-                <p className="text-[1.5rem] leading-[2rem] text-center">
+            <CardBox className="md:flex md:justify-around md:py-[3rem] md:px-0 md:w-1/2 md:my-0 my-[1rem] p-3">
+              <div className="mb-3  md:mb-0">
+                <p className="text-[1.5rem] leading-[2rem]  md:text-center text-left">
                   {formatNumberWithUnit(referralTvl, "ETH")}
                 </p>
-                <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E]">
+                <p className="mt-[1rem] text-[1rem] leading-[rem]  md:text-center text-left text-[#7E7E7E]">
                   Referral TVL
                 </p>
               </div>
@@ -728,6 +747,7 @@ export default function Dashboard() {
                   Your Invite Code (Remaining {invite?.canInviteNumber || 0})
                   <Tooltip
                     className="p-[1rem]"
+                    isOpen={showTooltip4}
                     content={
                       <p className="text-[1rem] max-w-[25rem]">
                         In the later phase, we might consider raising the spots
@@ -738,6 +758,9 @@ export default function Dashboard() {
                     }
                   >
                     <img
+                    onMouseEnter={()=> setShowTooltip4(true)}
+                    onMouseLeave={()=> setShowTooltip4(false)}
+                    onTouchStart={()=> setShowTooltip4((prev) => !prev)}
                       src="/img/icon-info.svg"
                       className="w-[0.875rem] h-[0.875rem] opacity-40"
                     />
@@ -749,11 +772,12 @@ export default function Dashboard() {
 
           {/* Group Milestone */}
           <div className="mt-[2rem]">
-            <div className="flex justify-between items-center leading-[2rem] font-[700]">
+            <div className="md:flex md:justify-between items-center leading-[2rem] font-[700]">
               <div className="flex items-center gap-[0.37rem]">
                 <span className="text-[1.5rem]">Group Milestone</span>
                 <Tooltip
                   className="px-[1rem] py-[1rem]"
+                  isOpen={showTooltip5}
                   content={
                     <p className="text-[1rem]">
                       You will get a higher group booster if your group unlocks
@@ -769,6 +793,9 @@ export default function Dashboard() {
                   }
                 >
                   <img
+                    onMouseEnter={()=> setShowTooltip5(true)}
+                    onMouseLeave={()=> setShowTooltip5(false)}
+                    onTouchStart={()=> setShowTooltip5((prev) => !prev)}
                     src="/img/icon-info.svg"
                     className="w-[0.875rem] h-[0.875rem]"
                   />
@@ -788,8 +815,8 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <CardBox className="mt-[2rem] py-[1.5rem] pl-[1.5rem] pr-[3rem]">
-              <ProgressBar className="progress-bar flex w-full">
+            <CardBox className="mt-[2rem] py-[1.5rem] pl-[1.5rem] pr-[3rem] overflow-x-auto">
+              <ProgressBar className="progress-bar flex w-[40rem] md:w-full">
                 <div className="title">Target/Boost</div>
 
                 {progressList.map((item, index) => (
@@ -818,22 +845,22 @@ export default function Dashboard() {
 
           <div className="mt-[2rem]">
             {/* Tabs btn: Assets | Trademark NFTs | Referral  */}
-            <TabsBox className="flex items-center gap-[1.5rem]">
+            <TabsBox className="flex items-center gap-[1.5rem] overflow-x-auto">
               <span
-                className={`tab-item ${tabsActive === 0 ? "active" : ""}`}
+                className={`tab-item whitespace-nowrap ${tabsActive === 0 ? "active" : ""}`}
                 onClick={() => setTabsActive(0)}
               >
                 Assets
               </span>
               <span
-                className={`tab-item ${tabsActive === 1 ? "active" : ""}`}
+                className={`tab-item whitespace-nowrap ${tabsActive === 1 ? "active" : ""}`}
                 onClick={() => setTabsActive(1)}
               >
                 Trademark NFTs
               </span>
 
               <div
-                className={`tab-item relative flex items-center gap-[0.5rem] ${
+                className={`tab-item whitespace-nowrap relative flex items-center gap-[0.5rem] ${
                   tabsActive === 2 ? "active" : ""
                 }`}
                 onClick={() => setTabsActive(2)}
@@ -889,7 +916,7 @@ export default function Dashboard() {
         isOpen={bridgeModal.isOpen}
         onOpenChange={bridgeModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem]">
+        <ModalContent className="mt-[2rem] mb-[5.75rem]">
           {(onClose) => (
             <>
               <ModalHeader>Bridge</ModalHeader>
@@ -906,7 +933,7 @@ export default function Dashboard() {
         isOpen={mintModal.isOpen}
         onOpenChange={mintModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem] py-5 px-6">
+        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Select and mint your favorite SBT
           </ModalHeader>
@@ -923,7 +950,7 @@ export default function Dashboard() {
                 <img
                   src={`/img/img-${item}.png`}
                   alt=""
-                  className="w-[192px] h-[192px]"
+                  className="w-[192px] md:h-[192px]"
                 />
               </div>
             ))}

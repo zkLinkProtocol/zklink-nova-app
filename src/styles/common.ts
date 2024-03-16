@@ -31,6 +31,14 @@ export const BgBox = styled.div`
     rgba(12, 14, 17, 0.23) 100%
   );
   overflow: auto;
+  .maxWid{
+    max-width: calc(100% - 30rem)
+  }
+  @media (max-width: 768px) {
+    .maxWid{
+      max-width: 100%
+    }
+  }
 `;
 
 export const BgCoverImg = styled.div`
@@ -56,6 +64,16 @@ export const CardBox = styled.div`
   }
   &.bg {
     background-image: url('/img/bg-nova-points.png');
+  }
+  .maxWid{
+    max-width: calc(100% - 14rem);
+    overflow: auto;
+  }
+  @media (max-width: 768px) {
+    .maxWid{
+      max-width: none;
+      overflow: visible;
+    }
   }
 `;
 

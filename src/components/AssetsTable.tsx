@@ -412,7 +412,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
   return (
     <>
       <CardBox className="mt-[2rem] p-[0.38rem] flex justify-between items-center w-full overflow-auto">
-        <div style={{ maxWidth: "calc(100% - 14rem)", overflow: "auto" }}>
+        <div className="maxWid">
           <TabsBar className="flex items-center gap-[0.5rem]">
             {assetTabList.map((item, index) => (
               <span
@@ -439,7 +439,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         </div>
       </CardBox>
 
-      <TableBox>
+      <TableBox className="overflow-auto md:overflow-visible">
         <Table
           removeWrapper
           className="table mt-[1.5rem] min-h-[30rem]"
