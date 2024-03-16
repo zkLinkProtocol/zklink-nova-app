@@ -6,7 +6,7 @@ import styled from "styled-components";
 const TvlBox = styled.div`
   .tvl-num-item {
     // padding: 0 0.5rem;
-    line-height: 3.875rem;
+    // line-height: 3.875rem;
     border-radius: 1rem;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15.800000190734863px);
@@ -63,7 +63,7 @@ export default function TotalTvlCard() {
       {tvlArr.map((item, index) => (
         <span
           key={index}
-          className={`tvl-num-item w-[1.5rem] h-[1.5rem] md:w-[2.8rem] md:h-[3.875rem] text-[28px] md:text-[48px] ${
+          className={`tvl-num-item w-[1.625rem] h-[2rem] leading-[2rem] md:w-[2.8rem] md:h-[3.875rem] md:leading-[3.875rem] text-[1.5rem] md:text-[48px] ${
             item === "," ? "comma" : ""
           }`}
         >
