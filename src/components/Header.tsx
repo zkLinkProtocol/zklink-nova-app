@@ -10,7 +10,7 @@ import {
   Avatar,
   Tooltip,
 } from "@nextui-org/react";
-import { Link, NavLink, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import styled from "styled-components";
@@ -31,6 +31,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import { getInvite } from "@/api";
+import { FaBars, FaTimes } from "react-icons/fa";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 const NavNet = styled.div`
@@ -89,7 +90,7 @@ const LogoBox = styled.div`
 `;
 
 const ButtonText = styled.span`
-  color: #03d498;
+  // color: #03d498;
   font-family: Heebo;
   font-size: 1rem;
   font-style: normal;
@@ -218,12 +219,15 @@ export default function Header() {
     console.log("isActiveUser", isActiveUser);
   }, [invite]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <>
       <Navbar
         // shouldHideOnScroll
-        className={`bg-navBackground md: md:px-[1.5rem] py-[0.75rem] fixed pt-0`}
+        className={`bg-navBackground md:bg-transparent md:px-[1.5rem] py-[0.75rem] fixed pt-0 ${
+          isMenuOpen ? "bg-mobile" : ""
+        }`}
         style={{
           // position: isHeaderTop ? 'fixed' : 'sticky',
           background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
@@ -234,12 +238,6 @@ export default function Header() {
         onMenuOpenChange={setIsMenuOpen}
       >
         <NavbarContent>
-          {/* mobile toggle button */}
-          <NavbarMenuToggle
-            className="mr-2 md:hidden md:mr-6"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          />
-
           {/* <Logo /> */}
 
           <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
@@ -250,7 +248,7 @@ export default function Header() {
               }}
             >
               <img
-                className="max-w-[120px] md:max-w-[145.431px] h-auto"
+                className="max-w-[150px] md:max-w-[145.431px] h-auto"
                 src="/img/NOVA.svg"
               />
               {/* <span className='logo-text'>zk.Link</span> */}
@@ -259,7 +257,7 @@ export default function Header() {
           <NavNet className="hidden md:flex">
             <div>Mainnet Live</div>
           </NavNet>
-          {/* <NavBox className="ml-[3.5rem]"> */}
+          {/* <NavBox> */}
           <NavbarContent
             className="hidden md:flex gap-[2.5rem]"
             justify="center"
@@ -397,12 +395,28 @@ export default function Header() {
               </Button>
             )}
             <Button
-              className="bg-[#1D4138] text-[#03D498] px-4 flex justify-center items-center gap-[0.75rem]"
+              className="btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
               disableAnimation
               onClick={() => web3Modal.open()}
             >
-              <img width={20} height={20} src="/img/icon-wallet.svg" />
-              <ButtonText>
+              <img
+                className="hidden md:block"
+                width={20}
+                height={20}
+                src="/img/icon-wallet.svg"
+              />
+              <img
+                className="md:hidden"
+                width={22}
+                height={22}
+                src="/img/icon-wallet-white.svg"
+              />
+
+              <ButtonText
+                className={`text-white md:text-[#03d498] ${
+                  isConnected ? "ml-2 md:ml-0" : ""
+                }`}
+              >
                 {isConnected ? (
                   showAccount(address)
                 ) : (
@@ -412,17 +426,24 @@ export default function Header() {
             </Button>
           </NavbarItem>
         </NavbarContent>
+        {/* mobile toggle button */}
+        <NavbarMenuToggle
+          className="ml-2 md:hidden text-[1.25rem]"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          icon={isMenuOpen ? <FaTimes /> : <FaBars />}
+        />
         <NavbarMenu
-          className={`md:px-[1.5rem] py-[0.75rem] fixed pt-4`}
+          className={`navbar-menu md:px-[1.5rem] py-[0.75rem] fixed pt-4 gap-4`}
           style={{
-            background: "rgba(0, 0, 0, 0.08)",
-            backdropFilter: "blur(15.800000190734863px)",
+          backgroundColor: "rgba(0,0,0,0.9)",
           }}
           onClick={() => {
             setIsMenuOpen(false);
           }}
         >
-          <NavbarMenuItem>
+          <NavbarMenuItem
+            isActive={location.pathname === "/aggregation-parade"}
+          >
             <NavLink to="/aggregation-parade" className="nav-link">
               Aggregation Parade
             </NavLink>
@@ -440,13 +461,13 @@ export default function Header() {
                   </Tooltip>
                 )}
               </NavbarMenuItem> */}
-          <NavbarMenuItem>
+          <NavbarMenuItem isActive={location.pathname === "/leaderboard"}>
             <NavLink to="/leaderboard">Leaderboard</NavLink>
           </NavbarMenuItem>
-          <NavbarMenuItem>
+          <NavbarMenuItem isActive={location.pathname === "/about"}>
             <NavLink to="/about">About</NavLink>
           </NavbarMenuItem>
-          <NavbarMenuItem>
+          <NavbarMenuItem isActive={location.pathname === "/bridge"}>
             <NavLink to="/bridge">Bridge</NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem>

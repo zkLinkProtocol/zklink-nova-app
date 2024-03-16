@@ -164,6 +164,9 @@ export default function Bridge() {
   return (
     <BgBox>
       <div className="block lg:flex md:py-24 pb-24 pt-6">
+        <div className="md:hidden mx-6 mb-16">
+          <BridgeComponent />
+        </div>
         <div className="px-6 pb-6 md:px-16 lg:px-32 lg:w-1/2">
           <h2 className="text-[32px] md:text-4xl mt-0 font-black leading-10">
             Bridge To zkLink Nova To Earn Extra Yield & Token Rewards
@@ -185,9 +188,11 @@ export default function Bridge() {
           {activeType === "nft" ? <NovaNFT /> : <NovaPoints />}
         </div>
         <div className="relative px-6 md:px-16 lg:px-32 lg:w-1/2">
-          <BridgeComponent />
+          <div className="hidden md:block">
+            <BridgeComponent />
+          </div>
 
-          <div className="md:absolute left-0 bottom-0 flex flex-col items-end w-full px-8 md:px-16 lg:px-32">
+          <div className="md:absolute left-0 bottom-0 flex flex-col md:items-end w-full px-8 md:px-16 lg:px-32">
             <FooterTvlText className="mt-4 md:mt-0 mb-[0.5rem] text-right">
               TVL
             </FooterTvlText>

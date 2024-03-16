@@ -11,6 +11,12 @@ export default {
     extend: {
       colors: {
         navBackground: "rgba(0, 0, 0, 0.08)",
+        primary: {
+          100: "#48ECAE",
+          400: "#3E52FC",
+          700: "#49CED7",
+        },
+        inputColor: "#313841",
       },
     },
   },
