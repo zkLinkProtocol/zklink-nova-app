@@ -212,7 +212,6 @@ export default function Header() {
   }, [invite, isConnected, address]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
 
   return (
     <>
