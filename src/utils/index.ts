@@ -306,3 +306,8 @@ export const getProviderWithRpcUrl = (rpcUrl: string) => {
   }
   return provider;
 };
+
+export const getTweetShareText = (inviteCode: string) => {
+  const text = `Join @zkLinkNova's 🎉Aggregation Parade🎉 the celebration to unlock "MEGA YIELD" for 🎯ETH, L2 Native token, Stables, LSTs and LRTs🎯%0A%0AUse my referral code https://app.zklink.io/aggregation-parade?inviteCode=${inviteCode} to join the @zkLink_Official's biggest campaign%0A%0A%23zkLinkNovaAggParade %23zkLink %23ZKL %23AggregatedL3`;
+  return text;
+};

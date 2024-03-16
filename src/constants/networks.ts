@@ -19,6 +19,33 @@ import {
 } from "@wagmi/core/chains";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
+import { defineChain } from "viem";
+
+const sourceId = 1; // mainnet
+
+export const blast = /*#__PURE__*/ defineChain({
+  id: 81457,
+  name: "Blast",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["https://rpc.blast.io"] },
+  },
+  blockExplorers: {
+    default: { name: "Blastscan", url: "https://blastscan.io" },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      blockCreated: 212929,
+    },
+  },
+  sourceId,
+});
+
 export const l1Networks = {
   mainnet: {
     ...mainnet,
@@ -82,6 +109,10 @@ export const l1Networks = {
   manta: {
     ...manta,
     name: "Manta Mainnet",
+  },
+  blast: {
+    ...blast,
+    name: "Blast Mainnet",
   },
 } as const;
 export type L1Network = Chain;
@@ -204,6 +235,22 @@ export const nexusNode: ZkSyncNetwork[] = [
     isEthGasToken: true,
     l1Network: l1Networks.manta,
   },
+  {
+    id: 810180,
+    key: "blast",
+    name: "zkLink Nova",
+    rpcUrl: "https://rpc.zklink.io",
+    logoUrl: "/img/blast.svg",
+    blockExplorerUrl: "https://explorer.zklink.io",
+    blockExplorerApi: "https://explorer-api.zklink.io",
+    withdrawalFinalizerApi: "https://withdrawal-api.zklink.io",
+    mainContract: "0x29BA92Fe724beD5c5EBfd0099F2F64a6DC5078FD",
+    erc20BridgeL1: "0x8Df0c2bA3916bF4789c50dEc5A79b2fc719F500b",
+    erc20BridgeL2: "0x17887788E01A1192a26F636Cfcfc033c7Bb42348",
+    l1Gateway: "0x41FaF46Ca4Dfd912B65B66D29BdD432782BB1158",
+    isEthGasToken: true,
+    l1Network: l1Networks.blast,
+  },
 ];
 
 export const nexusGoerliNode: ZkSyncNetwork[] = [
@@ -300,6 +347,7 @@ export const wagmiConfig = defaultWagmiConfig({
           manta,
           mantle,
           createEraChain(nexusNode[0]),
+          blast,
         ],
   projectId,
   metadata: {

@@ -54,6 +54,9 @@ export const CardBox = styled.div`
   &.successed {
     background: #1d4138 !important;
   }
+  &.bg {
+    background-image: url('/img/bg-nova-points.png');
+  }
 `;
 
 export const TableBox = styled.div`
@@ -81,7 +84,7 @@ export const TableBox = styled.div`
 
   .table-tbody {
     tr:first-child td {
-      padding: 1.5rem 0 0.75rem;
+      padding: 1.5rem 0 1.5rem;
     }
     tr:last-child td {
       padding: 0.75rem 0 1.5rem;

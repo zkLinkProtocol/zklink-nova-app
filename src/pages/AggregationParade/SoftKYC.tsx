@@ -15,6 +15,7 @@ import {
   setIsCheckedInviteCode,
   setSignature,
   setSignatureAddress,
+  setTwitter,
 } from "@/store/modules/airdrop";
 import { CardBox, FooterTvlText } from "@/styles/common";
 import {
@@ -60,6 +61,7 @@ import { IS_MAINNET } from "@/constants";
 const verifyFromList = [...fromList];
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
+const env = import.meta.env.VITE_ENV;
 
 const BgBox = styled.div`
   position: relative;
@@ -274,7 +276,7 @@ export default function SoftKYC() {
       // setIsInviteCodeLoading(false);
       dispatch(setIsCheckedInviteCode(true));
     } catch (error) {
-      console.log(error);
+      console.error(error);
       // setIsInviteCodeLoading(false);
       dispatch(setIsCheckedInviteCode(false));
     } finally {
@@ -284,16 +286,19 @@ export default function SoftKYC() {
 
   const getTwitterClientId = () => {
     let clientId = "";
-    if (clientIds.length > 1) {
-      const index = getRandomNumber(0, clientIds.length - 1);
-      clientId = clientIds[index];
+
+    if (env === "production") {
+      const clientIds = twitterClientId.split(",");
+      const widgetClientIds = new Array(37).fill(clientIds[0]);
+      const randomClientIds = clientIds.concat(widgetClientIds);
+      const index = getRandomNumber(0, randomClientIds.length - 1);
+      clientId = randomClientIds[index];
     } else {
-      clientId = clientIds[0];
+      clientId = twitterClientId;
     }
+
     return clientId;
   };
-
-  const clientIds = twitterClientId.split(",");
 
   const handleConnectTwitter = () => {
     setTwitterLoading(true);
@@ -328,25 +333,21 @@ export default function SoftKYC() {
         message: SIGN_MESSAGE,
       },
       {
-        onSuccess(data, variables, context) {
-          console.log(data, variables, context);
-          console.log("signature", data);
+        onSuccess(data, _variables, _context) {
           dispatch(setSignature(data));
           dispatch(setSignatureAddress(address));
           setSignLoading(false);
           setIsHandleSign(false);
         },
         onError(error, variables, context) {
-          console.log(error, variables, context);
+          console.error(error, variables, context);
           setSignLoading(false);
-
           toast.error("User reject signature. Try again.");
         },
       }
     );
   };
   useEffect(() => {
-    console.log("is Handle Sign", isConnected, isHandleSign);
     if (isConnected && isHandleSign) {
       handleConnectAndSign();
     }
@@ -372,17 +373,13 @@ export default function SoftKYC() {
             setDepositStatus("");
           }
         } catch (e) {
-          console.log(e);
+          console.error(e);
         } finally {
           setAccessRpcLoading(false);
         }
       }
     })();
   }, [depositTxHash]);
-
-  useEffect(() => {
-    console.log("signLoading", signLoading);
-  }, [signLoading]);
 
   const toastTwitterError = (text?: string) => {
     toast.error(text || "Could not connect to Twitter. Try again.");
@@ -402,8 +399,6 @@ export default function SoftKYC() {
       code_verifier: "challenge",
     })
       .then((res) => {
-        console.log(res);
-
         if (res?.error) {
           toastTwitterError();
           return;
@@ -411,7 +406,6 @@ export default function SoftKYC() {
 
         const { access_token } = res;
 
-        console.log(access_token);
         if (access_token && access_token !== "") {
           fetch("/twitter/2/users/me", {
             method: "GET",
@@ -422,12 +416,9 @@ export default function SoftKYC() {
           })
             .then(async (res: any) => {
               let { data } = await res.json();
-              console.log(data);
-              console.log(data.username);
-              // dispatch(setTwitter(data));
-
               if (data?.username) {
                 setTwitterLoading(false);
+                dispatch(setTwitter(data));
                 setTwitterAccessToken(access_token);
               } else {
                 toastTwitterError();
@@ -450,26 +441,25 @@ export default function SoftKYC() {
               //   }
               // }
             })
-            .catch(() => {
+            .catch((e) => {
+              console.error(e);
               toastTwitterError();
             });
         }
       })
       .catch((error) => {
-        console.log(error);
-        toastTwitterError;
+        console.error(error);
+        toastTwitterError();
       });
   };
 
   /**
-   * TODO: Verify deposit hash
+   *  Verify deposit hash
    */
-
   const [verifyDepositError, setVerifyDepositError] = useState("");
   const verifyDepositHash = async () => {
     setDepositStatus("");
     setIsReVerifyDeposit(true);
-    console.log(selectedChainId, depositTxHash);
     try {
       const res = await getTxByTxHash({
         txHash: depositTxHash,
@@ -477,7 +467,6 @@ export default function SoftKYC() {
         address,
       });
       // TODO: response will return a field (as status: "PENDING") to show process ...
-      console.log("verifyDepositHash", res);
       if (res?.isValid) {
         setDepositStatus(VerifyResult.SUCCESS);
         dispatch(setDepositTx(depositTxHash));
@@ -487,9 +476,8 @@ export default function SoftKYC() {
         setDepositStatus(VerifyResult.FAILED);
       }
     } catch (e: any) {
-      console.log(e);
+      console.error(e);
       if (e?.message) {
-        // toast.error(e.message)
         setVerifyDepositError(e.message);
       }
       setDepositStatus(VerifyResult.FAILED);
@@ -503,7 +491,6 @@ export default function SoftKYC() {
     try {
       setIsLoading(true);
       const res = await getInvite(address);
-      console.log("getInviteFunc", res);
       if (res?.result) {
         setTimeout(() => {
           setIsLoading(false);
@@ -511,13 +498,13 @@ export default function SoftKYC() {
         }, 1000);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setIsLoading(false);
       handleSubmitError();
     }
   };
 
-  // TODO: Submit user bind form
+  // Submit user bind form
   const handleSubmitError = (message?: string) => {
     toast.error(
       message
@@ -529,9 +516,8 @@ export default function SoftKYC() {
     dispatch(setDepositTx(""));
     setTwitterAccessToken("");
     dispatch(setSignature(""));
-
-    // dispatch(setInvite(null));
   };
+
   const handleSubmit = async () => {
     if (!address || !submitStatus) return;
     setIsLoading(true);
@@ -554,8 +540,6 @@ export default function SoftKYC() {
         txHash: depositTx,
       });
 
-      console.log("handleSubmit", res);
-
       if (+res?.status === 0) {
         getInviteFunc();
       } else {
@@ -564,7 +548,7 @@ export default function SoftKYC() {
     } catch (error: any) {
       // TODO: error type
       handleSubmitError(error?.message);
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -580,7 +564,6 @@ export default function SoftKYC() {
       setSearchParams("");
       const txs = txhashes[address];
 
-      console.log("txhashes", txhashes[address]);
       if (txs?.length > 0) {
         const { txhash, rpcUrl } = txs[0];
         const chainId = verifyFromList.find(
@@ -602,10 +585,6 @@ export default function SoftKYC() {
       setSearchParams("");
     }
   }, [searchParams]);
-
-  // const checkInviteCode = async (code: string) => {
-
-  // };
 
   useEffect(() => {
     if (validInviteCode(inviteCode)) {

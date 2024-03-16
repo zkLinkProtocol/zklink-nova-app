@@ -19,6 +19,7 @@ import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About";
 import { useDispatch } from "react-redux";
 import { setInviteCode } from "./store/modules/airdrop";
+import Maintenance from "./components/Maintenance";
 
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
@@ -48,6 +49,15 @@ export default function App() {
               </Suspense>
             }
           />
+          <Route
+            path="/invite/:code"
+            element={
+              <Suspense fallback="">
+                <Home />
+              </Suspense>
+            }
+          ></Route>
+
           <Route
             path="/aggregation-parade"
             element={
