@@ -4,7 +4,7 @@ import axios from "axios";
 // import toast from "react-hot-toast";
 
 const http = axios.create({
-  baseURL: "",
+  baseURL: "https://test3-api.app.zklink.io",
 });
 // http.defaults.transformRequest = data => {
 //     // if (_.isPlainObject(data)) data = qs.stringify(data);
