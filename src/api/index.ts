@@ -1,4 +1,5 @@
 import http from "@/utils/http";
+import qs from "qs";
 
 type Response = {
   status: string;
@@ -194,7 +195,7 @@ export type RegisterAccountParams = {
   address: string;
   code?: string | null;
   siganture: string;
-  accessToken: string;
+  accessToken?: string | null;
   chainId: string | number;
   txHash: string;
 };
@@ -211,4 +212,39 @@ export const registerAccount = (
   });
 };
 
-export const getTwitterAccessToken = () => {};
+export type AccessTokenParams = {
+  code: string;
+  grant_type: string;
+  client_id: string;
+  redirect_uri: string;
+  code_verifier: string;
+};
+export type AccessTokenResponse = {
+  token_type: string;
+  expires_in: number;
+  access_token: string;
+  scope: string;
+};
+export const getTwitterAccessToken = (
+  params: AccessTokenParams
+): Promise<AccessTokenResponse> =>
+  http.post("/twitter/2/oauth2/token", qs.stringify({ ...params }), {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
+
+export type TwitterUserResponse = {
+  data: {
+    id: string;
+    name: string;
+    username: string;
+  };
+};
+export const getTwitterUser = (
+  accessToken: string
+): Promise<TwitterUserResponse> =>
+  http.get("/twitter/2/users/me", {
+    headers: {
+      // "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });

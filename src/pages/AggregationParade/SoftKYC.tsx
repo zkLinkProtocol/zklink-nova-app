@@ -1,6 +1,7 @@
 import {
   checkInviteCode,
   getInvite,
+  getTwitterAccessToken,
   getTxByTxHash,
   registerAccount,
 } from "@/api";
@@ -15,15 +16,9 @@ import {
   setIsCheckedInviteCode,
   setSignature,
   setSignatureAddress,
-  setTwitter,
 } from "@/store/modules/airdrop";
 import { CardBox, FooterTvlText } from "@/styles/common";
-import {
-  getProviderWithRpcUrl,
-  getRandomNumber,
-  postData,
-  showAccount,
-} from "@/utils";
+import { getProviderWithRpcUrl, getRandomNumber, showAccount } from "@/utils";
 import {
   Avatar,
   Button,
@@ -39,7 +34,7 @@ import {
 } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import qs from "qs";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -52,6 +47,7 @@ import fromList, {
 import Loading from "@/components/Loading";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { IS_MAINNET } from "@/constants";
+import Toast from "@/components/Toast";
 
 // const verifyFromList = [
 //   ...fromList,
@@ -62,7 +58,9 @@ const verifyFromList = [...fromList];
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 const env = import.meta.env.VITE_ENV;
-const isTwitterAccessValid = import.meta.env.VITE_IS_TWITTER_ACCESS_VALID;
+const isValidTwitterAccess = Boolean(
+  +import.meta.env.VITE_IS_VALID_TWITTER_ACCESS
+);
 
 const BgBox = styled.div`
   position: relative;
@@ -171,6 +169,7 @@ export default function SoftKYC() {
 
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
+  const [twitterAuthCode, setTwitterAuthCode] = useState("");
   const [twitterAccessToken, setTwitterAccessToken] = useState("");
   const [twitterLoading, setTwitterLoading] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<string>(
@@ -232,7 +231,7 @@ export default function SoftKYC() {
 
     if (env === "production") {
       const clientIds = twitterClientId.split(",");
-      const widgetClientIds = new Array(37).fill(clientIds[0]);
+      const widgetClientIds = new Array(98).fill(clientIds[0]);
       const randomClientIds = clientIds.concat(widgetClientIds);
       const index = getRandomNumber(0, randomClientIds.length - 1);
       clientId = randomClientIds[index];
@@ -252,7 +251,8 @@ export default function SoftKYC() {
       redirect_uri: twitterCallbackURL,
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
-      scope: "tweet.read%20tweet.write%20users.read%20follows.read%20follows.write",
+      scope:
+        "tweet.read%20tweet.write%20users.read%20follows.read%20follows.write",
       state: "state",
       code_challenge: "challenge",
       code_challenge_method: "plain",
@@ -262,6 +262,64 @@ export default function SoftKYC() {
 
     window.location.href = url.href;
   };
+
+  const toastTwitterError = (text?: string) => {
+    console.error("Could not connect to Twitter. Try again.");
+    toast.error(text || "Could not connect to Twitter. Try again.", {
+      duration: 3000,
+    });
+    setTwitterLoading(false);
+  };
+
+  const getTwitterUserFunc = async (code: string) => {
+    setTwitterLoading(true);
+
+    const clientId = getTwitterClientId();
+    const params = {
+      code,
+      grant_type: "authorization_code",
+      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      // redirect_uri: "http://localhost:3000/aggregation-parade",
+      client_id: clientId,
+      redirect_uri: twitterCallbackURL,
+      code_verifier: "challenge",
+    };
+    try {
+      const { access_token } = await getTwitterAccessToken(params);
+      console.log(!access_token, isValidTwitterAccess);
+
+      if (access_token) {
+        setTwitterAccessToken(access_token);
+        /**
+         * Get twitter user info (if use)
+         * // const { data } = await getTwitterUser(access_token);
+         */
+        return;
+      }
+
+      if (isValidTwitterAccess && !access_token) {
+        toastTwitterError();
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (isValidTwitterAccess) {
+        toastTwitterError();
+      }
+    } finally {
+      setTwitterAuthCode(code);
+      setTwitterLoading(false);
+    }
+  };
+
+  const [isCheckedTwitter, setIsCheckedTwitter] = useState(false);
+
+  useEffect(() => {
+    setIsCheckedTwitter(
+      isValidTwitterAccess
+        ? Boolean(twitterAccessToken)
+        : Boolean(twitterAuthCode)
+    );
+  }, [isValidTwitterAccess, twitterAuthCode, twitterAccessToken]);
 
   const handleConnectAndSign = async () => {
     if (!isConnected || !address) {
@@ -290,6 +348,7 @@ export default function SoftKYC() {
       }
     );
   };
+
   useEffect(() => {
     if (isConnected && isHandleSign) {
       handleConnectAndSign();
@@ -323,82 +382,6 @@ export default function SoftKYC() {
       }
     })();
   }, [depositTxHash]);
-
-  const toastTwitterError = (text?: string) => {
-    toast.error(text || "Could not connect to Twitter. Try again.");
-    setTwitterLoading(false);
-  };
-
-  const getTwitterAPI = async (code: string) => {
-    const clientId = getTwitterClientId();
-    setTwitterLoading(true);
-    postData("/twitter/2/oauth2/token", {
-      code,
-      grant_type: "authorization_code",
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
-      code_verifier: "challenge",
-    })
-      .then((res) => {
-        if (res?.error) {
-          toastTwitterError();
-          return;
-        }
-
-        const { access_token } = res;
-
-        if (access_token && access_token !== "") {
-          fetch("/twitter/2/users/me", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${access_token}`,
-            },
-          })
-            .then(async (res: any) => {
-              let { data } = await res.json();
-              if (data?.username) {
-                setTwitterLoading(false);
-                dispatch(setTwitter(data));
-                setTwitterAccessToken(access_token);
-              } else {
-                if (isTwitterAccessValid) {
-                  toastTwitterError();
-                }
-              }
-
-              // TODO: valid twitter ?
-              // if (data?.username) {
-              //   console.log(data?.username);
-              //   const res = await validTwitter(data?.username, address);
-
-              //   if (res.result) {
-              //     setTwitterLoading(false);
-              //     setTwitterAccessToken(access_token);
-              //     console.log("twitter account", access_token);
-              //     // setSearchParams("");
-              //   } else {
-              //     toastTwitterError(
-              //       "Sorry, this Twitter account has already been bound."
-              //     );
-              //   }
-              // }
-            })
-            .catch((e) => {
-              console.error(e);
-              toastTwitterError();
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        if (isTwitterAccessValid) {
-          toastTwitterError();
-        }
-      });
-  };
 
   /**
    *  Verify deposit hash
@@ -482,7 +465,7 @@ export default function SoftKYC() {
         address: address,
         code: inviteCodeValue,
         siganture: signature,
-        accessToken: twitterAccessToken,
+        accessToken: twitterAccessToken || null,
         chainId: depositChainId,
         txHash: depositTx,
       });
@@ -523,13 +506,13 @@ export default function SoftKYC() {
     }
 
     if (error) {
-      toast.error("Could not connect to Twitter. Try again.");
+      toastTwitterError(error);
       setSearchParams("");
       return;
     }
 
     if (code) {
-      getTwitterAPI(code);
+      getTwitterUserFunc(code);
       setSearchParams("");
     }
   }, [searchParams]);
@@ -543,14 +526,14 @@ export default function SoftKYC() {
   useEffect(() => {
     if (
       validInviteCode(inviteCodeValue) &&
-      twitterAccessToken &&
+      isCheckedTwitter &&
       depositTx &&
       isConnected &&
       signature
     ) {
       setSubmitStatus(true);
     }
-  }, [inviteCodeValue, twitterAccessToken, depositTx, isConnected, signature]);
+  }, [inviteCodeValue, isCheckedTwitter, depositTx, isConnected, signature]);
 
   useEffect(() => {
     if (!inviteCodeValue || inviteCodeValue?.length !== 6) {
@@ -560,6 +543,7 @@ export default function SoftKYC() {
 
   return (
     <BgBox>
+      <Toast />
       {isLoading && <Loading />}
       <div>
         {/* Title */}
@@ -709,12 +693,12 @@ export default function SoftKYC() {
 
           {/* Step 4: connect twitter */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox className={`${twitterAccessToken ? "successed" : ""}`}>
+            <CardBox className={`${isCheckedTwitter ? "successed" : ""}`}>
               <StepNum>04</StepNum>
             </CardBox>
             <CardBox
               className={`flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                twitterAccessToken ? "successed" : ""
+                isCheckedTwitter ? "successed" : ""
               }`}
             >
               <StepItem>
@@ -724,7 +708,7 @@ export default function SoftKYC() {
                 </p>
               </StepItem>
               <div>
-                {twitterAccessToken ? (
+                {isCheckedTwitter ? (
                   <img
                     src="/img/icon-right.svg"
                     className="w-[1.5rem] h-[1.5rem]"
