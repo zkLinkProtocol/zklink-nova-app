@@ -252,7 +252,7 @@ export default function SoftKYC() {
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
       scope:
-        "tweet.read%20tweet.write%20users.read%20follows.read%20follows.write",
+        "tweet.read%20tweet.write%20like.write%20users.read%20follows.read%20follows.write",
       state: "state",
       code_challenge: "challenge",
       code_challenge_method: "plain",
@@ -506,7 +506,7 @@ export default function SoftKYC() {
     }
 
     if (error) {
-      toastTwitterError(error);
+      toastTwitterError();
       setSearchParams("");
       return;
     }
