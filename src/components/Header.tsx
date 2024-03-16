@@ -392,7 +392,7 @@ export default function Header() {
               </Button>
             )}
             <Button
-              className="btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
+              className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
               disableAnimation
               onClick={() => web3Modal.open()}
             >
