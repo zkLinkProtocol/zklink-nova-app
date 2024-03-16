@@ -31,12 +31,12 @@ export const BgBox = styled.div`
     rgba(12, 14, 17, 0.23) 100%
   );
   overflow: auto;
-  .maxWid{
-    max-width: calc(100% - 30rem)
+  .maxWid {
+    max-width: calc(100% - 30rem);
   }
   @media (max-width: 768px) {
-    .maxWid{
-      max-width: 100%
+    .maxWid {
+      max-width: 100%;
     }
   }
 `;
@@ -63,14 +63,14 @@ export const CardBox = styled.div`
     background: #1d4138 !important;
   }
   &.bg {
-    background-image: url('/img/bg-nova-points.png');
+    background-image: url("/img/bg-nova-points.png");
   }
-  .maxWid{
+  .maxWid {
     max-width: calc(100% - 14rem);
     overflow: auto;
   }
   @media (max-width: 768px) {
-    .maxWid{
+    .maxWid {
       max-width: none;
       overflow: visible;
     }
@@ -141,7 +141,7 @@ export const TableBoxs = styled.div`
 
   .table-tbody {
     tr:first-child td {
-      padding: 1.5rem 0 0.75rem;
+      padding: 1.5rem 0 1.5rem;
     }
     tr:last-child td {
       padding: 0.75rem 0 1.5rem;
@@ -198,5 +198,3 @@ export const GradientBorder = styled.div`
     background: linear-gradient(90deg, #48ecae 0%, #3a50ed 52.9%, #49cdd7 100%);
   }
 `;
-
-
