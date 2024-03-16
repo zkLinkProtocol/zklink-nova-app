@@ -1014,7 +1014,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         onOpenChange={fromModal.onOpenChange}
         scrollBehavior="inside"
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           <ModalHeader className="flex flex-col gap-1 text-[1.25rem] md:text-3xl">
             From
           </ModalHeader>
@@ -1044,7 +1044,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         isOpen={tokenModal.isOpen}
         onOpenChange={tokenModal.onOpenChange}
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           <ModalHeader className="flex flex-col gap-1 text-[1.25rem] md:text-3xl">
             Choose Token
           </ModalHeader>
@@ -1099,7 +1099,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         onOpenChange={transLoadModal.onOpenChange}
         className="trans"
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           <ModalBody className="pb-8">
             <Trans>
               <Button
@@ -1125,7 +1125,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         onOpenChange={transSuccModal.onOpenChange}
         className="trans"
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           <ModalBody className="pb-8">
             <Trans>
               <img src="/img/transSuccess.png" alt="" className="statusImg" />
@@ -1153,7 +1153,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         isOpen={transFailModal.isOpen}
         onOpenChange={transFailModal.onOpenChange}
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           <ModalBody className="pb-8">
             <Trans>
               <img src="/img/transFail.png" alt="" className="statusImg" />
