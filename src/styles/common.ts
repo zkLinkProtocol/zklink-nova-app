@@ -102,6 +102,9 @@ export const TableBox = styled.div`
 
   .table-tbody {
     tr:first-child td {
+      padding: 1.5rem 0 0.75rem;
+    }
+    tr.self-data td{
       padding: 1.5rem 0 1.5rem;
     }
     tr:last-child td {
@@ -141,6 +144,9 @@ export const TableBoxs = styled.div`
 
   .table-tbody {
     tr:first-child td {
+      padding: 1.5rem 0 0.75rem;
+    }
+    tr.self-data td{
       padding: 1.5rem 0 1.5rem;
     }
     tr:last-child td {
