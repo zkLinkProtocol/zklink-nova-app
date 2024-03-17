@@ -131,8 +131,15 @@ export const getSupportedTokens = (): Promise<SupportToken[]> =>
 export const getTokenPrice = (address: string): Promise<TokenPriceInfo> =>
   http.get(`${BASE_URL_POINTS}/tokens/${address}`);
 
-export const getAccountsRank = (): Promise<Response> =>
-  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountsRank`);
+export type PageParams = {
+  page: number;
+  limit: number;
+};
+
+export const getAccountsRank = (params?: PageParams): Promise<Response> =>
+  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountsRank`, {
+    params,
+  });
 
 export const getAccountRank = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRank`, {
