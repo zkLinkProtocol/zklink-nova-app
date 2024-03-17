@@ -432,7 +432,7 @@ export default function Header() {
         <NavbarMenu
           className={`navbar-menu md:px-[1.5rem] py-[0.75rem] fixed pt-4 gap-4`}
           style={{
-          backgroundColor: "rgba(0,0,0,0.9)",
+            backgroundColor: "rgba(0,0,0,0.9)",
           }}
           onClick={() => {
             setIsMenuOpen(false);
