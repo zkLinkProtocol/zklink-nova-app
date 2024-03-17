@@ -777,7 +777,7 @@ export default function SoftKYC() {
                 isCheckedTwitter ? "successed" : ""
               }`}
             >
-              <StepNum>03</StepNum>
+              <StepNum>04</StepNum>
             </CardBox>
 
             <CardBox
