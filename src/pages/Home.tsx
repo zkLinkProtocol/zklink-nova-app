@@ -229,7 +229,6 @@ const FooterBox = styled.div`
 `;
 
 export default function Home() {
-  const web3Modal = useWeb3Modal();
   const { isConnected } = useAccount();
   const { inviteCode, isActiveUser } = useSelector(
     (store: RootState) => store.airdrop

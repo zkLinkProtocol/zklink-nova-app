@@ -20,7 +20,8 @@ import {
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
 import { defineChain } from "viem";
-
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { createConfig, http } from "wagmi";
 const sourceId = 1; // mainnet
 
 export const blast = /*#__PURE__*/ defineChain({
@@ -329,34 +330,84 @@ const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 export const NetworkConfig =
   nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
+export const chains =
+  nodeType === "nexus-goerli"
+    ? [goerli, lineaTestnet, mantleTestnet, createEraChain(nexusGoerliNode[0])]
+    : [
+        mainnet,
+        arbitrum,
+        linea,
+        zkSync,
+        manta,
+        mantle,
+        createEraChain(nexusNode[0]),
+        blast,
+      ];
+// export const wagmiConfig = defaultWagmiConfig({
+//   chains: chains,
+//   projectId,
+//   metadata: {
+//     name: "zkLink Nova Portal",
+//     description:
+//       "zkLink Nova Portal - view balances, transfer and bridge tokens",
+//     url: "https://app.zklink.io/",
+//     icons: ["../public/img/icon.png"],
+//   },
 
-export const wagmiConfig = defaultWagmiConfig({
-  chains:
-    nodeType === "nexus-goerli"
-      ? [
-          goerli,
-          lineaTestnet,
-          mantleTestnet,
-          createEraChain(nexusGoerliNode[0]),
-        ]
-      : [
-          mainnet,
-          arbitrum,
-          linea,
-          zkSync,
-          manta,
-          mantle,
-          createEraChain(nexusNode[0]),
-          blast,
-        ],
+//   enableCoinbase: false,
+//   enableWalletConnect: false,
+//   enableEIP6963: true,
+// });
+
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import {
+  rainbowWallet,
+  walletConnectWallet,
+  okxWallet,
+  rabbyWallet,
+  metaMaskWallet,
+  injectedWallet,
+} from "@rainbow-me/rainbowkit/wallets";
+okxWallet({
   projectId,
-  metadata: {
-    name: "zkLink Nova Portal",
-    description:
-      "zkLink Nova Portal - view balances, transfer and bridge tokens",
-    url: "https://app.zklink.io/",
-    icons: ["../public/img/icon.png"],
-  },
+});
+rabbyWallet();
+injectedWallet();
+metaMaskWallet({
+  projectId,
+});
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: "Recommended",
+      wallets: [
+        injectedWallet,
+        rainbowWallet,
+        okxWallet,
+        rabbyWallet,
+        metaMaskWallet,
+        walletConnectWallet,
+      ],
+    },
+  ],
+  {
+    appName: "zklink Nova App",
+    projectId: projectId,
+  }
+);
 
-  enableCoinbase: false,
+export const config = getDefaultConfig({
+  appName: "My RainbowKit App",
+  projectId: projectId,
+  chains: chains,
+  ssr: false, // If your dApp uses server side rendering (SSR)
+});
+
+export const wagmiDefaultConfig = createConfig({
+  chains: chains,
+  connectors,
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
 });

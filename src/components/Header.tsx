@@ -32,6 +32,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import { getInvite } from "@/api";
 import { FaBars, FaTimes } from "react-icons/fa";
+import {
+  useConnectModal,
+  useAccountModal,
+} from "@rainbow-me/rainbowkit";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 const NavNet = styled.div`
@@ -99,9 +103,10 @@ const ButtonText = styled.span`
 `;
 
 export default function Header() {
-  const web3Modal = useWeb3Modal();
+  // const web3Modal = useWeb3Modal();
   const { address, isConnected } = useAccount();
-
+  const { openConnectModal } = useConnectModal();
+  const { openAccountModal } = useAccountModal();
   const {
     depositStatus,
     depositL1TxHash,
@@ -328,11 +333,6 @@ export default function Header() {
                 />
               </div>
             )}
-            {/* <Button
-                            className='bg-blue-950'
-                            onClick={() => web3Modal.open({ view: 'Networks' })}>
-                            Network
-                        </Button> */}
             {address && depositStatus && (
               <>
                 {depositStatus === "pending" && (
@@ -394,7 +394,14 @@ export default function Header() {
             <Button
               className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
               disableAnimation
-              onClick={() => web3Modal.open()}
+              // onClick={() => web3Modal.open()}
+              onClick={() => {
+                if (isConnected && address) {
+                  openAccountModal?.();
+                } else {
+                  openConnectModal?.();
+                }
+              }}
             >
               <img
                 className="hidden md:block"
@@ -409,6 +416,7 @@ export default function Header() {
                 src="/img/icon-wallet-white.svg"
               />
 
+              {/* <ConnectButton /> */}
               <ButtonText
                 className={`text-white md:text-[#03d498] ${
                   isConnected ? "ml-2 md:ml-0" : ""
@@ -432,7 +440,7 @@ export default function Header() {
         <NavbarMenu
           className={`navbar-menu md:px-[1.5rem] py-[0.75rem] fixed pt-4 gap-4`}
           style={{
-          backgroundColor: "rgba(0,0,0,0.9)",
+            backgroundColor: "rgba(0,0,0,0.9)",
           }}
           onClick={() => {
             setIsMenuOpen(false);
