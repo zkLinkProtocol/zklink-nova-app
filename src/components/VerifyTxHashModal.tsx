@@ -92,7 +92,7 @@ const VerifyTxHashModal = (props: IProps) => {
         isOpen={modal.isOpen}
         onOpenChange={modal.onOpenChange}
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           <ModalHeader className="flex flex-col gap-1 text-lg font-normal">
             Verify you deposit
           </ModalHeader>

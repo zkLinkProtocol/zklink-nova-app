@@ -69,7 +69,7 @@ export default function NFTCard() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
       >
-        <ModalContent>
+        <ModalContent className="mb-[5.75rem]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
