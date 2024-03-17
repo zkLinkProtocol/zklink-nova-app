@@ -773,7 +773,9 @@ export default function SoftKYC() {
           {/* Step 4: connect twitter */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox
-              className={`hidden md:block ${depositTx ? "successed" : ""}`}
+              className={`hidden md:block ${
+                isCheckedTwitter ? "successed" : ""
+              }`}
             >
               <StepNum>03</StepNum>
             </CardBox>
@@ -792,7 +794,6 @@ export default function SoftKYC() {
                   </p>
                 </div>
               </StepItem>
-
               <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
                 {isCheckedTwitter ? (
                   <img
@@ -815,7 +816,7 @@ export default function SoftKYC() {
           {/* Submit for user bind */}
           <div className="flex justify-center w-full md:px-[5rem] ">
             <Button
-              className={`gradient-btn bg- mx-auto mt-[1rem] md:py-[2rem] w-full text-center`}
+              className={`gradient-btn mx-auto mt-[1rem] md:py-[2rem] w-full text-center`}
               disabled={!submitStatus}
               onClick={handleSubmit}
             >
