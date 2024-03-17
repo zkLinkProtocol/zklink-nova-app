@@ -529,7 +529,7 @@ export default function Dashboard() {
             <div className="md:w-[24rem] md:h-[18.75rem] bg-[#65E7E5] rounded-[1rem]">
               <img
                 src={nft?.image ?? "/img/img-mint-example.png"}
-                className="text-center block mx-auto h-full rounded-[1rem]"
+                className="text-center block mx-auto h-auto rounded-[1rem]"
               />
             </div>
             <Tooltip content={nft ? "coming soon" : ""} isOpen={showTooltip1}>
