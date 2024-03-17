@@ -97,26 +97,9 @@ const ProgressBar = styled.div`
     background: #2a2a2a;
     border-radius: 0.5rem;
 
-    &.active,
-    .active {
-      border-radius: 0.5rem;
-      background: linear-gradient(
-        90deg,
-        #48ecae 0%,
-        #3e52fc 51.07%,
-        #49ced7 100%
-      );
-      &:not(:last-child)::after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        right: -1.5rem;
-        width: 2rem;
-        height: 0.5rem;
-        border-radius: 0.5rem;
-        background: #49ced7;
-        z-index: 11;
+    &.active {
+      .inner-bar {
+        width: 100%;
       }
       .progress-points {
         background-color: #46aae2;
@@ -132,6 +115,18 @@ const ProgressBar = styled.div`
         }
       }
     }
+
+    .inner-bar {
+      max-width: 100%;
+      border-radius: 0.5rem;
+      background: linear-gradient(
+        90deg,
+        #48ecae 0%,
+        #3e52fc 51.07%,
+        #49ced7 100%
+      );
+    }
+
     .progress-points {
       position: absolute;
       top: 50%;
@@ -210,6 +205,14 @@ export type AccountTvlItem = {
   iconURL: string | null;
 };
 
+export type ProgressItem = {
+  tier: number;
+  value: number;
+  booster: number;
+  progress: number;
+  isActive: boolean;
+};
+
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -224,7 +227,7 @@ export default function Dashboard() {
     novaPoint: 0,
     referPoint: 0,
   });
-  const [progressList, setProgressList] = useState<any[]>([]);
+  const [progressList, setProgressList] = useState<ProgressItem[]>([]);
   const [referrersTvlList, setReferrersTvl] = useState([]);
   const [bridgeToken, setBridgeToken] = useState("");
   const bridgeModal = useDisclosure();
@@ -356,27 +359,25 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    let isShow = false;
-    let isShowIndex = 0;
+    const num = Number(groupTvl);
 
     let arr = BOOST_LIST.map((item, index) => {
-      const isActive = +groupTvl > +item.value;
-      if (!isActive && !isShow) {
-        isShow = true;
-        isShowIndex = index;
+      let progress = 0;
+      let prevValue = index === 0 ? 0 : BOOST_LIST[index - 1].value;
+      if (num > prevValue) {
+        progress = num / item.value;
+        progress = progress > 1 ? 1 : progress;
       }
-
       let obj = {
         ...item,
-        isActive,
-        showProgress: false,
-        progress: +groupTvl !== 0 ? +groupTvl / item.value : 0,
+        isActive: num > item.value,
+        progress,
       };
 
       return obj;
     });
 
-    arr[isShowIndex].showProgress = true;
+    console.log("progress list", arr);
 
     setProgressList(arr);
   }, [groupTvl]);
@@ -828,18 +829,16 @@ export default function Dashboard() {
                 {progressList.map((item, index) => (
                   <div
                     className={`progress-item w-1/5 ${
-                      groupTvl > item.value ? "active" : "not-active-1"
+                      item.isActive ? "active" : ""
                     } `}
                     key={index}
                   >
-                    {item.showProgress && (
-                      <div
-                        className="bar absolute left-0 top-0 buttom-0 h-full active"
-                        style={{ width: `${item.progress}%` }}
-                      ></div>
-                    )}
+                    <div
+                      className="inner-bar absolute left-0 top-0 h-full"
+                      style={{ width: `${item.progress * 100}%` }}
+                    ></div>
+
                     <div className="progress-points">
-                      {/* <div>{groupTvl}  {item.value} {groupTvl / item.value}</div> */}
                       <div className="points-top">{item.booster}x</div>
                       <div className="points-bottom">{item.value} ETH</div>
                     </div>

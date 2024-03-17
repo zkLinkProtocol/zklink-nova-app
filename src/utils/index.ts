@@ -143,7 +143,7 @@ export function getBooster(value: number): number {
 
 export function getNextMilestone(value: number): number {
   const arr = BOOST_LIST.filter((item) => value < item.value);
-  const nextValue = arr[0].value;
+  const nextValue = arr.length > 0 ?arr[0].value : 0
   return nextValue;
 }
 
