@@ -142,10 +142,14 @@ export default function Header() {
   useEffect(() => {
     (async () => {
       if (!depositL1TxHash) {
-        // dispatch(setDepositStatus(""));
+        dispatch(setDepositStatus(""));
         return;
       } else {
         dispatch(setDepositStatus("pending"));
+        setTimeout(() => {
+          dispatch(setDepositL1TxHash(""));
+          dispatch(setDepositStatus(""));
+        }, 30 * 1000); //avoid wait to long
         const l2hash = await getDepositL2TxHash(
           depositL1TxHash as `0x${string}`
         );
@@ -158,7 +162,7 @@ export default function Header() {
         }
       }
     })();
-  }, [depositL1TxHash, getDepositL2TxHash, dispatch]);
+  }, [depositL1TxHash, getDepositL2TxHash, dispatch, depositStatus]);
 
   const [isHeaderTop, setIsHeaderTop] = useState(true);
 
