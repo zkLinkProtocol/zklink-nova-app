@@ -716,7 +716,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               content={ContentForMNTDeposit}
               isDisabled={actionBtnTooltipForMantleDisabeld}
             >
-              <Button
+              {/* <Button
                 className="gradient-btn w-full rounded-full "
                 style={{ display: "flex", alignItems: "center" }}
                 disableAnimation
@@ -726,7 +726,20 @@ export default function Bridge(props: IBridgeComponentProps) {
                 disabled={actionBtnDisabled}
               >
                 {btnText}
-              </Button>
+              </Button> */}
+              <a href="https://portal.zklink.io/bridge/" target="_blank">
+                <Button
+                  className="gradient-btn w-full rounded-full "
+                  style={{ display: "flex", alignItems: "center" }}
+                  disableAnimation
+                  size="lg"
+                  // onClick={handleAction}
+                  isLoading={loading}
+                  // disabled={actionBtnDisabled}
+                >
+                  Deposit through zkLink Nova Portal now
+                </Button>
+              </a>
             </Tooltip>
           ) : (
             <Button
@@ -892,7 +905,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               content={ContentForMNTDeposit}
               isDisabled={actionBtnTooltipForMantleDisabeld}
             >
-              <Button
+              {/* <Button
                 className="gradient-btn w-full rounded-full "
                 style={{ display: "flex", alignItems: "center" }}
                 disableAnimation
@@ -902,7 +915,19 @@ export default function Bridge(props: IBridgeComponentProps) {
                 disabled={actionBtnDisabled}
               >
                 {btnText}
-              </Button>
+              </Button> */}
+              <a href="https://portal.zklink.io/bridge/" target="_blank">
+                <Button
+                  className="gradient-btn w-full rounded-full "
+                  style={{ display: "flex", alignItems: "center" }}
+                  disableAnimation
+                  size="lg"
+                  isLoading={loading}
+                  // disabled={actionBtnDisabled}
+                >
+                  Deposit through zkLink Nova Portal now
+                </Button>
+              </a>
             </Tooltip>
           ) : (
             <Button
