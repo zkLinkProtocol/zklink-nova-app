@@ -351,7 +351,7 @@ export default function Home() {
         )} */}
       </CardBox>
 
-      <FooterBox className="w-full fixed left-0 bottom-0 md:bg-black md:bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-10 lg:px-36 py-4">
+      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-10 lg:px-36 py-4">
         {/* Footer: total tvl data */}
         <div className="flex flex-col mb-8">
           <span className="text-[1.25rem] text-center">
@@ -362,7 +362,7 @@ export default function Home() {
         {/* <TotalTvlCard /> */}
 
         {/* Footer: nav links */}
-        <div className="hidden right-[6rem] bottom-[1rem] flex justify-end items-end">
+        <div className="right-[6rem] bottom-[1rem] flex justify-end items-end">
           <div className="flex items-center gap-[1.25rem]">
             <a href="https://blog.zk.link/" target="_blank">
               <img
