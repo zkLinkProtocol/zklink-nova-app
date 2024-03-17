@@ -24,7 +24,7 @@ import {
   useConnectors,
 } from "wagmi";
 import styled from "styled-components";
-import { showAccount } from "@/utils";
+import { scrollToTop, showAccount } from "@/utils";
 import { useCallback, useEffect, useState } from "react";
 import {
   setInvite,
@@ -299,7 +299,13 @@ export default function Header() {
         <NavbarContent>
           {/* <Logo /> */}
 
-          <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
+          <Link
+            to="/"
+            onClick={() => {
+              dispatch(setTwitterAccessToken(""));
+              scrollToTop();
+            }}
+          >
             <LogoBox
               className="relative"
               onClick={() => {
@@ -322,7 +328,11 @@ export default function Header() {
             justify="center"
           >
             <NavbarItem>
-              <NavLink to="/aggregation-parade" className="nav-link">
+              <NavLink
+                to="/aggregation-parade"
+                className="nav-link"
+                onClick={scrollToTop}
+              >
                 Aggregation Parade
               </NavLink>
             </NavbarItem>
@@ -340,13 +350,19 @@ export default function Header() {
                 )}
               </NavbarItem> */}
             <NavbarItem>
-              <NavLink to="/leaderboard">Leaderboard</NavLink>
+              <NavLink to="/leaderboard" onClick={scrollToTop}>
+                Leaderboard
+              </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/about">About</NavLink>
+              <NavLink to="/about" onClick={scrollToTop}>
+                About
+              </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/bridge">Bridge</NavLink>
+              <NavLink to="/bridge" onClick={scrollToTop}>
+                Bridge
+              </NavLink>
             </NavbarItem>
             <NavbarItem>
               <a
@@ -567,7 +583,11 @@ export default function Header() {
           <NavbarMenuItem
             isActive={location.pathname === "/aggregation-parade"}
           >
-            <NavLink to="/aggregation-parade" className="nav-link">
+            <NavLink
+              to="/aggregation-parade"
+              className="nav-link"
+              onClick={scrollToTop}
+            >
               Aggregation Parade
             </NavLink>
           </NavbarMenuItem>
@@ -585,13 +605,19 @@ export default function Header() {
                 )}
               </NavbarMenuItem> */}
           <NavbarMenuItem isActive={location.pathname === "/leaderboard"}>
-            <NavLink to="/leaderboard">Leaderboard</NavLink>
+            <NavLink to="/leaderboard" onClick={scrollToTop}>
+              Leaderboard
+            </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem isActive={location.pathname === "/about"}>
-            <NavLink to="/about">About</NavLink>
+            <NavLink to="/about" onClick={scrollToTop}>
+              About
+            </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem isActive={location.pathname === "/bridge"}>
-            <NavLink to="/bridge">Bridge</NavLink>
+            <NavLink to="/bridge" onClick={scrollToTop}>
+              Bridge
+            </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem>
             <a
