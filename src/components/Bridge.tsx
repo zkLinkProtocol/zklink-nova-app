@@ -151,7 +151,7 @@ const Container = styled.div`
     left: 1rem;
     bottom: 1rem;
     right: 1rem;
-    z-index: 999;
+    z-index: 1;
     border-radius: 12px;
     background: rgba(0, 0, 0, 0.8);
     /* display: flex; */
@@ -660,11 +660,11 @@ export default function Bridge(props: IBridgeComponentProps) {
     return (
       <div className="mask-layer flex flex-col items-center justify-center p-[1.5rem]">
         <p className="text-center text-[1rem]">
-          The Aggregation Parade Deposit is currently undergoing an upgrade.
+          The deposit function on this page is currently undergoing an upgrade
         </p>
         <p className="mt-2 text-[1rem] text-[#999] text-center">
-          Please click the following button to deposit through the zkLink Nova
-          Portal.
+          You can still participate the parade by deposit through the zkLink
+          Nova Portal and copy your deposit hash to pass verification.
         </p>
         <a href="https://portal.zklink.io/bridge/" target="_blank">
           <Button
