@@ -896,6 +896,7 @@ export default function SoftKYC() {
               </Select>
 
               <Input
+                className="max-w-[100%]"
                 variant="underlined"
                 placeholder="Please enter your tx hash"
                 value={depositTxHash}
