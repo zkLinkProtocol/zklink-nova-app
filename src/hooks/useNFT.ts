@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getMintSignature } from "@/api";
 import NovaNFT from "@/constants/abi/NovaNFT.json";
 import { BigNumber } from "ethers";
-import { wagmiConfig } from "@/constants/networks";
+import { config } from "@/constants/networks";
 import { zkSyncProvider } from "./zksyncProviders";
 
 import { encodeFunctionData } from "viem";
@@ -27,7 +27,7 @@ const useNovaNFT = () => {
   const [fetchLoading, setFetchLoading] = useState(false);
 
   const getNFTBalance = useCallback(async (address: string) => {
-    const balance = await readContract(wagmiConfig, {
+    const balance = await readContract(config, {
       abi: NovaNFT.abi,
       address: NOVA_NFT_CONTRACT as `0x${string}`,
       functionName: "balanceOf",
@@ -39,7 +39,7 @@ const useNovaNFT = () => {
   }, []);
 
   const getTokenIdByIndex = useCallback(async (address: string) => {
-    const tokenId = await readContract(wagmiConfig, {
+    const tokenId = await readContract(config, {
       abi: NovaNFT.abi,
       address: NOVA_NFT_CONTRACT as `0x${string}`,
       functionName: "tokenOfOwnerByIndex",
@@ -50,7 +50,7 @@ const useNovaNFT = () => {
     return tokenId as number;
   }, []);
   const getTokenURIByTokenId = useCallback(async (tokenId: number) => {
-    const tokenURI = await readContract(wagmiConfig, {
+    const tokenURI = await readContract(config, {
       abi: NovaNFT.abi,
       address: NOVA_NFT_CONTRACT as `0x${string}`,
       functionName: "tokenURI",

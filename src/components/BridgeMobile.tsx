@@ -58,7 +58,7 @@ import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
-
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -234,7 +234,7 @@ const ContentForMNTDeposit =
   "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
   const { onClose, bridgeToken } = props;
-  const web3Modal = useWeb3Modal();
+  // const web3Modal = useWeb3Modal();
   const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
   const tokenModal = useDisclosure();
@@ -268,16 +268,16 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
-
+  const { openConnectModal } = useConnectModal();
   const dispatch = useDispatch();
 
   const { addTxHash, txhashes } = useVerifyStore();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      refreshTokenBalanceList();
-    }, 5000);
-    return () => clearInterval(timer);
+    // const timer = setInterval(() => {
+    //   refreshTokenBalanceList();
+    // }, 5000);
+    // return () => clearInterval(timer);
   }, [refreshTokenBalanceList]);
 
   useEffect(() => {
@@ -630,7 +630,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               <Input
                 classNames={{
                   input: "text-4xl",
-                  inputWrapper: ["bg-inputColor","h-14"],
+                  inputWrapper: ["bg-inputColor", "h-14"],
                 }}
                 size="lg"
                 // type="number"
@@ -743,7 +743,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               size="lg"
               color="primary"
               disableAnimation
-              onClick={() => web3Modal.open()}
+              onClick={() => openConnectModal?.()}
             >
               Connect Wallet
             </Button>

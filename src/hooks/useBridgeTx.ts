@@ -1,8 +1,10 @@
+import { useA } from "@web3modal/wagmi/react";
 import {
   PRIMARY_CHAIN_KEY,
   nexusGoerliNode,
   nexusNode,
-  wagmiConfig,
+  // wagmiConfig,
+  config,
 } from "../constants/networks";
 import { BigNumber, utils, BigNumberish, ethers, VoidSigner } from "ethers";
 import { usePublicClient, useWalletClient } from "wagmi";
@@ -86,9 +88,10 @@ export function walletClientToProvider(walletClient: WalletClient) {
 }
 
 export const useBridgeTx = () => {
+  const { chainId } = useAccount();
   const networkKey = useBridgeNetworkStore.getState().networkKey;
   console.log("networkKey: ", networkKey);
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ config, chainId });
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);
@@ -269,6 +272,8 @@ export const useBridgeTx = () => {
       to: contractAddress,
       data: "0x534ca054", //call txGasPrice returns uint256
     })) as unknown as string;
+    console.log("publicClient: ", publicClient, result);
+
     return BigNumber.from(utils.hexValue(result.data));
   };
 
@@ -666,7 +671,7 @@ export const useBridgeTx = () => {
         (item) => item.key === PRIMARY_CHAIN_KEY
       );
       const web3Provider = new ethers.providers.Web3Provider(
-        getPublicClient(wagmiConfig, {
+        getPublicClient(config, {
           chainId: primaryNetwork!.l1Network?.id,
         }) as any,
         "any"

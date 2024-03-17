@@ -58,7 +58,7 @@ import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
-
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -234,7 +234,9 @@ const ContentForMNTDeposit =
   "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
   const { onClose, bridgeToken } = props;
-  const web3Modal = useWeb3Modal();
+  // const web3Modal = useWeb3Modal();
+  const { openConnectModal } = useConnectModal();
+
   const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
   const tokenModal = useDisclosure();
@@ -274,10 +276,10 @@ export default function Bridge(props: IBridgeComponentProps) {
   const { addTxHash, txhashes } = useVerifyStore();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      refreshTokenBalanceList();
-    }, 5000);
-    return () => clearInterval(timer);
+    // const timer = setInterval(() => {
+    //   refreshTokenBalanceList();
+    // }, 5000);
+    // return () => clearInterval(timer);
   }, [refreshTokenBalanceList]);
 
   useEffect(() => {
@@ -716,7 +718,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               content={ContentForMNTDeposit}
               isDisabled={actionBtnTooltipForMantleDisabeld}
             >
-              {/* <Button
+              <Button
                 className="gradient-btn w-full rounded-full "
                 style={{ display: "flex", alignItems: "center" }}
                 disableAnimation
@@ -726,8 +728,8 @@ export default function Bridge(props: IBridgeComponentProps) {
                 disabled={actionBtnDisabled}
               >
                 {btnText}
-              </Button> */}
-              <a href="https://portal.zklink.io/bridge/" target="_blank">
+              </Button>
+              {/* <a href="https://portal.zklink.io/bridge/" target="_blank">
                 <Button
                   className="gradient-btn w-full rounded-full "
                   style={{ display: "flex", alignItems: "center" }}
@@ -739,7 +741,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 >
                   Deposit through zkLink Nova Portal now
                 </Button>
-              </a>
+              </a> */}
             </Tooltip>
           ) : (
             <Button
@@ -747,7 +749,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               size="lg"
               color="primary"
               disableAnimation
-              onClick={() => web3Modal.open()}
+              onClick={() => openConnectModal?.()}
             >
               Connect Wallet
             </Button>
@@ -905,7 +907,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               content={ContentForMNTDeposit}
               isDisabled={actionBtnTooltipForMantleDisabeld}
             >
-              {/* <Button
+              <Button
                 className="gradient-btn w-full rounded-full "
                 style={{ display: "flex", alignItems: "center" }}
                 disableAnimation
@@ -915,8 +917,8 @@ export default function Bridge(props: IBridgeComponentProps) {
                 disabled={actionBtnDisabled}
               >
                 {btnText}
-              </Button> */}
-              <a href="https://portal.zklink.io/bridge/" target="_blank">
+              </Button>
+              {/* <a href="https://portal.zklink.io/bridge/" target="_blank">
                 <Button
                   className="gradient-btn w-full rounded-full "
                   style={{ display: "flex", alignItems: "center" }}
@@ -927,7 +929,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 >
                   Deposit through zkLink Nova Portal now
                 </Button>
-              </a>
+              </a> */}
             </Tooltip>
           ) : (
             <Button
@@ -935,7 +937,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               size="lg"
               color="primary"
               disableAnimation
-              onClick={() => web3Modal.open()}
+              onClick={() => openConnectModal?.()}
             >
               Connect Wallet
             </Button>
