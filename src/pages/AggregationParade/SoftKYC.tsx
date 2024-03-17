@@ -798,7 +798,7 @@ export default function SoftKYC() {
                 {isCheckedTwitter ? (
                   <img
                     src="/img/icon-right.svg"
-                    className="w-[1.5rem] h-[1.5rem]"
+                    className="w-[1.5rem] h-[1.5rem] mx-auto"
                   />
                 ) : (
                   <Button
