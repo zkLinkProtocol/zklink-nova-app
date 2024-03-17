@@ -30,6 +30,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
+  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
@@ -496,16 +497,21 @@ export default function SoftKYC() {
 
   // Submit user bind form
   const handleSubmitError = (message?: string) => {
+    if (message && message?.toLowerCase().includes("twitter")) {
+      setTwitterAccessToken("");
+    } else {
+      dispatch(setIsCheckedInviteCode(false));
+      dispatch(setInviteCode(""));
+      dispatch(setDepositTx(""));
+      setTwitterAccessToken("");
+      dispatch(setSignature(""));
+    }
+
     toast.error(
       message
         ? message
         : "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
     );
-    dispatch(setIsCheckedInviteCode(false));
-    dispatch(setInviteCode(""));
-    dispatch(setDepositTx(""));
-    setTwitterAccessToken("");
-    dispatch(setSignature(""));
   };
 
   const handleSubmit = async () => {
@@ -592,6 +598,8 @@ export default function SoftKYC() {
       signature
     ) {
       setSubmitStatus(true);
+    } else {
+      setSubmitStatus(false);
     }
   }, [inviteCodeValue, isCheckedTwitter, depositTx, isConnected, signature]);
 
@@ -759,15 +767,18 @@ export default function SoftKYC() {
                 >
                   <span className="ml-[0.5rem]">Bridge</span>
                 </Button>
-                <Button
-                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                  disabled={Boolean(depositTx) || !address}
-                  onClick={() => {
-                    verifyDepositModal.onOpen();
-                  }}
-                >
-                  <span className="ml-[0.5rem]">Verify</span>
-                </Button>
+
+                <Tooltip content="Connect your wallet and sign the message before verifying.">
+                  <Button
+                    className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                    disabled={Boolean(depositTx) || !address || !signature}
+                    onClick={() => {
+                      verifyDepositModal.onOpen();
+                    }}
+                  >
+                    <span className="ml-[0.5rem]">Verify</span>
+                  </Button>
+                </Tooltip>
               </div>
             </CardBox>
           </div>
