@@ -449,7 +449,7 @@ export default function Header() {
           <NavbarMenuItem
             isActive={location.pathname === "/aggregation-parade"}
           >
-            <NavLink to="/aggregation-parade" className="nav-link">
+            <NavLink to="/aggregation-parade" className="nav-link block">
               Aggregation Parade
             </NavLink>
           </NavbarMenuItem>
@@ -467,24 +467,35 @@ export default function Header() {
                 )}
               </NavbarMenuItem> */}
           <NavbarMenuItem isActive={location.pathname === "/leaderboard"}>
-            <NavLink to="/leaderboard">Leaderboard</NavLink>
+            <NavLink to="/leaderboard" className="block">
+              Leaderboard
+            </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem isActive={location.pathname === "/about"}>
-            <NavLink to="/about">About</NavLink>
+            <NavLink to="/about" className="block">
+              About
+            </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem isActive={location.pathname === "/bridge"}>
-            <NavLink to="/bridge">Bridge</NavLink>
+            <NavLink to="/bridge" className="block">
+              Bridge
+            </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem>
             <a
               href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
               target="_blank"
+              className="block"
             >
               User Guide
             </a>
           </NavbarMenuItem>
           <NavbarMenuItem>
-            <a href="https://explorer.zklink.io/" target="_blank">
+            <a
+              href="https://explorer.zklink.io/"
+              target="_blank"
+              className="block"
+            >
               Explorer
             </a>
           </NavbarMenuItem>
