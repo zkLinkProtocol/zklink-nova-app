@@ -144,6 +144,18 @@ const Trans = styled.div`
 const Container = styled.div`
   background: #313841;
   border-radius: 12px;
+  position: relative;
+  .mask-layer {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 999;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    /* display: flex; */
+  }
 `;
 const SelectBox = styled.div`
   & {
@@ -644,9 +656,37 @@ export default function Bridge(props: IBridgeComponentProps) {
     unsupportedChainWithConnector,
   ]);
 
+  const ContainerCover = () => {
+    return (
+      <div className="mask-layer flex flex-col items-center justify-center p-[1.5rem]">
+        <p className="text-center text-[1rem]">
+          The Aggregation Parade Deposit is currently undergoing an upgrade.
+        </p>
+        <p className="mt-2 text-[1rem] text-[#999] text-center">
+          Please click the following button to deposit through the zkLink Nova
+          Portal.
+        </p>
+        <a href="https://portal.zklink.io/bridge/" target="_blank">
+          <Button
+            className="mt-4 gradient-btn w-full rounded-full "
+            style={{ display: "flex", alignItems: "center" }}
+            disableAnimation
+            size="lg"
+            // onClick={handleAction}
+            isLoading={loading}
+            // disabled={actionBtnDisabled}
+          >
+            Deposit through zkLink Nova Portal now
+          </Button>
+        </a>
+      </div>
+    );
+  };
+
   return (
     <>
       <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
+        <ContainerCover />
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4">
             <span className="font-bold">From</span>
@@ -831,7 +871,9 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
         )}
       </Container>
-      <Container className="block md:hidden px-4 py-6 md:px-8 md:py-8">
+      <Container className="block md:hidden px-4 py-6 md:px-8 md:py-8 layer">
+        <ContainerCover />
+
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4 mb-4">
             <span className="font-bold">From</span>
