@@ -14,7 +14,7 @@ import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import styled from "styled-components";
-import { showAccount } from "@/utils";
+import { scrollToTop, showAccount } from "@/utils";
 import { useCallback, useEffect, useState } from "react";
 import {
   setInvite,
@@ -216,6 +216,10 @@ export default function Header() {
   }, [invite, isConnected, address]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    scrollToTop();
+  }, [location.pathname]);
 
   return (
     <>
