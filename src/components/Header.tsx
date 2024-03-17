@@ -217,6 +217,10 @@ export default function Header() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+    scrollToTop();
+  }, [location.pathname]);
+
   return (
     <>
       <Navbar
@@ -236,13 +240,7 @@ export default function Header() {
         <NavbarContent>
           {/* <Logo /> */}
 
-          <Link
-            to="/"
-            onClick={() => {
-              dispatch(setTwitterAccessToken(""));
-              scrollToTop();
-            }}
-          >
+          <Link to="/" onClick={() => dispatch(setTwitterAccessToken(""))}>
             <LogoBox
               className="relative"
               onClick={() => {
@@ -265,11 +263,7 @@ export default function Header() {
             justify="center"
           >
             <NavbarItem>
-              <NavLink
-                to="/aggregation-parade"
-                className="nav-link"
-                onClick={scrollToTop}
-              >
+              <NavLink to="/aggregation-parade" className="nav-link">
                 Aggregation Parade
               </NavLink>
             </NavbarItem>
@@ -287,19 +281,13 @@ export default function Header() {
                 )}
               </NavbarItem> */}
             <NavbarItem>
-              <NavLink to="/leaderboard" onClick={scrollToTop}>
-                Leaderboard
-              </NavLink>
+              <NavLink to="/leaderboard">Leaderboard</NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/about" onClick={scrollToTop}>
-                About
-              </NavLink>
+              <NavLink to="/about">About</NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/bridge" onClick={scrollToTop}>
-                Bridge
-              </NavLink>
+              <NavLink to="/bridge">Bridge</NavLink>
             </NavbarItem>
             <NavbarItem>
               <a
@@ -461,11 +449,7 @@ export default function Header() {
           <NavbarMenuItem
             isActive={location.pathname === "/aggregation-parade"}
           >
-            <NavLink
-              to="/aggregation-parade"
-              className="nav-link"
-              onClick={scrollToTop}
-            >
+            <NavLink to="/aggregation-parade" className="nav-link">
               Aggregation Parade
             </NavLink>
           </NavbarMenuItem>
@@ -483,19 +467,13 @@ export default function Header() {
                 )}
               </NavbarMenuItem> */}
           <NavbarMenuItem isActive={location.pathname === "/leaderboard"}>
-            <NavLink to="/leaderboard" onClick={scrollToTop}>
-              Leaderboard
-            </NavLink>
+            <NavLink to="/leaderboard">Leaderboard</NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem isActive={location.pathname === "/about"}>
-            <NavLink to="/about" onClick={scrollToTop}>
-              About
-            </NavLink>
+            <NavLink to="/about">About</NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem isActive={location.pathname === "/bridge"}>
-            <NavLink to="/bridge" onClick={scrollToTop}>
-              Bridge
-            </NavLink>
+            <NavLink to="/bridge">Bridge</NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem>
             <a
