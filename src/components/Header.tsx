@@ -9,10 +9,20 @@ import {
   Button,
   Avatar,
   Tooltip,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
 import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useAccount, useDisconnect } from "wagmi";
+import {
+  useAccount,
+  useDisconnect,
+  useConnections,
+  useConnectorClient,
+  useConnectors,
+} from "wagmi";
 import styled from "styled-components";
 import { showAccount } from "@/utils";
 import { useCallback, useEffect, useState } from "react";
@@ -41,6 +51,7 @@ import {
 import { BrowserView } from "react-device-detect";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 import { config } from "@/constants/networks";
+import toast from "react-hot-toast";
 
 const NavNet = styled.div`
   background: #313841;
@@ -231,14 +242,38 @@ export default function Header() {
 
   const onDisconnect = async () => {
     if (isConnected || address) {
-      const res = await disconnect();
-      console.log("=====================>disconnect", res);
+      await disconnect();
+      console.log("=====================>disconnect");
     }
   };
 
-  // useEffect(() => {
-  //   onDisconnect();
-  // }, []);
+  const connections = useConnections();
+  const connectors = useConnectors();
+  const connectorClient = useConnectorClient();
+
+  useEffect(() => {
+    console.log("======================>connections", connections);
+    console.log("======================>connectors", connectors);
+    console.log("======================>ConnectorClient", connectorClient);
+  }, [connections, connectors, connectorClient]);
+
+  const handleCopyAddress = () => {
+    if (!address) return;
+    navigator.clipboard.writeText(address);
+    toast.success("Copied", { duration: 2000 });
+  };
+
+  const handleWallectAction = (key: string | number) => {
+    console.log("handleWallectAction", key);
+
+    if (key === "copy") {
+      handleCopyAddress();
+    } else if (key === "explorer") {
+      window.open(`https://explorer.zklink.io/address/${address}`, "_blank");
+    } else if (key === "disconnect") {
+      onDisconnect();
+    }
+  };
 
   return (
     <>
@@ -414,52 +449,99 @@ export default function Header() {
               </Button>
             )}
 
-            <Button onClick={onDisconnect}>disconnect</Button>
+            {/* <Button onClick={onDisconnect}>disconnect</Button> */}
 
-            <ConnectButton.Custom>
-              {({ chain }) => (
-                <Button
-                  className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
-                  disableAnimation
-                  // onClick={() => web3Modal.open()}
-                  onClick={() => {
-                    if (chain?.unsupported) {
-                      openChainModal?.();
-                    } else if (isConnected && address) {
-                      openAccountModal?.();
-                    } else {
-                      openConnectModal?.();
-                    }
-                  }}
-                >
-                  <img
-                    className="hidden md:block"
-                    width={20}
-                    height={20}
-                    src="/img/icon-wallet.svg"
-                  />
-                  <img
-                    className="md:hidden"
-                    width={22}
-                    height={22}
-                    src="/img/icon-wallet-white.svg"
-                  />
-
-                  {/* <ConnectButton /> */}
-                  <ButtonText
-                    className={`text-white md:text-[#03d498] ${
-                      isConnected ? "ml-2 md:ml-0" : ""
-                    }`}
+            {isConnected && address ? (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    // variant="bordered"
+                    className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
+                    disableAnimation
                   >
-                    {isConnected ? (
-                      showAccount(address)
-                    ) : (
-                      <span className="hidden md:block">Connect Wallet</span>
-                    )}
-                  </ButtonText>
-                </Button>
-              )}
-            </ConnectButton.Custom>
+                    <img
+                      className="hidden md:block"
+                      width={20}
+                      height={20}
+                      src="/img/icon-wallet.svg"
+                    />
+                    <img
+                      className="md:hidden"
+                      width={22}
+                      height={22}
+                      src="/img/icon-wallet-white.svg"
+                    />
+
+                    {/* <ConnectButton /> */}
+                    <ButtonText
+                      className={`text-white md:text-[#03d498] ${
+                        isConnected ? "ml-2 md:ml-0" : ""
+                      }`}
+                    >
+                      {showAccount(address)}
+                    </ButtonText>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu onAction={(key) => handleWallectAction(key)}>
+                  <DropdownItem key="copy">
+                    <span>Copy</span>
+                  </DropdownItem>
+                  <DropdownItem key="explorer">Explorer</DropdownItem>
+                  <DropdownItem
+                    key="disconnect"
+                    className="text-danger"
+                    color="danger"
+                  >
+                    Disconnect
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            ) : (
+              <ConnectButton.Custom>
+                {({ chain }) => (
+                  <Button
+                    className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
+                    disableAnimation
+                    // onClick={() => web3Modal.open()}
+                    onClick={() => {
+                      if (chain?.unsupported) {
+                        openChainModal?.();
+                      } else if (isConnected && address) {
+                        openAccountModal?.();
+                      } else {
+                        openConnectModal?.();
+                      }
+                    }}
+                  >
+                    <img
+                      className="hidden md:block"
+                      width={20}
+                      height={20}
+                      src="/img/icon-wallet.svg"
+                    />
+                    <img
+                      className="md:hidden"
+                      width={22}
+                      height={22}
+                      src="/img/icon-wallet-white.svg"
+                    />
+
+                    {/* <ConnectButton /> */}
+                    <ButtonText
+                      className={`text-white md:text-[#03d498] ${
+                        isConnected ? "ml-2 md:ml-0" : ""
+                      }`}
+                    >
+                      {isConnected ? (
+                        showAccount(address)
+                      ) : (
+                        <span className="hidden md:block">Connect Wallet</span>
+                      )}
+                    </ButtonText>
+                  </Button>
+                )}
+              </ConnectButton.Custom>
+            )}
           </NavbarItem>
         </NavbarContent>
         {/* mobile toggle button */}
