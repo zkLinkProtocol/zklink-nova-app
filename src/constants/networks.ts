@@ -358,7 +358,13 @@ export const chains =
 //   enableWalletConnect: false,
 //   enableEIP6963: true,
 // });
-
+const metadata = {
+  name: "zkLink Nova App",
+  description:
+    "zkLink Nova App - Aggregated Layer 3 zkEVM network Aggregation Parade",
+  url: "https://app.zklink.io",
+  icons: ["../../public/img/favicon.png"],
+};
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   rainbowWallet,
@@ -370,11 +376,20 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 okxWallet({
   projectId,
+  walletConnectParameters: {
+    metadata,
+  },
 });
 rabbyWallet();
 injectedWallet();
 metaMaskWallet({
   projectId,
+});
+walletConnectWallet({
+  projectId,
+  options: {
+    metadata,
+  },
 });
 const connectors = connectorsForWallets(
   [
@@ -397,7 +412,7 @@ const connectors = connectorsForWallets(
 );
 
 export const config = getDefaultConfig({
-  appName: "My RainbowKit App",
+  appName: "zklink Nova App",
   projectId: projectId,
   chains: chains,
   ssr: false, // If your dApp uses server side rendering (SSR)
