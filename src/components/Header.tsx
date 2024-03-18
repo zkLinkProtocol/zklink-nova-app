@@ -35,6 +35,8 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import {
   useConnectModal,
   useAccountModal,
+  useChainModal,
+  ConnectButton,
 } from "@rainbow-me/rainbowkit";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
@@ -107,6 +109,7 @@ export default function Header() {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
   const {
     depositStatus,
     depositL1TxHash,
@@ -391,44 +394,50 @@ export default function Header() {
                 Deposit History
               </Button>
             )}
-            <Button
-              className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
-              disableAnimation
-              // onClick={() => web3Modal.open()}
-              onClick={() => {
-                if (isConnected && address) {
-                  openAccountModal?.();
-                } else {
-                  openConnectModal?.();
-                }
-              }}
-            >
-              <img
-                className="hidden md:block"
-                width={20}
-                height={20}
-                src="/img/icon-wallet.svg"
-              />
-              <img
-                className="md:hidden"
-                width={22}
-                height={22}
-                src="/img/icon-wallet-white.svg"
-              />
+            <ConnectButton.Custom>
+              {({ chain }) => (
+                <Button
+                  className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
+                  disableAnimation
+                  // onClick={() => web3Modal.open()}
+                  onClick={() => {
+                    if (chain?.unsupported) {
+                      openChainModal?.();
+                    } else if (isConnected && address) {
+                      openAccountModal?.();
+                    } else {
+                      openConnectModal?.();
+                    }
+                  }}
+                >
+                  <img
+                    className="hidden md:block"
+                    width={20}
+                    height={20}
+                    src="/img/icon-wallet.svg"
+                  />
+                  <img
+                    className="md:hidden"
+                    width={22}
+                    height={22}
+                    src="/img/icon-wallet-white.svg"
+                  />
 
-              {/* <ConnectButton /> */}
-              <ButtonText
-                className={`text-white md:text-[#03d498] ${
-                  isConnected ? "ml-2 md:ml-0" : ""
-                }`}
-              >
-                {isConnected ? (
-                  showAccount(address)
-                ) : (
-                  <span className="hidden md:block">Connect Wallet</span>
-                )}
-              </ButtonText>
-            </Button>
+                  {/* <ConnectButton /> */}
+                  <ButtonText
+                    className={`text-white md:text-[#03d498] ${
+                      isConnected ? "ml-2 md:ml-0" : ""
+                    }`}
+                  >
+                    {isConnected ? (
+                      showAccount(address)
+                    ) : (
+                      <span className="hidden md:block">Connect Wallet</span>
+                    )}
+                  </ButtonText>
+                </Button>
+              )}
+            </ConnectButton.Custom>
           </NavbarItem>
         </NavbarContent>
         {/* mobile toggle button */}
