@@ -260,3 +260,8 @@ export const checkOkx = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/invite/check/okx`, {
     params: { addressList: [address] },
   });
+
+export const visitReward = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/visit/reward`, {
+    params: { address },
+  });

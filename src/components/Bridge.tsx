@@ -975,7 +975,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       {isFirstDeposit && address && txhashes[address]?.[0] && (
         <div>
           <Link
-            to="/aggregation-parade?flag=1"
+            to="/aggregation-parade?verifyTx=1"
             target="_blank"
             className="text-[1rem]"
           >
