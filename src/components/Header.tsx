@@ -27,10 +27,11 @@ import {
   setIsActiveUser,
   setDepositTx,
   setSignatureAddress,
+  setIsOkxFlag,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { getInvite } from "@/api";
+import { getInvite, visitReward } from "@/api";
 import { FaBars, FaTimes } from "react-icons/fa";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 
@@ -109,6 +110,7 @@ export default function Header() {
     isActiveUser,
     signatureAddress,
     inviteCode,
+    isOkxFlag,
   } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
 
   const { getDepositL2TxHash } = useBridgeTx();
@@ -120,13 +122,30 @@ export default function Header() {
     return isConnected && Boolean(invite?.twitterHandler);
   }, [isConnected, invite]);
 
+  const visitRewardFunc = async () => {
+    if (!address) return;
+    await visitReward(address);
+  };
+
   useEffect(() => {
     const queryInviteCode = searchParams.get("inviteCode");
+    const flag = searchParams.get("flag");
 
     if (queryInviteCode && queryInviteCode.length === 6) {
       dispatch(setInviteCode(queryInviteCode));
     }
+
+    if (flag) {
+      const isOkx = flag.toLowerCase() === "okx";
+      dispatch(setIsOkxFlag(isOkx));
+    }
   }, [dispatch, searchParams]);
+
+  useEffect(() => {
+    if (address && isOkxFlag) {
+      visitRewardFunc();
+    }
+  }, [address, isOkxFlag]);
 
   useEffect(() => {
     if (location.pathname.includes("invite")) {
