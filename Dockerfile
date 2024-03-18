@@ -2,13 +2,9 @@ FROM 475911326710.dkr.ecr.ap-northeast-1.amazonaws.com/node:20.11.1-slim as buil
 
 WORKDIR /zklink-nova-app
 
-#RUN apt update -y
-#RUN apt install -y python-is-python3
-
 ADD . /zklink-nova-app
 
 RUN npm install && npm run build:dev
-#RUN yarn install && yarn build
 
 FROM 475911326710.dkr.ecr.ap-northeast-1.amazonaws.com/nginx:alpine3.18
 
