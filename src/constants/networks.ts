@@ -321,7 +321,9 @@ const createEraChain = (network: ZkSyncNetwork) => {
       default: { http: [network.rpcUrl] },
       public: { http: [network.rpcUrl] },
     },
-    blockExplorers: { default: { url: network.blockExplorerUrl } },
+    blockExplorers: {
+      default: { url: network.blockExplorerUrl, name: "zklink nova explorer" },
+    },
   };
 };
 
@@ -330,9 +332,14 @@ const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 export const NetworkConfig =
   nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
-export const chains =
+export const chains: readonly [Chain, ...Chain[]] =
   nodeType === "nexus-goerli"
-    ? [goerli, lineaTestnet, mantleTestnet, createEraChain(nexusGoerliNode[0])]
+    ? [
+        goerli,
+        lineaTestnet,
+        mantleTestnet,
+        createEraChain(nexusGoerliNode[0]) as Chain,
+      ]
     : [
         mainnet,
         arbitrum,
@@ -340,7 +347,7 @@ export const chains =
         zkSync,
         manta,
         mantle,
-        createEraChain(nexusNode[0]),
+        createEraChain(nexusNode[0]) as Chain,
         blast,
       ];
 // export const wagmiConfig = defaultWagmiConfig({
@@ -421,6 +428,7 @@ export const config = getDefaultConfig({
 export const wagmiDefaultConfig = createConfig({
   chains: chains,
   connectors,
+  multiInjectedProviderDiscovery: true,
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),
