@@ -478,6 +478,13 @@ export default function Bridge(props: IBridgeComponentProps) {
     actionBtnDisabled,
     tokenFiltered[tokenActive]
   );
+
+  const isDepositErc20 = useMemo(() => {
+    return (
+      tokenFiltered[tokenActive] &&
+      tokenFiltered[tokenActive].address !== ETH_ADDRESS
+    );
+  }, [tokenActive, tokenFiltered]);
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
@@ -489,9 +496,11 @@ export default function Bridge(props: IBridgeComponentProps) {
       if (Number(amount) > Number(tokenFiltered[tokenActive].formatedBalance)) {
         return "Insufficient balance";
       }
+    } else if (isDepositErc20) {
+      return "Approve and Deposit";
     }
     return "Continue";
-  }, [invalidChain, amount, tokenActive, tokenFiltered]);
+  }, [invalidChain, amount, tokenActive, tokenFiltered, isDepositErc20]);
 
   const handleInputValue = (v: string) => {
     if (!v) {
@@ -1146,7 +1155,9 @@ export default function Bridge(props: IBridgeComponentProps) {
                 isLoading={loading}
                 disabled={actionBtnDisabled}
               ></Button>
-              <div className="title">Depositing</div>
+              <div className="title">
+                {!isDepositErc20 ? "Depositing" : "Sending Transaction"}
+              </div>
               <div className="inner">
                 Please sign the transaction in your wallet.
               </div>
