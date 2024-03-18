@@ -9,6 +9,7 @@ import { BOOST_LIST } from "@/constants/boost";
 import numeral from "numeral";
 import { nexusGoerliNode, nexusNode } from "@/constants/networks";
 import FromList from "@/constants/fromChainList";
+import { checkOkx } from "@/api";
 
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -316,4 +317,15 @@ export const scrollToTop = () => {
   window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
+};
+
+export const getCheckOkxPoints = async (address: string) => {
+  let points = 0;
+  if (!address) return points;
+  const res = await checkOkx(address);
+  const { result } = res;
+  if (result && Array.isArray(result) && result.length > 0) {
+    points = 5;
+  }
+  return points;
 };
