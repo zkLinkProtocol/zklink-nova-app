@@ -553,10 +553,10 @@ export default function SoftKYC() {
   useEffect(() => {
     const code = searchParams.get("code");
     const error = searchParams.get("error");
-    const flag = searchParams.get("flag");
+    const verifyTx = searchParams.get("verifyTx");
 
     // if after deposit to link here, show verify tx modal
-    if (flag && address) {
+    if (verifyTx && address) {
       setSearchParams("");
       const txs = txhashes[address];
 
