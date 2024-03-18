@@ -310,6 +310,15 @@ export default function Bridge(props: IBridgeComponentProps) {
     })();
   }, []);
 
+  const errorInputMsg = useMemo(() => {
+    const token = tokenFiltered[tokenActive];
+    const [_, decimals] = amount.split(".");
+    if (token && decimals && decimals.length > token.decimals) {
+      return `Max decimal length for ${token.symbol} is ${token.decimals}`;
+    }
+    return "";
+  }, [tokenActive, tokenFiltered, amount]);
+
   const computePoints = debounce(() => {
     if (!amount || !tokenFiltered[tokenActive]) {
       setShowNoPointsTip(false);
@@ -457,12 +466,13 @@ export default function Bridge(props: IBridgeComponentProps) {
       (!tokenFiltered[tokenActive].balance ||
         tokenFiltered[tokenActive].balance! <= 0 ||
         Number(tokenFiltered[tokenActive].formatedBalance) < Number(amount) ||
-        Number(amount) <= 0)
+        Number(amount) <= 0 ||
+        errorInputMsg)
     ) {
       return true;
     }
     return false;
-  }, [tokenFiltered, tokenActive, invalidChain, amount]);
+  }, [tokenFiltered, tokenActive, invalidChain, amount, errorInputMsg]);
   console.log(
     "actionBtnDisabled: ",
     actionBtnDisabled,
@@ -619,7 +629,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               value={String(amount)}
               onValueChange={handleInputValue}
               onWheel={(e) => e.preventDefault()}
-              errorMessage=""
+              errorMessage={errorInputMsg}
             />
 
             <div
@@ -822,7 +832,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 value={String(amount)}
                 onValueChange={handleInputValue}
                 onWheel={(e) => e.preventDefault()}
-                errorMessage=""
+                errorMessage={errorInputMsg}
               />
             </div>
           </div>
