@@ -83,12 +83,16 @@ export default function PointsLeaderboard() {
 
       if (address && nextPage === 1) {
         const { result } = await getAccountRank(address);
+        let novaPoints = +result?.novaPoint || 0;
         const okxPoints = await getCheckOkxPoints(address);
+        if (novaPoints !== 0) {
+          novaPoints += okxPoints;
+        }
 
         if (result) {
           arr.unshift({
             ...result,
-            novaPoint: (+result?.novaPoint || 0) + okxPoints,
+            novaPoint: novaPoints,
           });
         }
       }
