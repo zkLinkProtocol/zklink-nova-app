@@ -52,27 +52,24 @@ const ETH_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT = 800;
 
 const defaultNetwork = nodeConfig[0];
+
 export const useZksyncProvider = () => {
   // const { networkKey } = useNetworkStore();
   const networkKey = useBridgeNetworkStore.getState().networkKey;
   const eraNetwork =
     nodeConfig.find((item) => item.key === networkKey) ?? defaultNetwork;
 
-  const provider = new Provider(eraNetwork.rpcUrl);
-  //if provider.networkKey != eraNetwork.key
-  // provider.setContractAddresses(eraNetwork.key, {
-  //   mainContract: eraNetwork.mainContract,
-  //   erc20BridgeL1: eraNetwork.erc20BridgeL1,
-  //   erc20BridgeL2: eraNetwork.erc20BridgeL2,
-  //   l1Gateway: eraNetwork.l1Gateway,
-  // });
-  // provider.setIsEthGasToken(eraNetwork.isEthGasToken ?? true);
-  const getDefaultBridgeAddresses = async () => {
+  const provider = useMemo(() => {
+    if (!networkKey) return;
+    return new Provider(eraNetwork.rpcUrl);
+  }, [eraNetwork.rpcUrl, networkKey]);
+
+  const getDefaultBridgeAddresses = useCallback(async () => {
     return {
       erc20L1: eraNetwork.erc20BridgeL1,
       erc20L2: eraNetwork.erc20BridgeL2,
     };
-  };
+  }, [eraNetwork.erc20BridgeL1, eraNetwork.erc20BridgeL2]);
   return { provider, getDefaultBridgeAddresses };
 };
 
