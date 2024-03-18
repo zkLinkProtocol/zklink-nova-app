@@ -6,6 +6,7 @@ import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
 import {
   SupportToken,
+  checkOkx,
   getAccounTvl,
   getAccountPoint,
   getAccountRefferalsTVL,
@@ -27,6 +28,7 @@ import NovaPoints from "@/components/Dashboard/NovaPoints";
 import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
+import { getCheckOkxPoints } from "@/utils";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -87,9 +89,14 @@ export default function Dashboard() {
 
   const getAccountPointFunc = async () => {
     if (!address) return;
-    const res = await getAccountPoint(address);
-    if (res.result) {
-      setAccountPoint(res.result);
+    const { result } = await getAccountPoint(address);
+    const okxPoings = await getCheckOkxPoints(address);
+
+    if (result) {
+      setAccountPoint({
+        novaPoint: (+result?.novaPoint || 0) + okxPoings,
+        referPoint: +result?.referPoint || 0,
+      });
     }
   };
 

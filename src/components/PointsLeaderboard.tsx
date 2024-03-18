@@ -1,6 +1,6 @@
 import { getAccountRank, getAccountsRank } from "@/api";
 import { TableColumnItem } from "@/types";
-import { formatNumberWithUnit } from "@/utils";
+import { formatNumberWithUnit, getCheckOkxPoints } from "@/utils";
 import {
   Button,
   Spinner,
@@ -82,9 +82,14 @@ export default function PointsLeaderboard() {
       }
 
       if (address && nextPage === 1) {
-        const accountRankRes = await getAccountRank(address);
-        if (accountRankRes?.result) {
-          arr.unshift(accountRankRes.result);
+        const { result } = await getAccountRank(address);
+        const okxPoints = await getCheckOkxPoints(address);
+
+        if (result) {
+          arr.unshift({
+            ...result,
+            novaPoint: (+result?.novaPoint || 0) + okxPoints,
+          });
         }
       }
 
