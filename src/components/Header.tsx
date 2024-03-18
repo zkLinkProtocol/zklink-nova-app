@@ -143,6 +143,7 @@ export default function Header() {
 
   useEffect(() => {
     if (address && isOkxFlag) {
+      console.log('visitRewardFunc',address, isOkxFlag)
       visitRewardFunc();
     }
   }, [address, isOkxFlag]);
