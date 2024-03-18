@@ -1167,7 +1167,11 @@ export default function Bridge(props: IBridgeComponentProps) {
                 {!isDepositErc20 ? "Depositing" : "Sending Transaction"}
               </div>
               <div className="inner">
-                Please sign the transaction in your wallet.
+                <p>Please sign the transaction in your wallet.</p>
+                <p className="mt-2">
+                  If the transaction doesn't appear in your wallet after 1
+                  minute, please refresh the page and try again.
+                </p>
               </div>
             </Trans>
           </ModalBody>
@@ -1214,7 +1218,13 @@ export default function Bridge(props: IBridgeComponentProps) {
             <Trans>
               <img src="/img/transFail.png" alt="" className="statusImg" />
               <div className="title">Transaction Failed</div>
-              <div className="title">{failMessage}</div>
+              <div className="title">
+                {failMessage
+                  .toLowerCase()
+                  .includes("missing or invalid parameters")
+                  ? "User rejected signature"
+                  : failMessage}
+              </div>
               <div className="inner">
                 If you have any questions regarding this transaction, please{" "}
                 <a
