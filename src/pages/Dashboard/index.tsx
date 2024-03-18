@@ -8,12 +8,10 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-  Skeleton,
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import BridgeComponent from "@/components/Bridge";
-import { BOOST_LIST } from "@/constants/boost";
 import {
   formatNumberWithUnit,
   getBooster,
@@ -46,6 +44,7 @@ import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
+import ProgressBar from "@/components/Dashboard/ProgressBar";
 
 const GradientButton = styled.span`
   border-radius: 0.5rem;
@@ -73,100 +72,6 @@ const GradientText = styled.span`
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-`;
-
-const ProgressBar = styled.div`
-  position: relative;
-  padding: 2rem 0;
-
-  .title {
-    position: absolute;
-    left: 0;
-    bottom: -0.1rem;
-    color: #fff;
-    font-family: Satoshi;
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 1; /* 157.143% */
-  }
-
-  .progress-item {
-    position: relative;
-    height: 0.5rem;
-    background: #2a2a2a;
-    border-radius: 0.5rem;
-
-    &.active {
-      .inner-bar {
-        width: 100%;
-      }
-      .progress-points {
-        background-color: #46aae2;
-        z-index: 12;
-        .points-top {
-          background: linear-gradient(90deg, #48ecae 0%, #49ced7 100%);
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        .points-bottom {
-          color: #fff;
-        }
-      }
-    }
-
-    .inner-bar {
-      max-width: 100%;
-      border-radius: 0.5rem;
-      background: linear-gradient(
-        90deg,
-        #48ecae 0%,
-        #3e52fc 51.07%,
-        #49ced7 100%
-      );
-    }
-
-    .progress-points {
-      position: absolute;
-      top: 50%;
-      right: -0.625rem;
-      transform: translate(0, -50%);
-      width: 1.25rem;
-      height: 1.25rem;
-      border-radius: 50%;
-      background-color: #2a2a2a;
-      z-index: 10;
-      .points-top {
-        position: absolute;
-        top: -2rem;
-        left: 50%;
-        transform: translate(-50%, 0);
-        color: #919192;
-        text-align: center;
-        font-family: Satoshi;
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 1.375rem; /* 157.143% */
-        white-space: nowrap;
-      }
-      .points-bottom {
-        position: absolute;
-        bottom: -2rem;
-        left: 50%;
-        transform: translate(-50%, 0);
-        color: #919192;
-        text-align: center;
-        font-family: Satoshi;
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 1.375rem; /* 157.143% */
-        white-space: nowrap;
-      }
-    }
-  }
 `;
 
 const TabsBox = styled.div`
@@ -205,14 +110,6 @@ export type AccountTvlItem = {
   iconURL: string | null;
 };
 
-export type ProgressItem = {
-  tier: number;
-  value: number;
-  booster: number;
-  progress: number;
-  isActive: boolean;
-};
-
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -227,7 +124,6 @@ export default function Dashboard() {
     novaPoint: 0,
     referPoint: 0,
   });
-  const [progressList, setProgressList] = useState<ProgressItem[]>([]);
   const [referrersTvlList, setReferrersTvl] = useState([]);
   const [bridgeToken, setBridgeToken] = useState("");
   const bridgeModal = useDisclosure();
@@ -357,30 +253,6 @@ export default function Dashboard() {
 
     setTotalTvl(res?.result || 0);
   };
-
-  useEffect(() => {
-    const num = Number(groupTvl);
-
-    let arr = BOOST_LIST.map((item, index) => {
-      let progress = 0;
-      let prevValue = index === 0 ? 0 : BOOST_LIST[index - 1].value;
-      if (num > prevValue) {
-        progress = num / item.value;
-        progress = progress > 1 ? 1 : progress;
-      }
-      let obj = {
-        ...item,
-        isActive: num > item.value,
-        progress,
-      };
-
-      return obj;
-    });
-
-    console.log("progress list", arr);
-
-    setProgressList(arr);
-  }, [groupTvl]);
 
   const getEthUsdPrice = async () => {
     const tokenList = await getExplorerTokenTvl(true);
@@ -625,9 +497,9 @@ export default function Dashboard() {
                 Est. in next epoch
               </p> */}
 
-              <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-                <div className="flex items-center gap-[0.5rem]">
-                  <span>Earned By Your Deposit</span>
+            <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
+              <div className="flex items-center gap-[0.5rem]">
+                <span>Earned By Your Deposit</span>
 
                 <Tooltip
                   className="p-[1rem]"
@@ -823,28 +695,7 @@ export default function Dashboard() {
             </div>
 
             <CardBox className="mt-[2rem] py-[1.5rem] pl-[1.5rem] pr-[3rem] overflow-x-auto">
-              <ProgressBar className="progress-bar flex w-[40rem] md:w-full">
-                <div className="title">Target/Boost</div>
-
-                {progressList.map((item, index) => (
-                  <div
-                    className={`progress-item w-1/5 ${
-                      item.isActive ? "active" : ""
-                    } `}
-                    key={index}
-                  >
-                    <div
-                      className="inner-bar absolute left-0 top-0 h-full"
-                      style={{ width: `${item.progress * 100}%` }}
-                    ></div>
-
-                    <div className="progress-points">
-                      <div className="points-top">{item.booster}x</div>
-                      <div className="points-bottom">{item.value} ETH</div>
-                    </div>
-                  </div>
-                ))}
-              </ProgressBar>
+              <ProgressBar groupTvl={groupTvl} />
             </CardBox>
           </div>
 
