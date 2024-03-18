@@ -81,7 +81,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               onMouseLeave={() => setShowTooltip2(false)}
               onTouchStart={() => setShowTooltip2((prev) => !prev)}
             >
-              {getBooster(groupTvl) * 2}x
+              {(getBooster(groupTvl) + 1) * 2}x
             </GreenTag>
           </Tooltip>
         </div>
