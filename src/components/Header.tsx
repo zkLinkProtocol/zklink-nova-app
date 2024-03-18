@@ -655,9 +655,8 @@ export default function Header() {
               up after 1 minute, please refresh the page and try again.
             </p>
             <p className="mt-2 text-[#9db4d0] font-[700]">
-              If you're using MetaMask on your mobile device, we suggest
-              accessing app.zklink.io directly through the in-app browser in
-              MetaMask.
+              If you're using MetaMask or OKX Wallet on your mobile device, we suggest
+              accessing app.zklink.io directly through the in-app browser.
             </p>
           </div>
         )}
