@@ -12,7 +12,7 @@ import {
 } from "@nextui-org/react";
 import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import styled from "styled-components";
 import { showAccount } from "@/utils";
 import { useCallback, useEffect, useState } from "react";
@@ -40,6 +40,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { BrowserView } from "react-device-detect";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
+import { config } from "@/constants/networks";
 
 const NavNet = styled.div`
   background: #313841;
@@ -226,6 +227,19 @@ export default function Header() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const { disconnect } = useDisconnect();
+
+  const onDisconnect = async () => {
+    if (isConnected || address) {
+      const res = await disconnect();
+      console.log("=====================>disconnect", res);
+    }
+  };
+
+  // useEffect(() => {
+  //   onDisconnect();
+  // }, []);
+
   return (
     <>
       <Navbar
@@ -399,6 +413,9 @@ export default function Header() {
                 Deposit History
               </Button>
             )}
+
+            <Button onClick={onDisconnect}>disconnect</Button>
+
             <ConnectButton.Custom>
               {({ chain }) => (
                 <Button
