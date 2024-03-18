@@ -621,12 +621,14 @@ export const useBridgeTx = () => {
         return Promise.reject(new Error("Insufficient balance"));
       }
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      //set a timeout
+      await sleep(1000);
       try {
         const res = await publicClient?.waitForTransactionReceipt({ hash });
-        console.log(res);
+        console.log("tx res: ", res);
       } catch (e) {
         // maybe not found. But tx is sent and will succeed
-        console.error(e);
+        console.error("tx errpr: ", e);
       }
 
       return hash;

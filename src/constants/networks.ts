@@ -1,3 +1,4 @@
+import { chains } from "./networks";
 import { Address } from "viem";
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
@@ -22,6 +23,7 @@ import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { createConfig, http } from "wagmi";
+import { walletConnect } from "wagmi/connectors";
 const sourceId = 1; // mainnet
 
 export const blast = /*#__PURE__*/ defineChain({
@@ -427,7 +429,14 @@ export const config = getDefaultConfig({
 
 export const wagmiDefaultConfig = createConfig({
   chains: chains,
-  connectors,
+  connectors: [
+    ...connectors,
+    walletConnect({
+      projectId,
+      metadata,
+      showQrModal: true,
+    }),
+  ],
   multiInjectedProviderDiscovery: true,
   transports: {
     [mainnet.id]: http(),
