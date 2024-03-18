@@ -406,9 +406,9 @@ const connectors = connectorsForWallets(
       groupName: "Recommended",
       wallets: [
         injectedWallet,
-        rainbowWallet,
+        // rainbowWallet,
         okxWallet,
-        rabbyWallet,
+        // rabbyWallet,
         metaMaskWallet,
         walletConnectWallet,
       ],
