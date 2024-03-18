@@ -59,6 +59,7 @@ import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { wagmiDefaultConfig } from "@/constants/networks";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -287,6 +288,13 @@ export default function Bridge(props: IBridgeComponentProps) {
       if (address) {
         //TODO call api to get loyal points
         // setLoyalPoints(300);
+        // const client = await getConnectorClient(wagmiDefaultConfig);
+        if (wagmiDefaultConfig.state?.current) {
+          const connection = wagmiDefaultConfig.state.connections.get(
+            wagmiDefaultConfig.state?.current
+          );
+          console.log("connection: ", connection);
+        }
       }
     })();
   }, [address]);
