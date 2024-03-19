@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import {
   Avatar,
@@ -288,6 +288,27 @@ export default function Bridge(props: IBridgeComponentProps) {
   const dispatch = useDispatch();
 
   const { addTxHash, txhashes } = useVerifyStore();
+
+  const inputRef1 = useRef<HTMLInputElement>(null);
+  const inputRef2 = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    //https://github.com/ant-design/ant-design-mobile/issues/5174
+    inputRef1.current?.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+      },
+      { passive: false }
+    );
+    inputRef2.current?.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+      },
+      { passive: false }
+    );
+  }, []);
 
   useEffect(() => {
     // const timer = setInterval(() => {
@@ -686,7 +707,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   return (
     <>
       <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
-        <ContainerCover />
+        {/* <ContainerCover /> */}
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4">
             <span className="font-bold">From</span>
@@ -708,6 +729,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
           <div className="flex items-center gap-4 mt-2">
             <Input
+              ref={inputRef1}
               classNames={{ input: "text-4xl" }}
               size="lg"
               // type="number"
@@ -715,7 +737,6 @@ export default function Bridge(props: IBridgeComponentProps) {
               variant={"underlined"}
               value={String(amount)}
               onValueChange={handleInputValue}
-              onWheel={(e) => e.preventDefault()}
               errorMessage={errorInputMsg}
             />
 
@@ -872,7 +893,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         )}
       </Container>
       <Container className="block md:hidden px-4 py-6 md:px-8 md:py-8 layer">
-        <ContainerCover />
+        {/* <ContainerCover /> */}
 
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4 mb-4">
@@ -914,6 +935,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
             <div>
               <Input
+                ref={inputRef2}
                 classNames={{
                   input: "text-4xl",
                   inputWrapper: ["bg-inputColor", "h-14"],
@@ -925,7 +947,6 @@ export default function Bridge(props: IBridgeComponentProps) {
                 radius="lg"
                 value={String(amount)}
                 onValueChange={handleInputValue}
-                onWheel={(e) => e.preventDefault()}
                 errorMessage={errorInputMsg}
               />
             </div>
