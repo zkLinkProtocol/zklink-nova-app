@@ -23,14 +23,14 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/twitter/, ""),
       },
       "/api": {
-        target: "https://goerli.app.zklink.io",
-        // target: "https://app.zklink.io",
+        // target: "https://goerli.app.zklink.io",
+        target: "https://app.zklink.io",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/api"),
       },
       "/points": {
-        target: "https://goerli.app.zklink.io",
-        // target: "https://app.zklink.io",
+        // target: "https://goerli.app.zklink.io",
+        target: "https://app.zklink.io",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/points/, "/points"),
       },

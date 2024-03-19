@@ -190,6 +190,37 @@ const SelectBox = styled.div`
   }
 `;
 
+const TokenYieldBox = styled.div`
+  & .token-yield {
+    display: flex;
+    padding: 2px 4px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    color: #fff;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 200% */
+    letter-spacing: -0.06px;
+    margin-right: 6px;
+  }
+  & .token-yield-1 {
+    background: linear-gradient(90deg, #64b3ec -0.39%, #1e1a6a 99.76%);
+  }
+  & .token-yield-2 {
+    background: linear-gradient(90deg, #874fff -0.39%, #41ff54 99.76%);
+  }
+  & .token-yield-3 {
+    background: linear-gradient(90deg, #ddf3fd 0%, #7c3dc8 0.01%, #0f002b 100%);
+  }
+  & .token-yield-4 {
+    background: linear-gradient(90deg, #0bc48f 0%, #00192b 107.78%);
+  }
+`;
+
 const LoyaltyBoostBox = styled.div`
   background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
   width: 100px;
@@ -505,7 +536,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const unsupportedChainWithConnector = useMemo(() => {
     if (connectorName && fromList[fromActive]) {
       if (
-        connectorName === "Binance DeFi Wallet" &&
+        connectorName.toLowerCase().includes("binance") &&
         fromList[fromActive].networkKey === "mantle"
       ) {
         return "Binance wallet may not support Mantle Network.";
@@ -1238,7 +1269,29 @@ export default function Bridge(props: IBridgeComponentProps) {
                 >
                   <div className="flex items-center">
                     <Avatar src={item?.icon} className="w-12 h-12" />
-                    <span className="text-xl ml-4">{item?.symbol}</span>
+                    <div className="text-xl ml-4 ">
+                      <span>{item?.symbol}</span>
+                      {item.symbol === "pufETH" && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden ">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-2`}>
+                            Puffer Points
+                          </span>
+                        </TokenYieldBox>
+                      )}
+                    </div>
+                    {item.symbol === "pufETH" && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span>
+                        <span className={`token-yield token-yield-2`}>
+                          Puffer Points
+                        </span>
+                      </TokenYieldBox>
+                    )}
                   </div>
 
                   <span className="text-base">{item?.formatedBalance}</span>
