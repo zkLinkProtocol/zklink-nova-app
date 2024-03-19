@@ -190,10 +190,10 @@ const SelectBox = styled.div`
   }
 `;
 
-const TokenYieldBox = styled.div`
+export const TokenYieldBox = styled.div`
   & .token-yield {
     display: flex;
-    padding: 2px 4px;
+    padding: 2px 8px;
     justify-content: center;
     align-items: center;
     border-radius: 6px;

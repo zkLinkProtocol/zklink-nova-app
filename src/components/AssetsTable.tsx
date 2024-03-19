@@ -19,7 +19,7 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import BridgeComponent from "@/components/Bridge";
+import BridgeComponent, { TokenYieldBox } from "@/components/Bridge";
 import { formatNumberWithUnit } from "@/utils";
 import _ from "lodash";
 import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
@@ -136,6 +136,7 @@ const TableItem = styled.div`
     }
   }
 `;
+
 
 export const TableBox = styled.div`
   .table {
@@ -486,6 +487,17 @@ export default function AssetsTable(props: IAssetsTableProps) {
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
                         {item?.multiplier}x Boost
                       </span>
+
+                      {item.symbol === "pufETH" && (
+                        <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-2`}>
+                            Puffer Points
+                          </span>
+                        </TokenYieldBox>
+                      )}
                     </TableItem>
                   </TableCell>
                   <TableCell>
@@ -547,7 +559,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
       </TableBox>
 
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px" }}
         size="2xl"
         isOpen={bridgeModal.isOpen}
@@ -558,10 +570,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
             <>
               <ModalHeader>Bridge</ModalHeader>
               <ModalBody className="pb-8">
-                <BridgeComponent
-                  bridgeToken={bridgeToken}
-                  onClose={onClose}
-                />
+                <BridgeComponent bridgeToken={bridgeToken} onClose={onClose} />
               </ModalBody>
             </>
           )}
