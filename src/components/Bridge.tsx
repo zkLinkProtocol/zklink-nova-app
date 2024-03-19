@@ -601,7 +601,12 @@ export default function Bridge(props: IBridgeComponentProps) {
       if (e.message) {
         if (e.message.includes("Insufficient balance")) {
           setFailMessage("Insufficient balance");
-        } else if (e.message.includes("User rejected the request")) {
+        } else if (
+          e.message.includes(
+            "User rejected the request" ||
+              e.message.includes("OKX Wallet Reject")
+          )
+        ) {
           setFailMessage("User rejected the request");
         } else {
           setFailMessage(e.message);

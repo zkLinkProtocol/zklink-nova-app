@@ -243,7 +243,8 @@ export default function Header() {
 
   const onDisconnect = async () => {
     if (isConnected || address) {
-      for (const connector of connectors) { //maybe multi connectors. disconnct all.
+      for (const connector of connectors) {
+        //maybe multi connectors. disconnct all.
         await disconnect({ connector });
       }
       await disconnect();
@@ -652,13 +653,13 @@ export default function Header() {
       </Navbar>
 
       <BrowserView>
-        {connectModalOpen && (
+        {connectModalOpen && !address && (
           <div className="fixed bottom-[0rem] w-full text-center z-[2147483647] bg-[#09171e] py-[1rem] text-[1rem] ">
-            <p className="text-[#9db4d0] font-[700]">
+            <p className="text-[#C57D10] font-[700]">
               WalletConnect can be slow sometimes. If the QR code doesn't show
               up after 1 minute, please refresh the page and try again.
             </p>
-            <p className="mt-2 text-[#9db4d0] font-[700]">
+            <p className="mt-2 text-[#C57D10] font-[700]">
               If you're using MetaMask or OKX Wallet on your mobile device, we
               suggest accessing app.zklink.io directly through the in-app
               browser.
