@@ -157,14 +157,15 @@ export default function Header() {
     }
 
     if (flag) {
-      const isOkx = flag.toLowerCase() === "okx";
+      const isOkx =
+        flag.toLowerCase() === "okx" || flag.toLowerCase() === "bonus";
       dispatch(setIsOkxFlag(isOkx));
     }
   }, [dispatch, searchParams]);
 
   useEffect(() => {
     if (address && isOkxFlag) {
-      console.log('visitRewardFunc',address, isOkxFlag)
+      console.log("visitRewardFunc", address, isOkxFlag);
       visitRewardFunc();
     }
   }, [address, isOkxFlag]);
