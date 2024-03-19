@@ -203,10 +203,11 @@ interface IAssetsTableProps {
   accountTvlData: AccountTvlItem[];
   totalTvlList: TotalTvlItem[];
   supportTokens: SupportToken[];
+  ethUsdPrice: number;
 }
 
 export default function AssetsTable(props: IAssetsTableProps) {
-  const { accountTvlData, totalTvlList, supportTokens } = props;
+  const { accountTvlData, totalTvlList, supportTokens, ethUsdPrice } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
   const [tableList, setTableList] = useState<AssetsListItem[]>([]);
@@ -400,6 +401,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => item?.type === filterType);
     }
 
+    console.log("account tvl list========>", arr);
     setTableList(arr);
   }, [
     isMyHolding,
@@ -494,7 +496,10 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         {formatNumberWithUnit(item.groupAmount)}
                       </div>
                       <div className="sub-value mt-[0.12rem]">
-                        {formatNumberWithUnit(item.groupTvl, "$")}
+                        {formatNumberWithUnit(
+                          +item.groupTvl * +ethUsdPrice,
+                          "$"
+                        )}
                       </div>
                     </TableItem>
                   </TableCell>
@@ -524,7 +529,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         {formatNumberWithUnit(item.amount)}
                       </div>
                       <div className="sub-value mt-[0.12rem]">
-                        {formatNumberWithUnit(item.tvl, "$")}
+                        {formatNumberWithUnit(+item.tvl * +ethUsdPrice, "$")}
                       </div>
                     </TableItem>
                   </TableCell>
@@ -547,7 +552,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
       </TableBox>
 
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px" }}
         size="2xl"
         isOpen={bridgeModal.isOpen}
@@ -558,10 +563,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
             <>
               <ModalHeader>Bridge</ModalHeader>
               <ModalBody className="pb-8">
-                <BridgeComponent
-                  bridgeToken={bridgeToken}
-                  onClose={onClose}
-                />
+                <BridgeComponent bridgeToken={bridgeToken} onClose={onClose} />
               </ModalBody>
             </>
           )}
