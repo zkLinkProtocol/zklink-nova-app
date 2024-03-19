@@ -295,6 +295,8 @@ export default function Bridge(props: IBridgeComponentProps) {
         const walletName = provider?.session?.peer?.metadata.name;
         console.log("connection provider name : ", walletName);
         setConnectorName(walletName);
+      } else {
+        setConnectorName("");
       }
     })();
   }, [address, connections]);
