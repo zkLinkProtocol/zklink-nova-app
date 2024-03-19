@@ -239,17 +239,20 @@ export default function Header() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const { disconnect } = useDisconnect();
+  const { connectors, disconnect } = useDisconnect();
 
   const onDisconnect = async () => {
     if (isConnected || address) {
+      for (const connector of connectors) { //maybe multi connectors. disconnct all.
+        await disconnect({ connector });
+      }
       await disconnect();
       console.log("=====================>disconnect");
     }
   };
 
   const connections = useConnections();
-  const connectors = useConnectors();
+  // const connectors = useConnectors();
   const connectorClient = useConnectorClient();
 
   useEffect(() => {
