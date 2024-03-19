@@ -41,15 +41,26 @@ export default function GroupMilestone(props: { groupTvl: number }) {
         </div>
 
         <div className="flex items-center">
-          <span className="text-[1rem]">Next Milestone</span>
-          <GradientText className="ml-[0.5rem] text-[1rem]">
-            {getNextMilestone(groupTvl)} ETH
-          </GradientText>
+          {+groupTvl > 5000 ? (
+            <>
+              {/* <div className="flex items-center gap-2">
+              <span className="ml-[0.5rem] text-[1rem] text-[#03d498]">
+                Congratulations
+              </span>
+              <span className="text-[1rem]">🎉</span>
+            </div> */}
+            </>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-[1rem]">Next Milestone</span>
 
-          {/* <img
-                                  src='/img/icon-info.svg'
-                                  className='ml-[0.38rem] w-[0.875rem] h-[0.875rem]'
-                              /> */}
+              <GradientText className="ml-[0.5rem] text-[1rem]">
+                {getNextMilestone(groupTvl)} ETH
+              </GradientText>
+            </div>
+          )}
+
+          <GradientText className="ml-[0.5rem] text-[1rem]"></GradientText>
         </div>
       </div>
       <CardBox className="mt-[2rem] py-[1.5rem] pl-[1.5rem] pr-[3rem] overflow-x-auto">
