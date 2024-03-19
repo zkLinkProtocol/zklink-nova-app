@@ -59,7 +59,7 @@ import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { wagmiDefaultConfig } from "@/constants/networks";
+import { useConnections } from "wagmi";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -271,7 +271,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
-
+  const connections = useConnections();
   const dispatch = useDispatch();
 
   const { addTxHash, txhashes } = useVerifyStore();
@@ -288,16 +288,14 @@ export default function Bridge(props: IBridgeComponentProps) {
       if (address) {
         //TODO call api to get loyal points
         // setLoyalPoints(300);
-        // const client = await getConnectorClient(wagmiDefaultConfig);
-        if (wagmiDefaultConfig.state?.current) {
-          const connection = wagmiDefaultConfig.state.connections.get(
-            wagmiDefaultConfig.state?.current
-          );
-          console.log("connection: ", connection);
-        }
+        console.log("connections: ", connections);
       }
     })();
-  }, [address]);
+  }, [address, connections]);
+
+  const connectorName = useMemo(() => {
+    return connections?.[0]?.connector.name;
+  }, [connections]);
 
   useEffect(() => {
     if (category === "ALL") {
@@ -1168,10 +1166,13 @@ export default function Bridge(props: IBridgeComponentProps) {
               </div>
               <div className="inner">
                 <p>Please sign the transaction in your wallet.</p>
-                <p className="mt-2">
-                  If the transaction doesn't appear in your wallet after 1
-                  minute, please refresh the page and try again.
-                </p>
+                {connectorName === "WalletConnect" && (
+                  <p className="mt-2">
+                    WalletConnect can be slow sometimes. If the transaction
+                    doesn't appear in your mobile wallet after 1 minute, please
+                    refresh the page and try again.
+                  </p>
+                )}
               </div>
             </Trans>
           </ModalBody>

@@ -25,7 +25,11 @@
   <meta name="twitter:image:width" content="1200">
   <meta name="twitter:image:height" content="630">
   <script src="//cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
+  <script>
+    if (window.innerWidth < 500) {
+      eruda.init();
+    }
+  </script>
 </head>
 
 <body>
