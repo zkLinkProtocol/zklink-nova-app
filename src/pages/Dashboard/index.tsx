@@ -196,10 +196,10 @@ export default function Dashboard() {
   const [pufferPoints, setPufferPoints] = useState(0);
   const getPufferPointsFunc = async () => {
     if (!address) return;
-    const { result } = await getPufferPoints(address);
+    const { data } = await getPufferPoints(address);
 
-    if (result) {
-      setPufferPoints(+result);
+    if (data?.points) {
+      setPufferPoints(+data.points);
     }
   };
 

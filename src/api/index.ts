@@ -1,4 +1,5 @@
 import http from "@/utils/http";
+import axios from "axios";
 import qs from "qs";
 
 type Response = {
@@ -273,11 +274,10 @@ export const getEigenlayerPoints = (address: string) =>
       params: { address },
       headers: {
         "client-id": "08879426f59a4b038b7755b274bc19dc",
+        'Accept': 'application/json'
       },
     }
   );
 
-export const getPufferPoints = (address: string): Promise<Response> =>
-  http.get("", {
-    params: { address },
-  });
+export const getPufferPoints = (address: string) =>
+  http.get(`https://lrt-points.zklink.io/points/${address}/pufferpoints`);

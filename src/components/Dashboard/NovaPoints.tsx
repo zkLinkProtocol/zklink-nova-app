@@ -135,12 +135,20 @@ export default function NovaPoints(props: INovaPointsProps) {
             className="w-[0.875rem] h-[0.875rem] opacity-40"
           />
         </p>
+
         <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <span>Puffer Points</span>
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-puffer-points.png" />
+            <span>Puffer Points</span>
+          </div>
           <span>{formatNumberWithUnit(pufferPoints)}</span>
         </p>
+        
         <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <span>Eigenlayer Points (Puffer)</span>
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-eigenlayer-points.png" />
+            <span>Eigenlayer Points (Puffer)</span>
+          </div>
           <span>{formatNumberWithUnit(eigenlayerPoints)}</span>
         </p>
       </CardBox>
