@@ -234,9 +234,6 @@ export default function Dashboard() {
   //     stakingUsdValue + stakingUsdValue !== 0 && +ethUsdPrice !== 0
   //       ? stakingUsdValue / ethUsdPrice
   //       : 0;
-  // useEffect(() => {
-  //   let ethValue = 0;
-
   //   if (
   //     accountTvlData.length === 1 &&
   //     accountTvlData[0].symbol.toLocaleUpperCase() === "ETH"
