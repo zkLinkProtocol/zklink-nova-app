@@ -360,13 +360,24 @@ export default function Bridge(props: IBridgeComponentProps) {
         const provider: any = await connections?.[0]?.connector.getProvider();
         const walletName = provider?.session?.peer?.metadata.name;
         console.log("connection provider name : ", walletName);
-        // setConnectorName(walletName);
-        setConnectorName(" Binance Web3 Wallet");
+        setConnectorName(walletName);
       } else {
         setConnectorName("");
       }
     })();
   }, [address, connections]);
+
+  const unsupportedChainWithConnector = useMemo(() => {
+    if (connectorName && fromList[fromActive]) {
+      if (
+        connectorName.toLowerCase().includes("binance") &&
+        fromList[fromActive].networkKey === "mantle"
+      ) {
+        return "Binance wallet may not support Mantle Network.";
+      }
+    }
+    return "";
+  }, [fromActive, connectorName]);
 
   useEffect(() => {
     if (category === "ALL") {
@@ -537,7 +548,9 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [chainId, fromActive]);
 
   const actionBtnDisabled = useMemo(() => {
-    if (
+    if (unsupportedChainWithConnector) {
+      return true;
+    } else if (
       !invalidChain &&
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
@@ -549,7 +562,14 @@ export default function Bridge(props: IBridgeComponentProps) {
       return true;
     }
     return false;
-  }, [tokenFiltered, tokenActive, invalidChain, amount, errorInputMsg]);
+  }, [
+    tokenFiltered,
+    tokenActive,
+    invalidChain,
+    amount,
+    errorInputMsg,
+    unsupportedChainWithConnector,
+  ]);
   console.log(
     "actionBtnDisabled: ",
     actionBtnDisabled,
@@ -899,9 +919,9 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
-          {switchChainError && (
+          {unsupportedChainWithConnector && (
             <p className="mt-4 text-[#C57D10] text-[14px]">
-              {switchChainError}
+              {unsupportedChainWithConnector}
             </p>
           )}
         </div>
@@ -1094,9 +1114,9 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
-          {switchChainError && (
+          {unsupportedChainWithConnector && (
             <p className="mt-4 text-[#C57D10] text-[14px]">
-              {switchChainError}
+              {unsupportedChainWithConnector}
             </p>
           )}
         </div>
