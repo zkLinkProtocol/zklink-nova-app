@@ -272,6 +272,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
   const connections = useConnections();
+  const [connectorName, setConnectorName] = useState("");
   const dispatch = useDispatch();
 
   const { addTxHash, txhashes } = useVerifyStore();
@@ -289,13 +290,14 @@ export default function Bridge(props: IBridgeComponentProps) {
         //TODO call api to get loyal points
         // setLoyalPoints(300);
         console.log("connections: ", connections);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const provider: any = await connections?.[0]?.connector.getProvider();
+        const walletName = provider?.session?.peer?.metadata.name;
+        console.log("connection provider name : ", walletName);
+        setConnectorName(walletName);
       }
     })();
   }, [address, connections]);
-
-  const connectorName = useMemo(() => {
-    return connections?.[0]?.connector.name;
-  }, [connections]);
 
   useEffect(() => {
     if (category === "ALL") {
@@ -465,8 +467,22 @@ export default function Bridge(props: IBridgeComponentProps) {
     return chainId !== fromList[fromActive].chainId;
   }, [chainId, fromActive]);
 
+  const unsupportedChainWithConnector = useMemo(() => {
+    if (connectorName && fromList[fromActive]) {
+      if (
+        connectorName === "Binance DeFi Wallet" &&
+        fromList[fromActive].networkKey === "mantle"
+      ) {
+        return "Binance wallet may not support Mantle Network.";
+      }
+    }
+    return "";
+  }, [fromActive, connectorName]);
+
   const actionBtnDisabled = useMemo(() => {
-    if (
+    if (unsupportedChainWithConnector) {
+      return true;
+    } else if (
       !invalidChain &&
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
@@ -478,7 +494,14 @@ export default function Bridge(props: IBridgeComponentProps) {
       return true;
     }
     return false;
-  }, [tokenFiltered, tokenActive, invalidChain, amount, errorInputMsg]);
+  }, [
+    tokenFiltered,
+    tokenActive,
+    invalidChain,
+    amount,
+    errorInputMsg,
+    unsupportedChainWithConnector,
+  ]);
   console.log(
     "actionBtnDisabled: ",
     actionBtnDisabled,
@@ -523,6 +546,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   };
 
   const handleAction = useCallback(async () => {
+    if (unsupportedChainWithConnector) return;
     if (!address) return;
     if (invalidChain) {
       switchChain(
@@ -610,6 +634,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     transSuccModal,
     networkKey,
     transFailModal,
+    unsupportedChainWithConnector,
   ]);
 
   return (
@@ -778,6 +803,11 @@ export default function Bridge(props: IBridgeComponentProps) {
             >
               Connect Wallet
             </Button>
+          )}
+          {unsupportedChainWithConnector && (
+            <p className="mt-4 text-[#C57D10]">
+              {unsupportedChainWithConnector}
+            </p>
           )}
         </div>
         {isFirstDeposit && showNoPointsTip && (
@@ -966,6 +996,11 @@ export default function Bridge(props: IBridgeComponentProps) {
             >
               Connect Wallet
             </Button>
+          )}
+          {unsupportedChainWithConnector && (
+            <p className="mt-4 text-[#C57D10]">
+              {unsupportedChainWithConnector}
+            </p>
           )}
         </div>
         {isFirstDeposit && showNoPointsTip && (
@@ -1166,13 +1201,11 @@ export default function Bridge(props: IBridgeComponentProps) {
               </div>
               <div className="inner">
                 <p>Please sign the transaction in your wallet.</p>
-                {connectorName === "WalletConnect" && (
-                  <p className="mt-2">
-                    WalletConnect can be slow sometimes. If the transaction
-                    doesn't appear in your mobile wallet after 1 minute, please
-                    refresh the page and try again.
-                  </p>
-                )}
+                <p className="mt-2">
+                  If the transaction doesn't show up in your wallet after a
+                  minute or if the deposit keeps pending, please refresh the
+                  page and try again.
+                </p>
               </div>
             </Trans>
           </ModalBody>

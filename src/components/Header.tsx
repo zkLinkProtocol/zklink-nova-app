@@ -160,30 +160,31 @@ export default function Header() {
     }
   }, [dispatch, location.pathname]);
 
-  useEffect(() => {
-    (async () => {
-      if (!depositL1TxHash) {
-        dispatch(setDepositStatus(""));
-        return;
-      } else {
-        dispatch(setDepositStatus("pending"));
-        setTimeout(() => {
-          dispatch(setDepositL1TxHash(""));
-          dispatch(setDepositStatus(""));
-        }, 30 * 1000); //avoid wait to long
-        const l2hash = await getDepositL2TxHash(
-          depositL1TxHash as `0x${string}`
-        );
-        if (l2hash) {
-          dispatch(setDepositL1TxHash(""));
-          dispatch(setDepositStatus("success"));
-          setTimeout(() => {
-            dispatch(setDepositStatus(""));
-          }, 5000);
-        }
-      }
-    })();
-  }, [depositL1TxHash, getDepositL2TxHash, dispatch, depositStatus]);
+  //Fix: remove for now
+  // useEffect(() => {
+  //   (async () => {
+  //     if (!depositL1TxHash) {
+  //       dispatch(setDepositStatus(""));
+  //       return;
+  //     } else {
+  //       dispatch(setDepositStatus("pending"));
+  //       setTimeout(() => {
+  //         dispatch(setDepositL1TxHash(""));
+  //         dispatch(setDepositStatus(""));
+  //       }, 30 * 1000); //avoid wait to long
+  //       const l2hash = await getDepositL2TxHash(
+  //         depositL1TxHash as `0x${string}`
+  //       );
+  //       if (l2hash) {
+  //         dispatch(setDepositL1TxHash(""));
+  //         dispatch(setDepositStatus("success"));
+  //         setTimeout(() => {
+  //           dispatch(setDepositStatus(""));
+  //         }, 5000);
+  //       }
+  //     }
+  //   })();
+  // }, [depositL1TxHash, getDepositL2TxHash, dispatch, depositStatus]);
 
   const [isHeaderTop, setIsHeaderTop] = useState(true);
 
@@ -655,8 +656,9 @@ export default function Header() {
               up after 1 minute, please refresh the page and try again.
             </p>
             <p className="mt-2 text-[#9db4d0] font-[700]">
-              If you're using MetaMask or OKX Wallet on your mobile device, we suggest
-              accessing app.zklink.io directly through the in-app browser.
+              If you're using MetaMask or OKX Wallet on your mobile device, we
+              suggest accessing app.zklink.io directly through the in-app
+              browser.
             </p>
           </div>
         )}
