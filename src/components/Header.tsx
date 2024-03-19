@@ -481,7 +481,7 @@ export default function Header() {
             {/* <Button onClick={onDisconnect}>disconnect</Button> */}
 
             {isConnected && address ? (
-              <Dropdown>
+              <Dropdown disableAnimation>
                 <DropdownTrigger>
                   <Button
                     // variant="bordered"
