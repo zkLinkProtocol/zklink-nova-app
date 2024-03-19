@@ -1,9 +1,10 @@
 import { CardBox } from "@/styles/common";
 import { formatNumberWithUnit, getBooster } from "@/utils";
-import { Tooltip } from "@nextui-org/react";
-import { useState } from "react";
+// import { Tooltip } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 const GreenTag = styled.span`
   display: flex;
   justify-content: center;
@@ -18,10 +19,12 @@ interface INovaPointsProps {
     novaPoint: number;
     referPoint: number;
   };
+  eigenlayerPoints: number;
+  pufferPoints: number;
 }
 
 export default function NovaPoints(props: INovaPointsProps) {
-  const { accountPoint, groupTvl } = props;
+  const { accountPoint, groupTvl, eigenlayerPoints, pufferPoints } = props;
   const [showTooltip, setShowTooltip] = useState(false);
   const [showTooltip2, setShowTooltip2] = useState(false);
   const [showTooltip3, setShowTooltip3] = useState(false);
@@ -50,16 +53,46 @@ export default function NovaPoints(props: INovaPointsProps) {
         </p>
 
         <div className="flex items-center gap-[1rem]">
-          <span className="text-[2.5rem] font-[700]">
+          <span
+            className="text-[2.5rem] font-[700]"
+            data-tooltip-id="nova-points"
+          >
             {formatNumberWithUnit(
               (+accountPoint.novaPoint || 0) + (+accountPoint.referPoint || 0)
             )}
           </span>
-          <Tooltip
-            className="p-[1rem]"
-            isOpen={showTooltip2}
-            content={
-              <p className="text-[1rem]">
+
+          <ReactTooltip
+            id="nova-points"
+            place="top"
+            style={{ fontSize: "14px", borderRadius: "16px" }}
+            render={() => (
+              <div className="px-4 py-4">
+                <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                  <span>Earn By Your Deposit and Holding</span>
+                  <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
+                </p>
+                <p className="flex justify-between gap-4 items-center mt-[1rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                  <span>Earned By Referring Friends</span>
+                  <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
+                </p>
+              </div>
+            )}
+          />
+
+          <GreenTag
+            data-tooltip-id="booster-learn-more"
+            className="py-[0.375rem] w-[5.625rem] text-[1rem]"
+          >
+            {(getBooster(groupTvl) + 1) * 2}x
+          </GreenTag>
+
+          <ReactTooltip
+            id="booster-learn-more"
+            place="top"
+            style={{ fontSize: "14px", borderRadius: "16px" }}
+            render={() => (
+              <p className="text-[14px]">
                 {getBooster(groupTvl) !== 0 &&
                   `Group Booster: ${getBooster(groupTvl)}x`}
                 <br />
@@ -73,17 +106,8 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Learn More
                 </a>
               </p>
-            }
-          >
-            <GreenTag
-              className="py-[0.375rem] w-[5.625rem] text-[1rem]"
-              onMouseEnter={() => setShowTooltip2(true)}
-              onMouseLeave={() => setShowTooltip2(false)}
-              onTouchStart={() => setShowTooltip2((prev) => !prev)}
-            >
-              {(getBooster(groupTvl) + 1) * 2}x
-            </GreenTag>
-          </Tooltip>
+            )}
+          />
         </div>
         {/* TODO Est. in next epoch */}
         {/* <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
@@ -93,55 +117,39 @@ export default function NovaPoints(props: INovaPointsProps) {
           Est. in next epoch
         </p> */}
 
-        <p className="flex justify-between items-center mt-[3rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-          <div className="flex items-center gap-[0.5rem]">
-            <span>Earned By Your Deposit</span>
+        {/* // TODO other points */}
 
-            <Tooltip
-              className="p-[1rem]"
-              isOpen={showTooltip}
-              content={
-                <p className="text-[1rem] max-w-[25rem] gap-[0.5rem]">
-                  This includes the initial deposit rewards as well as the
-                  ongoing rewards for holding (snapshot every 8 hours).
-                </p>
-              }
-            >
-              <img
-                src="/img/icon-info.svg"
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-                onTouchStart={() => setShowTooltip((prev) => !prev)}
-                className="w-[0.875rem] h-[0.875rem] opacity-40"
-              />
-            </Tooltip>
-          </div>
-          <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
+        <ReactTooltip
+          id="more-points-soon"
+          place="top"
+          style={{ fontSize: "14px", borderRadius: "16px" }}
+          content="More points will be listed here soon."
+        />
+
+        <p className="mt-[3rem] w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
+          <span>Other Points</span>
+
+          <img
+            data-tooltip-id="more-points-soon"
+            src="/img/icon-info.svg"
+            className="w-[0.875rem] h-[0.875rem] opacity-40"
+          />
         </p>
-        <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem] text-[#919192]">
-          <div className="flex items-center gap-[0.5rem]">
-            <span>Earned By Referring Friends</span>
 
-            <Tooltip
-              className="p-[1rem]"
-              isOpen={showTooltip3}
-              content={
-                <p className="text-[1rem] max-w-[25rem] gap-[0.5rem]">
-                  The referral rewards will be updated every 8 hours along with
-                  the deposit rewards.
-                </p>
-              }
-            >
-              <img
-                onMouseEnter={() => setShowTooltip3(true)}
-                onMouseLeave={() => setShowTooltip3(false)}
-                onTouchStart={() => setShowTooltip3((prev) => !prev)}
-                src="/img/icon-info.svg"
-                className="w-[0.875rem] h-[0.875rem] opacity-40"
-              />
-            </Tooltip>
+        <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-puffer-points.png" />
+            <span>Puffer Points</span>
           </div>
-          <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
+          <span>{formatNumberWithUnit(pufferPoints)}</span>
+        </p>
+        
+        <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-eigenlayer-points.png" />
+            <span>Eigenlayer Points (Puffer)</span>
+          </div>
+          <span>{formatNumberWithUnit(eigenlayerPoints)}</span>
         </p>
       </CardBox>
     </>

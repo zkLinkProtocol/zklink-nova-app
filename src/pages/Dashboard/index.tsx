@@ -11,8 +11,10 @@ import {
   getAccountPoint,
   getAccountRefferalsTVL,
   getAccountTvl,
+  getEigenlayerPoints,
   getExplorerTokenTvl,
   getGroupTvl,
+  getPufferPoints,
   getReferralTvl,
   getSupportTokens,
   getTokenPrice,
@@ -123,11 +125,11 @@ export default function Dashboard() {
     }
     setAccountTvlData(data);
 
-    let usd = 0;
+    let sum = 0;
     data.forEach((item) => {
-      usd += +item?.tvl;
+      sum += +item?.tvl;
     });
-    setStakingUsdValue(usd);
+    setStakingUsdValue(sum);
   };
 
   const getTotalTvlByTokenFunc = async () => {
@@ -181,9 +183,32 @@ export default function Dashboard() {
     }
   };
 
+  const [eigenlayerPoints, setEigenlayerPoints] = useState(0);
+  const getEigenlayerPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getEigenlayerPoints(address);
+    console.log("getEigenlayerPointsFunc", data);
+    if (data && data?.eigenlayer_points) {
+      setEigenlayerPoints(+data.eigenlayer_points);
+    }
+  };
+
+  const [pufferPoints, setPufferPoints] = useState(0);
+  const getPufferPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getPufferPoints(address);
+
+    if (data && Array.isArray(data) && data.length > 0) {
+      const obj = data.find((item) => (item.address = address));
+      if (obj) {
+        setPufferPoints(+obj.points);
+      }
+    }
+  };
+
   useEffect(() => {
     let ethValue =
-      +stakingUsdValue !== 0 && +ethUsdPrice !== 0
+      stakingUsdValue + stakingUsdValue !== 0 && +ethUsdPrice !== 0
         ? stakingUsdValue / ethUsdPrice
         : 0;
 
@@ -211,6 +236,8 @@ export default function Dashboard() {
     getGroupTvlFunc();
     getReferralTvlFunc();
     getTotalTvlFunc();
+    getEigenlayerPointsFunc();
+    getPufferPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -249,7 +276,12 @@ export default function Dashboard() {
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem]">
           <NovaCharacter />
-          <NovaPoints groupTvl={groupTvl} accountPoint={accountPoint} />
+          <NovaPoints
+            groupTvl={groupTvl}
+            accountPoint={accountPoint}
+            eigenlayerPoints={eigenlayerPoints}
+            pufferPoints={pufferPoints}
+          />
           <StakingValue
             stakingUsdValue={stakingUsdValue}
             stakingEthValue={stakingEthValue}

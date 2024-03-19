@@ -1,4 +1,5 @@
 import http from "@/utils/http";
+import axios from "axios";
 import qs from "qs";
 
 type Response = {
@@ -265,3 +266,18 @@ export const visitReward = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/invite/visit/reward`, {
     params: { address },
   });
+
+export const getEigenlayerPoints = (address: string) =>
+  http.get(
+    "https://quest-api.puffer.fi/puffer-quest/third/query_zklink_point",
+    {
+      params: { address },
+      headers: {
+        "client-id": "08879426f59a4b038b7755b274bc19dc",
+        'Accept': 'application/json'
+      },
+    }
+  );
+
+export const getPufferPoints = (address: string) =>
+  http.get(`https://lrt-points.zklink.io/points/${address}/pufferpoints`);
