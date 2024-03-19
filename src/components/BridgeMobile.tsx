@@ -536,14 +536,14 @@ export default function Bridge(props: IBridgeComponentProps) {
       setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
       dispatch(setDepositL1TxHash(hash!));
       transLoadModal.onClose();
-      dispatch(setDepositStatus("pending"));
+      // dispatch(setDepositStatus("pending"));
       transSuccModal.onOpen();
       setTimeout(() => {
         transSuccModal.onClose();
       }, 5000);
     } catch (e) {
       transLoadModal.onClose();
-      dispatch(setDepositStatus(""));
+      // dispatch(setDepositStatus(""));
 
       if (e.message) {
         if (e.message.includes("Insufficient balance")) {
