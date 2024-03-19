@@ -49,7 +49,7 @@ import Loading from "@/components/Loading";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { IS_MAINNET } from "@/constants";
 import Toast from "@/components/Toast";
-
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 const verifyFromList = [
   ...fromList,
   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
@@ -214,7 +214,8 @@ export const enum VerifyResult {
 }
 
 export default function SoftKYC() {
-  const web3Modal = useWeb3Modal();
+  // const web3Modal = useWeb3Modal();
+  const { openConnectModal } = useConnectModal();
   const verifyDepositModal = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();
   const { address, isConnected } = useAccount();
@@ -383,7 +384,8 @@ export default function SoftKYC() {
   const handleConnectAndSign = async () => {
     if (!isConnected || !address) {
       setIsHandleSign(true);
-      web3Modal.open({ view: "Connect" });
+      // web3Modal.open({ view: "Connect" });
+      openConnectModal?.();
       return;
     }
     setSignLoading(true);
@@ -905,6 +907,7 @@ export default function SoftKYC() {
               </Select>
 
               <Input
+                className="max-w-[100%]"
                 variant="underlined"
                 placeholder="Please enter your tx hash"
                 value={depositTxHash}

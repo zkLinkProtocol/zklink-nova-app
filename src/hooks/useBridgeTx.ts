@@ -1,8 +1,10 @@
+import { useA } from "@web3modal/wagmi/react";
 import {
   PRIMARY_CHAIN_KEY,
   nexusGoerliNode,
   nexusNode,
-  wagmiConfig,
+  // wagmiConfig,
+  config,
 } from "../constants/networks";
 import { BigNumber, utils, BigNumberish, ethers, VoidSigner } from "ethers";
 import { usePublicClient, useWalletClient } from "wagmi";
@@ -50,27 +52,24 @@ const ETH_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT = 800;
 
 const defaultNetwork = nodeConfig[0];
+
 export const useZksyncProvider = () => {
   // const { networkKey } = useNetworkStore();
   const networkKey = useBridgeNetworkStore.getState().networkKey;
   const eraNetwork =
     nodeConfig.find((item) => item.key === networkKey) ?? defaultNetwork;
 
-  const provider = new Provider(eraNetwork.rpcUrl);
-  //if provider.networkKey != eraNetwork.key
-  // provider.setContractAddresses(eraNetwork.key, {
-  //   mainContract: eraNetwork.mainContract,
-  //   erc20BridgeL1: eraNetwork.erc20BridgeL1,
-  //   erc20BridgeL2: eraNetwork.erc20BridgeL2,
-  //   l1Gateway: eraNetwork.l1Gateway,
-  // });
-  // provider.setIsEthGasToken(eraNetwork.isEthGasToken ?? true);
-  const getDefaultBridgeAddresses = async () => {
+  const provider = useMemo(() => {
+    if (!networkKey) return;
+    return new Provider(eraNetwork.rpcUrl);
+  }, [eraNetwork.rpcUrl, networkKey]);
+
+  const getDefaultBridgeAddresses = useCallback(async () => {
     return {
       erc20L1: eraNetwork.erc20BridgeL1,
       erc20L2: eraNetwork.erc20BridgeL2,
     };
-  };
+  }, [eraNetwork.erc20BridgeL1, eraNetwork.erc20BridgeL2]);
   return { provider, getDefaultBridgeAddresses };
 };
 
@@ -86,9 +85,10 @@ export function walletClientToProvider(walletClient: WalletClient) {
 }
 
 export const useBridgeTx = () => {
+  const { chainId } = useAccount();
   const networkKey = useBridgeNetworkStore.getState().networkKey;
   console.log("networkKey: ", networkKey);
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ config, chainId });
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);
@@ -269,6 +269,8 @@ export const useBridgeTx = () => {
       to: contractAddress,
       data: "0x534ca054", //call txGasPrice returns uint256
     })) as unknown as string;
+    console.log("publicClient: ", publicClient, result);
+
     return BigNumber.from(utils.hexValue(result.data));
   };
 
@@ -619,12 +621,15 @@ export const useBridgeTx = () => {
         return Promise.reject(new Error("Insufficient balance"));
       }
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      console.log("tx hash: ", hash);
+      //set a timeout
+      await sleep(1000);
       try {
         const res = await publicClient?.waitForTransactionReceipt({ hash });
-        console.log(res);
+        console.log("tx res: ", res);
       } catch (e) {
         // maybe not found. But tx is sent and will succeed
-        console.error(e);
+        console.error("tx errpr: ", e);
       }
 
       return hash;
@@ -666,7 +671,7 @@ export const useBridgeTx = () => {
         (item) => item.key === PRIMARY_CHAIN_KEY
       );
       const web3Provider = new ethers.providers.Web3Provider(
-        getPublicClient(wagmiConfig, {
+        getPublicClient(config, {
           chainId: primaryNetwork!.l1Network?.id,
         }) as any,
         "any"

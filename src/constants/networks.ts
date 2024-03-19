@@ -1,3 +1,4 @@
+import { chains } from "./networks";
 import { Address } from "viem";
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
@@ -20,7 +21,10 @@ import {
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
 import { defineChain } from "viem";
-
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { createConfig, http } from "wagmi";
+import { walletConnect } from "wagmi/connectors";
+import { BinanceWallet } from "./binanceWallet";
 const sourceId = 1; // mainnet
 
 export const blast = /*#__PURE__*/ defineChain({
@@ -320,7 +324,9 @@ const createEraChain = (network: ZkSyncNetwork) => {
       default: { http: [network.rpcUrl] },
       public: { http: [network.rpcUrl] },
     },
-    blockExplorers: { default: { url: network.blockExplorerUrl } },
+    blockExplorers: {
+      default: { url: network.blockExplorerUrl, name: "zklink nova explorer" },
+    },
   };
 };
 
@@ -329,34 +335,116 @@ const nodeType = import.meta.env.VITE_NODE_TYPE;
 
 export const NetworkConfig =
   nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
+export const chains: readonly [Chain, ...Chain[]] =
+  nodeType === "nexus-goerli"
+    ? [
+        goerli,
+        lineaTestnet,
+        mantleTestnet,
+        createEraChain(nexusGoerliNode[0]) as Chain,
+      ]
+    : [
+        mainnet,
+        arbitrum,
+        linea,
+        zkSync,
+        manta,
+        mantle,
+        createEraChain(nexusNode[0]) as Chain,
+        blast,
+      ];
+// export const wagmiConfig = defaultWagmiConfig({
+//   chains: chains,
+//   projectId,
+//   metadata: {
+//     name: "zkLink Nova Portal",
+//     description:
+//       "zkLink Nova Portal - view balances, transfer and bridge tokens",
+//     url: "https://app.zklink.io/",
+//     icons: ["../public/img/icon.png"],
+//   },
 
-export const wagmiConfig = defaultWagmiConfig({
-  chains:
-    nodeType === "nexus-goerli"
-      ? [
-          goerli,
-          lineaTestnet,
-          mantleTestnet,
-          createEraChain(nexusGoerliNode[0]),
-        ]
-      : [
-          mainnet,
-          arbitrum,
-          linea,
-          zkSync,
-          manta,
-          mantle,
-          createEraChain(nexusNode[0]),
-          blast,
-        ],
+//   enableCoinbase: false,
+//   enableWalletConnect: false,
+//   enableEIP6963: true,
+// });
+const metadata = {
+  name: "zkLink Nova App",
+  description:
+    "zkLink Nova App - Aggregated Layer 3 zkEVM network Aggregation Parade",
+  url: "https://app.zklink.io",
+  icons: ["../../public/img/favicon.png"],
+};
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import {
+  rainbowWallet,
+  walletConnectWallet,
+  okxWallet,
+  rabbyWallet,
+  metaMaskWallet,
+  injectedWallet,
+} from "@rainbow-me/rainbowkit/wallets";
+okxWallet({
   projectId,
-  metadata: {
-    name: "zkLink Nova Portal",
-    description:
-      "zkLink Nova Portal - view balances, transfer and bridge tokens",
-    url: "https://app.zklink.io/",
-    icons: ["../public/img/icon.png"],
+  walletConnectParameters: {
+    metadata,
   },
+});
+BinanceWallet({
+  projectId,
+});
+rabbyWallet();
+injectedWallet();
+metaMaskWallet({
+  projectId,
+});
+walletConnectWallet({
+  projectId,
+  options: {
+    metadata,
+  },
+});
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: "Recommended",
+      wallets: [
+        injectedWallet,
+        // rainbowWallet,
+        okxWallet,
+        BinanceWallet,
+        // rabbyWallet,
+        metaMaskWallet,
+        walletConnectWallet,
+      ],
+    },
+  ],
+  {
+    appName: "zklink Nova App",
+    projectId: projectId,
+  }
+);
 
-  enableCoinbase: false,
+export const config = getDefaultConfig({
+  appName: "zklink Nova App",
+  projectId: projectId,
+  chains: chains,
+  ssr: false, // If your dApp uses server side rendering (SSR)
+});
+
+export const wagmiDefaultConfig = createConfig({
+  chains: chains,
+  connectors: [
+    ...connectors,
+    walletConnect({
+      projectId,
+      metadata,
+      showQrModal: true,
+    }),
+  ],
+  multiInjectedProviderDiscovery: true,
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
 });
