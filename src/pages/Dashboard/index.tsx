@@ -160,8 +160,16 @@ export default function Dashboard() {
   };
 
   const getTotalTvlFunc = async () => {
-    const res = await getTotalTvl();
-    setTotalTvl(res?.result || 0);
+    // const res = await getTotalTvl();
+    // setTotalTvl(res?.result || 0);
+    const res = await getExplorerTokenTvl(false);
+
+    let num = 0;
+    if (res.length > 0) {
+      num = +parseInt(res[0].tvl);
+    }
+
+    setTotalTvl(num);
   };
 
   const getEthUsdPrice = async () => {
