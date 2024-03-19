@@ -198,8 +198,11 @@ export default function Dashboard() {
     if (!address) return;
     const { data } = await getPufferPoints(address);
 
-    if (data?.points) {
-      setPufferPoints(+data.points);
+    if (data && Array.isArray(data) && data.length > 0) {
+      const obj = data.find((item) => (item.address = address));
+      if (obj) {
+        setPufferPoints(+obj.points);
+      }
     }
   };
 
