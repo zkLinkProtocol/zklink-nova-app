@@ -624,6 +624,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         setSwitchLoading(true);
         await switchChainAsync({ chainId: fromList[fromActive].chainId });
         setSwitchChainError("");
+        return;
       } catch (e) {
         console.log(e);
         if (e.message && e.message.includes("the method now not support")) {
@@ -639,6 +640,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       } finally {
         setSwitchLoading(false);
       }
+      return;
     }
     if (!amount) {
       return;
