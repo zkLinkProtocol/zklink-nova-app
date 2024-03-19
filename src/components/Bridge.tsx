@@ -598,7 +598,6 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [fromActive]);
 
   const handleAction = useCallback(async () => {
-    if (unsupportedChainWithConnector) return;
     if (!address) return;
     if (invalidChain) {
       try {
@@ -668,6 +667,8 @@ export default function Bridge(props: IBridgeComponentProps) {
           )
         ) {
           setFailMessage("User rejected the request");
+        } else if (e.message.includes("Internal JSON-RPC error ")) {
+          setFailMessage("Internal JSON-RPC error. Please try again");
         } else {
           setFailMessage(e.message);
         }
@@ -690,7 +691,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     transLoadModal,
     refreshTokenBalanceList,
     onClose,
-    switchChain,
+    switchChainAsync,
     fromActive,
     sendDepositTx,
     tokenFiltered,
@@ -701,7 +702,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     transSuccModal,
     networkKey,
     transFailModal,
-    unsupportedChainWithConnector,
   ]);
 
   const ContainerCover = () => {
