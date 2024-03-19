@@ -329,6 +329,18 @@ export default function Home() {
           />
         </div>
 
+        <div className="mt-[1.5rem] text-[1rem]">
+          Join our{" "}
+          <a href="https://discord.com/invite/zklink" className="text-[#1CFFE4]" target="_blank">
+            Discord
+          </a>{" "}
+          or search{" "}
+          <a href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click" className="text-[#1CFFE4]" target="_blank">
+            #zkLinkNovaAggParade
+          </a>{" "}
+          on twitter for invite code
+        </div>
+
         <div>
           <Button
             className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] w-[15.97rem]`}
