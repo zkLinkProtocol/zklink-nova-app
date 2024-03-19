@@ -24,6 +24,7 @@ import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { createConfig, http } from "wagmi";
 import { walletConnect } from "wagmi/connectors";
+import { BinanceWallet } from "./binanceWallet";
 const sourceId = 1; // mainnet
 
 export const blast = /*#__PURE__*/ defineChain({
@@ -389,6 +390,9 @@ okxWallet({
     metadata,
   },
 });
+BinanceWallet({
+  projectId,
+});
 rabbyWallet();
 injectedWallet();
 metaMaskWallet({
@@ -408,6 +412,7 @@ const connectors = connectorsForWallets(
         injectedWallet,
         // rainbowWallet,
         okxWallet,
+        BinanceWallet,
         // rabbyWallet,
         metaMaskWallet,
         walletConnectWallet,
