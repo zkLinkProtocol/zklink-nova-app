@@ -289,7 +289,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const transFailModal = useDisclosure();
   const [failMessage, setFailMessage] = useState("");
   const chainId = useChainId();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { sendDepositTx, loading } = useBridgeTx();
   const [amount, setAmount] = useState("");
 
@@ -316,6 +316,8 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [openTooltip, setOpenTooltip] = useState(false);
   const connections = useConnections();
   const [connectorName, setConnectorName] = useState("");
+  const [switchLoading, setSwitchLoading] = useState(false);
+  const [switchChainError, setSwitchChainError] = useState("");
   const dispatch = useDispatch();
 
   const { addTxHash, txhashes } = useVerifyStore();
@@ -358,7 +360,8 @@ export default function Bridge(props: IBridgeComponentProps) {
         const provider: any = await connections?.[0]?.connector.getProvider();
         const walletName = provider?.session?.peer?.metadata.name;
         console.log("connection provider name : ", walletName);
-        setConnectorName(walletName);
+        // setConnectorName(walletName);
+        setConnectorName(" Binance Web3 Wallet");
       } else {
         setConnectorName("");
       }
@@ -533,22 +536,8 @@ export default function Bridge(props: IBridgeComponentProps) {
     return chainId !== fromList[fromActive].chainId;
   }, [chainId, fromActive]);
 
-  const unsupportedChainWithConnector = useMemo(() => {
-    if (connectorName && fromList[fromActive]) {
-      if (
-        connectorName.toLowerCase().includes("binance") &&
-        fromList[fromActive].networkKey === "mantle"
-      ) {
-        return "Binance wallet may not support Mantle Network.";
-      }
-    }
-    return "";
-  }, [fromActive, connectorName]);
-
   const actionBtnDisabled = useMemo(() => {
-    if (unsupportedChainWithConnector) {
-      return true;
-    } else if (
+    if (
       !invalidChain &&
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
@@ -560,14 +549,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       return true;
     }
     return false;
-  }, [
-    tokenFiltered,
-    tokenActive,
-    invalidChain,
-    amount,
-    errorInputMsg,
-    unsupportedChainWithConnector,
-  ]);
+  }, [tokenFiltered, tokenActive, invalidChain, amount, errorInputMsg]);
   console.log(
     "actionBtnDisabled: ",
     actionBtnDisabled,
@@ -611,19 +593,32 @@ export default function Bridge(props: IBridgeComponentProps) {
     }, 3000);
   };
 
+  useEffect(() => {
+    setSwitchChainError("");
+  }, [fromActive]);
+
   const handleAction = useCallback(async () => {
-    if (unsupportedChainWithConnector) return;
     if (!address) return;
     if (invalidChain) {
-      switchChain(
-        { chainId: fromList[fromActive].chainId },
-        {
-          onError: (e) => {
-            console.log(e);
-          },
+      try {
+        setSwitchLoading(true);
+        await switchChainAsync({ chainId: fromList[fromActive].chainId });
+        setSwitchChainError("");
+      } catch (e) {
+        console.log(e);
+        if (e.message && e.message.includes("the method now not support")) {
+          // imported wallet in binance not support some chain
+          setSwitchChainError(
+            `The Binance Web3 wallet may not be support ${fromList[fromActive].chainName} if you're using an imported wallet.`
+          );
+          return;
         }
-      );
-      return;
+        setSwitchChainError(
+          "Switch network failed. Please refresh page and try again."
+        );
+      } finally {
+        setSwitchLoading(false);
+      }
     }
     if (!amount) {
       return;
@@ -672,6 +667,8 @@ export default function Bridge(props: IBridgeComponentProps) {
           )
         ) {
           setFailMessage("User rejected the request");
+        } else if (e.message.includes("Internal JSON-RPC error ")) {
+          setFailMessage("Internal JSON-RPC error. Please try again");
         } else {
           setFailMessage(e.message);
         }
@@ -694,7 +691,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     transLoadModal,
     refreshTokenBalanceList,
     onClose,
-    switchChain,
+    switchChainAsync,
     fromActive,
     sendDepositTx,
     tokenFiltered,
@@ -705,7 +702,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     transSuccModal,
     networkKey,
     transFailModal,
-    unsupportedChainWithConnector,
   ]);
 
   const ContainerCover = () => {
@@ -903,9 +899,9 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
-          {unsupportedChainWithConnector && (
+          {switchChainError && (
             <p className="mt-4 text-[#C57D10] text-[14px]">
-              {unsupportedChainWithConnector}
+              {switchChainError}
             </p>
           )}
         </div>
@@ -1098,9 +1094,9 @@ export default function Bridge(props: IBridgeComponentProps) {
               Connect Wallet
             </Button>
           )}
-          {unsupportedChainWithConnector && (
+          {switchChainError && (
             <p className="mt-4 text-[#C57D10] text-[14px]">
-              {unsupportedChainWithConnector}
+              {switchChainError}
             </p>
           )}
         </div>
