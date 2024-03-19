@@ -812,7 +812,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </Button>
           )}
           {unsupportedChainWithConnector && (
-            <p className="mt-4 text-[#C57D10]">
+            <p className="mt-4 text-[#C57D10] text-[14px]">
               {unsupportedChainWithConnector}
             </p>
           )}
@@ -1005,7 +1005,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </Button>
           )}
           {unsupportedChainWithConnector && (
-            <p className="mt-4 text-[#C57D10]">
+            <p className="mt-4 text-[#C57D10] text-[14px]">
               {unsupportedChainWithConnector}
             </p>
           )}
