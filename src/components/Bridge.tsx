@@ -206,6 +206,7 @@ export const TokenYieldBox = styled.div`
     line-height: 24px; /* 200% */
     letter-spacing: -0.06px;
     margin-right: 6px;
+    white-space: nowrap;
   }
   & .token-yield-1 {
     background: linear-gradient(90deg, #64b3ec -0.39%, #1e1a6a 99.76%);
@@ -218,6 +219,9 @@ export const TokenYieldBox = styled.div`
   }
   & .token-yield-4 {
     background: linear-gradient(90deg, #0bc48f 0%, #00192b 107.78%);
+  }
+  & .token-yield-5 {
+    background: linear-gradient(90deg, #ace730 -0.39%, #324900 99.76%);
   }
 `;
 
@@ -381,7 +385,13 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   useEffect(() => {
     if (category === "ALL") {
-      setTokenFiltered([...tokenList]);
+      let arr = [...tokenList];
+
+      const ezEthIndex = arr.findIndex((item) => item.symbol === "ezETH");
+      const ezEthItem = arr.splice(ezEthIndex, 1);
+      arr.splice(4, 0, ezEthItem[0]);
+
+      setTokenFiltered(arr);
     } else {
       const tokens = tokenList.filter(
         (item) => item.type?.toUpperCase() === category.toUpperCase()
@@ -620,7 +630,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         await switchChainAsync({ chainId: fromList[fromActive].chainId });
         setSwitchChainError("");
         return;
-      } catch (e) {
+      } catch (e:any) {
         console.log(e);
         if (e.message && e.message.includes("the method now not support")) {
           // imported wallet in binance not support some chain
@@ -670,7 +680,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       setTimeout(() => {
         transSuccModal.onClose();
       }, 5000);
-    } catch (e) {
+    } catch (e:any) {
       transLoadModal.onClose();
       // dispatch(setDepositStatus(""));
 
@@ -1302,6 +1312,17 @@ export default function Bridge(props: IBridgeComponentProps) {
                         </span>
                         <span className={`token-yield token-yield-2`}>
                           Puffer Points
+                        </span>
+                      </TokenYieldBox>
+                    )}
+
+                    {item.symbol === "ezETH" && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span>
+                        <span className={`token-yield token-yield-5`}>
+                          ezPoints
                         </span>
                       </TokenYieldBox>
                     )}

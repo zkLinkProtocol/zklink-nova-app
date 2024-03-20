@@ -14,6 +14,7 @@ export const BASE_URL_API = "/api";
 export const BASE_URL_POINTS = "/points";
 export const BASE_URL_TOKENS = "/tokens";
 export const BASE_URL_TWITTER = "/twitter";
+export const BASE_URL_LRT_POINTS = '/lrt-points'
 
 export type BindInviteCodeWithAddressParams = {
   address: string;
@@ -268,16 +269,17 @@ export const visitReward = (address: string): Promise<Response> =>
   });
 
 export const getEigenlayerPoints = (address: string) =>
-  http.get(
-    "/quest-api/puffer-quest/third/query_zklink_point",
-    {
-      params: { address },
-      headers: {
-        "client-id": "08879426f59a4b038b7755b274bc19dc",
-        'Accept': 'application/json'
-      },
-    }
-  );
+  http.get(`${BASE_URL_LRT_POINTS}/points/forward/puffer/zklink_point`, {
+    params: { address },
+    headers: {
+      "client-id": "08879426f59a4b038b7755b274bc19dc",
+      Accept: "application/json",
+    },
+  });
 
 export const getPufferPoints = (address: string) =>
-  http.get(`/lrt-points/points/${address}/pufferpoints`);
+  http.get(`${BASE_URL_LRT_POINTS}/points/${address}/pufferpoints`);
+
+
+export const getRenzoPoints = (address: string) =>
+  http.get(`${BASE_URL_LRT_POINTS}/points/renzo/points`, { params: { address } });
