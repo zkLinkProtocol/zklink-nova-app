@@ -38,5 +38,17 @@ export default defineConfig({
   },
   build: {
     target: ["esnext"],
+    rollupOptions: {
+      output: {
+        chunkFileNames: "js/[name]-[hash:8].js",
+        entryFileNames: "js/[name]-[hash:8].js",
+        assetFileNames: "[ext]/[name]-[hash:8].[ext]",
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString()
+          }
+        }
+      }
+    }
   },
 });
