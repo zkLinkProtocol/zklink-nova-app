@@ -42,13 +42,13 @@ export default function ReferralList(props: IReferralListProps) {
   //     },
   // ]
 
-  const { data, ethUsdPrice } = props;
+  const { data } = props;
 
-  const getEthValue = (tvl: number) => {
-    if (isNaN(+tvl)) return 0
-    const ethValue = +tvl !== 0 && +tvl !== 0 ? tvl / ethUsdPrice : 0
-    return formatNumberWithUnit(ethValue)
-  }
+  // const getEthValue = (tvl: number) => {
+  //   if (isNaN(+tvl)) return 0
+  //   const ethValue = +tvl !== 0 && +tvl !== 0 ? tvl / ethUsdPrice : 0
+  //   return formatNumberWithUnit(ethValue)
+  // }
 
   return (
     <>
@@ -63,7 +63,7 @@ export default function ReferralList(props: IReferralListProps) {
           key={index}
         >
           <span>{showAccount(item.address)}</span>
-          <span>{getEthValue(+item.tvl)} ETH</span>
+          <span>{formatNumberWithUnit(+item.tvl)} ETH</span>
         </ListItem>
       ))}
     </>
