@@ -29,7 +29,6 @@ import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
-import { forEach } from "lodash";
 
 const TabsBox = styled.div`
   .tab-item {
