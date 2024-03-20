@@ -228,7 +228,7 @@ export default function Dashboard() {
 
     let sum = 0;
     if (res && Array.isArray(res) && res.length > 0) {
-      sum += res.reduce((prev, item) => prev + +item?.points, 0);
+      sum = res.reduce((prev, item) => prev + +item?.points, 0);
     }
 
     setRenzoPoints(sum);
