@@ -6,8 +6,6 @@ import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
 import {
   SupportToken,
-  checkOkx,
-  getAccounTvl,
   getAccountPoint,
   getAccountRefferalsTVL,
   getAccountTvl,
@@ -18,7 +16,6 @@ import {
   getReferralTvl,
   getSupportTokens,
   getTokenPrice,
-  getTotalTvl,
   getTotalTvlByToken,
 } from "@/api";
 import { useAccount } from "wagmi";
@@ -92,11 +89,11 @@ export default function Dashboard() {
   const getAccountPointFunc = async () => {
     if (!address) return;
     const { result } = await getAccountPoint(address);
-    const okxPoings = await getCheckOkxPoints(address);
+    const okxPoints = await getCheckOkxPoints(address);
 
     if (result) {
       setAccountPoint({
-        novaPoint: (+result?.novaPoint || 0) + okxPoings,
+        novaPoint: (+result?.novaPoint || 0) + okxPoints,
         referPoint: +result?.referPoint || 0,
       });
     }
@@ -110,10 +107,10 @@ export default function Dashboard() {
     }
   };
 
-  const getAccounTvlFunc = async () => {
-    if (!address) return;
-    const res = await getAccounTvl(address);
-  };
+  // const getAccounTvlFunc = async () => {
+  //   if (!address) return;
+  //   const res = await getAccounTvl(address);
+  // };
 
   const getAccountTvlFunc = async () => {
     let usdPrice = 0;
@@ -144,14 +141,6 @@ export default function Dashboard() {
     setStakingEthValue(eth);
     setStakingUsdValue(usd * usdPrice);
   };
-
-  // useEffect(() => {
-  //   console.log("stakingUsdValue", stakingUsdValue);
-  //   console.log("ethUsdPrice", ethUsdPrice);
-  //   if (+stakingUsdValue !== 0 && +ethUsdPrice !== 0) {
-  //     setStakingUsdValue(+stakingUsdValue * +ethUsdPrice);
-  //   }
-  // }, [stakingUsdValue, ethUsdPrice]);
 
   const getTotalTvlByTokenFunc = async () => {
     const res = await getTotalTvlByToken();
@@ -227,21 +216,6 @@ export default function Dashboard() {
     }
   };
 
-  // useEffect(() => {
-  //   let ethValue =
-  //     stakingUsdValue + stakingUsdValue !== 0 && +ethUsdPrice !== 0
-  //       ? stakingUsdValue / ethUsdPrice
-  //       : 0;
-  //   if (
-  //     accountTvlData.length === 1 &&
-  //     accountTvlData[0].symbol.toLocaleUpperCase() === "ETH"
-  //   ) {
-  //     ethValue = +accountTvlData[0].amount;
-  //   }
-
-  //   setStakingEthValue(ethValue);
-  // }, [accountTvlData]);
-
   /**
    * Init: Get data from server
    */
@@ -251,7 +225,6 @@ export default function Dashboard() {
     getTotalTvlByTokenFunc();
     getAccountPointFunc();
     getAccountRefferalsTVLFunc();
-    getAccounTvlFunc();
     getGroupTvlFunc();
     getReferralTvlFunc();
     getTotalTvlFunc();
@@ -281,18 +254,9 @@ export default function Dashboard() {
   return (
     <BgBox>
       <BgCoverImg />
-      <a href={`https://explorer.zklink.io/address/${address}`} target="_blank">
-        <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
-          <span className="text-[#03d498]">
-            Balance and Nova Points may update later. Click here to check your
-            balance.
-          </span>
-        </div>
-      </a>
-
       {isLoading && <Loading />}
 
-      <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[3rem]">
+      <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1]">
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem]">
           <NovaCharacter />

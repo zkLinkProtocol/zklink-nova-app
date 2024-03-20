@@ -1,6 +1,5 @@
 import { CardBox } from "@/styles/common";
 import { formatNumberWithUnit, getBooster } from "@/utils";
-import { useState } from "react";
 import styled from "styled-components";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
