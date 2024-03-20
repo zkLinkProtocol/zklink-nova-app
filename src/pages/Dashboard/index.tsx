@@ -29,6 +29,7 @@ import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
+import { forEach } from "lodash";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -68,6 +69,7 @@ export type AccountTvlItem = {
 
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
+
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [tabsActive, setTabsActive] = useState(0);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
@@ -222,10 +224,16 @@ export default function Dashboard() {
     if (!address) return;
     const res = await getRenzoPoints(address);
 
+    console.log("getRenzoPoints", res);
+
     let sum = 0;
     if (res && Array.isArray(res) && res.length > 0) {
-      sum = res.reduce((a, b) => +a?.points + +b?.points);
+      // sum += res.reduce((a, b) => {return +a?.points + +b?.points});
+      res.forEach((item) => {
+        sum += +item?.points;
+      });
     }
+
     setRenzoPoints(sum);
   };
 
