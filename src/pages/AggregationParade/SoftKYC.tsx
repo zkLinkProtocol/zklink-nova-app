@@ -377,7 +377,7 @@ export default function SoftKYC() {
     setIsCheckedTwitter(
       isValidTwitterAccess
         ? Boolean(twitterAccessToken)
-        : Boolean(twitterAuthCode)
+        : true
     );
   }, [isValidTwitterAccess, twitterAuthCode, twitterAccessToken]);
 
@@ -784,7 +784,7 @@ export default function SoftKYC() {
           </div>
 
           {/* Step 4: connect twitter */}
-          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
+          {/* <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox
               className={`hidden md:block ${
                 isCheckedTwitter ? "successed" : ""
@@ -824,7 +824,7 @@ export default function SoftKYC() {
                 )}
               </div>
             </CardBox>
-          </div>
+          </div> */}
 
           {/* Submit for user bind */}
           <div className="flex justify-center w-full md:px-[5rem] ">
