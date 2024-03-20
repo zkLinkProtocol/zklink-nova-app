@@ -14,6 +14,7 @@ import {
   getGroupTvl,
   getPufferPoints,
   getReferralTvl,
+  getRenzoPoints,
   getSupportTokens,
   getTokenPrice,
   getTotalTvlByToken,
@@ -216,6 +217,18 @@ export default function Dashboard() {
     }
   };
 
+  const [renzoPoints, setRenzoPoints] = useState(0);
+  const getRenzoPointsFunc = async () => {
+    if (!address) return;
+    const res = await getRenzoPoints(address);
+
+    let sum = 0;
+    if (res && Array.isArray(res) && res.length > 0) {
+      sum = res.reduce((a, b) => +a?.points + +b?.points);
+    }
+    setRenzoPoints(sum);
+  };
+
   /**
    * Init: Get data from server
    */
@@ -230,6 +243,7 @@ export default function Dashboard() {
     getTotalTvlFunc();
     getEigenlayerPointsFunc();
     getPufferPointsFunc();
+    getRenzoPointsFunc();
     getAccountTvlFunc();
   }, [address]);
 
@@ -265,6 +279,7 @@ export default function Dashboard() {
             accountPoint={accountPoint}
             eigenlayerPoints={eigenlayerPoints}
             pufferPoints={pufferPoints}
+            renzoPoints={renzoPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}

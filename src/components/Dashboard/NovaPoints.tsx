@@ -19,10 +19,17 @@ interface INovaPointsProps {
   };
   eigenlayerPoints: number;
   pufferPoints: number;
+  renzoPoints: number;
 }
 
 export default function NovaPoints(props: INovaPointsProps) {
-  const { accountPoint, groupTvl, eigenlayerPoints, pufferPoints } = props;
+  const {
+    accountPoint,
+    groupTvl,
+    eigenlayerPoints,
+    pufferPoints,
+    renzoPoints,
+  } = props;
   const eralyBirdBooster = 2;
 
   return (
@@ -127,7 +134,7 @@ export default function NovaPoints(props: INovaPointsProps) {
           content="More points will be listed here soon."
         />
 
-        <p className="mt-[3rem] w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
+        <div className="mt-[3rem] w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
           <span>Other Points</span>
 
           <img
@@ -135,23 +142,33 @@ export default function NovaPoints(props: INovaPointsProps) {
             src="/img/icon-info.svg"
             className="w-[0.875rem] h-[0.875rem] opacity-40"
           />
-        </p>
+        </div>
 
-        <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+        <div className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           <div className="flex items-center gap-2">
-            <img src="/img/icon-puffer-points.png" />
-            <span>Puffer Points</span>
+            <img src="/img/icon-puffer-points.png" className="w-[1.5rem]" />
+            <span className="font-[700]">Puffer Points</span>
           </div>
           <span>{formatNumberWithUnit(pufferPoints)}</span>
-        </p>
+        </div>
 
-        <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <div className="flex items-center gap-2">
-            <img src="/img/icon-eigenlayer-points.png" />
-            <span>Eigenlayer Points (Puffer)</span>
-          </div>
+        <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <span className="ml-[2rem]">Eigenlayer Points (Puffer)</span>
           <span>{formatNumberWithUnit(eigenlayerPoints)}</span>
-        </p>
+        </div>
+
+        <div className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-ezPoints.png" className="w-[1.5rem]" />
+            <span className="font-[700]">ezPoints</span>
+          </div>
+          <span>{formatNumberWithUnit(renzoPoints)}</span>
+        </div>
+
+        <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <span className="ml-[2rem]">Eigenlayer Points (Renzo)</span>
+          <span>{formatNumberWithUnit(renzoPoints)}</span>
+        </div>
       </CardBox>
     </>
   );
