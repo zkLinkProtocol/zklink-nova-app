@@ -139,10 +139,8 @@ export default function Dashboard() {
     let eth = 0;
     data.forEach((item) => {
       usd += +item?.tvl;
-      eth += +item?.amount;
+      eth += +item?.tvl;
     });
-    console.log("eth", eth);
-    console.log("usd", usd);
     setStakingEthValue(eth);
     setStakingUsdValue(usd * usdPrice);
   };
