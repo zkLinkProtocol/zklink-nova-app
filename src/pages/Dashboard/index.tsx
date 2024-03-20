@@ -68,7 +68,7 @@ export type AccountTvlItem = {
 };
 
 export default function Dashboard() {
-  const { address, isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [tabsActive, setTabsActive] = useState(0);
@@ -228,10 +228,7 @@ export default function Dashboard() {
 
     let sum = 0;
     if (res && Array.isArray(res) && res.length > 0) {
-      // sum += res.reduce((a, b) => {return +a?.points + +b?.points});
-      res.forEach((item) => {
-        sum += +item?.points;
-      });
+      sum += res.reduce((prev, item) => prev + +item?.points, 0);
     }
 
     setRenzoPoints(sum);
