@@ -116,7 +116,17 @@ export default function Dashboard() {
   };
 
   const getAccountTvlFunc = async () => {
+    let usdPrice = 0;
+    const tokenList = await getExplorerTokenTvl(true);
+    const ethToken = tokenList.find((item) => item.symbol === "ETH");
+    if (ethToken) {
+      const res = await getTokenPrice(ethToken.l2Address);
+      usdPrice = +res.usdPrice || 0;
+      setEthUsdPrice(usdPrice);
+    }
+
     if (!address) return;
+
     const res = await getAccountTvl(address);
     const { result } = res;
     let data = [];
@@ -125,12 +135,23 @@ export default function Dashboard() {
     }
     setAccountTvlData(data);
 
-    let sum = 0;
+    let usd = 0;
+    let eth = 0;
     data.forEach((item) => {
-      sum += +item?.tvl;
+      usd += +item?.tvl;
+      eth += +item?.tvl;
     });
-    setStakingUsdValue(sum);
+    setStakingEthValue(eth);
+    setStakingUsdValue(usd * usdPrice);
   };
+
+  // useEffect(() => {
+  //   console.log("stakingUsdValue", stakingUsdValue);
+  //   console.log("ethUsdPrice", ethUsdPrice);
+  //   if (+stakingUsdValue !== 0 && +ethUsdPrice !== 0) {
+  //     setStakingUsdValue(+stakingUsdValue * +ethUsdPrice);
+  //   }
+  // }, [stakingUsdValue, ethUsdPrice]);
 
   const getTotalTvlByTokenFunc = async () => {
     const res = await getTotalTvlByToken();
@@ -206,21 +227,20 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    let ethValue =
-      stakingUsdValue + stakingUsdValue !== 0 && +ethUsdPrice !== 0
-        ? stakingUsdValue / ethUsdPrice
-        : 0;
+  // useEffect(() => {
+  //   let ethValue =
+  //     stakingUsdValue + stakingUsdValue !== 0 && +ethUsdPrice !== 0
+  //       ? stakingUsdValue / ethUsdPrice
+  //       : 0;
+  //   if (
+  //     accountTvlData.length === 1 &&
+  //     accountTvlData[0].symbol.toLocaleUpperCase() === "ETH"
+  //   ) {
+  //     ethValue = +accountTvlData[0].amount;
+  //   }
 
-    if (
-      accountTvlData.length === 1 &&
-      accountTvlData[0].symbol.toLocaleUpperCase() === "ETH"
-    ) {
-      ethValue = +accountTvlData[0].amount;
-    }
-
-    setStakingEthValue(ethValue);
-  }, [ethUsdPrice, stakingUsdValue, accountTvlData]);
+  //   setStakingEthValue(ethValue);
+  // }, [accountTvlData]);
 
   /**
    * Init: Get data from server
@@ -232,12 +252,12 @@ export default function Dashboard() {
     getAccountPointFunc();
     getAccountRefferalsTVLFunc();
     getAccounTvlFunc();
-    getAccountTvlFunc();
     getGroupTvlFunc();
     getReferralTvlFunc();
     getTotalTvlFunc();
     getEigenlayerPointsFunc();
     getPufferPointsFunc();
+    getAccountTvlFunc();
   }, [address]);
 
   useEffect(() => {
@@ -320,6 +340,7 @@ export default function Dashboard() {
             {/* Tabs view: Assets */}
             {tabsActive === 0 && (
               <AssetsTable
+                ethUsdPrice={ethUsdPrice}
                 supportTokens={supportTokens}
                 totalTvlList={totalTvlList}
                 accountTvlData={accountTvlData}

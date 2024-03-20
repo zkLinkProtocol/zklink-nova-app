@@ -14,7 +14,7 @@ import classNames from "classnames";
 import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useBalance, useChainId, useSwitchChain } from "wagmi";
-
+import { config } from "@/constants/networks";
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
   const { address } = useAccount();
@@ -31,6 +31,7 @@ export default function NovaCharacter() {
   }, [chainId]);
 
   const { data: nativeTokenBalance } = useBalance({
+    config,
     address: address as `0x${string}`,
     chainId: NOVA_CHAIN_ID,
     token: undefined,

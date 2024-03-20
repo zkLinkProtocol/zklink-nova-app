@@ -19,7 +19,8 @@ export type NOVA_NFT = {
 };
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 const useNovaNFT = () => {
-  const publicClient = usePublicClient();
+  const { chainId } = useAccount();
+  const publicClient = usePublicClient({ config, chainId });
   const { data: walletClient } = useWalletClient();
   const [nft, setNFT] = useState<NOVA_NFT>();
   const { address } = useAccount();
