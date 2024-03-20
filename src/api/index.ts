@@ -308,7 +308,7 @@ export const visitReward = (address: string): Promise<Response> =>
 
 export const getEigenlayerPoints = (address: string) =>
   http.get(
-    "https://quest-api.puffer.fi/puffer-quest/third/query_zklink_point",
+    "/quest-api/puffer-quest/third/query_zklink_point",
     {
       params: { address },
       headers: {
@@ -319,4 +319,4 @@ export const getEigenlayerPoints = (address: string) =>
   );
 
 export const getPufferPoints = (address: string) =>
-  http.get(`https://lrt-points.zklink.io/points/${address}/pufferpoints`);
+  http.get(`/lrt-points/points/${address}/pufferpoints`);

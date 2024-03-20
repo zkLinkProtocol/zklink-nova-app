@@ -34,6 +34,16 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/points/, "/points"),
       },
+      "/quest-api": {
+        target: "https://quest-api.puffer.fi",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/quest-api/, ""),
+      },
+      "/lrt-points": {
+        target: "https://lrt-points.zklink.io",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/lrt-points/, ""),
+      },
     },
   },
   build: {
