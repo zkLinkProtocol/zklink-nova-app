@@ -179,7 +179,9 @@ export function formatNumber2(value: number) {
 }
 
 export function formatNumberWithUnit(value: number | string, symbol?: string) {
-  value = formatNumber2(Number(value));
+  if (+value > 0.01) {
+    value = formatNumber2(Number(value));
+  }
 
   let format = symbol === "$" ? "$0" : `0 ${symbol ? symbol : ""}`;
 
@@ -193,6 +195,8 @@ export function formatNumberWithUnit(value: number | string, symbol?: string) {
           : `${numeral(value).format("0.00a")} ${symbol ? symbol : ""}`;
     }
   }
+
+  console.log("formatNumberWithUnit", value, format);
 
   return format;
 }
