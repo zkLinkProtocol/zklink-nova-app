@@ -466,22 +466,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   ]);
 
   useEffect(() => {
-    if (isFirstDeposit) {
-      const network = localStorage.getItem(STORAGE_NETWORK_KEY);
-      if (network) {
-        setNetworkKey(network);
-        if (fromList[0].networkKey !== network) {
-          const index = fromList.findIndex(
-            (item) => item.networkKey === network
-          );
-          if (index > -1) {
-            setFromActive(index);
-          }
-        }
-      } else if (!network) {
-        setNetworkKey(fromList[0].networkKey);
-      }
-    } else if (bridgeToken && !bridgeTokenInited) {
+    if (bridgeToken && !bridgeTokenInited) {
       const token = tokenList.find((item) =>
         bridgeToken.indexOf("0x") > -1
           ? isSameAddress(item.address, bridgeToken)
@@ -511,6 +496,21 @@ export default function Bridge(props: IBridgeComponentProps) {
       }
       if (tokenList.length > 1) {
         setBridgeTokenInited(true);
+      }
+    } else {
+      const network = localStorage.getItem(STORAGE_NETWORK_KEY);
+      if (network) {
+        setNetworkKey(network);
+        if (fromList[0].networkKey !== network) {
+          const index = fromList.findIndex(
+            (item) => item.networkKey === network
+          );
+          if (index > -1) {
+            setFromActive(index);
+          }
+        }
+      } else if (!network) {
+        setNetworkKey(fromList[0].networkKey);
       }
     }
   }, [
@@ -570,11 +570,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     errorInputMsg,
     unsupportedChainWithConnector,
   ]);
-  console.log(
-    "actionBtnDisabled: ",
-    actionBtnDisabled,
-    tokenFiltered[tokenActive]
-  );
 
   const isDepositErc20 = useMemo(() => {
     return (

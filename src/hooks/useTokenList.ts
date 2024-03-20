@@ -78,7 +78,6 @@ export const useTokenBalanceList = () => {
     (async () => {
       if (!networkKey) return;
       const supportedTokens = await getSupportedTokens();
-      console.log("supportedTokens: ", supportedTokens);
       const index = supportedTokens.findIndex(
         (item) => item.symbol === "pufETH"
       );
