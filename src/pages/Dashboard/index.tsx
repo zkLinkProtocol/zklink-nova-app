@@ -67,7 +67,8 @@ export type AccountTvlItem = {
 };
 
 export default function Dashboard() {
-  const { address, isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
+
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [tabsActive, setTabsActive] = useState(0);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
@@ -222,10 +223,13 @@ export default function Dashboard() {
     if (!address) return;
     const res = await getRenzoPoints(address);
 
+    console.log("getRenzoPoints", res);
+
     let sum = 0;
     if (res && Array.isArray(res) && res.length > 0) {
-      sum = res.reduce((a, b) => +a?.points + +b?.points);
+      sum = res.reduce((prev, item) => prev + +item?.points, 0);
     }
+
     setRenzoPoints(sum);
   };
 
