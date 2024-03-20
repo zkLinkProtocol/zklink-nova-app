@@ -11,18 +11,32 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import classNames from "classnames";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useBalance, useChainId, useSwitchChain } from "wagmi";
 import { config } from "@/constants/networks";
+import { getRemainDrawCount } from "@/api";
+import Marquee from "../Marquee";
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
+  const drawModal = useDisclosure();
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
+  const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
+  const [update, setUpdate] = useState(0);
+
+  useEffect(() => {
+    if (address) {
+      getRemainDrawCount(address).then((res) => {
+        console.log("remain draw count: ", res);
+        setRemainDrawCount(res.result);
+      });
+    }
+  }, [address, update]);
 
   const [showTooltip1, setShowTooltip1] = useState(false);
 
@@ -44,6 +58,29 @@ export default function NovaCharacter() {
     return 0;
   }, [nativeTokenBalance]);
   console.log("nativeTokenBalance: ", nativeTokenBalance);
+
+  const handleMintTrademark = useCallback(async () => {
+    if (remainDrawCount > 0) {
+      drawModal.onOpen();
+    }
+  }, [drawModal, remainDrawCount]);
+
+  const handleDrawAndMint = useCallback(async () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+          },
+        }
+      );
+      return;
+    }
+    setUpdate((update) => update + 1);
+  }, []);
 
   const handleMintNow = useCallback(() => {
     if (nft || fetchLoading) {
@@ -111,30 +148,38 @@ export default function NovaCharacter() {
             className="text-center block mx-auto h-auto rounded-[1rem]"
           />
         </div>
-        <Tooltip content={nft ? "coming soon" : ""} isOpen={showTooltip1}>
+        <div className="flex items-center w-full">
           <Button
-            onClick={handleMintNow}
-            onMouseEnter={() => nft && setShowTooltip1(true)}
-            onMouseLeave={() => nft && setShowTooltip1(false)}
-            onTouchStart={() => nft && setShowTooltip1((prev) => !prev)}
-            isLoading={fetchLoading || mintLoading}
-            className={classNames(
-              "gradient-btn w-full py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
-              nft ? "opacity-40 " : "opacity-100",
-              nft ? "cursor-default" : "cursor-pointer"
-            )}
+            className="gradient-btn flex-1 py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mr-4"
+            onClick={handleMintTrademark}
           >
-            <span>{nft ? "Upgrade" : "Mint Now"}</span>
-            {nft ? (
-              <img
-                src="/img/icon-info.svg"
-                className="w-[0.875rem] h-[0.875rem]"
-              />
-            ) : (
-              ""
-            )}
+            Mint trademark ({remainDrawCount})
           </Button>
-        </Tooltip>
+          <Tooltip content={nft ? "coming soon" : ""} isOpen={showTooltip1}>
+            <Button
+              onClick={handleMintNow}
+              onMouseEnter={() => nft && setShowTooltip1(true)}
+              onMouseLeave={() => nft && setShowTooltip1(false)}
+              onTouchStart={() => nft && setShowTooltip1((prev) => !prev)}
+              isLoading={fetchLoading || mintLoading}
+              className={classNames(
+                "gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
+                nft ? "opacity-40 " : "opacity-100",
+                nft ? "cursor-default" : "cursor-pointer"
+              )}
+            >
+              <span>{nft ? "Upgrade" : "Mint Now"}</span>
+              {nft ? (
+                <img
+                  src="/img/icon-info.svg"
+                  className="w-[0.875rem] h-[0.875rem]"
+                />
+              ) : (
+                ""
+              )}
+            </Button>
+          </Tooltip>
+        </div>
       </CardBox>
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -178,6 +223,56 @@ export default function NovaCharacter() {
             <span>
               {isInvaidChain ? "Switch to Nova network to mint" : "Mint Now"}
             </span>
+          </Button>
+        </ModalContent>
+      </Modal>
+      <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        isOpen={drawModal.isOpen}
+        onOpenChange={drawModal.onOpenChange}
+      >
+        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
+          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
+            Draw and Mint your Trademark NFTs
+          </ModalHeader>
+          <Marquee />
+          {/* <div className="grid grid-cols-2 place-content-center gap-4 w-auto mx-auto">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="flex items-center justify-center">
+                <img
+                  src={`/img/img-trademark-temp-${item}.png`}
+                  alt=""
+                  className="w-[160px] h-[160px]"
+                />
+              </div>
+            ))}
+          </div> */}
+          <p className="text-[#fff] text-[24px] font-normal text-xs my-4 text-center font-satoshi">
+            Draw Oppertunities:{" "}
+            <span className="text-[#43E3B5]">{remainDrawCount}</span>
+          </p>
+          <p className="text-center text-[#C0C0C0] mb-4">
+            You will have a chance to randomly mint some mystery NFT if you are
+            top 100 in the daily referral leaderboard (first come first in) or
+            if you are lucky enough
+          </p>
+          <Button
+            onClick={handleMint}
+            isDisabled={!isInvaidChain && novaBalance === 0}
+            isLoading={mintLoading}
+            className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+          >
+            <span>
+              {isInvaidChain ? "Switch to Nova network to mint" : "Dray & Mint"}
+            </span>
+          </Button>
+          <Button
+            onClick={handleMint}
+            isDisabled={!isInvaidChain && novaBalance === 0}
+            isLoading={mintLoading}
+            className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
+          >
+            <span>Trade in the market</span>
           </Button>
         </ModalContent>
       </Modal>

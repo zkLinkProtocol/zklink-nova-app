@@ -18,6 +18,9 @@ export default {
         },
         inputColor: "#313841",
       },
+      fontFamily: {
+        'satoshi': ['Satoshi', 'sans-serif']
+      }
     },
   },
   darkMode: "class",

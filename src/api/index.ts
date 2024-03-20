@@ -41,6 +41,22 @@ export const checkInviteCode = (code: string): Promise<Response> => {
   });
 };
 
+export const getRemainDrawCount = (address: string): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/draw/nft/remain`, {
+    params: { address },
+  });
+};
+
+export const drawTrademarkNFT = (
+  address: string,
+  signature: string
+): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/draw/nft`, {
+    address,
+    signature,
+  });
+};
+
 export const getMintSignature = (address: string): Promise<Response> => {
   return http.get(`${BASE_URL_API}/invite/validate/nft`, {
     params: { address, projectId: "NOVA-SBT-1" },
@@ -274,7 +290,7 @@ export const getEigenlayerPoints = (address: string) =>
       params: { address },
       headers: {
         "client-id": "08879426f59a4b038b7755b274bc19dc",
-        'Accept': 'application/json'
+        Accept: "application/json",
       },
     }
   );

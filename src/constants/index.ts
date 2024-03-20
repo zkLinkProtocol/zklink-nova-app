@@ -20,6 +20,11 @@ export const NOVA_NFT_CONTRACT =
   nodeType === "nexus-goerli"
     ? "0xF2fe005206cF81C149EbB2D40A294F5Ac59D9E6D"
     : "0xE310c6595205252C73e9044f6740BA8775bf0Da0";
+
+export const TRADEMARK_NFT_CONTRACT =
+  nodeType === "nexus-goerli"
+    ? "0x34101952B0aa46bDe9E87617D2A4610907915e04"
+    : "";
 export const NOVA_START_TIME = 1710410400000; //1710410400000;
 
 export const NexusEstimateArrivalTimes: Record<string, number> = {
@@ -36,4 +41,4 @@ export const NexusGoerliEstimateArrivalTimes = {};
 
 export const IS_MAINNET = nodeType === "nexus";
 
-export const TWEET_SHARE_TEXT = 'ZkLink Nova Campaign blablablablabla'
+export const TWEET_SHARE_TEXT = "ZkLink Nova Campaign blablablablabla";

@@ -38,23 +38,27 @@ const queryClient = new QueryClient();
 //   projectId,
 //   themeMode: "dark",
 // });
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  +isMaintenance ? (
-    <Maintenance />
-  ) : (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <WagmiProvider config={wagmiDefaultConfig}>
-          <QueryClientProvider client={queryClient}>
-            <RainbowKitProvider>
-              <NextUIProvider>
-                <App />
-              </NextUIProvider>
-            </RainbowKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
-      </PersistGate>
-    </Provider>
-  )
-);
+try {
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    +isMaintenance ? (
+      <Maintenance />
+    ) : (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <WagmiProvider config={wagmiDefaultConfig}>
+            <QueryClientProvider client={queryClient}>
+              <RainbowKitProvider>
+                <NextUIProvider>
+                  <App />
+                </NextUIProvider>
+              </RainbowKitProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+        </PersistGate>
+      </Provider>
+    )
+  );
+} catch (e) {
+  console.error(e);
+  throw e;
+}
