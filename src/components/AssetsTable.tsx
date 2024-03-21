@@ -432,8 +432,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
       if (!isNaN(+item?.timestamp) && item?.timestamp * 1000 <= ts) {
         str = item.multiplier;
       }
-
-      console.log("getMultiplier--------------- ===== >", item, ts, str);
     });
 
     return str;
