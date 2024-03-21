@@ -478,8 +478,16 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
       <div className="mt-[1rem]">
         <Input
+          data-hover={false}
           isClearable
           placeholder="Please enter the token symbol."
+          className="rounded-lg"
+          classNames={{
+            base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
+            mainWrapper: ["bg-transparent", "hover:bg-transparent"],
+            inputWrapper: ["bg-transparent", "hover:bg-transparent"],
+            input: ["bg-transparent", "hover:bg-transparent"],
+          }}
           startContent={
             <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
           }

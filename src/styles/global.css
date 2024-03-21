@@ -25,7 +25,7 @@
   border: none;
 }
 .gradient-btn.default {
-  background:rgba(0, 0, 0, 0.40);
+  background: rgba(0, 0, 0, 0.4);
 }
 .gradient-btn:disabled {
   cursor: not-allowed;
@@ -65,24 +65,26 @@
   display: none;
 }
 
- @media (max-width: 768px) {
-.btn-default{
-  min-width: auto;
-  padding: 0 10px;
-  gap:0;
-  border-radius: 8px;
-  background: linear-gradient(to right, #48ECAE, #3E52FC, #49CED7);
-}
-.padX{
-  padding: 0 20px;
-}
-.bg-mobile{
-  background: rgba(0,0,0,0.9) !important; 
+@media (max-width: 768px) {
+  .btn-default {
+    min-width: auto;
+    padding: 0 10px;
+    gap: 0;
+    border-radius: 8px;
+    background: linear-gradient(to right, #48ecae, #3e52fc, #49ced7);
   }
-.navbar-menu{
-  background-color: rgba(0,0,0,0.9);
-  
+  .padX {
+    padding: 0 20px;
+  }
+  .bg-mobile {
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+  .navbar-menu {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
 }
-  
- }
-  
+
+
+.bg-transparent {
+  background: transparent !important;
+}
