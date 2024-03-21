@@ -2,6 +2,7 @@ import { CardBox } from "@/styles/common";
 import {
   Button,
   Checkbox,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -21,6 +22,7 @@ import { formatNumberWithUnit } from "@/utils";
 import _ from "lodash";
 import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
 import { AccountTvlItem, TotalTvlItem } from "@/pages/Dashboard";
+import { SearchIcon } from "./SearchIcon";
 
 const TabsBar = styled.div`
   .tab-item {
@@ -208,9 +210,11 @@ export default function AssetsTable(props: IAssetsTableProps) {
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
   const [tableList, setTableList] = useState<AssetsListItem[]>([]);
+  const [filterTableList, setFilterTableList] = useState<AssetsListItem[]>([]);
   const [bridgeToken, setBridgeToken] = useState("");
   const [isMyHolding, setIsMyHolding] = useState(false);
   const bridgeModal = useDisclosure();
+  const [serachValue, setSearchValue] = useState("");
 
   const yieldsTypeList = [
     { name: "NOVA Points", label: "Nova Points" },
@@ -372,18 +376,22 @@ export default function AssetsTable(props: IAssetsTableProps) {
         yieldType: item?.yieldType,
         multiplier: item?.multiplier,
       };
+
+      // sum all chains token amount/tvl
       item.address.forEach((chains) => {
         const accountTvlItem = getTokenAccountTvl(chains.l2Address);
         const totalTvlItem = getTotalTvl(chains.l2Address);
 
         if (accountTvlItem) {
-          obj.amount = +accountTvlItem.amount ? +accountTvlItem.amount : 0;
-          obj.tvl = +accountTvlItem.tvl ? +accountTvlItem.tvl * ethUsdPrice : 0;
+          obj.amount += +accountTvlItem.amount ? +accountTvlItem.amount : 0;
+          obj.tvl += +accountTvlItem.tvl
+            ? +accountTvlItem.tvl * ethUsdPrice
+            : 0;
         }
 
         if (totalTvlItem) {
-          obj.totalAmount = +totalTvlItem.amount ? +totalTvlItem.amount : 0;
-          obj.totalTvl = +totalTvlItem.tvl
+          obj.totalAmount += +totalTvlItem.amount ? +totalTvlItem.amount : 0;
+          obj.totalTvl += +totalTvlItem.tvl
             ? +totalTvlItem.tvl * ethUsdPrice
             : 0;
           obj.tokenAddress = totalTvlItem?.tokenAddress || "";
@@ -394,17 +402,9 @@ export default function AssetsTable(props: IAssetsTableProps) {
             ? getIconUrlByL2Address(chains.l2Address)
             : obj.iconURL;
       });
+
       arr.push(obj);
     });
-
-    if (isMyHolding) {
-      arr = arr.filter((item) => +item.tvl !== 0);
-    }
-
-    if (assetsTabsActive !== 0) {
-      const filterType = assetTabList[assetsTabsActive].name;
-      arr = arr.filter((item) => item?.type === filterType);
-    }
 
     arr = arr.sort((a, b) => +b.totalTvl - +a.totalTvl);
 
@@ -421,6 +421,52 @@ export default function AssetsTable(props: IAssetsTableProps) {
     supportTokens,
     explorerTvl,
   ]);
+
+  useEffect(() => {
+    let arr = [...tableList];
+
+    if (isMyHolding) {
+      arr = arr.filter((item) => +item.tvl !== 0);
+    }
+
+    if (assetsTabsActive !== 0) {
+      const filterType = assetTabList[assetsTabsActive].name;
+      arr = arr.filter((item) => item?.type === filterType);
+    }
+
+    if (serachValue.trim()) {
+      let queryStringArr = serachValue.split("");
+      let str = "(.*?)";
+      let regStr = str + queryStringArr.join(str) + str;
+      let reg = RegExp(regStr, "i");
+
+      arr = arr.filter((item) => reg.test(item.symbol));
+    }
+
+    setFilterTableList(arr);
+  }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
+
+  const styles = {
+    label: "text-black/50 dark:text-white/90",
+    input: [
+      "bg-transparent",
+      "text-black/90 dark:text-white/90",
+      "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+    ],
+    innerWrapper: "bg-transparent",
+    inputWrapper: [
+      "shadow-xl",
+      "bg-default-200/50",
+      "dark:bg-default/60",
+      "backdrop-blur-xl",
+      "backdrop-saturate-200",
+      "hover:bg-default-200/70",
+      "focus-within:!bg-default-200/50",
+      "dark:hover:bg-default/70",
+      "dark:focus-within:!bg-default/60",
+      "!cursor-text",
+    ],
+  };
 
   return (
     <>
@@ -452,10 +498,24 @@ export default function AssetsTable(props: IAssetsTableProps) {
         </div>
       </CardBox>
 
+      <div className="mt-[1rem]">
+        <Input
+          isClearable
+          placeholder="Please enter the token symbol."
+          startContent={
+            <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+          }
+          onClear={() => {
+            setSearchValue("");
+          }}
+          onValueChange={setSearchValue}
+        />
+      </div>
+
       <TableBox className="overflow-auto md:overflow-visible">
         <Table
           removeWrapper
-          className="table mt-[1.5rem] min-h-[30rem]"
+          className="table mt-[1rem] min-h-[30rem]"
           classNames={{ thead: "table-header", tbody: "table-tbody" }}
         >
           <TableHeader>
@@ -483,7 +543,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
             <TableColumn children={undefined}></TableColumn>
           </TableHeader>
           <TableBody>
-            {tableList.map((item: AssetsListItem, index) => {
+            {filterTableList.map((item: AssetsListItem, index) => {
               return (
                 <TableRow key={index} className="py-5">
                   <TableCell>
