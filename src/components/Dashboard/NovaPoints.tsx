@@ -1,10 +1,8 @@
 import { CardBox } from "@/styles/common";
 import { formatNumberWithUnit, getBooster } from "@/utils";
-// import { Tooltip } from "@nextui-org/react";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
+
 const GreenTag = styled.span`
   display: flex;
   justify-content: center;
@@ -21,13 +19,18 @@ interface INovaPointsProps {
   };
   eigenlayerPoints: number;
   pufferPoints: number;
+  renzoPoints: number;
 }
 
 export default function NovaPoints(props: INovaPointsProps) {
-  const { accountPoint, groupTvl, eigenlayerPoints, pufferPoints } = props;
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [showTooltip2, setShowTooltip2] = useState(false);
-  const [showTooltip3, setShowTooltip3] = useState(false);
+  const {
+    accountPoint,
+    groupTvl,
+    eigenlayerPoints,
+    pufferPoints,
+    renzoPoints,
+  } = props;
+  const eralyBirdBooster = 2;
 
   return (
     <>
@@ -64,15 +67,15 @@ export default function NovaPoints(props: INovaPointsProps) {
 
           <ReactTooltip
             id="nova-points"
-            place="top"
-            style={{ fontSize: "14px", borderRadius: "16px" }}
+            place="top-start"
+            style={{ fontSize: "14px", borderRadius: "16px", zIndex: "999999" }}
             render={() => (
-              <div className="px-4 py-4">
+              <div>
                 <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                   <span>Earn By Your Deposit and Holding</span>
                   <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
                 </p>
-                <p className="flex justify-between gap-4 items-center mt-[1rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                   <span>Earned By Referring Friends</span>
                   <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
                 </p>
@@ -92,11 +95,18 @@ export default function NovaPoints(props: INovaPointsProps) {
             place="top"
             style={{ fontSize: "14px", borderRadius: "16px" }}
             render={() => (
-              <p className="text-[14px]">
-                {getBooster(groupTvl) !== 0 &&
-                  `Group Booster: ${getBooster(groupTvl)}x`}
-                <br />
-                Early Bird Booster: 2x <br />
+              <div>
+                <p>
+                  {getBooster(groupTvl) !== 0 &&
+                    `Group Booster: ${getBooster(groupTvl)}x`}
+                </p>
+                <p className="mt-[0.5rem]">
+                  Early Bird Booster: {eralyBirdBooster}x
+                </p>
+                <p className="mt-[0.5rem]">
+                  Total Booster = {eralyBirdBooster} * ({1} +{" "}
+                  {getBooster(groupTvl)})
+                </p>
                 <br />
                 <a
                   href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
@@ -105,7 +115,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                 >
                   Learn More
                 </a>
-              </p>
+              </div>
             )}
           />
         </div>
@@ -117,8 +127,6 @@ export default function NovaPoints(props: INovaPointsProps) {
           Est. in next epoch
         </p> */}
 
-        {/* // TODO other points */}
-
         <ReactTooltip
           id="more-points-soon"
           place="top"
@@ -126,7 +134,7 @@ export default function NovaPoints(props: INovaPointsProps) {
           content="More points will be listed here soon."
         />
 
-        <p className="mt-[3rem] w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
+        <div className="mt-[3rem] w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
           <span>Other Points</span>
 
           <img
@@ -134,23 +142,33 @@ export default function NovaPoints(props: INovaPointsProps) {
             src="/img/icon-info.svg"
             className="w-[0.875rem] h-[0.875rem] opacity-40"
           />
-        </p>
+        </div>
 
-        <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+        <div className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           <div className="flex items-center gap-2">
-            <img src="/img/icon-puffer-points.png" />
-            <span>Puffer Points</span>
+            <img src="/img/icon-puffer-points.png" className="w-[1.5rem]" />
+            <span className="font-[700]">Puffer Points</span>
           </div>
           <span>{formatNumberWithUnit(pufferPoints)}</span>
-        </p>
-        
-        <p className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <div className="flex items-center gap-2">
-            <img src="/img/icon-eigenlayer-points.png" />
-            <span>Eigenlayer Points (Puffer)</span>
-          </div>
+        </div>
+
+        <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <span className="ml-[2rem]">Eigenlayer Points (Puffer)</span>
           <span>{formatNumberWithUnit(eigenlayerPoints)}</span>
-        </p>
+        </div>
+
+        <div className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-ezPoints.png" className="w-[1.5rem]" />
+            <span className="font-[700]">ezPoints</span>
+          </div>
+          <span>{formatNumberWithUnit(renzoPoints)}</span>
+        </div>
+
+        <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+          <span className="ml-[2rem]">Eigenlayer Points (Renzo)</span>
+          <span>{formatNumberWithUnit(renzoPoints)}</span>
+        </div>
       </CardBox>
     </>
   );

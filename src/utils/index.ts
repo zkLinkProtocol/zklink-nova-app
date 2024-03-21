@@ -128,9 +128,10 @@ export function formatBalance(
   decimals: number,
   fixed: number = 8
 ) {
-  return new bignumber(
-    new bignumber(formatUnits(balance ?? BigInt(0), decimals)).toFixed(fixed)
-  ).toFixed();
+  const v = new bignumber(
+    new bignumber(formatUnits(balance ?? BigInt(0), decimals)).toFixed(fixed, 1)
+  ).toNumber(); //use 1 to round_down
+  return v;
 }
 
 export function getBooster(value: number): number {
@@ -196,7 +197,7 @@ export function formatNumberWithUnit(value: number | string, symbol?: string) {
     }
   }
 
-  console.log("formatNumberWithUnit", value, format);
+  // console.log("formatNumberWithUnit", value, format);
 
   return format;
 }
