@@ -5,6 +5,7 @@ import { addNovaChain, formatBalance } from "@/utils";
 import {
   Button,
   Modal,
+  ModalBody,
   ModalContent,
   ModalHeader,
   Tooltip,
@@ -15,11 +16,35 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useBalance, useChainId, useSwitchChain } from "wagmi";
 import { config } from "@/constants/networks";
-import { getRemainDrawCount } from "@/api";
+import { getRemainDrawCount, getRemainMintCount } from "@/api";
 import Marquee from "../Marquee";
+import styled from "styled-components";
+
+const TxResult = styled.div`
+  .statusImg {
+    width: 128px;
+    margin-top: 20px;
+    margin-left: calc(50% - 64px);
+    margin-bottom: 23px;
+  }
+  .statusBtn {
+    transform: scale(3.5);
+    background: transparent;
+    margin-top: 50px;
+    margin-left: calc(50% - 48px);
+    margin-bottom: 50px;
+  }
+`;
+
+const enum MintStatus {
+  Minting = "Minting",
+  Failed = "Failed",
+  Success = "Success",
+}
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
   const drawModal = useDisclosure();
+  const trademarkMintModal = useDisclosure();
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
@@ -27,13 +52,21 @@ export default function NovaCharacter() {
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
   const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
+  const [remainMintCount, setRemainMintCount] = useState(0);
   const [update, setUpdate] = useState(0);
-
+  const [trademarkMintStatus, setTrademarkMintStatus] = useState<
+    MintStatus | undefined
+  >();
+  const [trademarkMinting, setTrademarkMinting] = useState(false);
   useEffect(() => {
     if (address) {
       getRemainDrawCount(address).then((res) => {
         console.log("remain draw count: ", res);
         setRemainDrawCount(res.result);
+      });
+      getRemainMintCount(address).then((res) => {
+        console.log("remain mint count: ", res);
+        setRemainMintCount(res.result);
       });
     }
   }, [address, update]);
@@ -274,6 +307,61 @@ export default function NovaCharacter() {
           >
             <span>Trade in the market</span>
           </Button>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
+        size="xl"
+        isOpen={trademarkMintModal.isOpen}
+        onOpenChange={trademarkMintModal.onOpenChange}
+        className="trans"
+      >
+        <ModalContent className="mb-[5.75rem]">
+          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
+            {trademarkMintStatus === MintStatus.Minting && <span>Minting</span>}
+            {trademarkMintStatus === MintStatus.Success && (
+              <span>Congratulations</span>
+            )}
+            {trademarkMintStatus === MintStatus.Failed && (
+              <span>Transaction Failed</span>
+            )}
+          </ModalHeader>
+          <ModalBody className="pb-8">
+            <TxResult>
+              {trademarkMintStatus === MintStatus.Minting && (
+                <Button
+                  className="statusBut"
+                  disableAnimation
+                  size="lg"
+                  isLoading={trademarkMinting}
+                ></Button>
+              )}
+              {trademarkMintStatus === MintStatus.Failed && (
+                <img src="/img/transFail.png" alt="" className="statusImg" />
+              )}
+              {trademarkMintStatus === MintStatus.Success && (
+                <div className="flex flex-col items-center">
+                  <img
+                    src="/img/img-trademark-temp-1.png"
+                    alt=""
+                    className="w-[10rem] h-[10rem] rounded-3xl mb-4"
+                  />
+                  <p className="text-[#C0C0C0]">You have successfully minted</p>
+                  <p className="">Chess King #123</p>
+                </div>
+              )}
+              <div>
+                {trademarkMintStatus === MintStatus.Success && (
+                  <Button className="w-full gradient-button">
+                    Trade in Alienswap
+                  </Button>
+                )}
+                <Button className="secondary-button">Close</Button>
+              </div>
+            </TxResult>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
