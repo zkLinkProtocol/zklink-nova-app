@@ -20,6 +20,7 @@
     "axios": "^1.6.7",
     "bignumber.js": "^9.1.2",
     "classnames": "^2.5.1",
+    "decimal.js": "^10.4.3",
     "ethers": "~5.7.0",
     "framer-motion": "^11.0.6",
     "lodash": "^4.17.21",
