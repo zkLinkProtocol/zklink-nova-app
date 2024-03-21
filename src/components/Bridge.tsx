@@ -361,10 +361,15 @@ export default function Bridge(props: IBridgeComponentProps) {
         // setLoyalPoints(300);
         console.log("connections: ", connections);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const provider: any = await connections?.[0]?.connector.getProvider();
-        const walletName = provider?.session?.peer?.metadata.name;
-        console.log("connection provider name : ", walletName);
-        setConnectorName(walletName);
+        if (connections?.[0]?.connector.name === "GateWallet") {
+          setConnectorName("GateWallet");
+        } else {
+          const provider: any = await connections?.[0]?.connector.getProvider();
+
+          const walletName = provider?.session?.peer?.metadata.name;
+          console.log("connection provider name : ", walletName);
+          setConnectorName(walletName);
+        }
       } else {
         setConnectorName("");
       }
@@ -378,6 +383,13 @@ export default function Bridge(props: IBridgeComponentProps) {
         fromList[fromActive].networkKey === "mantle"
       ) {
         return "Binance wallet may not support Mantle Network.";
+      } else if (
+        connectorName.toLowerCase().includes("gate") &&
+        ["ethereum", "arbitrum", "zksync"].includes(
+          fromList[fromActive].networkKey
+        )
+      ) {
+        return `Gate wallet may not support ${fromList[fromActive].chainName} Network.`;
       }
     }
     return "";
@@ -630,7 +642,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         await switchChainAsync({ chainId: fromList[fromActive].chainId });
         setSwitchChainError("");
         return;
-      } catch (e:any) {
+      } catch (e: any) {
         console.log(e);
         if (e.message && e.message.includes("the method now not support")) {
           // imported wallet in binance not support some chain
@@ -680,7 +692,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       setTimeout(() => {
         transSuccModal.onClose();
       }, 5000);
-    } catch (e:any) {
+    } catch (e: any) {
       transLoadModal.onClose();
       // dispatch(setDepositStatus(""));
 
