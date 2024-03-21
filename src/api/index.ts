@@ -272,7 +272,7 @@ export const visitReward = (address: string): Promise<Response> =>
   });
 
 export const getEigenlayerPoints = (address: string) =>
-  http.get(`${BASE_URL_QUEST}/puffer-quest/third/query_zklink_point`, {
+  http.get(`${BASE_URL_LRT_POINTS}/points/forward/puffer/zklink_point`, {
     params: { address },
     headers: {
       "client-id": "08879426f59a4b038b7755b274bc19dc",
