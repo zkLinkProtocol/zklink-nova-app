@@ -1,8 +1,16 @@
-import { Wallet, getWalletConnectConnector } from "@rainbow-me/rainbowkit";
+import {
+  RainbowKitWalletConnectParameters,
+  Wallet,
+  getWalletConnectConnector,
+} from "@rainbow-me/rainbowkit";
 export interface MyWalletOptions {
   projectId: string;
+  walletConnectParameters?: RainbowKitWalletConnectParameters;
 }
-export const BinanceWallet = ({ projectId }: MyWalletOptions): Wallet => ({
+export const BinanceWallet = ({
+  projectId,
+  walletConnectParameters,
+}: MyWalletOptions): Wallet => ({
   id: "binance-wallet",
   name: "Binance DeFi Wallet",
   iconUrl: "/img/binance.svg",
@@ -62,5 +70,8 @@ export const BinanceWallet = ({ projectId }: MyWalletOptions): Wallet => ({
       ],
     },
   },
-  createConnector: getWalletConnectConnector({ projectId }),
+  createConnector: getWalletConnectConnector({
+    projectId,
+    walletConnectParameters,
+  }),
 });
