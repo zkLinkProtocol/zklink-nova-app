@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import {
   Avatar,
@@ -58,7 +58,8 @@ import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
-
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useConnections } from "wagmi";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -189,6 +190,41 @@ const SelectBox = styled.div`
   }
 `;
 
+export const TokenYieldBox = styled.div`
+  & .token-yield {
+    display: flex;
+    padding: 2px 8px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    color: #fff;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 200% */
+    letter-spacing: -0.06px;
+    margin-right: 6px;
+    white-space: nowrap;
+  }
+  & .token-yield-1 {
+    background: linear-gradient(90deg, #64b3ec -0.39%, #1e1a6a 99.76%);
+  }
+  & .token-yield-2 {
+    background: linear-gradient(90deg, #874fff -0.39%, #41ff54 99.76%);
+  }
+  & .token-yield-3 {
+    background: linear-gradient(90deg, #ddf3fd 0%, #7c3dc8 0.01%, #0f002b 100%);
+  }
+  & .token-yield-4 {
+    background: linear-gradient(90deg, #0bc48f 0%, #00192b 107.78%);
+  }
+  & .token-yield-5 {
+    background: linear-gradient(90deg, #ace730 -0.39%, #324900 99.76%);
+  }
+`;
+
 const LoyaltyBoostBox = styled.div`
   background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
   width: 100px;
@@ -246,7 +282,9 @@ const ContentForMNTDeposit =
   "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
   const { onClose, bridgeToken } = props;
-  const web3Modal = useWeb3Modal();
+  // const web3Modal = useWeb3Modal();
+  const { openConnectModal } = useConnectModal();
+
   const { isConnected, address } = useAccount();
   const fromModal = useDisclosure();
   const tokenModal = useDisclosure();
@@ -255,7 +293,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   const transFailModal = useDisclosure();
   const [failMessage, setFailMessage] = useState("");
   const chainId = useChainId();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { sendDepositTx, loading } = useBridgeTx();
   const [amount, setAmount] = useState("");
 
@@ -280,16 +318,40 @@ export default function Bridge(props: IBridgeComponentProps) {
   const [tokenFiltered, setTokenFiltered] = useState<Token[]>([]);
   const [bridgeTokenInited, setBridgeTokenInited] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
-
+  const connections = useConnections();
+  const [connectorName, setConnectorName] = useState("");
+  const [switchLoading, setSwitchLoading] = useState(false);
+  const [switchChainError, setSwitchChainError] = useState("");
   const dispatch = useDispatch();
 
   const { addTxHash, txhashes } = useVerifyStore();
 
+  const inputRef1 = useRef<HTMLInputElement>(null);
+  const inputRef2 = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      refreshTokenBalanceList();
-    }, 5000);
-    return () => clearInterval(timer);
+    //https://github.com/ant-design/ant-design-mobile/issues/5174
+    inputRef1.current?.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+      },
+      { passive: false }
+    );
+    inputRef2.current?.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+      },
+      { passive: false }
+    );
+  }, []);
+
+  useEffect(() => {
+    // const timer = setInterval(() => {
+    //   refreshTokenBalanceList();
+    // }, 5000);
+    // return () => clearInterval(timer);
   }, [refreshTokenBalanceList]);
 
   useEffect(() => {
@@ -297,13 +359,39 @@ export default function Bridge(props: IBridgeComponentProps) {
       if (address) {
         //TODO call api to get loyal points
         // setLoyalPoints(300);
+        console.log("connections: ", connections);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const provider: any = await connections?.[0]?.connector.getProvider();
+        const walletName = provider?.session?.peer?.metadata.name;
+        console.log("connection provider name : ", walletName);
+        setConnectorName(walletName);
+      } else {
+        setConnectorName("");
       }
     })();
-  }, [address]);
+  }, [address, connections]);
+
+  const unsupportedChainWithConnector = useMemo(() => {
+    if (connectorName && fromList[fromActive]) {
+      if (
+        connectorName.toLowerCase().includes("binance") &&
+        fromList[fromActive].networkKey === "mantle"
+      ) {
+        return "Binance wallet may not support Mantle Network.";
+      }
+    }
+    return "";
+  }, [fromActive, connectorName]);
 
   useEffect(() => {
     if (category === "ALL") {
-      setTokenFiltered([...tokenList]);
+      let arr = [...tokenList];
+
+      const ezEthIndex = arr.findIndex((item) => item.symbol === "ezETH");
+      const ezEthItem = arr.splice(ezEthIndex, 1);
+      arr.splice(4, 0, ezEthItem[0]);
+
+      setTokenFiltered(arr);
     } else {
       const tokens = tokenList.filter(
         (item) => item.type?.toUpperCase() === category.toUpperCase()
@@ -319,6 +407,15 @@ export default function Bridge(props: IBridgeComponentProps) {
       setMinDepositValue(minDeposit.ethAmount || 0.1);
     })();
   }, []);
+
+  const errorInputMsg = useMemo(() => {
+    const token = tokenFiltered[tokenActive];
+    const [_, decimals] = amount.split(".");
+    if (token && decimals && decimals.length > token.decimals) {
+      return `Max decimal length for ${token.symbol} is ${token.decimals}`;
+    }
+    return "";
+  }, [tokenActive, tokenFiltered, amount]);
 
   const computePoints = debounce(() => {
     if (!amount || !tokenFiltered[tokenActive]) {
@@ -379,22 +476,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   ]);
 
   useEffect(() => {
-    if (isFirstDeposit) {
-      const network = localStorage.getItem(STORAGE_NETWORK_KEY);
-      if (network) {
-        setNetworkKey(network);
-        if (fromList[0].networkKey !== network) {
-          const index = fromList.findIndex(
-            (item) => item.networkKey === network
-          );
-          if (index > -1) {
-            setFromActive(index);
-          }
-        }
-      } else if (!network) {
-        setNetworkKey(fromList[0].networkKey);
-      }
-    } else if (bridgeToken && !bridgeTokenInited) {
+    if (bridgeToken && !bridgeTokenInited) {
       const token = tokenList.find((item) =>
         bridgeToken.indexOf("0x") > -1
           ? isSameAddress(item.address, bridgeToken)
@@ -424,6 +506,21 @@ export default function Bridge(props: IBridgeComponentProps) {
       }
       if (tokenList.length > 1) {
         setBridgeTokenInited(true);
+      }
+    } else {
+      const network = localStorage.getItem(STORAGE_NETWORK_KEY);
+      if (network) {
+        setNetworkKey(network);
+        if (fromList[0].networkKey !== network) {
+          const index = fromList.findIndex(
+            (item) => item.networkKey === network
+          );
+          if (index > -1) {
+            setFromActive(index);
+          }
+        }
+      } else if (!network) {
+        setNetworkKey(fromList[0].networkKey);
       }
     }
   }, [
@@ -461,23 +558,35 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [chainId, fromActive]);
 
   const actionBtnDisabled = useMemo(() => {
-    if (
+    if (unsupportedChainWithConnector) {
+      return true;
+    } else if (
       !invalidChain &&
       tokenFiltered[tokenActive] &&
       (!tokenFiltered[tokenActive].balance ||
         tokenFiltered[tokenActive].balance! <= 0 ||
         Number(tokenFiltered[tokenActive].formatedBalance) < Number(amount) ||
-        Number(amount) <= 0)
+        Number(amount) <= 0 ||
+        errorInputMsg)
     ) {
       return true;
     }
     return false;
-  }, [tokenFiltered, tokenActive, invalidChain, amount]);
-  console.log(
-    "actionBtnDisabled: ",
-    actionBtnDisabled,
-    tokenFiltered[tokenActive]
-  );
+  }, [
+    tokenFiltered,
+    tokenActive,
+    invalidChain,
+    amount,
+    errorInputMsg,
+    unsupportedChainWithConnector,
+  ]);
+
+  const isDepositErc20 = useMemo(() => {
+    return (
+      tokenFiltered[tokenActive] &&
+      tokenFiltered[tokenActive].address !== ETH_ADDRESS
+    );
+  }, [tokenActive, tokenFiltered]);
   const btnText = useMemo(() => {
     if (invalidChain) {
       return "Switch Network";
@@ -489,9 +598,11 @@ export default function Bridge(props: IBridgeComponentProps) {
       if (Number(amount) > Number(tokenFiltered[tokenActive].formatedBalance)) {
         return "Insufficient balance";
       }
+    } else if (isDepositErc20) {
+      return "Approve and Deposit";
     }
     return "Continue";
-  }, [invalidChain, amount, tokenActive, tokenFiltered]);
+  }, [invalidChain, amount, tokenActive, tokenFiltered, isDepositErc20]);
 
   const handleInputValue = (v: string) => {
     if (!v) {
@@ -507,17 +618,33 @@ export default function Bridge(props: IBridgeComponentProps) {
     }, 3000);
   };
 
+  useEffect(() => {
+    setSwitchChainError("");
+  }, [fromActive]);
+
   const handleAction = useCallback(async () => {
     if (!address) return;
     if (invalidChain) {
-      switchChain(
-        { chainId: fromList[fromActive].chainId },
-        {
-          onError: (e) => {
-            console.log(e);
-          },
+      try {
+        setSwitchLoading(true);
+        await switchChainAsync({ chainId: fromList[fromActive].chainId });
+        setSwitchChainError("");
+        return;
+      } catch (e:any) {
+        console.log(e);
+        if (e.message && e.message.includes("the method now not support")) {
+          // imported wallet in binance not support some chain
+          setSwitchChainError(
+            `The Binance Web3 wallet may not be support ${fromList[fromActive].chainName} if you're using an imported wallet.`
+          );
+          return;
         }
-      );
+        setSwitchChainError(
+          "Switch network failed. Please refresh page and try again."
+        );
+      } finally {
+        setSwitchLoading(false);
+      }
       return;
     }
     if (!amount) {
@@ -548,20 +675,27 @@ export default function Bridge(props: IBridgeComponentProps) {
       setUrl(`${fromList[fromActive].explorerUrl}/tx/${hash}`);
       dispatch(setDepositL1TxHash(hash!));
       transLoadModal.onClose();
-      dispatch(setDepositStatus("pending"));
+      // dispatch(setDepositStatus("pending"));
       transSuccModal.onOpen();
       setTimeout(() => {
         transSuccModal.onClose();
       }, 5000);
-    } catch (e) {
+    } catch (e:any) {
       transLoadModal.onClose();
-      dispatch(setDepositStatus(""));
+      // dispatch(setDepositStatus(""));
 
       if (e.message) {
         if (e.message.includes("Insufficient balance")) {
           setFailMessage("Insufficient balance");
-        } else if (e.message.includes("User rejected the request")) {
+        } else if (
+          e.message.includes(
+            "User rejected the request" ||
+              e.message.includes("OKX Wallet Reject")
+          )
+        ) {
           setFailMessage("User rejected the request");
+        } else if (e.message.includes("Internal JSON-RPC error ")) {
+          setFailMessage("Internal JSON-RPC error. Please try again");
         } else {
           setFailMessage(e.message);
         }
@@ -584,7 +718,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     transLoadModal,
     refreshTokenBalanceList,
     onClose,
-    switchChain,
+    switchChainAsync,
     fromActive,
     sendDepositTx,
     tokenFiltered,
@@ -627,7 +761,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   return (
     <>
       <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
-        <ContainerCover />
+        {/* <ContainerCover /> */}
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4">
             <span className="font-bold">From</span>
@@ -649,6 +783,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           </div>
           <div className="flex items-center gap-4 mt-2">
             <Input
+              ref={inputRef1}
               classNames={{ input: "text-4xl" }}
               size="lg"
               // type="number"
@@ -656,8 +791,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               variant={"underlined"}
               value={String(amount)}
               onValueChange={handleInputValue}
-              onWheel={(e) => e.preventDefault()}
-              errorMessage=""
+              errorMessage={errorInputMsg}
             />
 
             <div
@@ -767,6 +901,19 @@ export default function Bridge(props: IBridgeComponentProps) {
               >
                 {btnText}
               </Button>
+              {/* <a href="https://portal.zklink.io/bridge/" target="_blank">
+                <Button
+                  className="gradient-btn w-full rounded-full "
+                  style={{ display: "flex", alignItems: "center" }}
+                  disableAnimation
+                  size="lg"
+                  // onClick={handleAction}
+                  isLoading={loading}
+                  // disabled={actionBtnDisabled}
+                >
+                  Deposit through zkLink Nova Portal now
+                </Button>
+              </a> */}
             </Tooltip>
           ) : (
             <Button
@@ -774,10 +921,15 @@ export default function Bridge(props: IBridgeComponentProps) {
               size="lg"
               color="primary"
               disableAnimation
-              onClick={() => web3Modal.open()}
+              onClick={() => openConnectModal?.()}
             >
               Connect Wallet
             </Button>
+          )}
+          {unsupportedChainWithConnector && (
+            <p className="mt-4 text-[#C57D10] text-[14px]">
+              {unsupportedChainWithConnector}
+            </p>
           )}
         </div>
         {isFirstDeposit && showNoPointsTip && (
@@ -795,7 +947,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         )}
       </Container>
       <Container className="block md:hidden px-4 py-6 md:px-8 md:py-8 layer">
-        <ContainerCover />
+        {/* <ContainerCover /> */}
 
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4 mb-4">
@@ -837,6 +989,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
             <div>
               <Input
+                ref={inputRef2}
                 classNames={{
                   input: "text-4xl",
                   inputWrapper: ["bg-inputColor", "h-14"],
@@ -848,8 +1001,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 radius="lg"
                 value={String(amount)}
                 onValueChange={handleInputValue}
-                onWheel={(e) => e.preventDefault()}
-                errorMessage=""
+                errorMessage={errorInputMsg}
               />
             </div>
           </div>
@@ -945,6 +1097,18 @@ export default function Bridge(props: IBridgeComponentProps) {
               >
                 {btnText}
               </Button>
+              {/* <a href="https://portal.zklink.io/bridge/" target="_blank">
+                <Button
+                  className="gradient-btn w-full rounded-full "
+                  style={{ display: "flex", alignItems: "center" }}
+                  disableAnimation
+                  size="lg"
+                  isLoading={loading}
+                  // disabled={actionBtnDisabled}
+                >
+                  Deposit through zkLink Nova Portal now
+                </Button>
+              </a> */}
             </Tooltip>
           ) : (
             <Button
@@ -952,10 +1116,15 @@ export default function Bridge(props: IBridgeComponentProps) {
               size="lg"
               color="primary"
               disableAnimation
-              onClick={() => web3Modal.open()}
+              onClick={() => openConnectModal?.()}
             >
               Connect Wallet
             </Button>
+          )}
+          {unsupportedChainWithConnector && (
+            <p className="mt-4 text-[#C57D10] text-[14px]">
+              {unsupportedChainWithConnector}
+            </p>
           )}
         </div>
         {isFirstDeposit && showNoPointsTip && (
@@ -975,7 +1144,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       {isFirstDeposit && address && txhashes[address]?.[0] && (
         <div>
           <Link
-            to="/aggregation-parade?flag=1"
+            to="/aggregation-parade?verifyTx=1"
             target="_blank"
             className="text-[1rem]"
           >
@@ -1123,7 +1292,40 @@ export default function Bridge(props: IBridgeComponentProps) {
                 >
                   <div className="flex items-center">
                     <Avatar src={item?.icon} className="w-12 h-12" />
-                    <span className="text-xl ml-4">{item?.symbol}</span>
+                    <div className="text-xl ml-4 ">
+                      <span>{item?.symbol}</span>
+                      {item.symbol === "pufETH" && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden ">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-2`}>
+                            Puffer Points
+                          </span>
+                        </TokenYieldBox>
+                      )}
+                    </div>
+                    {item.symbol === "pufETH" && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span>
+                        <span className={`token-yield token-yield-2`}>
+                          Puffer Points
+                        </span>
+                      </TokenYieldBox>
+                    )}
+
+                    {item.symbol === "ezETH" && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span>
+                        <span className={`token-yield token-yield-5`}>
+                          ezPoints
+                        </span>
+                      </TokenYieldBox>
+                    )}
                   </div>
 
                   <span className="text-base">{item?.formatedBalance}</span>
@@ -1151,9 +1353,16 @@ export default function Bridge(props: IBridgeComponentProps) {
                 isLoading={loading}
                 disabled={actionBtnDisabled}
               ></Button>
-              <div className="title">Depositing</div>
+              <div className="title">
+                {!isDepositErc20 ? "Depositing" : "Sending Transaction"}
+              </div>
               <div className="inner">
-                Please sign the transaction in your wallet.
+                <p>Please sign the transaction in your wallet.</p>
+                <p className="mt-2">
+                  If the transaction doesn't show up in your wallet after a
+                  minute or if the deposit keeps pending, please refresh the
+                  page and try again.
+                </p>
               </div>
             </Trans>
           </ModalBody>
@@ -1200,7 +1409,13 @@ export default function Bridge(props: IBridgeComponentProps) {
             <Trans>
               <img src="/img/transFail.png" alt="" className="statusImg" />
               <div className="title">Transaction Failed</div>
-              <div className="title">{failMessage}</div>
+              <div className="title">
+                {failMessage
+                  .toLowerCase()
+                  .includes("missing or invalid parameters")
+                  ? "User rejected signature"
+                  : failMessage}
+              </div>
               <div className="inner">
                 If you have any questions regarding this transaction, please{" "}
                 <a

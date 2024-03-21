@@ -9,6 +9,7 @@ import { BOOST_LIST } from "@/constants/boost";
 import numeral from "numeral";
 import { nexusGoerliNode, nexusNode } from "@/constants/networks";
 import FromList from "@/constants/fromChainList";
+import { checkOkx } from "@/api";
 
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -127,9 +128,10 @@ export function formatBalance(
   decimals: number,
   fixed: number = 8
 ) {
-  return new bignumber(
-    new bignumber(formatUnits(balance ?? BigInt(0), decimals)).toFixed(fixed)
-  ).toFixed();
+  const v = new bignumber(
+    new bignumber(formatUnits(balance ?? BigInt(0), decimals)).toFixed(fixed, 1)
+  ).toNumber(); //use 1 to round_down
+  return v;
 }
 
 export function getBooster(value: number): number {
@@ -178,7 +180,9 @@ export function formatNumber2(value: number) {
 }
 
 export function formatNumberWithUnit(value: number | string, symbol?: string) {
-  value = formatNumber2(Number(value));
+  if (+value > 0.01) {
+    value = formatNumber2(Number(value));
+  }
 
   let format = symbol === "$" ? "$0" : `0 ${symbol ? symbol : ""}`;
 
@@ -192,6 +196,8 @@ export function formatNumberWithUnit(value: number | string, symbol?: string) {
           : `${numeral(value).format("0.00a")} ${symbol ? symbol : ""}`;
     }
   }
+
+  // console.log("formatNumberWithUnit", value, format);
 
   return format;
 }
@@ -316,4 +322,15 @@ export const scrollToTop = () => {
   window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
+};
+
+export const getCheckOkxPoints = async (address: string) => {
+  let points = 0;
+  if (!address) return points;
+  const res = await checkOkx(address);
+  const { result } = res;
+  if (result && Array.isArray(result) && result.length > 0) {
+    points = 5;
+  }
+  return points;
 };

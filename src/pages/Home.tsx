@@ -229,7 +229,6 @@ const FooterBox = styled.div`
 `;
 
 export default function Home() {
-  const web3Modal = useWeb3Modal();
   const { isConnected } = useAccount();
   const { inviteCode, isActiveUser } = useSelector(
     (store: RootState) => store.airdrop
@@ -327,6 +326,18 @@ export default function Home() {
             renderInput={(props) => <input {...props} />}
             shouldAutoFocus
           />
+        </div>
+
+        <div className="mt-[1.5rem] text-[1rem]">
+          Join our{" "}
+          <a href="https://discord.com/invite/zklink" className="text-[#1CFFE4]" target="_blank">
+            Discord
+          </a>{" "}
+          or search{" "}
+          <a href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click" className="text-[#1CFFE4]" target="_blank">
+            #zkLinkNovaAggParade
+          </a>{" "}
+          on twitter for invite code
         </div>
 
         <div>

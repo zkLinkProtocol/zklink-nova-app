@@ -1,4 +1,5 @@
 import http from "@/utils/http";
+import axios from "axios";
 import qs from "qs";
 
 type Response = {
@@ -9,10 +10,17 @@ type Response = {
   data?: any;
 };
 
-export const BASE_URL_API = "/api";
-export const BASE_URL_POINTS = "/points";
-export const BASE_URL_TOKENS = "/tokens";
-export const BASE_URL_TWITTER = "/twitter";
+const isProd = import.meta.env.PROD;
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+
+export const BASE_URL = isProd ? apiBaseURL : "/app-api";
+export const BASE_URL_API = `${BASE_URL}/api`;
+export const BASE_URL_POINTS = `${BASE_URL}/points`;
+export const BASE_URL_TOKENS = `${BASE_URL}/tokens`;
+export const BASE_URL_TWITTER = `${BASE_URL}/twitter`;
+export const BASE_URL_LRT_POINTS = `${BASE_URL}/lrt-points`;
+
+console.log("isProd", isProd);
 
 export type BindInviteCodeWithAddressParams = {
   address: string;
@@ -254,4 +262,30 @@ export const getTwitterUser = (
       // "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
+  });
+
+export const checkOkx = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/check/okx`, {
+    params: { addressList: [address] },
+  });
+
+export const visitReward = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/visit/reward`, {
+    params: { address },
+  });
+
+export const getEigenlayerPoints = (address: string) =>
+  http.get(`${BASE_URL_LRT_POINTS}/points/forward/puffer/zklink_point`, {
+    params: { address },
+    headers: {
+      "client-id": "08879426f59a4b038b7755b274bc19dc",
+    },
+  });
+
+export const getPufferPoints = (address: string) =>
+  http.get(`${BASE_URL_LRT_POINTS}/points/${address}/pufferpoints`);
+
+export const getRenzoPoints = (address: string) =>
+  http.get(`${BASE_URL_LRT_POINTS}/points/renzo/points`, {
+    params: { address },
   });

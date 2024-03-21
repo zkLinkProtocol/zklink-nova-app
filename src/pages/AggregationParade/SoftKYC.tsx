@@ -49,7 +49,7 @@ import Loading from "@/components/Loading";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { IS_MAINNET } from "@/constants";
 import Toast from "@/components/Toast";
-
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 const verifyFromList = [
   ...fromList,
   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
@@ -214,7 +214,8 @@ export const enum VerifyResult {
 }
 
 export default function SoftKYC() {
-  const web3Modal = useWeb3Modal();
+  // const web3Modal = useWeb3Modal();
+  const { openConnectModal } = useConnectModal();
   const verifyDepositModal = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();
   const { address, isConnected } = useAccount();
@@ -376,14 +377,15 @@ export default function SoftKYC() {
     setIsCheckedTwitter(
       isValidTwitterAccess
         ? Boolean(twitterAccessToken)
-        : Boolean(twitterAuthCode)
+        : true
     );
   }, [isValidTwitterAccess, twitterAuthCode, twitterAccessToken]);
 
   const handleConnectAndSign = async () => {
     if (!isConnected || !address) {
       setIsHandleSign(true);
-      web3Modal.open({ view: "Connect" });
+      // web3Modal.open({ view: "Connect" });
+      openConnectModal?.();
       return;
     }
     setSignLoading(true);
@@ -551,10 +553,10 @@ export default function SoftKYC() {
   useEffect(() => {
     const code = searchParams.get("code");
     const error = searchParams.get("error");
-    const flag = searchParams.get("flag");
+    const verifyTx = searchParams.get("verifyTx");
 
     // if after deposit to link here, show verify tx modal
-    if (flag && address) {
+    if (verifyTx && address) {
       setSearchParams("");
       const txs = txhashes[address];
 
@@ -782,7 +784,7 @@ export default function SoftKYC() {
           </div>
 
           {/* Step 4: connect twitter */}
-          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
+          {/* <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox
               className={`hidden md:block ${
                 isCheckedTwitter ? "successed" : ""
@@ -822,7 +824,7 @@ export default function SoftKYC() {
                 )}
               </div>
             </CardBox>
-          </div>
+          </div> */}
 
           {/* Submit for user bind */}
           <div className="flex justify-center w-full md:px-[5rem] ">
@@ -905,6 +907,7 @@ export default function SoftKYC() {
               </Select>
 
               <Input
+                className="max-w-[100%]"
                 variant="underlined"
                 placeholder="Please enter your tx hash"
                 value={depositTxHash}

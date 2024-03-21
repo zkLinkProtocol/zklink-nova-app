@@ -20,7 +20,11 @@ export type Token = {
 };
 import { useQueryClient } from "@tanstack/react-query";
 import { formatBalance, isSameAddress } from "@/utils";
-import { PRIMARY_CHAIN_KEY, wagmiConfig } from "@/constants/networks";
+import {
+  PRIMARY_CHAIN_KEY,
+  config,
+  wagmiDefaultConfig,
+} from "@/constants/networks";
 import { getSupportedTokens } from "@/api";
 
 const nativeToken = {
@@ -74,7 +78,14 @@ export const useTokenBalanceList = () => {
     (async () => {
       if (!networkKey) return;
       const supportedTokens = await getSupportedTokens();
-      console.log("supportedTokens: ", supportedTokens);
+      const index = supportedTokens.findIndex(
+        (item) => item.symbol === "pufETH"
+      );
+      if (index > -1) {
+        const pufETH = { ...supportedTokens[index] };
+        supportedTokens.splice(index, 1);
+        supportedTokens.splice(2, 0, pufETH);
+      }
       const tokens = [];
       for (const token of supportedTokens) {
         if (token.symbol === "ETH") continue;
@@ -118,6 +129,7 @@ export const useTokenBalanceList = () => {
   //   );
   // }, [networkKey]);
   const { data: nativeTokenBalance } = useBalance({
+    config: config,
     address: walletAddress as `0x${string}`,
     chainId: selectedChainId,
     token: undefined,
@@ -137,7 +149,7 @@ export const useTokenBalanceList = () => {
   }, [tokenSource, walletAddress, selectedChainId]);
 
   const { data: erc20Balances } = useReadContracts({
-    config: wagmiConfig,
+    config: config,
     contracts: erc20Contracts,
     query: {
       queryClient: queryClient,
@@ -185,7 +197,7 @@ export const useTokenBalanceList = () => {
     tokenList,
     refreshTokenBalanceList,
     allTokens,
-    nativeTokenBalance: nativeTokenBalance?.value
+    nativeTokenBalance: nativeTokenBalance?.value,
   };
 };
 

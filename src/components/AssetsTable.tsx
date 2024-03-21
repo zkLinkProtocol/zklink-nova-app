@@ -1,25 +1,22 @@
 import { CardBox } from "@/styles/common";
 import {
-  Avatar,
   Button,
   Checkbox,
   Modal,
   ModalBody,
   ModalContent,
   ModalHeader,
-  Skeleton,
   Table,
   TableBody,
   TableCell,
   TableColumn,
   TableHeader,
   TableRow,
-  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import BridgeComponent from "@/components/Bridge";
+import BridgeComponent, { TokenYieldBox } from "@/components/Bridge";
 import { formatNumberWithUnit } from "@/utils";
 import _ from "lodash";
 import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
@@ -187,8 +184,8 @@ export type AssetsListItem = {
   tokenAddress: string;
   iconURL: string;
   // total tvl by token
-  groupAmount: string | number;
-  groupTvl: string | number;
+  totalAmount: string | number;
+  totalTvl: string | number;
   // support token
   symbol: string;
   decimals: number;
@@ -203,10 +200,11 @@ interface IAssetsTableProps {
   accountTvlData: AccountTvlItem[];
   totalTvlList: TotalTvlItem[];
   supportTokens: SupportToken[];
+  ethUsdPrice: number;
 }
 
 export default function AssetsTable(props: IAssetsTableProps) {
-  const { accountTvlData, totalTvlList, supportTokens } = props;
+  const { accountTvlData, totalTvlList, supportTokens, ethUsdPrice } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
   const [tableList, setTableList] = useState<AssetsListItem[]>([]);
@@ -331,12 +329,12 @@ export default function AssetsTable(props: IAssetsTableProps) {
   };
 
   const getTokenAccountTvl = (l2Address: string) => {
-    const accountTvl = accountTvlData.find(
+    const accountTvlItem = accountTvlData.find(
       (tvlItem) =>
         l2Address.toLowerCase() === tvlItem.tokenAddress.toLowerCase()
     );
 
-    return accountTvl;
+    return accountTvlItem;
   };
 
   const getTotalTvlByAddressList = (
@@ -363,8 +361,8 @@ export default function AssetsTable(props: IAssetsTableProps) {
         tokenAddress: "",
         iconURL: "",
         // total tvl by token
-        groupAmount: 0,
-        groupTvl: 0,
+        totalAmount: 0,
+        totalTvl: 0,
         // support token
         symbol: item?.symbol,
         // address: item?.address,
@@ -375,13 +373,21 @@ export default function AssetsTable(props: IAssetsTableProps) {
         multiplier: item?.multiplier,
       };
       item.address.forEach((chains) => {
-        const accountTvl = getTokenAccountTvl(chains.l2Address);
-        const totalTvl = getTotalTvl(chains.l2Address);
-        obj.amount += accountTvl?.amount ? +accountTvl.amount : 0;
-        obj.tvl += accountTvl?.tvl ? +accountTvl.tvl : 0;
-        obj.groupAmount += totalTvl?.amount ? +totalTvl.amount : 0;
-        obj.groupTvl += totalTvl?.tvl ? +totalTvl.tvl : 0;
-        obj.tokenAddress = totalTvl?.tokenAddress || "";
+        const accountTvlItem = getTokenAccountTvl(chains.l2Address);
+        const totalTvlItem = getTotalTvl(chains.l2Address);
+
+        if (accountTvlItem) {
+          obj.amount = +accountTvlItem.amount ? +accountTvlItem.amount : 0;
+          obj.tvl = +accountTvlItem.tvl ? +accountTvlItem.tvl * ethUsdPrice : 0;
+        }
+
+        if (totalTvlItem) {
+          obj.totalAmount = +totalTvlItem.amount ? +totalTvlItem.amount : 0;
+          obj.totalTvl = +totalTvlItem.tvl
+            ? +totalTvlItem.tvl * ethUsdPrice
+            : 0;
+          obj.tokenAddress = totalTvlItem?.tokenAddress || "";
+        }
 
         obj.iconURL =
           !obj?.iconURL || obj.iconURL === ""
@@ -400,6 +406,13 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => item?.type === filterType);
     }
 
+    arr = arr.sort((a, b) => +b.totalTvl - +a.totalTvl);
+
+    const ezEthIndex = arr.findIndex((item) => item.symbol === "ezETH");
+    const ezEthItem = arr.splice(ezEthIndex, 1);
+    arr.splice(4, 0, ezEthItem[0]);
+
+    console.log("account tvl list========>", arr);
     setTableList(arr);
   }, [
     isMyHolding,
@@ -476,25 +489,47 @@ export default function AssetsTable(props: IAssetsTableProps) {
                   <TableCell>
                     <TableItem className="flex items-center min-w-[13rem]">
                       <img
-                        src={item.iconURL}
+                        src={item?.iconURL}
                         className="flex rounded-full w-[2.125rem] h-[2.125rem]"
                       />
                       <p className="value ml-[0.5rem]">
-                        {item.symbol}
+                        {item?.symbol}
                         {/* {item?.chain && `.${item.chain}`} */}
                       </p>
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
                         {item?.multiplier}x Boost
                       </span>
+
+                      {item?.symbol === "pufETH" && (
+                        <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-2`}>
+                            Puffer Points
+                          </span>
+                        </TokenYieldBox>
+                      )}
+
+                      {item?.symbol === "ezETH" && (
+                        <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-5`}>
+                            ezPoints
+                          </span>
+                        </TokenYieldBox>
+                      )}
                     </TableItem>
                   </TableCell>
                   <TableCell>
                     <TableItem>
                       <div className="value">
-                        {formatNumberWithUnit(item.groupAmount)}
+                        {formatNumberWithUnit(item?.totalAmount)}
                       </div>
                       <div className="sub-value mt-[0.12rem]">
-                        {formatNumberWithUnit(item.groupTvl, "$")}
+                        {formatNumberWithUnit(item?.totalTvl, "$")}
                       </div>
                     </TableItem>
                   </TableCell>
@@ -521,10 +556,10 @@ export default function AssetsTable(props: IAssetsTableProps) {
                   <TableCell>
                     <TableItem>
                       <div className="value">
-                        {formatNumberWithUnit(item.amount)}
+                        {formatNumberWithUnit(item?.amount)}
                       </div>
                       <div className="sub-value mt-[0.12rem]">
-                        {formatNumberWithUnit(item.tvl, "$")}
+                        {formatNumberWithUnit(item?.tvl, "$")}
                       </div>
                     </TableItem>
                   </TableCell>
@@ -533,7 +568,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                       className="bg-[#0BC48F] text-[#000] text-[1rem]"
                       onClick={() => {
                         console.log("item: ", item);
-                        handleBridgeMore(item.symbol);
+                        handleBridgeMore(item?.symbol);
                       }}
                     >
                       Bridge More
@@ -547,7 +582,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
       </TableBox>
 
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "600px" }}
         size="2xl"
         isOpen={bridgeModal.isOpen}
@@ -558,10 +593,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
             <>
               <ModalHeader>Bridge</ModalHeader>
               <ModalBody className="pb-8">
-                <BridgeComponent
-                  bridgeToken={bridgeToken}
-                  onClose={onClose}
-                />
+                <BridgeComponent bridgeToken={bridgeToken} onClose={onClose} />
               </ModalBody>
             </>
           )}

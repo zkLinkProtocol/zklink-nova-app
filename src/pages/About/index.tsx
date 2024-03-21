@@ -301,24 +301,24 @@ export default function About() {
         </div>
         <div className="paragraph title big">Timeline</div>
         <div className="paragraph">
-          <div className="title">Phase 1: Aggregation phase 3/24</div>
+          <div className="title">Phase 1: Aggregation phase 3/2024</div>
           <div className="before">
             Deposit all accepted tokens onto NOVA to earn Nova points
           </div>
         </div>
         <div className="paragraph">
-          <div className="title">Phase 2: Claiming Phase 4/24</div>
+          <div className="title">Phase 2: Claiming Phase 4/2024</div>
           <div className="before">Nova Lynks Holders split 10,000,000 $ZKL</div>
           <div className="before">Nova Points computation wrap up</div>
         </div>
         <div className="paragraph">
-          <div className="title">Phase 3: Releasing phase 4/24</div>
+          <div className="title">Phase 3: Releasing phase 4/2024</div>
           <div className="before">
             Nova Points will be released in the form of $ZKL
           </div>
         </div>
         <div className="paragraph">
-          <div className="title">Phase 4: Reunification Phase 5/24</div>
+          <div className="title">Phase 4: Reunification Phase 5/2024</div>
           <div className="before">
             More to be revealed after bitcoin halving
           </div>
