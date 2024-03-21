@@ -10,11 +10,17 @@ type Response = {
   data?: any;
 };
 
-export const BASE_URL_API = "/api";
-export const BASE_URL_POINTS = "/points";
-export const BASE_URL_TOKENS = "/tokens";
-export const BASE_URL_TWITTER = "/twitter";
-export const BASE_URL_LRT_POINTS = "/lrt-points";
+const isProd = import.meta.env.PROD;
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+
+export const BASE_URL = isProd ? apiBaseURL : "/app-api";
+export const BASE_URL_API = `${BASE_URL}/api`;
+export const BASE_URL_POINTS = `${BASE_URL}/points`;
+export const BASE_URL_TOKENS = `${BASE_URL}/tokens`;
+export const BASE_URL_TWITTER = `${BASE_URL}/twitter`;
+export const BASE_URL_LRT_POINTS = `${BASE_URL}/lrt-points`;
+
+console.log("isProd", isProd);
 
 export type BindInviteCodeWithAddressParams = {
   address: string;
