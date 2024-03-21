@@ -2,6 +2,7 @@ import { CardBox } from "@/styles/common";
 import { formatNumberWithUnit, getBooster } from "@/utils";
 import styled from "styled-components";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import Decimal from "decimal.js";
 
 const GreenTag = styled.span`
   display: flex;
@@ -87,7 +88,8 @@ export default function NovaPoints(props: INovaPointsProps) {
             data-tooltip-id="booster-learn-more"
             className="py-[0.375rem] w-[5.625rem] text-[1rem]"
           >
-            {(getBooster(groupTvl) + 1) * eralyBirdBooster}x
+            {Decimal.mul(getBooster(groupTvl) + 1, eralyBirdBooster).toNumber()}
+            x
           </GreenTag>
 
           <ReactTooltip
