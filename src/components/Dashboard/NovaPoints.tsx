@@ -88,8 +88,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             data-tooltip-id="booster-learn-more"
             className="py-[0.375rem] w-[5.625rem] text-[1rem]"
           >
-            {Decimal.mul(getBooster(groupTvl) + 1, eralyBirdBooster).toNumber()}
-            x
+            {(getBooster(groupTvl) + 1) * eralyBirdBooster}x
           </GreenTag>
 
           <ReactTooltip
