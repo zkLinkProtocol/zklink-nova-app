@@ -30,7 +30,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     pufferPoints,
     renzoPoints,
   } = props;
-  const eralyBirdBooster = 2;
+  const eralyBirdBooster = 1.5;
 
   return (
     <>
@@ -87,7 +87,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             data-tooltip-id="booster-learn-more"
             className="py-[0.375rem] w-[5.625rem] text-[1rem]"
           >
-            {(getBooster(groupTvl) + 1) * 2}x
+            {(getBooster(groupTvl) + 1) * eralyBirdBooster}x
           </GreenTag>
 
           <ReactTooltip
