@@ -152,8 +152,25 @@ export default function NovaPoints(props: INovaPointsProps) {
           <span>{formatNumberWithUnit(pufferPoints)}</span>
         </div>
 
+        <ReactTooltip
+          id="eigemlayer-points-puffer"
+          place="top"
+          style={{
+            maxWidth: "20rem",
+            fontSize: "14px",
+            borderRadius: "16px",
+          }}
+          content="zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points."
+        />
         <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <span className="ml-[2rem]">Eigenlayer Points (Puffer)</span>
+          <div className="flex items-center gap-[0.5rem]">
+            <span className="ml-[2rem]">Eigenlayer Points (Puffer)</span>
+            <img
+              data-tooltip-id="eigemlayer-points-puffer"
+              src="/img/icon-info.svg"
+              className="w-[0.875rem] h-[0.875rem] opacity-40"
+            />
+          </div>
           <span>{formatNumberWithUnit(eigenlayerPoints)}</span>
         </div>
 
