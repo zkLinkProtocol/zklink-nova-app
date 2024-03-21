@@ -11,7 +11,7 @@ const pathResolve = (path: string): string => resolve(process.cwd(), path);
 export default defineConfig({
   plugins: [
     react(),
-    visualizer({ open: true }),
+    visualizer({ open: false }),
     {
       ...viteCompression(),
       apply: "build",
