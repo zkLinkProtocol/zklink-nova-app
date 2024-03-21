@@ -16,6 +16,7 @@ export const BASE_URL_POINTS = `${BASE_URL}/points`;
 export const BASE_URL_TOKENS = `${BASE_URL}/tokens`;
 export const BASE_URL_TWITTER = `${BASE_URL}/twitter`;
 export const BASE_URL_LRT_POINTS = `${BASE_URL}/lrt-points`;
+export const BASE_URL_QUEST = `${BASE_URL}/quest-api`;
 
 
 export type BindInviteCodeWithAddressParams = {
@@ -271,7 +272,7 @@ export const visitReward = (address: string): Promise<Response> =>
   });
 
 export const getEigenlayerPoints = (address: string) =>
-  http.get(`${BASE_URL_LRT_POINTS}/points/forward/puffer/zklink_point`, {
+  http.get(`${BASE_URL_QUEST}/puffer-quest/third/query_zklink_point`, {
     params: { address },
     headers: {
       "client-id": "08879426f59a4b038b7755b274bc19dc",
