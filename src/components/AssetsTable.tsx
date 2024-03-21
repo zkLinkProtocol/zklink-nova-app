@@ -194,7 +194,7 @@ export type AssetsListItem = {
   cgPriceId: string;
   type: string;
   yieldType: string[];
-  multiplier: number;
+  multipliers: any;
   chain?: string;
 };
 
@@ -357,7 +357,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
   useEffect(() => {
     let arr: AssetsListItem[] = [];
-    supportTokens.forEach((item) => {
+    supportTokens.forEach((item: any) => {
       let obj = {
         // acount tvl
         amount: 0,
@@ -374,11 +374,11 @@ export default function AssetsTable(props: IAssetsTableProps) {
         cgPriceId: item?.cgPriceId,
         type: item?.type,
         yieldType: item?.yieldType,
-        multiplier: item?.multiplier,
+        multipliers: item?.multipliers,
       };
 
       // sum all chains token amount/tvl
-      item.address.forEach((chains) => {
+      item.address.forEach((chains: any) => {
         const accountTvlItem = getTokenAccountTvl(chains.l2Address);
         const totalTvlItem = getTotalTvl(chains.l2Address);
 
@@ -421,6 +421,23 @@ export default function AssetsTable(props: IAssetsTableProps) {
     supportTokens,
     explorerTvl,
   ]);
+
+  const getMultiplier = (arr: any) => {
+    // console.log("getMultiplier ===== >", arr, arr instanceof Array);
+
+    let str = "";
+    const ts = new Date().getTime();
+
+    arr.forEach((item: any) => {
+      if (!isNaN(+item?.timestamp) && item?.timestamp * 1000 <= ts) {
+        str = item.multiplier;
+      }
+
+      console.log("getMultiplier--------------- ===== >", item, ts, str);
+    });
+
+    return str;
+  };
 
   useEffect(() => {
     let arr = [...tableList];
@@ -542,8 +559,24 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         {item?.symbol}
                         {/* {item?.chain && `.${item.chain}`} */}
                       </p>
+
+                      {/* TODO */}
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
-                        {item?.multiplier}x Boost
+                        {/* {getMultiplier(
+                          item?.multiplier &&
+                            Array.isArray(item.multiplier) &&
+                            item.multiplier.length > 0
+                            ? item.multiplier
+                            : []
+                        )} */}
+                        {getMultiplier(
+                          item?.multipliers &&
+                            Array.isArray(item?.multipliers) &&
+                            item?.multipliers.length > 0
+                            ? item?.multipliers
+                            : []
+                        )}
+                        x Boost
                       </span>
 
                       {item?.symbol === "pufETH" && (
