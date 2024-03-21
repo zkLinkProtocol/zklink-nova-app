@@ -56,34 +56,35 @@ export default defineConfig({
   build: {
     target: ["esnext"],
     chunkSizeWarningLimit: 1600,
-    // rollupOptions: {
-    //   output: {
-    //     chunkFileNames: "static/js/[name]-[hash].js",
-    //     entryFileNames: "static/js/[name]-[hash].js",
-    //     assetFileNames: "static/[ext]/[name]-[hash].[ext]",
-    //     manualChunks: {
-    //       react: ["react", "react-dom", "react-router-dom"],
-    //       nextui: ["@nextui-org/react"],
-    //       lodash: ["lodash"],
-    //     },
-    //   },
-
-    // },
     rollupOptions: {
       output: {
         chunkFileNames: "static/js/[name]-[hash].js",
         entryFileNames: "static/js/[name]-[hash].js",
         assetFileNames: "static/[ext]/[name]-[hash].[ext]",
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            return id
-              .toString()
-              .split("node_modules/")[1]
-              .split("/")[0]
-              .toString();
-          }
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          nextui: ["@nextui-org/react"],
+          lodash: ["lodash"],
+          rainbowkit: ["@rainbow-me/rainbowkit"],
         },
       },
     },
+
+    // rollupOptions: {
+    //   output: {
+    //     chunkFileNames: "static/js/[name]-[hash].js",
+    //     entryFileNames: "static/js/[name]-[hash].js",
+    //     assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+    //     // manualChunks(id) {
+    //     //   if (id.includes("node_modules")) {
+    //     //     return id
+    //     //       .toString()
+    //     //       .split("node_modules/")[1]
+    //     //       .split("/")[0]
+    //     //       .toString();
+    //     //   }
+    //     // },
+    //   },
+    // },
   },
 });
