@@ -52,4 +52,5 @@ export type Invite = {
   twitterName: string | null;
   twitterHandler: string | null;
   beInvited?: boolean;
+  kolGroup?: boolean
 };

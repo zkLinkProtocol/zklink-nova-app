@@ -3,6 +3,8 @@ import { formatNumberWithUnit, getBooster } from "@/utils";
 import styled from "styled-components";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import Decimal from "decimal.js";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const GreenTag = styled.span`
   display: flex;
@@ -32,6 +34,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoPoints,
   } = props;
   const eralyBirdBooster = 1.5;
+  const { invite } = useSelector((store: RootState) => store.airdrop);
 
   return (
     <>
@@ -108,6 +111,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Total Booster = {eralyBirdBooster} * ({1} +{" "}
                   {getBooster(groupTvl)})
                 </p>
+                {invite?.kolGroup && <p className="mt-[0.5rem]">Referral Booster: 5%</p>}
                 <br />
                 <a
                   href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"

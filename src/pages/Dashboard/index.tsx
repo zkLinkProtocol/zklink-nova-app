@@ -31,6 +31,7 @@ import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import { forEach } from "lodash";
+import Decimal from "decimal.js";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -95,9 +96,16 @@ export default function Dashboard() {
     const { result } = await getAccountPoint(address);
     const okxPoints = await getCheckOkxPoints(address);
 
+    
+
     if (result) {
+
+      let novaPoint = (+result?.novaPoint || 0) + okxPoints
+      if (invite?.kolGroup) {
+        novaPoint += Decimal.mul(novaPoint, 0.05).toNumber()  
+      }
       setAccountPoint({
-        novaPoint: (+result?.novaPoint || 0) + okxPoints,
+        novaPoint: novaPoint,
         referPoint: +result?.referPoint || 0,
       });
     }
