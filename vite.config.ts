@@ -17,32 +17,10 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
     proxy: {
-      "/twitter": {
-        target: "https://api.twitter.com",
+      "/app-api": {
+        target: "https://app-api.zklink.io",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/twitter/, ""),
-      },
-      "/api": {
-        target: "https://app.zklink.io",
-        // target: "https://app.zklink.io",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "/api"),
-      },
-      "/points": {
-        target: "https://app.zklink.io",
-        // target: "https://app.zklink.io",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/points/, "/points"),
-      },
-      "/quest-api": {
-        target: "https://quest-api.puffer.fi",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/quest-api/, ""),
-      },
-      "/lrt-points": {
-        target: "https://lrt-points.zklink.io",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/lrt-points/, ""),
+        rewrite: (path) => path.replace(/^\/app-api/, ""),
       },
     },
   },
