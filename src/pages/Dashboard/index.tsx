@@ -28,7 +28,7 @@ import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
-
+import NFTCard from "./components/NFTCard";
 const TabsBox = styled.div`
   .tab-item {
     color: #a9a9a9;
@@ -288,7 +288,7 @@ export default function Dashboard() {
           <div className="mt-[2rem]">
             {/* Tabs btn: Assets | Trademark NFTs | Referral  */}
             <TabsBox className="flex items-center gap-[1.5rem] overflow-x-auto">
-              {["Assets", "Trademark NFTs", "Referral"].map((item, index) => (
+              {["Assets", "Nova NFTs", "Referral"].map((item, index) => (
                 <span
                   key={index}
                   className={`tab-item whitespace-nowrap ${
@@ -311,25 +311,8 @@ export default function Dashboard() {
               />
             )}
             {/* Tabs view: Trademark NFTs */}
-            {tabsActive === 1 && (
-              <CardBox className="flex flex-col justify-center items-center mt-[2rem] py-[10rem]">
-                <p className="text-[1rem] text-center mb-[1rem] font-[700]">
-                  Coming Soon
-                </p>
-                <div className="flex">
-                  <img
-                    style={{ width: 80 }}
-                    src="/img/logoAlien.svg"
-                    className="w-[9.375rem] h-[9.375rem] mr-[2rem]"
-                  />
-                  <img
-                    style={{ width: 80 }}
-                    src="/img/icon-okx-web3.svg"
-                    className="w-[9.375rem] h-[9.375rem]"
-                  />
-                </div>
-              </CardBox>
-            )}
+            {tabsActive === 1 && <NFTCard />}
+
             {/* Tabs view: Referral */}
             {tabsActive === 2 && (
               <CardBox className="mt-[2rem] min-h-[30rem]">

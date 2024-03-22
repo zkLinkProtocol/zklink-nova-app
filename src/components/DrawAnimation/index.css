@@ -1,0 +1,22 @@
+.lottery-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .lottery-item {
+    opacity: 0.32;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .lottery-item.active {
+    opacity: 1;
+  }
+  
+  .lottery-item img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }

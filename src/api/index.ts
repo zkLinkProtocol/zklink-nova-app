@@ -47,19 +47,9 @@ export const getRemainDrawCount = (address: string): Promise<Response> => {
   });
 };
 
-export const getRemainMintCount = (address: string): Promise<Response> => {
-  return http.get(`${BASE_URL_API}/invite/mint/nft/remain`, {
-    params: { address },
-  });
-};
-
-export const drawTrademarkNFT = (
-  address: string,
-  signature: string
-): Promise<Response> => {
+export const drawTrademarkNFT = (address: string): Promise<Response> => {
   return http.post(`${BASE_URL_API}/invite/draw/nft`, {
     address,
-    signature,
   });
 };
 

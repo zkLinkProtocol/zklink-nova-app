@@ -1,4 +1,4 @@
-import { NOVA_CHAIN_ID } from "@/constants";
+import { NFT_MARKET_URL, NOVA_CHAIN_ID } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import { CardBox } from "@/styles/common";
 import { addNovaChain, formatBalance } from "@/utils";
@@ -16,10 +16,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useBalance, useChainId, useSwitchChain } from "wagmi";
 import { config } from "@/constants/networks";
-import { getRemainDrawCount, getRemainMintCount } from "@/api";
+import { getRemainDrawCount, drawTrademarkNFT } from "@/api";
 import Marquee from "../Marquee";
 import styled from "styled-components";
-
+import DrawAnimation from "../DrawAnimation";
 const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -31,7 +31,7 @@ const TxResult = styled.div`
     transform: scale(3.5);
     background: transparent;
     margin-top: 50px;
-    margin-left: calc(50% - 48px);
+
     margin-bottom: 50px;
   }
 `;
@@ -58,15 +58,19 @@ export default function NovaCharacter() {
     MintStatus | undefined
   >();
   const [trademarkMinting, setTrademarkMinting] = useState(false);
+  const [drawedNftId, setDrawedNftId] = useState();
+  const [trademarkMintParams, setTrademarkMintParams] = useState<{
+    nftId: number;
+    nonce: number;
+    signature: string;
+  }>();
   useEffect(() => {
     if (address) {
       getRemainDrawCount(address).then((res) => {
         console.log("remain draw count: ", res);
-        setRemainDrawCount(res.result);
-      });
-      getRemainMintCount(address).then((res) => {
-        console.log("remain mint count: ", res);
-        setRemainMintCount(res.result);
+        const { remainNumber, nftId } = res.result;
+        setDrawedNftId(nftId);
+        setRemainDrawCount(remainNumber);
       });
     }
   }, [address, update]);
@@ -93,8 +97,8 @@ export default function NovaCharacter() {
   console.log("nativeTokenBalance: ", nativeTokenBalance);
 
   const handleMintTrademark = useCallback(async () => {
+    drawModal.onOpen();
     if (remainDrawCount > 0) {
-      drawModal.onOpen();
     }
   }, [drawModal, remainDrawCount]);
 
@@ -112,8 +116,50 @@ export default function NovaCharacter() {
       );
       return;
     }
+    if (novaBalance === 0) {
+      toast.error("Insuffcient gas for mint transaction.");
+      return;
+    }
+    if (!drawedNftId) {
+      const res = await drawTrademarkNFT(address);
+      //TODO do the draw animation
+      if (res && res.result) {
+        const { nftId, nonce, signature } = res.result;
+        setDrawedNftId(nftId);
+        setTrademarkMintParams({ nftId, nonce, signature });
+      }
+      return;
+    }
+    if (!trademarkMintParams) {
+      const res = await drawTrademarkNFT(address);
+      if (res && res.result) {
+        const { nftId, nonce, signature } = res.result;
+        setTrademarkMintParams({ nftId, nonce, signature });
+      }
+    }
+
+    try {
+      //TODO call contract
+      setTrademarkMintStatus(MintStatus.Minting);
+      trademarkMintModal.onOpen();
+      // setTimeout(() => {
+      //   setTrademarkMintStatus(MintStatus.Success);
+      // }, 6000);
+    } catch (e) {
+      console.error(e);
+      setTrademarkMintStatus(MintStatus.Failed);
+    }
+
     setUpdate((update) => update + 1);
-  }, []);
+  }, [
+    address,
+    drawedNftId,
+    isInvaidChain,
+    novaBalance,
+    switchChain,
+    trademarkMintModal,
+    trademarkMintParams,
+  ]);
 
   const handleMintNow = useCallback(() => {
     if (nft || fetchLoading) {
@@ -268,7 +314,7 @@ export default function NovaCharacter() {
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Draw and Mint your Trademark NFTs
           </ModalHeader>
-          <Marquee />
+          <DrawAnimation targetImageIndex={3} />
           {/* <div className="grid grid-cols-2 place-content-center gap-4 w-auto mx-auto">
             {[1, 2, 3, 4].map((item) => (
               <div key={item} className="flex items-center justify-center">
@@ -290,17 +336,19 @@ export default function NovaCharacter() {
             if you are lucky enough
           </p>
           <Button
-            onClick={handleMint}
+            onClick={handleDrawAndMint}
             isDisabled={!isInvaidChain && novaBalance === 0}
             isLoading={mintLoading}
             className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
-              {isInvaidChain ? "Switch to Nova network to mint" : "Dray & Mint"}
+              {isInvaidChain && "Switch to Nova network to mint"}
+              {!isInvaidChain && !drawedNftId && "Draw & Mint"}
+              {!isInvaidChain && drawedNftId && "Mint"}
             </span>
           </Button>
           <Button
-            onClick={handleMint}
+            onClick={() => window.open(NFT_MARKET_URL, "_blank")}
             isDisabled={!isInvaidChain && novaBalance === 0}
             isLoading={mintLoading}
             className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
@@ -318,7 +366,7 @@ export default function NovaCharacter() {
         onOpenChange={trademarkMintModal.onOpenChange}
         className="trans"
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             {trademarkMintStatus === MintStatus.Minting && <span>Minting</span>}
             {trademarkMintStatus === MintStatus.Success && (
@@ -331,12 +379,17 @@ export default function NovaCharacter() {
           <ModalBody className="pb-8">
             <TxResult>
               {trademarkMintStatus === MintStatus.Minting && (
-                <Button
-                  className="statusBut"
-                  disableAnimation
-                  size="lg"
-                  isLoading={trademarkMinting}
-                ></Button>
+                <div className="flex flex-col items-center">
+                  <Button
+                    className="statusBtn"
+                    disableAnimation
+                    size="lg"
+                    isLoading={trademarkMintStatus === MintStatus.Minting}
+                  ></Button>
+                  <p className="text-[#C0C0C0] font-normal text-lg">
+                    Please sign the transaction in your wallet.
+                  </p>
+                </div>
               )}
               {trademarkMintStatus === MintStatus.Failed && (
                 <img src="/img/transFail.png" alt="" className="statusImg" />
@@ -349,16 +402,24 @@ export default function NovaCharacter() {
                     className="w-[10rem] h-[10rem] rounded-3xl mb-4"
                   />
                   <p className="text-[#C0C0C0]">You have successfully minted</p>
-                  <p className="">Chess King #123</p>
+                  <p className="text-[#03D498]">Chess King #123</p>
                 </div>
               )}
-              <div>
+              <div className="mt-6">
                 {trademarkMintStatus === MintStatus.Success && (
-                  <Button className="w-full gradient-button">
+                  <Button
+                    className="w-full gradient-btn mb-6"
+                    onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+                  >
                     Trade in Alienswap
                   </Button>
                 )}
-                <Button className="secondary-button">Close</Button>
+                <Button
+                  className="w-full default-btn"
+                  onClick={() => trademarkMintModal.onClose()}
+                >
+                  Close
+                </Button>
               </div>
             </TxResult>
           </ModalBody>
