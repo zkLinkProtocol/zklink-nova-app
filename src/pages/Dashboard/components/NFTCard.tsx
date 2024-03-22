@@ -10,7 +10,8 @@ import {
 import styled from "styled-components";
 import { CardBox } from "@/styles/common";
 import { NFT_MARKET_URL } from "@/constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import DrawAnimation from "@/components/DrawAnimation";
 const NftBox = styled.div`
   .nft-left {
     width: 60%;
@@ -86,25 +87,55 @@ const ALL_NFTS = [
   { img: "trademark-3.png", name: "Trade mark", balance: 1 },
   { img: "trademark-4.png", name: "Trade mark", balance: 1 },
 
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 1 },
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 2 },
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 3 },
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 4 },
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 5 },
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 6 },
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 7 },
-  { img: "mystery-box-1", name: "Mystery Box 1", balance: 8 },
+  { img: "point-booster-1.png", name: "Mystery Box 1", balance: 1 },
+  { img: "point-booster-2.png", name: "Mystery Box 2", balance: 2 },
+  { img: "point-booster-3.png", name: "Mystery Box 3", balance: 3 },
+  { img: "point-booster-4.png", name: "Mystery Box 4", balance: 4 },
+  { img: "point-booster-5.png", name: "Mystery Box 5", balance: 5 },
+  { img: "point-booster-6.png", name: "Mystery Box 6", balance: 6 },
+  { img: "point-booster-7.png", name: "Mystery Box 7", balance: 7 },
+  { img: "point-booster-8.png", name: "Mystery Box 8", balance: 8 },
 ];
 export default function NFTCard() {
   const openBoxModal = useDisclosure();
   const mintBoxModal = useDisclosure();
   const [remainMintCount, setRemainMintCount] = useState(0);
+  const [minting, setMinting] = useState(false);
+  const [opening, setOpening] = useState(false);
+  const [boxId, setBoxId] = useState<number | null>(null);
+  const drawRef = useRef<{ start: (target: number) => void }>();
+  const [drawing, setDrawing] = useState(false);
 
   const onOpen = () => {
     openBoxModal.onOpen();
   };
   const onMint = () => {
     mintBoxModal.onOpen();
+  };
+
+  useEffect(() => {
+    //fetch box count remain
+  }, []);
+  const onMintSubmit = () => {
+    try {
+      setMinting(true);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setMinting(false);
+    }
+  };
+
+  const onOpenSubmit = () => {
+    try {
+      setOpening(true);
+      setDrawing(true);
+      drawRef.current?.start(2);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setOpening(false);
+    }
   };
 
   return (
@@ -166,7 +197,7 @@ export default function NFTCard() {
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
-        size="md"
+        size="xl"
         isOpen={openBoxModal.isOpen}
         onOpenChange={openBoxModal.onOpenChange}
       >
@@ -177,23 +208,39 @@ export default function NFTCard() {
                 Open the Mystery box
               </ModalHeader>
               <ModalBody>
-                <div className="flex justify-center items-center mx-auto w-48 h-48 bg-white text-black text-xl">
-                  Mystery Box
+                <div className="flex flex-col items-center ">
+                  <DrawAnimation
+                    type="MysteryBox"
+                    ref={drawRef}
+                    onDrawEnd={() => {
+                      setDrawing(false);
+                    }}
+                  />
+                  <p className="text-[#fff] text-[24px] font-normal my-2 text-center font-satoshi">
+                    Mystery Box Left:{" "}
+                    <span className="text-[#43E3B5]">{remainMintCount}</span>
+                  </p>
+                  <p className="text-center text-[#C0C0C0] mb-4">
+                    You will have a chance to randomly mint some booster NFT.
+                    However, you must mint your booster NFT before you can enter
+                    another lucky draw.
+                  </p>
                 </div>
               </ModalBody>
               <ModalFooter>
                 <div className="w-full">
                   <Button
-                    className="w-full block bg-emerald-600"
-                    onPress={onClose}
+                    className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+                    onPress={onOpenSubmit}
+                    isLoading={opening || drawing}
                   >
-                    Open
+                    {opening || drawing ? "Opening" : "Open"}
                   </Button>
                   <Button
-                    className="mt-5 w-full block bg-transparent text-teal-500 border border-teal-500"
+                    className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
                     onPress={onClose}
                   >
-                    Open All
+                    Trade in Alienswap
                   </Button>
                 </div>
               </ModalFooter>
@@ -214,23 +261,28 @@ export default function NFTCard() {
                 Mint the Mystery box
               </ModalHeader>
               <ModalBody>
-                <div className="flex justify-center items-center mx-auto w-48 h-48 bg-white text-black text-xl">
-                  Mystery Box
+                <div className="flex flex-col items-center ">
+                  <img
+                    src="/img/img-mystery-box-temp.png"
+                    className="w-[330px] h-[330px] mb-6"
+                  />
+                  <p className="text-[24px] font-satoshi ">
+                    Minting oppertunities:{" "}
+                    <span className="text-green">{remainMintCount}</span>
+                  </p>
+                  <p className="text-gray text-[16px] font-normal">
+                    Congratulation, now you can mint Mystery Box{" "}
+                  </p>
                 </div>
               </ModalBody>
               <ModalFooter>
                 <div className="w-full">
                   <Button
-                    className="w-full block bg-emerald-600"
+                    className="w-full gradient-btn"
                     onPress={onClose}
+                    isLoading={minting}
                   >
-                    Open
-                  </Button>
-                  <Button
-                    className="mt-5 w-full block bg-transparent text-teal-500 border border-teal-500"
-                    onPress={onClose}
-                  >
-                    Open All
+                    {minting ? "Minting" : "Mint"}
                   </Button>
                 </div>
               </ModalFooter>

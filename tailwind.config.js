@@ -16,10 +16,13 @@ export default {
           400: "#3E52FC",
           700: "#49CED7",
         },
+        gray: '#C0C0C0',
         inputColor: "#313841",
+        green: '#43E3B5'
       },
       fontFamily: {
-        'satoshi': ['Satoshi', 'sans-serif']
+        'satoshi': ['Satoshi', 'sans-serif'],
+        'inter': ['Inter', 'sans-serif'],
       }
     },
   },

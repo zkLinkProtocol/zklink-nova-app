@@ -1,19 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  ReactNode,
+} from "react";
 import "./index.css";
 
 const Loops = 4;
-const LotteryAnimation = ({
-  targetImageIndex,
-}: {
-  targetImageIndex: number;
-}) => {
+let timeout: string | number | NodeJS.Timeout | undefined;
+type Ref = ReactNode | { start: (target: number) => void };
+interface IProps {
+  type: "Trademark" | "MysteryBox";
+  targetImageIndex?: number;
+  onDrawEnd: () => void;
+}
+const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
+  const { targetImageIndex, onDrawEnd, type } = props;
+  const curRef = useRef<HTMLDivElement>(null);
+  useImperativeHandle(ref, () => ({
+    start: (targetImageIndex: number) => start(targetImageIndex),
+  }));
   const [currentImageIndex, setCurrentImageIndex] = useState<number>();
 
-  useEffect(() => {
-    let timeout: string | number | NodeJS.Timeout | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const start = (targetImageIndex: number) => {
+    if (!targetImageIndex) return;
+
     let step = 0;
     let speed = 2;
-    const totalSteps = 6 * Loops + targetImageIndex; // run four loops and end on target
+    const count = type === "Trademark" ? 6 : 8;
+    const totalSteps = count * Loops + targetImageIndex; // run four loops and end on target
     const stopAnimation = () => {
       clearTimeout(timeout);
       setCurrentImageIndex(targetImageIndex);
@@ -21,54 +38,62 @@ const LotteryAnimation = ({
     const startAnimation = () => {
       if (step >= totalSteps) {
         stopAnimation();
+        onDrawEnd();
         return;
       }
-      if (step > 6 * (Loops - 1) + targetImageIndex) {
+      if (step > count * (Loops - 1) + targetImageIndex) {
         speed++;
       }
-      setCurrentImageIndex(step % 6);
+      setCurrentImageIndex(step % count);
       step++;
-      timeout = setTimeout(startAnimation, speed * 140);
+      timeout = setTimeout(startAnimation, speed * 120);
     };
 
     startAnimation();
+  };
 
-    return () => {
-      clearTimeout(timeout);
-    };
+  useEffect(() => {
+    if (targetImageIndex) {
+      setCurrentImageIndex(targetImageIndex);
+    }
+    // return () => {
+    //   onDrawEnd();
+    //   clearTimeout(timeout);
+    // };
   }, [targetImageIndex]);
 
   return (
-    <div className="lottery-container">
-      <div
-        className={`lottery-item ${currentImageIndex === 0 ? "active" : ""}`}
-      >
-        <img src={`/img/img-trademark-temp-1.png`} alt="Image 1" />
-      </div>
-
-      <div
-        className={`lottery-item ${currentImageIndex === 1 ? "active" : ""}`}
-      >
-        <img src={`/img/img-trademark-temp-2.png`} alt="Image 1" />
-      </div>
-      <div
-        className={`lottery-item ${currentImageIndex === 2 ? "active" : ""}`}
-      >
-        <img src={`/img/img-trademark-temp-3.png`} alt="Image 1" />
-      </div>
-
-      <div
-        className={`lottery-item ${currentImageIndex === 4 ? "active" : ""}`}
-      >
-        <img src={`/img/img-trademark-temp-5.png`} alt="Image 1" />
-      </div>
-      <div
-        className={`lottery-item ${currentImageIndex === 3 ? "active" : ""}`}
-      >
-        <img src={`/img/img-trademark-temp-4.png`} alt="Image 1" />
-      </div>
+    <div className={`lottery-container lottery-container-${type}`} ref={curRef}>
+      {type === "Trademark" && (
+        <>
+          {[1, 2, 3, 5, 4].map((item) => (
+            <div
+              key={item}
+              className={`lottery-item ${
+                currentImageIndex === item - 1 ? "active" : ""
+              }`}
+            >
+              <img src={`/img/img-trademark-temp-${item}.png`} alt="Image 1" />
+            </div>
+          ))}
+        </>
+      )}
+      {type === "MysteryBox" && (
+        <>
+          {[1, 2, 3, 4, 8, 7, 6, 5].map((item) => (
+            <div
+              key={item}
+              className={`lottery-item ${
+                currentImageIndex === item - 1 ? "active" : ""
+              }`}
+            >
+              <img src={`/img/img-point-booster-${item}.png`} alt="Image 1" />
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
-};
+});
 
 export default LotteryAnimation;

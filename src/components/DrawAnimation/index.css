@@ -20,3 +20,10 @@
     margin-right: 10px;
     margin-bottom: 10px;
   }
+
+  .lottery-container-MysteryBox {
+    width: 400px;
+    .lottery-item img {
+      margin-right: 0;
+    }
+  }

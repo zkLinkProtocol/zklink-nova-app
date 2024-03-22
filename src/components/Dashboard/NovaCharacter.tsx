@@ -12,12 +12,11 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import classNames from "classnames";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useBalance, useChainId, useSwitchChain } from "wagmi";
 import { config } from "@/constants/networks";
 import { getRemainDrawCount, drawTrademarkNFT } from "@/api";
-import Marquee from "../Marquee";
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 const TxResult = styled.div`
@@ -33,6 +32,32 @@ const TxResult = styled.div`
     margin-top: 50px;
 
     margin-bottom: 50px;
+  }
+  .inner {
+    color: #a0a5ad;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 133.333% */
+    letter-spacing: -0.5px;
+    margin-bottom: 23px;
+  }
+  .view {
+    color: #48ecae;
+    background: transparent;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 133.333% */
+    letter-spacing: -0.5px;
+    cursor: pointer;
+  }
+  .inline {
+    display: inline;
   }
 `;
 
@@ -58,12 +83,14 @@ export default function NovaCharacter() {
     MintStatus | undefined
   >();
   const [trademarkMinting, setTrademarkMinting] = useState(false);
-  const [drawedNftId, setDrawedNftId] = useState();
+  const [drawedNftId, setDrawedNftId] = useState<number>();
   const [trademarkMintParams, setTrademarkMintParams] = useState<{
     nftId: number;
     nonce: number;
     signature: string;
   }>();
+  const [drawing, setDrawing] = useState(false);
+  const drawRef = useRef<{ start: (target: number) => void }>();
   useEffect(() => {
     if (address) {
       getRemainDrawCount(address).then((res) => {
@@ -97,8 +124,9 @@ export default function NovaCharacter() {
   console.log("nativeTokenBalance: ", nativeTokenBalance);
 
   const handleMintTrademark = useCallback(async () => {
-    drawModal.onOpen();
+    drawModal.onOpen(); // for test only
     if (remainDrawCount > 0) {
+      drawModal.onOpen();
     }
   }, [drawModal, remainDrawCount]);
 
@@ -120,31 +148,36 @@ export default function NovaCharacter() {
       toast.error("Insuffcient gas for mint transaction.");
       return;
     }
+
     if (!drawedNftId) {
-      const res = await drawTrademarkNFT(address);
-      //TODO do the draw animation
-      if (res && res.result) {
-        const { nftId, nonce, signature } = res.result;
-        setDrawedNftId(nftId);
-        setTrademarkMintParams({ nftId, nonce, signature });
-      }
+      setDrawedNftId(1);
+      setDrawing(true);
+      drawRef?.current?.start(1);
+      // const res = await drawTrademarkNFT(address);
+      // //TODO do the draw animation
+      // if (res && res.result) {
+      //   const { nftId, nonce, signature } = res.result;
+      //   setDrawedNftId(nftId);
+      //   setTrademarkMintParams({ nftId, nonce, signature });
+      // }
       return;
     }
-    if (!trademarkMintParams) {
-      const res = await drawTrademarkNFT(address);
-      if (res && res.result) {
-        const { nftId, nonce, signature } = res.result;
-        setTrademarkMintParams({ nftId, nonce, signature });
-      }
-    }
+    // if (!trademarkMintParams) {
+    //   const res = await drawTrademarkNFT(address);
+    //   if (res && res.result) {
+    //     const { nftId, nonce, signature } = res.result;
+    //     setTrademarkMintParams({ nftId, nonce, signature });
+    //   }
+    // }
 
     try {
       //TODO call contract
+      drawRef?.current?.start(1);
       setTrademarkMintStatus(MintStatus.Minting);
       trademarkMintModal.onOpen();
-      // setTimeout(() => {
-      //   setTrademarkMintStatus(MintStatus.Success);
-      // }, 6000);
+      setTimeout(() => {
+        setTrademarkMintStatus(MintStatus.Failed);
+      }, 3000);
     } catch (e) {
       console.error(e);
       setTrademarkMintStatus(MintStatus.Failed);
@@ -314,7 +347,14 @@ export default function NovaCharacter() {
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Draw and Mint your Trademark NFTs
           </ModalHeader>
-          <DrawAnimation targetImageIndex={3} />
+          <DrawAnimation
+            type="Trademark"
+            ref={drawRef}
+            targetImageIndex={drawedNftId}
+            onDrawEnd={() => {
+              setDrawing(false);
+            }}
+          />
           {/* <div className="grid grid-cols-2 place-content-center gap-4 w-auto mx-auto">
             {[1, 2, 3, 4].map((item) => (
               <div key={item} className="flex items-center justify-center">
@@ -326,25 +366,25 @@ export default function NovaCharacter() {
               </div>
             ))}
           </div> */}
-          <p className="text-[#fff] text-[24px] font-normal text-xs my-4 text-center font-satoshi">
+          <p className="text-[#fff] text-[24px] font-normal my-2 text-center font-satoshi">
             Draw Oppertunities:{" "}
             <span className="text-[#43E3B5]">{remainDrawCount}</span>
           </p>
           <p className="text-center text-[#C0C0C0] mb-4">
-            You will have a chance to randomly mint some mystery NFT if you are
-            top 100 in the daily referral leaderboard (first come first in) or
-            if you are lucky enough
+            With every three referrals, you'll have a chance to receive one of
+            the four Trademark NFTs. However, you must mint your Trademark NFT
+            before you can enter another lucky draw.
           </p>
           <Button
             onClick={handleDrawAndMint}
             isDisabled={!isInvaidChain && novaBalance === 0}
-            isLoading={mintLoading}
+            isLoading={mintLoading || drawing}
             className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
               {isInvaidChain && "Switch to Nova network to mint"}
-              {!isInvaidChain && !drawedNftId && "Draw & Mint"}
-              {!isInvaidChain && drawedNftId && "Mint"}
+              {!isInvaidChain && (!drawedNftId || drawing) && "Draw & Mint"}
+              {!isInvaidChain && drawedNftId && !drawing && "Mint"}
             </span>
           </Button>
           <Button
@@ -353,7 +393,7 @@ export default function NovaCharacter() {
             isLoading={mintLoading}
             className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
           >
-            <span>Trade in the market</span>
+            <span>Trade in Alienswap</span>
           </Button>
         </ModalContent>
       </Modal>
@@ -361,7 +401,6 @@ export default function NovaCharacter() {
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
-        size="xl"
         isOpen={trademarkMintModal.isOpen}
         onOpenChange={trademarkMintModal.onOpenChange}
         className="trans"
@@ -392,7 +431,21 @@ export default function NovaCharacter() {
                 </div>
               )}
               {trademarkMintStatus === MintStatus.Failed && (
-                <img src="/img/transFail.png" alt="" className="statusImg" />
+                <div>
+                  <img src="/img/transFail.png" alt="" className="statusImg" />
+                  <div className="inner">
+                    If you have any questions regarding this transaction, please{" "}
+                    <a
+                      href="https://discord.com/invite/zklink"
+                      target="_blank"
+                      className="view inline"
+                      onClick={trademarkMintModal.onClose}
+                    >
+                      contact us
+                    </a>{" "}
+                    for help
+                  </div>
+                </div>
               )}
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
