@@ -18,7 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BridgeComponent, { TokenYieldBox } from "@/components/Bridge";
-import { formatNumberWithUnit } from "@/utils";
+import { findClosestMultiplier, formatNumberWithUnit } from "@/utils";
 import _ from "lodash";
 import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
 import { AccountTvlItem, TotalTvlItem } from "@/pages/Dashboard";
@@ -194,7 +194,10 @@ export type AssetsListItem = {
   cgPriceId: string;
   type: string;
   yieldType: string[];
-  multipliers: any;
+  multipliers: {
+    multiplier: number;
+    timestamp: number;
+  }[];
   chain?: string;
 };
 
@@ -422,21 +425,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
     explorerTvl,
   ]);
 
-  const getMultiplier = (arr: any) => {
-    // console.log("getMultiplier ===== >", arr, arr instanceof Array);
-
-    let str = "";
-    const ts = new Date().getTime();
-
-    arr.forEach((item: any) => {
-      if (!isNaN(+item?.timestamp) && item?.timestamp * 1000 <= ts) {
-        str = item.multiplier;
-      }
-    });
-
-    return str;
-  };
-
   useEffect(() => {
     let arr = [...tableList];
 
@@ -550,22 +538,9 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         {/* {item?.chain && `.${item.chain}`} */}
                       </p>
 
-                      {/* TODO */}
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
-                        {/* {getMultiplier(
-                          item?.multiplier &&
-                            Array.isArray(item.multiplier) &&
-                            item.multiplier.length > 0
-                            ? item.multiplier
-                            : []
-                        )} */}
-                        {getMultiplier(
-                          item?.multipliers &&
-                            Array.isArray(item?.multipliers) &&
-                            item?.multipliers.length > 0
-                            ? item?.multipliers
-                            : []
-                        )}
+                        {item?.multipliers &&
+                          findClosestMultiplier(item?.multipliers)}
                         x Boost
                       </span>
 
