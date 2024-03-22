@@ -94,13 +94,10 @@ export default function Dashboard() {
     const { result } = await getAccountPoint(address);
     const okxPoints = await getCheckOkxPoints(address);
 
-    
-
     if (result) {
-
-      let novaPoint = (+result?.novaPoint || 0) + okxPoints
+      let novaPoint = (+result?.novaPoint || 0) + okxPoints;
       if (invite?.kolGroup) {
-        novaPoint += Decimal.mul(novaPoint, 0.05).toNumber()  
+        novaPoint += Decimal.mul(novaPoint, 0.05).toNumber();
       }
       setAccountPoint({
         novaPoint: novaPoint,
@@ -227,18 +224,20 @@ export default function Dashboard() {
   };
 
   const [renzoPoints, setRenzoPoints] = useState(0);
+  const [renzoEigenLayerPoints, setRenzoEigenLayerPoints] = useState(0);
   const getRenzoPointsFunc = async () => {
     if (!address) return;
-    const res = await getRenzoPoints(address);
+    const { data } = await getRenzoPoints(address);
 
-    console.log("getRenzoPoints", res);
+    if (data && Array.isArray(data) && data.length > 0) {
+      setRenzoPoints(
+        data.reduce((prev, item) => prev + +item.points.renzoPoints, 0)
+      );
 
-    let sum = 0;
-    if (res && Array.isArray(res) && res.length > 0) {
-      sum = res.reduce((prev, item) => prev + +item?.points, 0);
+      setRenzoEigenLayerPoints(
+        data.reduce((prev, item) => prev + +item.points.eigenLayerPoints, 0)
+      );
     }
-
-    setRenzoPoints(sum);
   };
 
   /**
@@ -300,6 +299,7 @@ export default function Dashboard() {
             eigenlayerPoints={eigenlayerPoints}
             pufferPoints={pufferPoints}
             renzoPoints={renzoPoints}
+            renzoEigenLayerPoints={renzoEigenLayerPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}
