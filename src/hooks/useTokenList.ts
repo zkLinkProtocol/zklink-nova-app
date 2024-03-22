@@ -19,7 +19,7 @@ export type Token = {
   multiplier: number;
 };
 import { useQueryClient } from "@tanstack/react-query";
-import { formatBalance, isSameAddress } from "@/utils";
+import { findClosestMultiplier, formatBalance, isSameAddress } from "@/utils";
 import {
   PRIMARY_CHAIN_KEY,
   config,
@@ -98,6 +98,7 @@ export const useTokenBalanceList = () => {
           );
           tokens.push({
             ...token,
+            multiplier: findClosestMultiplier(token.multipliers),
             address: item.l1Address,
             networkKey,
             networkName: item.chain,
