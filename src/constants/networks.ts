@@ -421,7 +421,7 @@ const connectors = connectorsForWallets(
       wallets: [
         injectedWallet,
         // rainbowWallet,
-        gateWallet,
+        // gateWallet, // hide gate for now
         okxWallet,
         BinanceWallet,
         // rabbyWallet,
