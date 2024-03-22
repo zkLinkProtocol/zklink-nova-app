@@ -444,7 +444,9 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
     try {
       const priceInfo = allTokens.find(
-        (item) => item.symbol === tokenFiltered[tokenActive].symbol
+        (item) =>
+          item.symbol.toLowerCase() ===
+          tokenFiltered[tokenActive].symbol.toLowerCase()
       );
       const ethPriceInfo = allTokens.find((item) => item.symbol === "ETH");
       // const [priceInfo, ethPriceInfo] = await Promise.all([
