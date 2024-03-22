@@ -334,3 +334,26 @@ export const getCheckOkxPoints = async (address: string) => {
   }
   return points;
 };
+
+export function findClosestMultiplier(
+  arr: {
+    multiplier: number;
+    timestamp: number;
+  }[]
+) {
+  const currentTime = Date.now();
+  let closestMultiplier = null;
+  let timeDiff = Infinity;
+
+  for (let i = 0; i < arr.length; i++) {
+    const { timestamp, multiplier } = arr[i];
+    const diff = currentTime - timestamp * 1000;
+
+    if (diff > 0 && diff < timeDiff) {
+      timeDiff = diff;
+      closestMultiplier = multiplier;
+    }
+  }
+
+  return closestMultiplier;
+}
