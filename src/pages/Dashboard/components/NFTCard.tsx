@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import styled from "styled-components";
 import { CardBox } from "@/styles/common";
+<<<<<<< HEAD
 import { NFT_MARKET_URL, NOVA_CHAIN_ID, MintStatus } from "@/constants";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import DrawAnimation from "@/components/DrawAnimation";
@@ -24,6 +25,10 @@ import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import toast from "react-hot-toast";
 import { addNovaChain, sleep } from "@/utils";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
+=======
+import { NFT_MARKET_URL } from "@/constants";
+import { useState, useEffect } from "react";
+>>>>>>> aaa1e6b (update for draw)
 const NftBox = styled.div`
   .nft-left {
     width: 60%;
@@ -93,6 +98,7 @@ const NftBox = styled.div`
     align-items: center;
   }
 `;
+<<<<<<< HEAD
 //prize id (tokenId) ---> img id of point booster NFT, 8 for lynks NFT
 const PRIZE_ID_NFT_MAP: Record<number, number> = {
   3: 1,
@@ -122,10 +128,27 @@ const ALL_NFTS = [
   { img: "ISTP-LYNK.png", name: "LSTP-LYNK", balance: 0 },
   { img: "INFJ-LYNK.png", name: "INFJ-LYNK", balance: 0 },
   { img: "ESFJ-LYNK.png", name: "ESFJ-LYNK", balance: 0 },
+=======
+const ALL_NFTS = [
+  { img: "trademark-1.png", name: "Trade mark", balance: 1 },
+  { img: "trademark-2.png", name: "Trade mark", balance: 1 },
+  { img: "trademark-3.png", name: "Trade mark", balance: 1 },
+  { img: "trademark-4.png", name: "Trade mark", balance: 1 },
+
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 1 },
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 2 },
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 3 },
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 4 },
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 5 },
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 6 },
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 7 },
+  { img: "mystery-box-1", name: "Mystery Box 1", balance: 8 },
+>>>>>>> aaa1e6b (update for draw)
 ];
 export default function NFTCard() {
   const openBoxModal = useDisclosure();
   const mintBoxModal = useDisclosure();
+<<<<<<< HEAD
   const mintResultModal = useDisclosure();
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [minting, setMinting] = useState(false);
@@ -159,12 +182,17 @@ export default function NFTCard() {
   const [boxTokenIds, setBoxTokenIds] = useState<number[]>([]);
   const [mintParams, setMintParams] = useState<MysteryboxMintParams>();
   const [drawPrizeId, setDrawPrizeId] = useState<number>();
+=======
+  const [remainMintCount, setRemainMintCount] = useState(0);
+
+>>>>>>> aaa1e6b (update for draw)
   const onOpen = () => {
     openBoxModal.onOpen();
   };
   const onMint = () => {
     mintBoxModal.onOpen();
   };
+<<<<<<< HEAD
 
   const lynksNFTImg = useMemo(() => {
     if (sbtNFT) {
@@ -367,6 +395,8 @@ export default function NFTCard() {
     sendMysteryOpenMintTx,
     switchChain,
   ]);
+=======
+>>>>>>> aaa1e6b (update for draw)
 
   return (
     <>
@@ -381,9 +411,18 @@ export default function NFTCard() {
             </div>
             <Button className="gradient-btn">Buy</Button>
           </div>
+<<<<<<< HEAD
           <div className="grid grid-cols-3 gap-4 mt-8">
             {allNFTs.map((item, index) => (
               <div className="nft-chip relative   w-[170px] " key={index}>
+=======
+          <div className="flex justify-between flex-wrap mt-8">
+            {ALL_NFTS.map((item, index) => (
+              <div
+                className="nft-chip relative   w-[170px] mr-5 mb-16"
+                key={index}
+              >
+>>>>>>> aaa1e6b (update for draw)
                 <img src={`/img/img-${item.img}`} alt="" />
                 {/* <div className='relative bg-slate-50 h-24 w-8/12 m-auto'> */}
                 <div className="nft-info">
@@ -404,6 +443,7 @@ export default function NFTCard() {
               className="w-[14px] h-[14px] ml-1"
             />
           </div>
+<<<<<<< HEAD
           <div className=" w-[384px] h-[300px] mb-8">
             <img
               src="/img/img-mystery-box.png"
@@ -422,11 +462,24 @@ export default function NFTCard() {
             onClick={onMint}
             disabled={remainMintCount === 0}
           >
+=======
+          <div className="mt-10 w-[384px] h-[300px] bg-slate-50 mb-8">
+            <img src="/img/img-mystery-box.png" />
+          </div>
+          <Button className="gradient-btn mb-2 w-full" onPress={onOpen}>
+            Open Your Box
+          </Button>
+          <Button className="gradient-btn mb-2 w-full" onPress={onMint}>
+>>>>>>> aaa1e6b (update for draw)
             Mint Your Box ({remainMintCount})
           </Button>
           <Button
             className="gradient-btn  w-full"
+<<<<<<< HEAD
             onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+=======
+            onPress={() => window.open(NFT_MARKET_URL, "_blank")}
+>>>>>>> aaa1e6b (update for draw)
           >
             Trade in Alienswap
           </Button>
@@ -435,7 +488,11 @@ export default function NFTCard() {
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
+<<<<<<< HEAD
         size="xl"
+=======
+        size="md"
+>>>>>>> aaa1e6b (update for draw)
         isOpen={openBoxModal.isOpen}
         onOpenChange={openBoxModal.onOpenChange}
       >
@@ -517,6 +574,7 @@ export default function NFTCard() {
                 Mint the Mystery box
               </ModalHeader>
               <ModalBody>
+<<<<<<< HEAD
                 <div className="flex flex-col items-center ">
                   <img
                     src="/img/img-mystery-box-temp.png"
@@ -529,17 +587,34 @@ export default function NFTCard() {
                   <p className="text-gray text-[16px] font-normal">
                     Congratulation, now you can mint Mystery Box{" "}
                   </p>
+=======
+                <div className="flex justify-center items-center mx-auto w-48 h-48 bg-white text-black text-xl">
+                  Mystery Box
+>>>>>>> aaa1e6b (update for draw)
                 </div>
               </ModalBody>
               <ModalFooter>
                 <div className="w-full">
                   <Button
+<<<<<<< HEAD
                     className="w-full gradient-btn"
                     onClick={onMintSubmit}
                     isLoading={mintLoading}
                   >
                     {isInvaidChain && "Switch to Nova network to mint"}
                     {!isInvaidChain && mintLoading ? "Minting" : "Mint"}
+=======
+                    className="w-full block bg-emerald-600"
+                    onPress={onClose}
+                  >
+                    Open
+                  </Button>
+                  <Button
+                    className="mt-5 w-full block bg-transparent text-teal-500 border border-teal-500"
+                    onPress={onClose}
+                  >
+                    Open All
+>>>>>>> aaa1e6b (update for draw)
                   </Button>
                 </div>
               </ModalFooter>
@@ -547,6 +622,7 @@ export default function NFTCard() {
           )}
         </ModalContent>
       </Modal>
+<<<<<<< HEAD
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -640,6 +716,8 @@ export default function NFTCard() {
           </ModalBody>
         </ModalContent>
       </Modal>
+=======
+>>>>>>> aaa1e6b (update for draw)
     </>
   );
 }

@@ -139,7 +139,6 @@ export default function NovaCharacter() {
   const handleMintTrademark = useCallback(async () => {
     drawModal.onOpen(); // for test only
     if (remainDrawCount > 0) {
-      drawModal.onOpen();
     }
   }, [drawModal, remainDrawCount]);
 

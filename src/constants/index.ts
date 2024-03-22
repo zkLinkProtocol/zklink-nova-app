@@ -58,6 +58,7 @@ export const IS_MAINNET = nodeType === "nexus";
 
 export const TWEET_SHARE_TEXT = "ZkLink Nova Campaign blablablablabla";
 
+<<<<<<< HEAD
 export const NFT_MARKET_URL = "";
 
 export const enum MintStatus {
@@ -65,3 +66,7 @@ export const enum MintStatus {
   Failed = "Failed",
   Success = "Success",
 }
+=======
+
+export const NFT_MARKET_URL = ''
+>>>>>>> aaa1e6b (update for draw)
