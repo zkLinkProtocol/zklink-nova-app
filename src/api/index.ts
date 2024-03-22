@@ -111,6 +111,7 @@ export type SupportToken = {
   type: string;
   yieldType: string[];
   multiplier: number;
+  multipliers: { multiplier: number; timestamp: number }[];
 };
 
 export type TokenPriceInfo = {
