@@ -86,8 +86,7 @@ export default function Bridge() {
       </p>
       <p className="mt-6">
         <span className="font-bold"> Deposit Multiplier: </span>
-        Nova Points are distributed every 8 hours, and you will receive points
-        equal to 10 distributions after a valid deposit.
+        After making a valid deposit, you will instantly receive a x10 Nova Points boost.
       </p>
       <p className="mt-6">
         <span className="font-bold"> Group Multiplier: </span>
