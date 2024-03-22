@@ -539,9 +539,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
                       </p>
 
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
-                        {item?.multipliers &&
-                          findClosestMultiplier(item?.multipliers)}
-                        x Boost
+                        {item?.multipliers && Array.isArray(item.multipliers) ? findClosestMultiplier(item?.multipliers) : 0}x Boost
                       </span>
 
                       {item?.symbol === "pufETH" && (
