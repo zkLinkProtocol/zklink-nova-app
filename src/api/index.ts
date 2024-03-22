@@ -283,7 +283,22 @@ export const getEigenlayerPoints = (address: string) =>
 export const getPufferPoints = (address: string) =>
   http.get(`${BASE_URL_LRT_POINTS}/points/${address}/pufferpoints`);
 
-export const getRenzoPoints = (address: string) =>
-  http.get(`${BASE_URL_LRT_POINTS}/points/renzo/points`, {
+export interface RenzoResponse {
+  errno: number;
+  errmsg: string;
+  data: [
+    {
+      address: string;
+      tokenAddress: string;
+      points: {
+        renzoPoints: number;
+        eigenLayerPoints: number;
+      };
+      updatedAt: number;
+    }
+  ];
+}
+export const getRenzoPoints = (address: string): Promise<RenzoResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/renzo/points`, {
     params: { address },
   });
