@@ -23,6 +23,7 @@ interface INovaPointsProps {
   eigenlayerPoints: number;
   pufferPoints: number;
   renzoPoints: number;
+  renzoEigenLayerPoints: number
 }
 
 export default function NovaPoints(props: INovaPointsProps) {
@@ -32,6 +33,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     eigenlayerPoints,
     pufferPoints,
     renzoPoints,
+    renzoEigenLayerPoints
   } = props;
   const eralyBirdBooster = 1.5;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -189,7 +191,7 @@ export default function NovaPoints(props: INovaPointsProps) {
 
         <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           <span className="ml-[2rem]">Eigenlayer Points (Renzo)</span>
-          <span>{formatNumberWithUnit(renzoPoints)}</span>
+          <span>{formatNumberWithUnit(renzoEigenLayerPoints)}</span>
         </div>
       </CardBox>
     </>
