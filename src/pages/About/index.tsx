@@ -241,7 +241,7 @@ export default function About() {
         </div>
         <div className="paragraph">
           <div>
-            <span className="title">Deposit Multiplier:</span> After making a valid deposit, you will instantly receive Nova Points equivalent to holding assets for more than 3 days. Nova Points are distributed every 8 hours, and you will receive points equal to 10 distributions.
+            <span className="title">Deposit Multiplier:</span> After making a valid deposit, you will instantly receive a x10 Nova Points boost.
           </div>
         </div>
         <div className="paragraph">
