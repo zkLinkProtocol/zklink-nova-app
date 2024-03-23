@@ -19,6 +19,7 @@ import { config } from "@/constants/networks";
 import { getRemainDrawCount, drawTrademarkNFT } from "@/api";
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
+import useNovaDrawNFT from "@/hooks/useNovaNFT";
 const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -73,6 +74,7 @@ export default function NovaCharacter() {
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
+  const { trademarkNFT, publicClient } = useNovaDrawNFT();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
@@ -131,7 +133,7 @@ export default function NovaCharacter() {
   }, [drawModal, remainDrawCount]);
 
   const handleDrawAndMint = useCallback(async () => {
-    if (!address) return;
+    if (!address || !trademarkNFT) return;
     if (isInvaidChain) {
       switchChain(
         { chainId: NOVA_CHAIN_ID },
@@ -153,31 +155,40 @@ export default function NovaCharacter() {
       setDrawedNftId(1);
       setDrawing(true);
       drawRef?.current?.start(1);
-      // const res = await drawTrademarkNFT(address);
+      const res = await drawTrademarkNFT(address);
       // //TODO do the draw animation
-      // if (res && res.result) {
-      //   const { nftId, nonce, signature } = res.result;
-      //   setDrawedNftId(nftId);
-      //   setTrademarkMintParams({ nftId, nonce, signature });
-      // }
+      if (res && res.result) {
+        const { nftId, nonce, signature } = res.result;
+        setDrawedNftId(nftId);
+        setTrademarkMintParams({ nftId, nonce, signature });
+      }
       return;
     }
-    // if (!trademarkMintParams) {
-    //   const res = await drawTrademarkNFT(address);
-    //   if (res && res.result) {
-    //     const { nftId, nonce, signature } = res.result;
-    //     setTrademarkMintParams({ nftId, nonce, signature });
-    //   }
-    // }
+    let mintParams = { ...trademarkMintParams };
+    if (!trademarkMintParams) {
+      const res = await drawTrademarkNFT(address);
+      if (res && res.result) {
+        const { nftId, nonce, signature } = res.result;
+        setTrademarkMintParams({ nftId, nonce, signature });
+        mintParams = { nftId, nonce, signature };
+      }
+    }
 
     try {
       //TODO call contract
-      drawRef?.current?.start(1);
       setTrademarkMintStatus(MintStatus.Minting);
       trademarkMintModal.onOpen();
-      setTimeout(() => {
-        setTrademarkMintStatus(MintStatus.Failed);
-      }, 3000);
+      const expiry = Math.floor((Date.now() + 10 * 60 * 1000) / 1000); //10mins after now
+      const hash = await trademarkNFT.write.safeMint([
+        address,
+        mintParams?.nonce,
+        mintParams.nftId,
+        1,
+        expiry,
+        mintParams?.signature,
+      ]);
+      await publicClient?.waitForTransactionReceipt({ hash });
+      setTrademarkMintStatus(MintStatus.Success);
     } catch (e) {
       console.error(e);
       setTrademarkMintStatus(MintStatus.Failed);
@@ -189,9 +200,11 @@ export default function NovaCharacter() {
     drawedNftId,
     isInvaidChain,
     novaBalance,
+    publicClient,
     switchChain,
     trademarkMintModal,
     trademarkMintParams,
+    trademarkNFT,
   ]);
 
   const handleMintNow = useCallback(() => {

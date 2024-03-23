@@ -12,6 +12,7 @@ import { CardBox } from "@/styles/common";
 import { NFT_MARKET_URL } from "@/constants";
 import { useState, useEffect, useRef } from "react";
 import DrawAnimation from "@/components/DrawAnimation";
+import useSBTNFT from "@/hooks/useNFT";
 const NftBox = styled.div`
   .nft-left {
     width: 60%;
@@ -105,7 +106,7 @@ export default function NFTCard() {
   const [boxId, setBoxId] = useState<number | null>(null);
   const drawRef = useRef<{ start: (target: number) => void }>();
   const [drawing, setDrawing] = useState(false);
-
+  const { nft: sbtNFT } = useSBTNFT();
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -119,6 +120,7 @@ export default function NFTCard() {
   const onMintSubmit = () => {
     try {
       setMinting(true);
+      // 1. burn mystery box nft;2.call api to get prize and params; 3. call booster/lynx contract to mint
     } catch (e) {
       console.error(e);
     } finally {
@@ -177,8 +179,11 @@ export default function NFTCard() {
               className="w-[14px] h-[14px] ml-1"
             />
           </div>
-          <div className="mt-10 w-[384px] h-[300px] bg-slate-50 mb-8">
-            <img src="/img/img-mystery-box.png" />
+          <div className=" w-[384px] h-[300px] mb-8">
+            <img
+              src="/img/img-mystery-box.png"
+              className="h-[100%] mx-auto object-contain"
+            />
           </div>
           <Button className="gradient-btn mb-2 w-full" onPress={onOpen}>
             Open Your Box
@@ -215,6 +220,7 @@ export default function NFTCard() {
                     onDrawEnd={() => {
                       setDrawing(false);
                     }}
+                    sbtNFT={sbtNFT}
                   />
                   <p className="text-[#fff] text-[24px] font-normal my-2 text-center font-satoshi">
                     Mystery Box Left:{" "}
@@ -229,18 +235,30 @@ export default function NFTCard() {
               </ModalBody>
               <ModalFooter>
                 <div className="w-full">
-                  <Button
-                    className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
-                    onPress={onOpenSubmit}
-                    isLoading={opening || drawing}
-                  >
-                    {opening || drawing ? "Opening" : "Open"}
-                  </Button>
+                  <div>
+                    <Button
+                      className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+                      onPress={onOpenSubmit}
+                      isLoading={opening || drawing}
+                    >
+                      {opening || drawing ? "Opening" : "Open"}
+                    </Button>
+                    <Button
+                      className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+                      onPress={onOpenSubmit}
+                      isLoading={opening || drawing}
+                    >
+                      Mint
+                    </Button>
+                  </div>
+
                   <Button
                     className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
-                    onPress={onClose}
+                    onPress={() => {
+                      window.open(NFT_MARKET_URL, "_blacnk");
+                    }}
                   >
-                    Trade in Alienswap
+                    Buy from Alienswap
                   </Button>
                 </div>
               </ModalFooter>

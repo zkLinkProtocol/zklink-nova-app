@@ -25,5 +25,6 @@
     width: 400px;
     .lottery-item img {
       margin-right: 0;
+      border-radius: 50%;
     }
   }

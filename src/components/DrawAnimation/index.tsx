@@ -4,9 +4,10 @@ import React, {
   useRef,
   useImperativeHandle,
   ReactNode,
+  useMemo,
 } from "react";
 import "./index.css";
-
+import useSBTNFT, { NOVA_NFT } from "@/hooks/useNFT";
 const Loops = 4;
 let timeout: string | number | NodeJS.Timeout | undefined;
 type Ref = ReactNode | { start: (target: number) => void };
@@ -14,14 +15,21 @@ interface IProps {
   type: "Trademark" | "MysteryBox";
   targetImageIndex?: number;
   onDrawEnd: () => void;
+  sbtNFT?: NOVA_NFT;
 }
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
-  const { targetImageIndex, onDrawEnd, type } = props;
+  const { targetImageIndex, onDrawEnd, type, sbtNFT } = props;
   const curRef = useRef<HTMLDivElement>(null);
   useImperativeHandle(ref, () => ({
     start: (targetImageIndex: number) => start(targetImageIndex),
   }));
   const [currentImageIndex, setCurrentImageIndex] = useState<number>();
+
+  const lynksNFTImg = useMemo(() => {
+    if (type === "MysteryBox" && sbtNFT) {
+      return `/img/img-mystery-box-lynks-${sbtNFT.name}.png`;
+    }
+  }, [type, sbtNFT]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const start = (targetImageIndex: number) => {
@@ -87,7 +95,14 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
                 currentImageIndex === item - 1 ? "active" : ""
               }`}
             >
-              <img src={`/img/img-point-booster-${item}.png`} alt="Image 1" />
+              <img
+                src={
+                  item === 8
+                    ? lynksNFTImg
+                    : `/img/img-point-booster-${item}.png`
+                }
+                alt="Image 1"
+              />
             </div>
           ))}
         </>
