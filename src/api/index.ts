@@ -53,6 +53,20 @@ export const drawTrademarkNFT = (address: string): Promise<Response> => {
   });
 };
 
+export const getRemainMysteryboxDrawCount = (
+  address: string
+): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/draw/mysterybox/remain`, {
+    params: { address },
+  });
+};
+
+export const drawMysteryboxNFT = (address: string): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/draw/mysterybox`, {
+    address,
+  });
+};
+
 export const getMintSignature = (address: string): Promise<Response> => {
   return http.get(`${BASE_URL_API}/invite/validate/nft`, {
     params: { address, projectId: "NOVA-SBT-1" },

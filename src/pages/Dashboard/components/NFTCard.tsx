@@ -13,6 +13,9 @@ import { NFT_MARKET_URL } from "@/constants";
 import { useState, useEffect, useRef } from "react";
 import DrawAnimation from "@/components/DrawAnimation";
 import useSBTNFT from "@/hooks/useNFT";
+import useNovaNFT from "@/hooks/useNovaNFT";
+import { getRemainMysteryboxDrawCount } from "@/api";
+import { useAccount } from "wagmi";
 const NftBox = styled.div`
   .nft-left {
     width: 60%;
@@ -82,20 +85,35 @@ const NftBox = styled.div`
     align-items: center;
   }
 `;
-const ALL_NFTS = [
-  { img: "trademark-1.png", name: "Trade mark", balance: 1 },
-  { img: "trademark-2.png", name: "Trade mark", balance: 1 },
-  { img: "trademark-3.png", name: "Trade mark", balance: 1 },
-  { img: "trademark-4.png", name: "Trade mark", balance: 1 },
+//prize id --> tokenId of point booster NFT, 8 for lynks NFT
+const PRIzE_ID_NFT_MAP = {
+  1: 3, // NVA-BOOSTER-SBT-3
+  2: 4,
+  3: 100,
+  4: 300,
+  5: 500,
+  6: 1000,
+  7: 2000,
+};
 
-  { img: "point-booster-1.png", name: "Mystery Box 1", balance: 1 },
-  { img: "point-booster-2.png", name: "Mystery Box 2", balance: 2 },
-  { img: "point-booster-3.png", name: "Mystery Box 3", balance: 3 },
-  { img: "point-booster-4.png", name: "Mystery Box 4", balance: 4 },
-  { img: "point-booster-5.png", name: "Mystery Box 5", balance: 5 },
-  { img: "point-booster-6.png", name: "Mystery Box 6", balance: 6 },
-  { img: "point-booster-7.png", name: "Mystery Box 7", balance: 7 },
-  { img: "point-booster-8.png", name: "Mystery Box 8", balance: 8 },
+const ALL_NFTS = [
+  { img: "trademark-1.png", name: "Trade mark", balance: 0 },
+  { img: "trademark-2.png", name: "Trade mark", balance: 0 },
+  { img: "trademark-3.png", name: "Trade mark", balance: 0 },
+  { img: "trademark-4.png", name: "Trade mark", balance: 0 },
+
+  { img: "point-booster-1.png", name: "Point Booster 1", balance: 0 },
+  { img: "point-booster-2.png", name: "Point Booster 2", balance: 0 },
+  { img: "point-booster-3.png", name: "Point Booster 3", balance: 0 },
+  { img: "point-booster-4.png", name: "Point Booster 4", balance: 0 },
+  { img: "point-booster-5.png", name: "Point Booster 5", balance: 0 },
+  { img: "point-booster-6.png", name: "Point Booster 6", balance: 0 },
+  { img: "point-booster-7.png", name: "Point Booster 7", balance: 0 },
+
+  { img: "ENTP-LYNK.png", name: "ENTP-LYNK", balance: 0 },
+  { img: "ISTP-LYNK.png", name: "LSTP-LYNK", balance: 0 },
+  { img: "INFJ-LYNK.png", name: "INFJ-LYNK", balance: 0 },
+  { img: "ESFJ-LYNK.png", name: "ESFJ-LYNK", balance: 0 },
 ];
 export default function NFTCard() {
   const openBoxModal = useDisclosure();
@@ -107,6 +125,11 @@ export default function NFTCard() {
   const drawRef = useRef<{ start: (target: number) => void }>();
   const [drawing, setDrawing] = useState(false);
   const { nft: sbtNFT } = useSBTNFT();
+  const { trademarkNFT, boosterNFT, lynksNFT, getLynksNFT, sendMysteryMintTx } = useNovaNFT();
+  const { address } = useAccount();
+  const [allNFTs, setAllNFTs] =
+    useState<{ img: string; name: string; balance: number }[]>(ALL_NFTS);
+
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -116,7 +139,41 @@ export default function NFTCard() {
 
   useEffect(() => {
     //fetch box count remain
-  }, []);
+    if (address) {
+      getRemainMysteryboxDrawCount(address).then((res) => {
+        const remainNumber = res.result;
+        setRemainMintCount(remainNumber);
+      });
+    }
+  }, [address]);
+
+  useEffect(() => {
+    (async () => {
+      if (!address || !trademarkNFT || !boosterNFT || !lynksNFT) {
+        return;
+      }
+      const nfts = [];
+      const trademarkBalances = await Promise.all(
+        [1, 2, 3, 4].map((item) => trademarkNFT.read.balanceOf([address, item]))
+      );
+      console.log("trademarkBalances: ", trademarkBalances);
+      for (let i = 0; i < 4; i++) {
+        nfts.push({ ...ALL_NFTS[i], balance: Number(trademarkBalances[i]) });
+      }
+      const boosterBalances = await Promise.all(
+        [1, 2, 3, 4, 5, 6, 7].map((item: number) =>
+          boosterNFT.read.balanceOf([address, item])
+        )
+      );
+      console.log("boosterBalances: ", boosterBalances);
+      for (let i = 0; i < 7; i++) {
+        nfts.push({ ...ALL_NFTS[i + 4], balance: Number(boosterBalances[i]) });
+      }
+      const lynksBalances = await getLynksNFT(address);
+      console.log("lynksBalances: ", lynksBalances);
+      setAllNFTs(nfts);
+    })();
+  }, [address, boosterNFT, lynksNFT, trademarkNFT, getLynksNFT]);
   const onMintSubmit = () => {
     try {
       setMinting(true);
@@ -153,12 +210,9 @@ export default function NFTCard() {
             </div>
             <Button className="gradient-btn">Buy</Button>
           </div>
-          <div className="flex justify-between flex-wrap mt-8">
-            {ALL_NFTS.map((item, index) => (
-              <div
-                className="nft-chip relative   w-[170px] mr-5 mb-16"
-                key={index}
-              >
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            {allNFTs.map((item, index) => (
+              <div className="nft-chip relative   w-[170px] " key={index}>
                 <img src={`/img/img-${item.img}`} alt="" />
                 {/* <div className='relative bg-slate-50 h-24 w-8/12 m-auto'> */}
                 <div className="nft-info">

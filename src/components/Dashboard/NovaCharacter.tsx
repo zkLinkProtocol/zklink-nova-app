@@ -19,7 +19,7 @@ import { config } from "@/constants/networks";
 import { getRemainDrawCount, drawTrademarkNFT } from "@/api";
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
-import useNovaDrawNFT from "@/hooks/useNovaNFT";
+import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -60,6 +60,15 @@ const TxResult = styled.div`
   .inline {
     display: inline;
   }
+  .title {
+    color: #a0a5ad;
+    font-family: Satoshi;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 200% */
+    letter-spacing: -0.5px;
+  }
 `;
 
 const enum MintStatus {
@@ -67,6 +76,12 @@ const enum MintStatus {
   Failed = "Failed",
   Success = "Success",
 }
+const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
+  1: "Oak Tree Roots",
+  2: "Magnifying Glass",
+  3: "Chess Knight",
+  4: "Binary Code metrix Cube",
+};
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
   const drawModal = useDisclosure();
@@ -74,7 +89,12 @@ export default function NovaCharacter() {
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const { trademarkNFT, publicClient } = useNovaDrawNFT();
+  const {
+    trademarkNFT,
+    publicClient,
+    sendTrademarkMintTx,
+    loading: trademarkMintLoading,
+  } = useNovaDrawNFT();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
@@ -87,18 +107,20 @@ export default function NovaCharacter() {
   const [trademarkMinting, setTrademarkMinting] = useState(false);
   const [drawedNftId, setDrawedNftId] = useState<number>();
   const [trademarkMintParams, setTrademarkMintParams] = useState<{
-    nftId: number;
+    tokenId: number;
     nonce: number;
     signature: string;
+    expiry: number;
   }>();
   const [drawing, setDrawing] = useState(false);
   const drawRef = useRef<{ start: (target: number) => void }>();
+  const [failMessage, setFailMessage] = useState("");
   useEffect(() => {
     if (address) {
       getRemainDrawCount(address).then((res) => {
         console.log("remain draw count: ", res);
-        const { remainNumber, nftId } = res.result;
-        setDrawedNftId(nftId);
+        const { remainNumber, tokenId } = res.result;
+        setDrawedNftId(tokenId);
         setRemainDrawCount(remainNumber);
       });
     }
@@ -154,13 +176,12 @@ export default function NovaCharacter() {
     if (!drawedNftId) {
       setDrawedNftId(1);
       setDrawing(true);
-      drawRef?.current?.start(1);
+      drawRef?.current?.start(1); //do the draw animation
       const res = await drawTrademarkNFT(address);
-      // //TODO do the draw animation
       if (res && res.result) {
-        const { nftId, nonce, signature } = res.result;
-        setDrawedNftId(nftId);
-        setTrademarkMintParams({ nftId, nonce, signature });
+        const { tokenId, nonce, signature, expiry } = res.result;
+        setDrawedNftId(tokenId);
+        setTrademarkMintParams({ tokenId, nonce, signature, expiry });
       }
       return;
     }
@@ -168,9 +189,9 @@ export default function NovaCharacter() {
     if (!trademarkMintParams) {
       const res = await drawTrademarkNFT(address);
       if (res && res.result) {
-        const { nftId, nonce, signature } = res.result;
-        setTrademarkMintParams({ nftId, nonce, signature });
-        mintParams = { nftId, nonce, signature };
+        const { tokenId, nonce, signature, expiry } = res.result;
+        setTrademarkMintParams({ tokenId, nonce, signature, expiry });
+        mintParams = { tokenId, nonce, signature, expiry };
       }
     }
 
@@ -178,20 +199,16 @@ export default function NovaCharacter() {
       //TODO call contract
       setTrademarkMintStatus(MintStatus.Minting);
       trademarkMintModal.onOpen();
-      const expiry = Math.floor((Date.now() + 10 * 60 * 1000) / 1000); //10mins after now
-      const hash = await trademarkNFT.write.safeMint([
-        address,
-        mintParams?.nonce,
-        mintParams.nftId,
-        1,
-        expiry,
-        mintParams?.signature,
-      ]);
-      await publicClient?.waitForTransactionReceipt({ hash });
+      await sendTrademarkMintTx(mintParams as TrademarkMintParams);
       setTrademarkMintStatus(MintStatus.Success);
     } catch (e) {
       console.error(e);
       setTrademarkMintStatus(MintStatus.Failed);
+      if (e.message) {
+        if (e.message.includes("rejected the request")) {
+          setFailMessage("User rejected the request");
+        }
+      }
     }
 
     setUpdate((update) => update + 1);
@@ -200,7 +217,7 @@ export default function NovaCharacter() {
     drawedNftId,
     isInvaidChain,
     novaBalance,
-    publicClient,
+    sendTrademarkMintTx,
     switchChain,
     trademarkMintModal,
     trademarkMintParams,
@@ -390,7 +407,9 @@ export default function NovaCharacter() {
           </p>
           <Button
             onClick={handleDrawAndMint}
-            isDisabled={!isInvaidChain && novaBalance === 0}
+            isDisabled={
+              !isInvaidChain && novaBalance === 0 && drawedNftId !== 5 // 5 means no nft drawed
+            }
             isLoading={mintLoading || drawing}
             className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
@@ -446,6 +465,7 @@ export default function NovaCharacter() {
               {trademarkMintStatus === MintStatus.Failed && (
                 <div>
                   <img src="/img/transFail.png" alt="" className="statusImg" />
+                  <div className="title">{failMessage}</div>
                   <div className="inner">
                     If you have any questions regarding this transaction, please{" "}
                     <a
@@ -468,7 +488,9 @@ export default function NovaCharacter() {
                     className="w-[10rem] h-[10rem] rounded-3xl mb-4"
                   />
                   <p className="text-[#C0C0C0]">You have successfully minted</p>
-                  <p className="text-[#03D498]">Chess King #123</p>
+                  <p className="text-[#03D498]">
+                    {TRADEMARK_TOKEN_ID_MAP[drawedNftId!]}
+                  </p>
                 </div>
               )}
               <div className="mt-6">

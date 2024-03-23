@@ -37,7 +37,7 @@ export const LYNKS_NFT_CONTRACT =
     : "";
 export const MYSTERY_BOX_CONTRACT =
   nodeType === "nexus-goerli"
-    ? "0x24E8df873E32F2fC3b0dCa0dA0DDF0b67E748FB1"
+    ? "0x8A9D6EF8350548CB3172d0cD9a83f57E860240eB"
     : "";
 
 export const NOVA_START_TIME = 1710410400000; //1710410400000;

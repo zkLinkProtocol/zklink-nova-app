@@ -23,8 +23,10 @@
 
   .lottery-container-MysteryBox {
     width: 400px;
-    .lottery-item img {
-      margin-right: 0;
-      border-radius: 50%;
-    }
+    
+  }
+
+  .lottery-container-MysteryBox  .lottery-item img {
+    margin-right: 0;
+    border-radius: 50%;
   }
