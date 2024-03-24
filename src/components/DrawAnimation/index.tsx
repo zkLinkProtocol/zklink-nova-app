@@ -54,7 +54,10 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
       }
       setCurrentImageIndex(step % count);
       step++;
-      timeout = setTimeout(startAnimation, speed * 120);
+      timeout = setTimeout(
+        startAnimation,
+        speed * (type === "MysteryBox" ? 80 : 120)
+      );
     };
 
     startAnimation();

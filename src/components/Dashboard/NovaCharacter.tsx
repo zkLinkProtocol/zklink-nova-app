@@ -1,4 +1,4 @@
-import { NFT_MARKET_URL, NOVA_CHAIN_ID } from "@/constants";
+import { NFT_MARKET_URL, NOVA_CHAIN_ID, MintStatus } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import { CardBox } from "@/styles/common";
 import { addNovaChain, formatBalance } from "@/utils";
@@ -20,7 +20,7 @@ import { getRemainDrawCount, drawTrademarkNFT } from "@/api";
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
-const TxResult = styled.div`
+export const TxResult = styled.div`
   .statusImg {
     width: 128px;
     margin-top: 20px;
@@ -61,26 +61,22 @@ const TxResult = styled.div`
     display: inline;
   }
   .title {
-    color: #a0a5ad;
+    color: #fff;
+    text-align: center;
     font-family: Satoshi;
-    font-size: 1rem;
+    font-size: 18px;
     font-style: normal;
     font-weight: 500;
-    line-height: 24px; /* 200% */
     letter-spacing: -0.5px;
+    margin-bottom: 16px;
   }
 `;
 
-const enum MintStatus {
-  Minting = "Minting",
-  Failed = "Failed",
-  Success = "Success",
-}
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
-  1: "Oak Tree Roots",
-  2: "Magnifying Glass",
-  3: "Chess Knight",
-  4: "Binary Code metrix Cube",
+  0: "Oak Tree Roots",
+  1: "Magnifying Glass",
+  2: "Chess Knight",
+  3: "Binary Code metrix Cube",
 };
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
@@ -89,22 +85,15 @@ export default function NovaCharacter() {
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const {
-    trademarkNFT,
-    publicClient,
-    sendTrademarkMintTx,
-    loading: trademarkMintLoading,
-  } = useNovaDrawNFT();
+  const { trademarkNFT, sendTrademarkMintTx } = useNovaDrawNFT();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
   const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
-  const [remainMintCount, setRemainMintCount] = useState(0);
   const [update, setUpdate] = useState(0);
   const [trademarkMintStatus, setTrademarkMintStatus] = useState<
     MintStatus | undefined
   >();
-  const [trademarkMinting, setTrademarkMinting] = useState(false);
   const [drawedNftId, setDrawedNftId] = useState<number>();
   const [trademarkMintParams, setTrademarkMintParams] = useState<{
     tokenId: number;
@@ -120,7 +109,7 @@ export default function NovaCharacter() {
       getRemainDrawCount(address).then((res) => {
         console.log("remain draw count: ", res);
         const { remainNumber, tokenId } = res.result;
-        setDrawedNftId(tokenId);
+        setDrawedNftId(tokenId - 1);
         setRemainDrawCount(remainNumber);
       });
     }
@@ -155,7 +144,7 @@ export default function NovaCharacter() {
   }, [drawModal, remainDrawCount]);
 
   const handleDrawAndMint = useCallback(async () => {
-    if (!address || !trademarkNFT) return;
+    if (!address || !trademarkNFT || remainDrawCount === 0) return;
     if (isInvaidChain) {
       switchChain(
         { chainId: NOVA_CHAIN_ID },
@@ -174,13 +163,12 @@ export default function NovaCharacter() {
     }
 
     if (!drawedNftId) {
-      setDrawedNftId(1);
       setDrawing(true);
-      drawRef?.current?.start(1); //do the draw animation
       const res = await drawTrademarkNFT(address);
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
-        setDrawedNftId(tokenId);
+        drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
+        setDrawedNftId(tokenId - 1);
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
       }
       return;
@@ -408,7 +396,8 @@ export default function NovaCharacter() {
           <Button
             onClick={handleDrawAndMint}
             isDisabled={
-              !isInvaidChain && novaBalance === 0 && drawedNftId !== 5 // 5 means no nft drawed
+              !isInvaidChain &&
+              (novaBalance === 0 || drawedNftId === 5 || remainDrawCount === 0) // 5 means no nft drawed
             }
             isLoading={mintLoading || drawing}
             className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
@@ -483,7 +472,7 @@ export default function NovaCharacter() {
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
                   <img
-                    src="/img/img-trademark-temp-1.png"
+                    src={`/img/img-trademark-temp-${drawedNftId! + 1}.png`}
                     alt=""
                     className="w-[10rem] h-[10rem] rounded-3xl mb-4"
                   />

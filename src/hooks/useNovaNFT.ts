@@ -6,7 +6,12 @@ import {
   LYNKS_NFT_CONTRACT,
   IS_MAINNET,
 } from "@/constants";
-import { usePublicClient, useWalletClient, useAccount } from "wagmi";
+import {
+  usePublicClient,
+  useWalletClient,
+  useAccount,
+  useBalance,
+} from "wagmi";
 import { readContract } from "@wagmi/core";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import NovaTrademarkNFT from "@/constants/abi/NovaTrademarkNFT.json";
@@ -24,12 +29,18 @@ import {
   WriteContractParameters,
   encodeFunctionData,
 } from "viem";
-import { sleep } from "@/utils";
+import { formatBalance, sleep } from "@/utils";
 /**
  * fro trademark nft and mytestory box nft(booster and lynks nft)
  */
 export type TrademarkMintParams = {
   tokenId: number;
+  nonce: number;
+  signature: string;
+  expiry: number;
+};
+export type MysteryboxOpenParams = {
+  tokenId?: number;
   nonce: number;
   signature: string;
   expiry: number;
@@ -47,6 +58,20 @@ const useNovaDrawNFT = () => {
 
   const publicClient = usePublicClient({ config, chainId });
   const { data: walletClient } = useWalletClient();
+
+  const { data: nativeTokenBalance } = useBalance({
+    config,
+    address: address as `0x${string}`,
+    chainId: NOVA_CHAIN_ID,
+    token: undefined,
+  });
+
+  const novaETHBalance = useMemo(() => {
+    if (nativeTokenBalance) {
+      return formatBalance(nativeTokenBalance?.value ?? 0n, 18);
+    }
+    return 0;
+  }, [nativeTokenBalance]);
 
   const trademarkNFT = useMemo(() => {
     if (!publicClient) return null;
@@ -126,6 +151,28 @@ const useNovaDrawNFT = () => {
     [lynksNFT]
   );
 
+  const getMysteryboxNFT = useCallback(
+    async (address: string) => {
+      if (!mysteryBoxNFT) return;
+      const balance = await mysteryBoxNFT.read.balanceOf([address]);
+      if (BigNumber.from(balance).eq(0)) {
+        return;
+      }
+
+      const tokenIds = await Promise.all(
+        new Array(Number(balance))
+          .fill(undefined)
+          .map((_, index) =>
+            mysteryBoxNFT.read.tokenOfOwnerByIndex([address, index])
+          )
+      );
+      console.log("tokenIds: ", tokenIds);
+
+      return tokenIds.map((item) => Number(item));
+    },
+    [mysteryBoxNFT]
+  );
+
   const sendTrademarkMintTx = async (params: TrademarkMintParams) => {
     if (!address) return;
     try {
@@ -176,6 +223,48 @@ const useNovaDrawNFT = () => {
   };
 
   const sendMysteryMintTx = async (params: MysteryboxMintParams) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: MYSTERY_BOX_CONTRACT as Hash,
+        abi: NovaMysteryBoxNFT,
+        functionName: "safeMint",
+        args: [params.nonce, params.expiry, params.signature],
+      };
+      const txData = encodeFunctionData({
+        abi: tx.abi,
+        functionName: tx.functionName,
+        args: tx.args,
+      });
+      const fee = await zkSyncProvider.attachEstimateFee(
+        IS_MAINNET ? "https://rpc.zklink.io" : "https://goerli.rpc.zklink.io"
+      )({
+        from: address as `0x${string}`,
+        to: tx.address as `0x${string}`,
+        value: "0x00",
+        data: txData,
+      });
+      console.log("zksync chain fee for ETH", fee);
+
+      tx.maxFeePerGas = fee.maxFeePerGas.toBigInt();
+      tx.maxPriorityFeePerGas = fee.maxPriorityFeePerGas.toBigInt();
+      tx.gas = fee.gasLimit.toBigInt();
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendMysteryOpenMintTx = async (params: MysteryboxOpenParams) => {
     if (!address) return;
     const isLynks = !params.tokenId;
     try {
@@ -235,8 +324,11 @@ const useNovaDrawNFT = () => {
     publicClient,
     getLynksNFT,
     sendTrademarkMintTx,
+    sendMysteryOpenMintTx,
     sendMysteryMintTx,
     loading,
+    novaETHBalance,
+    getMysteryboxNFT,
   };
 };
 
