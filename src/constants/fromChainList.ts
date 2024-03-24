@@ -10,6 +10,8 @@ import mantaIcon from "../assets/img/manta.jpg";
 import arbIcon from "../assets/img/arbitrum.svg";
 import zkscyncIcon from "../assets/img/zksync.svg";
 import blastIcon from "../assets/img/blast.svg";
+import optimismIcon from "../assets/img/optimism.svg";
+import baseIcon from "../assets/img/base.svg";
 import {
   goerli,
   lineaTestnet,
@@ -20,6 +22,8 @@ import {
   manta,
   mantle,
   arbitrum,
+  optimism,
+  base,
 } from "@wagmi/core/chains";
 import { blast } from "./networks";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
@@ -116,6 +120,26 @@ const FromListMainnet = [
     chainName: "Blast",
     explorerUrl: blast.blockExplorers.default.url ?? "https://blastscan.io",
     rpcUrl: blast.rpcUrls.default.http[0] ?? "https://rpc.blast.io",
+  },
+  {
+    label: "Optimism",
+    icon: optimismIcon,
+    chainId: optimism.id,
+    networkKey: "optimism",
+    isEthGasToken: true,
+    chainName: "Optimism",
+    explorerUrl: optimism.blockExplorers.default.url,
+    rpcUrl: optimism.rpcUrls.default.http[0],
+  },
+  {
+    label: "Base",
+    icon: baseIcon,
+    chainId: base.id,
+    networkKey: "base",
+    isEthGasToken: true,
+    chainName: "Base",
+    explorerUrl: base.blockExplorers.default.url,
+    rpcUrl: base.rpcUrls.default.http[0],
   },
 ];
 
