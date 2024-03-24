@@ -74,7 +74,7 @@ export default function StakingValue(props: IStakingValueProps) {
         isOpen={bridgeModal.isOpen}
         onOpenChange={bridgeModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem] mb-[5.75rem]">
+        <ModalContent className="mt-[2rem] mb-[3.75rem]">
           {(onClose) => (
             <>
               <ModalHeader>Bridge</ModalHeader>

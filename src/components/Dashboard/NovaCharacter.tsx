@@ -142,7 +142,7 @@ export default function NovaCharacter() {
         isOpen={mintModal.isOpen}
         onOpenChange={mintModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
+        <ModalContent className="mt-[2rem] py-5 px-6 mb-[3.75rem]">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Select and mint your favorite SBT
           </ModalHeader>
