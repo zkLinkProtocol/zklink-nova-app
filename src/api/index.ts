@@ -308,3 +308,8 @@ export const getRenzoPoints = (address: string): Promise<RenzoResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/renzo/points`, {
     params: { address },
   });
+
+export const getTradeMarkRank = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/referrer/tradeMark/balance/rank`, {
+    params: { address },
+  });
