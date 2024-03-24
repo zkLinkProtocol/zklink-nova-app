@@ -86,13 +86,13 @@ const VerifyTxHashModal = (props: IProps) => {
     <>
       <Button onClick={() => modal.onOpen()}>Verify</Button>
       <Modal
-        classNames={{closeButton: 'text-[1.5rem]'}}
+        classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ width: "600px", backgroundColor: "rgb(38, 43, 51)" }}
         size="2xl"
         isOpen={modal.isOpen}
         onOpenChange={modal.onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           <ModalHeader className="flex flex-col gap-1 text-lg font-normal">
             Verify you deposit
           </ModalHeader>
