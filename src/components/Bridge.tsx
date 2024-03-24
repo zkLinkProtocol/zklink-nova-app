@@ -572,7 +572,12 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [chainId, fromActive]);
 
   const actionBtnDisabled = useMemo(() => {
-    if (unsupportedChainWithConnector) {
+    if (
+      !nativeTokenBalance ||
+      new BigNumber(nativeTokenBalance.toString()).eq(0)
+    ) {
+      return true;
+    } else if (unsupportedChainWithConnector) {
       return true;
     } else if (
       !invalidChain &&
@@ -587,12 +592,13 @@ export default function Bridge(props: IBridgeComponentProps) {
     }
     return false;
   }, [
+    nativeTokenBalance,
+    unsupportedChainWithConnector,
+    invalidChain,
     tokenFiltered,
     tokenActive,
-    invalidChain,
     amount,
     errorInputMsg,
-    unsupportedChainWithConnector,
   ]);
 
   const isDepositErc20 = useMemo(() => {
@@ -637,7 +643,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [fromActive]);
 
   const handleAction = useCallback(async () => {
-    if (!address) return;
+    if (!address || !nativeTokenBalance) return;
     if (invalidChain) {
       try {
         setSwitchLoading(true);
@@ -675,7 +681,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))
         parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals),
-        nativeTokenBalance ?? 0
+        nativeTokenBalance!
       );
       if (!hash) {
         return;
@@ -699,8 +705,8 @@ export default function Bridge(props: IBridgeComponentProps) {
       // dispatch(setDepositStatus(""));
 
       if (e.message) {
-        if (e.message.includes("Insufficient balance")) {
-          setFailMessage("Insufficient balance");
+        if (e.message.includes("Insufficient Gas Token Balance")) {
+          setFailMessage(e.message);
         } else if (
           e.message.includes(
             "User rejected the request" ||
@@ -718,7 +724,7 @@ export default function Bridge(props: IBridgeComponentProps) {
       transFailModal.onOpen();
       setTimeout(() => {
         transFailModal.onClose();
-      }, 5000);
+      }, 10000);
       return;
     }
 
@@ -1430,6 +1436,20 @@ export default function Bridge(props: IBridgeComponentProps) {
                   ? "User rejected signature"
                   : failMessage}
               </div>
+              {failMessage.includes("Insufficient Gas Token Balance") && (
+                <p className="inner">
+                  If you do have enough gas tokens in your wallet, you could try
+                  using a{" "}
+                  <a
+                    href="https://chainlist.org/"
+                    target="_blank"
+                    className="view inline"
+                  >
+                    VPN
+                  </a>{" "}
+                  or switching to a different RPC in your wallet.
+                </p>
+              )}
               <div className="inner">
                 If you have any questions regarding this transaction, please{" "}
                 <a
