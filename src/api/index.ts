@@ -10,14 +10,16 @@ type Response = {
   data?: any;
 };
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const isProd = import.meta.env.PROD;
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+
+export const BASE_URL = isProd ? apiBaseURL : "/app-api";
 export const BASE_URL_API = `${BASE_URL}/api`;
 export const BASE_URL_POINTS = `${BASE_URL}/points`;
 export const BASE_URL_TOKENS = `${BASE_URL}/tokens`;
 export const BASE_URL_TWITTER = `${BASE_URL}/twitter`;
 export const BASE_URL_LRT_POINTS = `${BASE_URL}/lrt-points`;
 export const BASE_URL_QUEST = `${BASE_URL}/quest-api`;
-
 
 export type BindInviteCodeWithAddressParams = {
   address: string;
@@ -125,9 +127,13 @@ export type TokenPriceInfo = {
   iconURL: string;
 };
 
-export const getAccountRefferalsTVL = (address: string): Promise<Response> =>
+export const getAccountRefferalsTVL = (
+  address: string,
+  page = 1,
+  limit = 100
+): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRefferalsTVL`, {
-    params: { address },
+    params: { address, page, limit },
   });
 
 export const getSupportTokens = (): Promise<SupportToken[]> =>
