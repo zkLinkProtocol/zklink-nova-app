@@ -197,7 +197,7 @@ export default function NFTCard() {
       openMysteryboxNFT(address).then((res) => {
         const { tokenId, nonce, signature, expiry } = res.result;
         setMintParams({ tokenId, nonce, signature, expiry });
-        setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
+        // setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
       });
     }
   }, [address, getMysteryboxNFT, update]);

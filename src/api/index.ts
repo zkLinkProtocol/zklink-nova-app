@@ -81,7 +81,9 @@ export const openMysteryboxNFT = (address: string): Promise<Response> => {
   });
 };
 
-export const getRemainMysteryboxOpenableCount = (address: string): Promise<Response> => {
+export const getRemainMysteryboxOpenableCount = (
+  address: string
+): Promise<Response> => {
   return http.get(`${BASE_URL_API}/invite/open/mysterybox/remain`, {
     params: { address },
   });

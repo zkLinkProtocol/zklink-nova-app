@@ -73,10 +73,10 @@ export const TxResult = styled.div`
 `;
 
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
-  0: "Oak Tree Roots",
-  1: "Magnifying Glass",
-  2: "Chess Knight",
-  3: "Binary Code metrix Cube",
+  1: "Oak Tree Roots",
+  2: "Magnifying Glass",
+  3: "Chess Knight",
+  4: "Binary Code metrix Cube",
 };
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
@@ -204,6 +204,7 @@ export default function NovaCharacter() {
     drawedNftId,
     isInvaidChain,
     novaBalance,
+    remainDrawCount,
     sendTrademarkMintTx,
     switchChain,
     trademarkMintModal,
@@ -404,7 +405,7 @@ export default function NovaCharacter() {
             <span>
               {isInvaidChain && "Switch to Nova network to mint"}
               {!isInvaidChain && (!drawedNftId || drawing) && "Draw & Mint"}
-              {!isInvaidChain && drawedNftId && !drawing && "Mint"}
+              {!isInvaidChain && !!drawedNftId && !drawing && "Mint"}
             </span>
           </Button>
           <Button
@@ -471,13 +472,15 @@ export default function NovaCharacter() {
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
                   <img
-                    src={`/img/img-trademark-temp-${drawedNftId! + 1}.png`}
+                    src={`/img/img-trademark-${
+                      trademarkMintParams!.tokenId
+                    }.png`}
                     alt=""
                     className="w-[10rem] h-[10rem] rounded-3xl mb-4"
                   />
                   <p className="text-[#C0C0C0]">You have successfully minted</p>
                   <p className="text-[#03D498]">
-                    {TRADEMARK_TOKEN_ID_MAP[drawedNftId!]}
+                    {TRADEMARK_TOKEN_ID_MAP[trademarkMintParams!.tokenId]}
                   </p>
                 </div>
               )}

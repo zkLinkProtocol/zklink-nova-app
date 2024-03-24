@@ -33,7 +33,6 @@ import NFTCard from "./components/NFTCard";
 import { forEach } from "lodash";
 import Decimal from "decimal.js";
 
-import NFTCard from "./components/NFTCard";
 const TabsBox = styled.div`
   .tab-item {
     color: #a9a9a9;
