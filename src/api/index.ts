@@ -10,7 +10,10 @@ type Response = {
   data?: any;
 };
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const isProd = import.meta.env.PROD;
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+
+export const BASE_URL = isProd ? apiBaseURL : "/app-api";
 export const BASE_URL_API = `${BASE_URL}/api`;
 export const BASE_URL_POINTS = `${BASE_URL}/points`;
 export const BASE_URL_TOKENS = `${BASE_URL}/tokens`;
