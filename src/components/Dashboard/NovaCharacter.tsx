@@ -20,6 +20,7 @@ import { getRemainDrawCount, drawTrademarkNFT } from "@/api";
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
+import { useMintStatus } from "@/hooks/useMintStatus";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -82,10 +83,20 @@ export default function NovaCharacter() {
   const mintModal = useDisclosure();
   const drawModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
+  const upgradeModal = useDisclosure();
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const { trademarkNFT, sendTrademarkMintTx } = useNovaDrawNFT();
+  const {
+    trademarkNFT,
+    sendTrademarkMintTx,
+    lynksNFT,
+    isTrademarkApproved,
+    sendTrademarkApproveTx,
+    sendUpgradeSBTTx,
+  } = useNovaDrawNFT();
+
+  const { updateRefreshBalanceId } = useMintStatus();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
@@ -104,6 +115,9 @@ export default function NovaCharacter() {
   const [drawing, setDrawing] = useState(false);
   const drawRef = useRef<{ start: (target: number) => void }>();
   const [failMessage, setFailMessage] = useState("");
+  const [upgradable, setUpgradable] = useState(false);
+  const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
+  const [lynksBalance, setLynksBalance] = useState(0);
   useEffect(() => {
     if (address) {
       getRemainDrawCount(address).then((res) => {
@@ -114,6 +128,34 @@ export default function NovaCharacter() {
       });
     }
   }, [address, update]);
+
+  useEffect(() => {
+    (async () => {
+      if (address && trademarkNFT && lynksNFT) {
+        const lynksBalance = (await lynksNFT.read.balanceOf([
+          address,
+        ])) as bigint;
+        setLynksBalance(Number(lynksBalance));
+        const trademarkBalances = (await Promise.all(
+          [1, 2, 3, 4].map((item) =>
+            trademarkNFT.read.balanceOf([address, item])
+          )
+        )) as bigint[];
+        console.log("trademarkBalances: ", trademarkBalances);
+        if (
+          // Number(lynksBalance) === 0 &&
+          trademarkBalances[0] > 0 &&
+          trademarkBalances[1] > 0 &&
+          trademarkBalances[2] > 0 &&
+          trademarkBalances[3] > 0
+        ) {
+          setUpgradable(true);
+        } else {
+          setUpgradable(false);
+        }
+      }
+    })();
+  }, [address, trademarkNFT, lynksNFT, update]);
 
   const [showTooltip1, setShowTooltip1] = useState(false);
 
@@ -137,8 +179,8 @@ export default function NovaCharacter() {
   console.log("nativeTokenBalance: ", nativeTokenBalance);
 
   const handleMintTrademark = useCallback(async () => {
-    drawModal.onOpen(); // for test only
     if (remainDrawCount > 0) {
+      drawModal.onOpen(); // for test only
     }
   }, [drawModal, remainDrawCount]);
 
@@ -161,16 +203,24 @@ export default function NovaCharacter() {
       return;
     }
 
-    if (!drawedNftId) {
+    // 5 - 1 = 4, 5 means no prize. Draw again
+    if (!drawedNftId || drawedNftId === 4) {
       setDrawing(true);
       const res = await drawTrademarkNFT(address);
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
         await drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
-        await sleep(2000);
+        // await sleep(2000);
         setDrawedNftId(Number(tokenId) - 1);
+        if (tokenId === 5) {
+          // 5 means no prize
+          setUpdate((update) => update + 1);
+          setTrademarkMintParams(undefined);
+          // return;
+        }
       }
+      return; // draw first and then mint as step2.
     }
     let mintParams = { ...trademarkMintParams };
 
@@ -188,12 +238,19 @@ export default function NovaCharacter() {
       }
       await sendTrademarkMintTx(mintParams as TrademarkMintParams);
       setTrademarkMintStatus(MintStatus.Success);
+      setMintResult({
+        name: TRADEMARK_TOKEN_ID_MAP[mintParams.tokenId!],
+        img: `/img/img-trademark-${mintParams!.tokenId}.png`,
+      });
+      updateRefreshBalanceId();
     } catch (e) {
       console.error(e);
       setTrademarkMintStatus(MintStatus.Failed);
       if (e.message) {
         if (e.message.includes("rejected the request")) {
           setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
         }
       }
     } finally {
@@ -213,15 +270,18 @@ export default function NovaCharacter() {
     trademarkMintModal,
     trademarkMintParams,
     trademarkNFT,
+    updateRefreshBalanceId,
   ]);
 
   const handleMintNow = useCallback(() => {
-    if (nft || fetchLoading) {
+    if (fetchLoading) {
       return;
-    } else {
+    } else if (!nft) {
       mintModal.onOpen();
+    } else if (upgradable) {
+      upgradeModal.onOpen();
     }
-  }, [mintModal, nft, fetchLoading]);
+  }, [mintModal, nft, fetchLoading, upgradable, upgradeModal]);
 
   const handleMint = useCallback(async () => {
     if (!address) return;
@@ -268,6 +328,74 @@ export default function NovaCharacter() {
     mintType,
     mintModal,
   ]);
+
+  const handleUpgrade = useCallback(async () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+          },
+        }
+      );
+      return;
+    }
+    try {
+      trademarkMintModal.onOpen();
+      setTrademarkMintStatus(MintStatus.Minting);
+      if (!isTrademarkApproved) {
+        await sendTrademarkApproveTx(address);
+        toast.success("Congrats! Approve completed!");
+      }
+      await sendUpgradeSBTTx(address);
+      setTrademarkMintStatus(MintStatus.Success);
+      setMintResult({
+        name: `Lynks - ${nft?.name}`,
+        img: `/img/img-${nft?.name}-LYNK.png`,
+      });
+      updateRefreshBalanceId();
+    } catch (e: any) {
+      console.log(e);
+      setTrademarkMintStatus(MintStatus.Failed);
+
+      if (e.message) {
+        if (e.message.includes("User rejected the request")) {
+          setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
+        }
+      } else {
+        toast.error("Upgrade SBT failed");
+      }
+    } finally {
+      upgradeModal.onClose();
+    }
+  }, [
+    address,
+    isInvaidChain,
+    isTrademarkApproved,
+    nft?.name,
+    sendTrademarkApproveTx,
+    sendUpgradeSBTTx,
+    switchChain,
+    trademarkMintModal,
+    upgradeModal,
+    updateRefreshBalanceId,
+  ]);
+
+  const nftImage = useMemo(() => {
+    if (!nft) {
+      return "/img/img-mint-example.png";
+    } else if (lynksBalance > 0) {
+      return `/img/img-${nft?.name}-LYNK.png`;
+    } else {
+      return nft.image;
+    }
+  }, [nft, lynksBalance]);
+
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -276,7 +404,7 @@ export default function NovaCharacter() {
         </p>
         <div className="md:w-[24rem] md:h-[18.75rem] bg-[#65E7E5] rounded-[1rem]">
           <img
-            src={nft?.image ?? "/img/img-mint-example.png"}
+            src={nftImage}
             className="text-center block mx-auto h-auto rounded-[1rem]"
           />
         </div>
@@ -328,10 +456,9 @@ export default function NovaCharacter() {
               onMouseLeave={() => nft && setShowTooltip1(false)}
               onTouchStart={() => nft && setShowTooltip1((prev) => !prev)}
               isLoading={fetchLoading || mintLoading}
+              isDisabled={!upgradable}
               className={classNames(
-                "gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] ",
-                nft ? "opacity-40 " : "opacity-100",
-                nft ? "cursor-default" : "cursor-pointer"
+                "gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
               )}
             >
               <span>{nft ? "Upgrade" : "Mint Now"}</span>
@@ -418,8 +545,7 @@ export default function NovaCharacter() {
           <Button
             onClick={handleDrawAndMint}
             isDisabled={
-              !isInvaidChain &&
-              (novaBalance === 0 || drawedNftId === 4 || remainDrawCount === 0) // 5 means no nft drawed
+              !isInvaidChain && (novaBalance === 0 || remainDrawCount === 0)
             }
             isLoading={mintLoading || drawing}
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
@@ -427,7 +553,7 @@ export default function NovaCharacter() {
             <span>
               {isInvaidChain && "Switch to Nova network to mint"}
               {!isInvaidChain &&
-                (!drawedNftId || drawing) &&
+                (!drawedNftId || !trademarkMintParams || drawing) &&
                 `Draw & Mint ( ${remainDrawCount} )`}
               {!isInvaidChain && !!drawedNftId && !drawing && "Mint"}
             </span>
@@ -497,15 +623,13 @@ export default function NovaCharacter() {
                 <div className="flex flex-col items-center">
                   <p className="text-[#C0C0C0]">You have successfully minted</p>
                   <img
-                    src={`/img/img-trademark-${
-                      trademarkMintParams!.tokenId
-                    }.png`}
+                    src={mintResult?.img}
                     alt=""
                     className="w-[10rem] h-[10rem] rounded-xl my-4 bg-[#3C4550]"
                   />
 
                   <p className="text-[24px] font-inter font-normal">
-                    {TRADEMARK_TOKEN_ID_MAP[trademarkMintParams!.tokenId]}
+                    {mintResult?.name}
                   </p>
                 </div>
               )}
@@ -527,6 +651,69 @@ export default function NovaCharacter() {
               </div>
             </TxResult>
           </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        size="3xl"
+        isOpen={upgradeModal.isOpen}
+        onOpenChange={upgradeModal.onOpenChange}
+      >
+        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
+          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
+            Upgrade your Nova SBT
+          </ModalHeader>
+          <div className="flex items-center justify-center">
+            <div className="grid grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map((item) => (
+                <img
+                  src={`/img/img-trademark-${item}.png`}
+                  alt=""
+                  className="w-[80px] md:h-[80px] rounded-xl bg-[#3C4550]"
+                />
+              ))}
+            </div>
+            <img src="/img/icon-plus.svg" alt="" className="w-6 h-6 mx-4" />
+            <img
+              src={nft?.image}
+              alt=""
+              className="w-[180px] h-[180px] object-cover"
+            />
+            <img src="/img/icon-equal.svg" alt="" className="w-6 h-6 mx-4" />
+            <img
+              src={`/img/img-${nft?.name}-LYNK.png`}
+              alt=""
+              className="w-[180px] h-[180px]"
+            />
+          </div>
+
+          <div className="text-[#A0A5AD] text-xs my-6">
+            <p>
+              You will have to collect all 4 different types of trademark NFT to
+              upgrade your nova SBT, you can receive trademark NFT in the
+              following way.
+            </p>
+            <p className="">
+              1. Mint a trademark NFT by for every 3 successful referrals
+            </p>
+            <p className="">
+              2. You can go to NFT Marketplace to purchase trademark NFT
+            </p>
+          </div>
+
+          <Button
+            onClick={handleUpgrade}
+            // isDisabled={!isInvaidChain}
+            isLoading={mintLoading}
+            className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
+          >
+            <span>
+              {isInvaidChain && "Switch to Nova network to mint"}
+              {!isInvaidChain && !isTrademarkApproved && "Approve & Mint"}
+              {!isInvaidChain && isTrademarkApproved && "Mint"}
+            </span>
+          </Button>
         </ModalContent>
       </Modal>
     </>

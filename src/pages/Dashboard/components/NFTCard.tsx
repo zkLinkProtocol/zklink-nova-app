@@ -25,6 +25,7 @@ import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import toast from "react-hot-toast";
 import { addNovaChain, sleep } from "@/utils";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
+import { useMintStatus } from "@/hooks/useMintStatus";
 const NftBox = styled.div`
   .nft-left {
     flex: 6;
@@ -165,6 +166,7 @@ export default function NFTCard() {
   const [mintParams, setMintParams] = useState<MysteryboxMintParams>();
   const [drawPrizeId, setDrawPrizeId] = useState<number>();
   const [initied, setInitied] = useState(false);
+  const { refreshBalanceId } = useMintStatus();
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -246,7 +248,15 @@ export default function NFTCard() {
       setAllNFTs(nfts);
       //TODO set lynks balance
     })();
-  }, [address, boosterNFT, lynksNFT, trademarkNFT, getLynksNFT, update]);
+  }, [
+    address,
+    boosterNFT,
+    lynksNFT,
+    trademarkNFT,
+    getLynksNFT,
+    update,
+    refreshBalanceId,
+  ]);
 
   const onMintSubmit = async () => {
     if (!address) return;

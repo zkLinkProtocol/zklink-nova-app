@@ -30,6 +30,7 @@ import {
   encodeFunctionData,
 } from "viem";
 import { formatBalance, sleep } from "@/utils";
+import { packetToBytes } from "node_modules/viem/_types/utils/ens/packetToBytes";
 /**
  * fro trademark nft and mytestory box nft(booster and lynks nft)
  */
@@ -55,6 +56,7 @@ const useNovaDrawNFT = () => {
   const { chainId } = useAccount();
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
+  const [isTrademarkApproved, setIsTrademarkApproved] = useState(false);
 
   const publicClient = usePublicClient({ config, chainId });
   const { data: walletClient } = useWalletClient();
@@ -173,6 +175,27 @@ const useNovaDrawNFT = () => {
     [mysteryBoxNFT]
   );
 
+  const insertEstimateFee = async (tx: WriteContractParameters) => {
+    const txData = encodeFunctionData({
+      abi: tx.abi,
+      functionName: tx.functionName,
+      args: tx.args,
+    });
+    const fee = await zkSyncProvider.attachEstimateFee(
+      IS_MAINNET ? "https://rpc.zklink.io" : "https://goerli.rpc.zklink.io"
+    )({
+      from: address as `0x${string}`,
+      to: tx.address as `0x${string}`,
+      value: "0x00",
+      data: txData,
+    });
+    console.log("zksync chain fee for ETH", fee);
+
+    tx.maxFeePerGas = fee.maxFeePerGas.toBigInt();
+    tx.maxPriorityFeePerGas = fee.maxPriorityFeePerGas.toBigInt();
+    tx.gas = fee.gasLimit.toBigInt();
+  };
+
   const sendTrademarkMintTx = async (params: TrademarkMintParams) => {
     if (!address) return;
     try {
@@ -190,24 +213,7 @@ const useNovaDrawNFT = () => {
           params.signature,
         ],
       };
-      const txData = encodeFunctionData({
-        abi: NovaTrademarkNFT,
-        functionName: tx.functionName,
-        args: tx.args,
-      });
-      const fee = await zkSyncProvider.attachEstimateFee(
-        IS_MAINNET ? "https://rpc.zklink.io" : "https://goerli.rpc.zklink.io"
-      )({
-        from: address as `0x${string}`,
-        to: TRADEMARK_NFT_CONTRACT as `0x${string}`,
-        value: "0x00",
-        data: txData,
-      });
-      console.log("zksync chain fee for ETH", fee);
-
-      tx.maxFeePerGas = fee.maxFeePerGas.toBigInt();
-      tx.maxPriorityFeePerGas = fee.maxPriorityFeePerGas.toBigInt();
-      tx.gas = fee.gasLimit.toBigInt();
+      await insertEstimateFee(tx);
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       await sleep(1000); //wait to avoid waitForTransactionReceipt failed
       const res = await publicClient?.waitForTransactionReceipt({
@@ -232,24 +238,8 @@ const useNovaDrawNFT = () => {
         functionName: "safeMint",
         args: [params.nonce, params.expiry, params.signature],
       };
-      const txData = encodeFunctionData({
-        abi: tx.abi,
-        functionName: tx.functionName,
-        args: tx.args,
-      });
-      const fee = await zkSyncProvider.attachEstimateFee(
-        IS_MAINNET ? "https://rpc.zklink.io" : "https://goerli.rpc.zklink.io"
-      )({
-        from: address as `0x${string}`,
-        to: tx.address as `0x${string}`,
-        value: "0x00",
-        data: txData,
-      });
-      console.log("zksync chain fee for ETH", fee);
 
-      tx.maxFeePerGas = fee.maxFeePerGas.toBigInt();
-      tx.maxPriorityFeePerGas = fee.maxPriorityFeePerGas.toBigInt();
-      tx.gas = fee.gasLimit.toBigInt();
+      await insertEstimateFee(tx);
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       await sleep(1000); //wait to avoid waitForTransactionReceipt failed
       const res = await publicClient?.waitForTransactionReceipt({
@@ -272,7 +262,7 @@ const useNovaDrawNFT = () => {
       const tx: WriteContractParameters = {
         address: (isLynks ? LYNKS_NFT_CONTRACT : BOOSTER_NFT_CONTRACT) as Hash,
         abi: isLynks ? NovaLynksNFT : NovaBoosterNFT,
-        functionName: "safeMint",
+        functionName: isLynks ? "safeMintWithAuth" : "safeMint",
         args: isLynks
           ? [address, params.nonce, params.expiry, params.signature]
           : [
@@ -284,24 +274,7 @@ const useNovaDrawNFT = () => {
               params.signature,
             ],
       };
-      const txData = encodeFunctionData({
-        abi: tx.abi,
-        functionName: tx.functionName,
-        args: tx.args,
-      });
-      const fee = await zkSyncProvider.attachEstimateFee(
-        IS_MAINNET ? "https://rpc.zklink.io" : "https://goerli.rpc.zklink.io"
-      )({
-        from: address as `0x${string}`,
-        to: tx.address as `0x${string}`,
-        value: "0x00",
-        data: txData,
-      });
-      console.log("zksync chain fee for ETH", fee);
-
-      tx.maxFeePerGas = fee.maxFeePerGas.toBigInt();
-      tx.maxPriorityFeePerGas = fee.maxPriorityFeePerGas.toBigInt();
-      tx.gas = fee.gasLimit.toBigInt();
+      await insertEstimateFee(tx);
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       await sleep(1000); //wait to avoid waitForTransactionReceipt failed
       const res = await publicClient?.waitForTransactionReceipt({
@@ -316,6 +289,64 @@ const useNovaDrawNFT = () => {
     }
   };
 
+  const sendUpgradeSBTTx = async (address: string) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: LYNKS_NFT_CONTRACT as Hash,
+        abi: NovaLynksNFT,
+        functionName: "safeMint",
+        args: [address],
+      };
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendTrademarkApproveTx = async (address: string) => {
+    if (!address) return;
+    try {
+      const tx: WriteContractParameters = {
+        address: TRADEMARK_NFT_CONTRACT as Hash,
+        abi: NovaTrademarkNFT,
+        functionName: "setApprovalForAll",
+        args: [LYNKS_NFT_CONTRACT, true],
+      };
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (address && trademarkNFT) {
+        const isApproved = (await trademarkNFT.read.isApprovedForAll([
+          address,
+          LYNKS_NFT_CONTRACT,
+        ])) as boolean;
+        setIsTrademarkApproved(isApproved);
+      }
+    })();
+  }, [address, trademarkNFT]);
+
   return {
     trademarkNFT,
     boosterNFT,
@@ -329,6 +360,9 @@ const useNovaDrawNFT = () => {
     loading,
     novaETHBalance,
     getMysteryboxNFT,
+    sendUpgradeSBTTx,
+    isTrademarkApproved,
+    sendTrademarkApproveTx
   };
 };
 

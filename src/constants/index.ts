@@ -18,7 +18,7 @@ export const NOVA_CHAIN_ID = nodeType === "nexus-goerli" ? 810182 : 810180;
 
 export const NOVA_NFT_CONTRACT =
   nodeType === "nexus-goerli"
-    ? "0xF2fe005206cF81C149EbB2D40A294F5Ac59D9E6D"
+    ? "0x3E4E2F5f1AFce2b048C73bd2C17C361997066716"
     : "0xE310c6595205252C73e9044f6740BA8775bf0Da0";
 
 export const TRADEMARK_NFT_CONTRACT =
@@ -28,12 +28,12 @@ export const TRADEMARK_NFT_CONTRACT =
 
 export const BOOSTER_NFT_CONTRACT =
   nodeType === "nexus-goerli"
-    ? "0x7137B3c6Ec578ED324965393A52b130eC567DE4c"
+    ? "0x11Daca615cdBbd4209a0B5E139a60caa6Bf7d874"
     : "0xE9c53534808388aD8d9A1b8fC5812B5C2185EBfD";
 
 export const LYNKS_NFT_CONTRACT =
   nodeType === "nexus-goerli"
-    ? "0x8945f1D2EF8854B47B75f67832D46Be67b5ab068"
+    ? "0xAFA859503D75E33553415bd8dC7b2702b2f73b65"
     : "0xd6d05CBdb8A70d3839166926f1b14d74d9953A08";
 export const MYSTERY_BOX_CONTRACT =
   nodeType === "nexus-goerli"

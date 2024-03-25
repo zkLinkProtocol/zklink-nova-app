@@ -20,11 +20,7 @@ export type Token = {
 };
 import { useQueryClient } from "@tanstack/react-query";
 import { findClosestMultiplier, formatBalance, isSameAddress } from "@/utils";
-import {
-  PRIMARY_CHAIN_KEY,
-  config,
-  wagmiDefaultConfig,
-} from "@/constants/networks";
+import { PRIMARY_CHAIN_KEY, config } from "@/constants/networks";
 import { getSupportedTokens } from "@/api";
 
 const nativeToken = {
