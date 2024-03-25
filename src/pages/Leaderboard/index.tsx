@@ -35,7 +35,7 @@ export default function Leaderboard() {
         {/* Tab btns */}
         <div className="flex items-center md:gap-[2rem] gap-[1rem]">
           <TabItem
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap bg-slate-700/40 ${
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap bg-slate-700 ${
               tabsActive === 0 ? "gradient-btn" : ""
             }`}
             onClick={() => setTabsActive(0)}
@@ -45,7 +45,7 @@ export default function Leaderboard() {
 
           {/* <Tooltip content="coming soon"> */}
           <TabItem
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap text-slate-500 ${
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap bg-slate-700 ${
               tabsActive === 1 ? "gradient-btn " : ""
             }`}
             onClick={() => setTabsActive(1)}
