@@ -200,13 +200,13 @@ export default function Dashboard() {
     }
   };
 
-  const [eigenlayerPoints, setEigenlayerPoints] = useState(0);
+  const [pufferEigenlayerPoints, setPufferEigenlayerPoints] = useState(0);
   const getEigenlayerPointsFunc = async () => {
     if (!address) return;
     const { data } = await getEigenlayerPoints(address);
     console.log("getEigenlayerPointsFunc", data);
     if (data && data?.eigenlayer_points) {
-      setEigenlayerPoints(+data.eigenlayer_points);
+      setPufferEigenlayerPoints(+data.eigenlayer_points);
     }
   };
 
@@ -283,9 +283,8 @@ export default function Dashboard() {
 
       <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
         <span className="text-[#03d498]">
-          Puffer points and ezPoints are undergoing synchronization at the
-          moment. Your point balances may not be visible until this process is
-          complete.
+          Eigenpie Points are undergoing synchronization at the moment. Your
+          point balances may not be visible until this process is complete.
         </span>
       </div>
 
@@ -296,7 +295,7 @@ export default function Dashboard() {
           <NovaPoints
             groupTvl={groupTvl}
             accountPoint={accountPoint}
-            eigenlayerPoints={eigenlayerPoints}
+            pufferEigenlayerPoints={pufferEigenlayerPoints}
             pufferPoints={pufferPoints}
             renzoPoints={renzoPoints}
             renzoEigenLayerPoints={renzoEigenLayerPoints}

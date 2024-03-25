@@ -14,13 +14,13 @@ const TabItem = styled.div`
   font-weight: 700;
   line-height: 2rem; /* 200% */
   letter-spacing: -0.03125rem;
-  d &.active,
+  /* &.active,
   &:hover {
     color: #fff;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15.800000190734863px);
-  }
-  .gradient-btn{
+  } */
+  .gradient-btn {
     background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
     color: #fff;
   }
@@ -35,8 +35,8 @@ export default function Leaderboard() {
         {/* Tab btns */}
         <div className="flex items-center md:gap-[2rem] gap-[1rem]">
           <TabItem
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap gradient-btn ${
-              tabsActive === 0 ? "active" : ""
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap bg-slate-700 ${
+              tabsActive === 0 ? "gradient-btn" : ""
             }`}
             onClick={() => setTabsActive(0)}
           >
@@ -46,13 +46,18 @@ export default function Leaderboard() {
           {/* <Tooltip content="coming soon"> */}
           <TabItem
             data-tooltip-id="coming-soon"
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500`}
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500 ${
+              tabsActive === 1 ? "gradient-btn " : ""
+            }`}
+            // onClick={() => setTabsActive(1)}
           >
             Referral Leaderboard
           </TabItem>
           <TabItem
             data-tooltip-id="coming-soon"
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500`}
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500 ${
+              tabsActive === 2 ? "gradient-btn" : ""
+            }`}
           >
             Mystery Box Winners
           </TabItem>
@@ -61,7 +66,7 @@ export default function Leaderboard() {
         <ReactTooltip
           id="coming-soon"
           place="top"
-          style={{fontSize: '14px'}}
+          style={{ fontSize: "14px" }}
           content="coming soon"
         />
 

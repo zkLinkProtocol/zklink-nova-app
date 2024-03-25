@@ -223,6 +223,9 @@ export const TokenYieldBox = styled.div`
   & .token-yield-5 {
     background: linear-gradient(90deg, #ace730 -0.39%, #324900 99.76%);
   }
+  & .token-yield-6 {
+    background: linear-gradient(90deg, #3e9d8f -0.39%, #205049 99.76%);
+  }
 `;
 
 const LoyaltyBoostBox = styled.div`
@@ -396,6 +399,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [fromActive, connectorName]);
 
   useEffect(() => {
+    console.log("tokenList=====", tokenList);
     if (category === "ALL") {
       let arr = [...tokenList];
 
@@ -1317,13 +1321,43 @@ export default function Bridge(props: IBridgeComponentProps) {
                     <div className="text-xl ml-4 ">
                       <span>{item?.symbol}</span>
                       {item.symbol === "pufETH" && (
-                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden ">
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
                           <span className={`token-yield token-yield-1`}>
                             EigenLayer Points
                           </span>
                           <span className={`token-yield token-yield-2`}>
                             Puffer Points
                           </span>
+                        </TokenYieldBox>
+                      )}
+                      {item.symbol === "ezETH" && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-5`}>
+                            ezPoints
+                          </span>
+                        </TokenYieldBox>
+                      )}
+                      {(item.symbol === "Stone" ||
+                        item.symbol === "wUSDm" ||
+                        item.symbol === "Manta" ||
+                        item.symbol === "rsETH" ||
+                        item.symbol === "mstETH" ||
+                        item.symbol === "mswETH" ||
+                        item.symbol === "mmETH" ||
+                        item.symbol === "mwBETH") && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
+                          <span className={`token-yield token-yield-6`}>
+                            Extra Nova
+                          </span>
+                          {/* <span className={`token-yield token-yield-5`}>
+                          EL Points
+                        </span>
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span> */}
                         </TokenYieldBox>
                       )}
                     </div>
@@ -1346,6 +1380,27 @@ export default function Bridge(props: IBridgeComponentProps) {
                         <span className={`token-yield token-yield-5`}>
                           ezPoints
                         </span>
+                      </TokenYieldBox>
+                    )}
+
+                    {(item.symbol === "Stone" ||
+                      item.symbol === "wUSDm" ||
+                      item.symbol === "Manta" ||
+                      item.symbol === "rsETH" ||
+                      item.symbol === "mstETH" ||
+                      item.symbol === "mswETH" ||
+                      item.symbol === "mmETH" ||
+                      item.symbol === "mwBETH") && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-6`}>
+                          Extra Nova
+                        </span>
+                        {/* <span className={`token-yield token-yield-5`}>
+                          EL Points
+                        </span>
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span> */}
                       </TokenYieldBox>
                     )}
                   </div>

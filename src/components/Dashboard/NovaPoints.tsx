@@ -5,6 +5,8 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 import Decimal from "decimal.js";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { Checkbox } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 const GreenTag = styled.span`
   display: flex;
@@ -20,23 +22,124 @@ interface INovaPointsProps {
     novaPoint: number;
     referPoint: number;
   };
-  eigenlayerPoints: number;
+  pufferEigenlayerPoints: number;
   pufferPoints: number;
   renzoPoints: number;
-  renzoEigenLayerPoints: number
+  renzoEigenLayerPoints: number;
 }
+
+export interface OtherPointsItem {
+  icon: string;
+  pointsName: string;
+  eigenlayerName: string;
+  pointsValue: number;
+  eigenlayerValue: number;
+  tooltip?: string;
+}
+
+export const OtherPointsItem: React.FC<OtherPointsItem> = ({
+  icon,
+  pointsName,
+  pointsValue,
+  eigenlayerName,
+  eigenlayerValue,
+  tooltip,
+}) => {
+  return (
+    <div>
+      <div className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+        <div className="flex items-center gap-2">
+          <img src={icon} className="w-[1.5rem]" />
+          <span className="font-[700]">{pointsName}</span>
+        </div>
+        <span>{formatNumberWithUnit(pointsValue)}</span>
+      </div>
+
+      <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
+        <div className="flex items-center gap-[0.5rem]">
+          <span className="ml-[2rem]">
+            Eigenlayer Points ({eigenlayerName})
+          </span>
+
+          {tooltip && (
+            <img
+              data-tooltip-id={`${eigenlayerName.trim()}`}
+              src="/img/icon-info.svg"
+              className="w-[0.875rem] h-[0.875rem] opacity-40"
+            />
+          )}
+        </div>
+        <span>{formatNumberWithUnit(eigenlayerValue)}</span>
+      </div>
+
+      {tooltip && (
+        <ReactTooltip
+          id={`${eigenlayerName.trim()}`}
+          place="top"
+          style={{
+            maxWidth: "20rem",
+            fontSize: "14px",
+            borderRadius: "16px",
+          }}
+          content={tooltip}
+        />
+      )}
+    </div>
+  );
+};
 
 export default function NovaPoints(props: INovaPointsProps) {
   const {
     accountPoint,
     groupTvl,
-    eigenlayerPoints,
+    pufferEigenlayerPoints,
     pufferPoints,
     renzoPoints,
-    renzoEigenLayerPoints
+    renzoEigenLayerPoints,
   } = props;
   const eralyBirdBooster = 1.5;
   const { invite } = useSelector((store: RootState) => store.airdrop);
+  const [isHidePoints, setIsHidePoints] = useState(false);
+  const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
+
+  useEffect(() => {
+    let otherPoints: OtherPointsItem[] = [
+      {
+        icon: "/img/icon-puffer-points.png",
+        pointsName: "Puffer Points",
+        eigenlayerName: "Puffer",
+        pointsValue: pufferPoints,
+        eigenlayerValue: pufferEigenlayerPoints,
+        tooltip:
+          "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points.",
+      },
+      {
+        icon: "/img/icon-ezPoints.png",
+        pointsName: "ezPoints",
+        eigenlayerName: "Renzo",
+        pointsValue: renzoPoints,
+        eigenlayerValue: renzoEigenLayerPoints,
+      },
+      {
+        icon: "/img/icon-eigenpie.png",
+        pointsName: "EigenPie Points",
+        eigenlayerName: "EigenPie",
+        pointsValue: 0,
+        eigenlayerValue: 0,
+      },
+    ];
+    if (isHidePoints) {
+      setOtherPointsList(otherPoints.filter((item) => item.pointsValue >= 0.1));
+    } else {
+      setOtherPointsList(otherPoints);
+    }
+  }, [
+    pufferPoints,
+    pufferEigenlayerPoints,
+    renzoPoints,
+    renzoEigenLayerPoints,
+    isHidePoints,
+  ]);
 
   return (
     <>
@@ -114,7 +217,9 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Total Booster = {eralyBirdBooster} * ({1} +{" "}
                   {getBooster(groupTvl)})
                 </p>
-                {invite?.kolGroup && <p className="mt-[0.5rem]">Referral Booster: 5%</p>}
+                {invite?.kolGroup && (
+                  <p className="mt-[0.5rem]">Referral Booster: 5%</p>
+                )}
                 <br />
                 <a
                   href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
@@ -142,58 +247,35 @@ export default function NovaPoints(props: INovaPointsProps) {
           content="More points will be listed here soon."
         />
 
-        <div className="mt-[3rem] w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
-          <span>Other Points</span>
-
-          <img
-            data-tooltip-id="more-points-soon"
-            src="/img/icon-info.svg"
-            className="w-[0.875rem] h-[0.875rem] opacity-40"
-          />
-        </div>
-
-        <div className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <div className="flex items-center gap-2">
-            <img src="/img/icon-puffer-points.png" className="w-[1.5rem]" />
-            <span className="font-[700]">Puffer Points</span>
-          </div>
-          <span>{formatNumberWithUnit(pufferPoints)}</span>
-        </div>
-
-        <ReactTooltip
-          id="eigemlayer-points-puffer"
-          place="top"
-          style={{
-            maxWidth: "20rem",
-            fontSize: "14px",
-            borderRadius: "16px",
-          }}
-          content="zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points."
-        />
-        <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <div className="flex items-center gap-[0.5rem]">
-            <span className="ml-[2rem]">Eigenlayer Points (Puffer)</span>
+        <div className="mt-[3rem] w-full flex justify-between items-center">
+          <div className="text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
+            <span>Other Points</span>
             <img
-              data-tooltip-id="eigemlayer-points-puffer"
+              data-tooltip-id="more-points-soon"
               src="/img/icon-info.svg"
               className="w-[0.875rem] h-[0.875rem] opacity-40"
             />
           </div>
-          <span>{formatNumberWithUnit(eigenlayerPoints)}</span>
+          <Checkbox
+            className="mr-[-1rem] flex-row-reverse items-center gap-[0.5rem] whitespace-nowrap"
+            isSelected={isHidePoints}
+            onValueChange={setIsHidePoints}
+          >
+            {"Hide Points < 0.1"}
+          </Checkbox>
         </div>
 
-        <div className="flex justify-between items-center mt-[1rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <div className="flex items-center gap-2">
-            <img src="/img/icon-ezPoints.png" className="w-[1.5rem]" />
-            <span className="font-[700]">ezPoints</span>
-          </div>
-          <span>{formatNumberWithUnit(renzoPoints)}</span>
-        </div>
-
-        <div className="flex justify-between items-center mt-[0.75rem] font-[400] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          <span className="ml-[2rem]">Eigenlayer Points (Renzo)</span>
-          <span>{formatNumberWithUnit(renzoEigenLayerPoints)}</span>
-        </div>
+        {otherPointsList.map((item, index) => (
+          <OtherPointsItem
+            key={index}
+            icon={item.icon}
+            pointsName={item.pointsName}
+            eigenlayerName={item.eigenlayerName}
+            pointsValue={item.pointsValue}
+            eigenlayerValue={item.eigenlayerValue}
+            tooltip={item.tooltip}
+          />
+        ))}
       </CardBox>
     </>
   );
