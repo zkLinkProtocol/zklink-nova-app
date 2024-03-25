@@ -14,12 +14,12 @@ const TabItem = styled.div`
   font-weight: 700;
   line-height: 2rem; /* 200% */
   letter-spacing: -0.03125rem;
-  d &.active,
+  /* &.active,
   &:hover {
     color: #fff;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15.800000190734863px);
-  }
+  } */
   .gradient-btn {
     background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
     color: #fff;
@@ -45,10 +45,11 @@ export default function Leaderboard() {
 
           {/* <Tooltip content="coming soon"> */}
           <TabItem
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap bg-slate-700 ${
+            data-tooltip-id="coming-soon"
+            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500 ${
               tabsActive === 1 ? "gradient-btn " : ""
             }`}
-            onClick={() => setTabsActive(1)}
+            // onClick={() => setTabsActive(1)}
           >
             Referral Leaderboard
           </TabItem>

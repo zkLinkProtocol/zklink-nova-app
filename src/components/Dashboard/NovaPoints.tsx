@@ -102,39 +102,44 @@ export default function NovaPoints(props: INovaPointsProps) {
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
 
-  const otherPoints: OtherPointsItem[] = [
-    {
-      icon: "/img/icon-puffer-points.png",
-      pointsName: "Puffer Points",
-      eigenlayerName: "Puffer",
-      pointsValue: pufferPoints,
-      eigenlayerValue: pufferEigenlayerPoints,
-      tooltip:
-        "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points.",
-    },
-    {
-      icon: "/img/icon-ezPoints.png",
-      pointsName: "ezPoints",
-      eigenlayerName: "Renzo",
-      pointsValue: renzoPoints,
-      eigenlayerValue: renzoEigenLayerPoints,
-    },
-    {
-      icon: "/img/icon-eigenpie.png",
-      pointsName: "EigenPie Points",
-      eigenlayerName: "EigenPie",
-      pointsValue: 0,
-      eigenlayerValue: 0,
-    },
-  ];
-
   useEffect(() => {
+    let otherPoints: OtherPointsItem[] = [
+      {
+        icon: "/img/icon-puffer-points.png",
+        pointsName: "Puffer Points",
+        eigenlayerName: "Puffer",
+        pointsValue: pufferPoints,
+        eigenlayerValue: pufferEigenlayerPoints,
+        tooltip:
+          "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points.",
+      },
+      {
+        icon: "/img/icon-ezPoints.png",
+        pointsName: "ezPoints",
+        eigenlayerName: "Renzo",
+        pointsValue: renzoPoints,
+        eigenlayerValue: renzoEigenLayerPoints,
+      },
+      {
+        icon: "/img/icon-eigenpie.png",
+        pointsName: "EigenPie Points",
+        eigenlayerName: "EigenPie",
+        pointsValue: 0,
+        eigenlayerValue: 0,
+      },
+    ];
     if (isHidePoints) {
       setOtherPointsList(otherPoints.filter((item) => item.pointsValue >= 0.1));
     } else {
       setOtherPointsList(otherPoints);
     }
-  }, [isHidePoints]);
+  }, [
+    pufferPoints,
+    pufferEigenlayerPoints,
+    renzoPoints,
+    renzoEigenLayerPoints,
+    isHidePoints,
+  ]);
 
   return (
     <>
