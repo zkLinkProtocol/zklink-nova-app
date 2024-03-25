@@ -758,7 +758,9 @@ export default function Bridge(props: IBridgeComponentProps) {
             />
             <p className="text-[#C57D10] ">
               Should you wish to participate in the Aggregation Parade, the
-              minimum deposit value should be {minDepositValue} ETH.
+              minimum deposit value should be {minDepositValue} ETH or
+              equivalence. To participate OKX Cryptopedia, there is no minimum
+              deposit value.
             </p>
           </div>
         )}
