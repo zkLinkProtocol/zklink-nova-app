@@ -1341,7 +1341,11 @@ export default function Bridge(props: IBridgeComponentProps) {
                       {(item.symbol === "Stone" ||
                         item.symbol === "wUSDm" ||
                         item.symbol === "Manta" ||
-                        item.symbol === "rsETH") && (
+                        item.symbol === "rsETH" ||
+                        item.symbol === "mstETH" ||
+                        item.symbol === "mswETH" ||
+                        item.symbol === "mmETH" ||
+                        item.symbol === "mwBETH") && (
                         <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
                           <span className={`token-yield token-yield-6`}>
                             Extra Nova
@@ -1380,7 +1384,11 @@ export default function Bridge(props: IBridgeComponentProps) {
                     {(item.symbol === "Stone" ||
                       item.symbol === "wUSDm" ||
                       item.symbol === "Manta" ||
-                      item.symbol === "rsETH") && (
+                      item.symbol === "rsETH" ||
+                      item.symbol === "mstETH" ||
+                      item.symbol === "mswETH" ||
+                      item.symbol === "mmETH" ||
+                      item.symbol === "mwBETH") && (
                       <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
                         <span className={`token-yield token-yield-6`}>
                           Extra Nova
