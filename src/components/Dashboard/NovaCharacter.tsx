@@ -429,6 +429,7 @@ export default function NovaCharacter() {
             <Button
               className="gradient-btn flex-1 py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mr-4"
               onClick={handleMintTrademark}
+              isDisabled={remainDrawCount === 0}
             >
               Mint trademark ({remainDrawCount})
             </Button>
@@ -461,7 +462,7 @@ export default function NovaCharacter() {
                 "gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
               )}
             >
-              <span>{nft ? "Upgrade" : "Mint Now"}</span>
+              <span>{nft ? "Upgrade" : "Mint SBT"}</span>
               {nft ? (
                 <img
                   src="/img/icon-info.svg"
@@ -684,7 +685,7 @@ export default function NovaCharacter() {
             <img
               src={`/img/img-${nft?.name}-LYNK.png`}
               alt=""
-              className="w-[180px] h-[180px]"
+              className="w-[180px] h-[180px] object-cover"
             />
           </div>
 
