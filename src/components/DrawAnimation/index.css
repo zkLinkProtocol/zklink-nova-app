@@ -3,11 +3,39 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    gap:0.75rem
   }
   
   .lottery-item {
     opacity: 0.32;
     transition: opacity 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+  }
+  .lottery-item .img-bg {
+    background-color: #3C4550;
+    border-radius:8px 8px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width: 160px; */
+    height:96px;
+  }
+  .lottery-item .item-name {
+      background: #22272D;
+      width: 10rem;
+      height: 2rem;
+      padding: 0px 21px;
+      justify-content: center;
+      align-items: center;
+      color: #FFF;
+      text-align: center;
+      font-family: Inter;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 24px; /* 200% */
+      padding: 0;
   }
   
   .lottery-item.active {
@@ -15,18 +43,21 @@
   }
   
   .lottery-item img {
-    width: 100px;
-    height: 100px;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    height: 90%;
+    width: auto;
+    object-fit: contain;
   }
 
-  .lottery-container-MysteryBox {
-    width: 400px;
-    
-  }
+
 
   .lottery-container-MysteryBox  .lottery-item img {
     margin-right: 0;
     border-radius: 50%;
+  }
+  .lottery-container-MysteryBox .lottery-item .img-bg {
+    height: 86px;
+  }
+
+  .lottery-container-MysteryBox .lottery-item .item-name {
+    width: 8rem;
   }

@@ -1,7 +1,7 @@
 import { NFT_MARKET_URL, NOVA_CHAIN_ID, MintStatus } from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import { CardBox } from "@/styles/common";
-import { addNovaChain, formatBalance } from "@/utils";
+import { addNovaChain, formatBalance, sleep } from "@/utils";
 import {
   Button,
   Modal,
@@ -109,7 +109,7 @@ export default function NovaCharacter() {
       getRemainDrawCount(address).then((res) => {
         console.log("remain draw count: ", res);
         const { remainNumber, tokenId } = res.result;
-        setDrawedNftId(tokenId - 1);
+        tokenId && setDrawedNftId(Number(tokenId) - 1);
         setRemainDrawCount(remainNumber);
       });
     }
@@ -166,26 +166,26 @@ export default function NovaCharacter() {
       const res = await drawTrademarkNFT(address);
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
-        drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
-        setDrawedNftId(tokenId - 1);
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
+        await drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
+        await sleep(2000);
+        setDrawedNftId(Number(tokenId) - 1);
       }
-      return;
     }
     let mintParams = { ...trademarkMintParams };
-    if (!trademarkMintParams) {
-      const res = await drawTrademarkNFT(address);
-      if (res && res.result) {
-        const { tokenId, nonce, signature, expiry } = res.result;
-        setTrademarkMintParams({ tokenId, nonce, signature, expiry });
-        mintParams = { tokenId, nonce, signature, expiry };
-      }
-    }
 
     try {
       //TODO call contract
-      setTrademarkMintStatus(MintStatus.Minting);
       trademarkMintModal.onOpen();
+      setTrademarkMintStatus(MintStatus.Minting);
+      if (!trademarkMintParams) {
+        const res = await drawTrademarkNFT(address);
+        if (res && res.result) {
+          const { tokenId, nonce, signature, expiry } = res.result;
+          setTrademarkMintParams({ tokenId, nonce, signature, expiry });
+          mintParams = { tokenId, nonce, signature, expiry };
+        }
+      }
       await sendTrademarkMintTx(mintParams as TrademarkMintParams);
       setTrademarkMintStatus(MintStatus.Success);
     } catch (e) {
@@ -196,6 +196,9 @@ export default function NovaCharacter() {
           setFailMessage("User rejected the request");
         }
       }
+    } finally {
+      setDrawing(false);
+      setDrawedNftId(undefined);
     }
 
     setUpdate((update) => update + 1);
@@ -265,7 +268,6 @@ export default function NovaCharacter() {
     mintType,
     mintModal,
   ]);
-
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -279,13 +281,47 @@ export default function NovaCharacter() {
           />
         </div>
         <div className="flex items-center w-full">
-          <Button
-            className="gradient-btn flex-1 py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mr-4"
-            onClick={handleMintTrademark}
+          <Tooltip
+            content={
+              <div className="flex flex-col py-2">
+                <p>
+                  With every three referrals, you'll have a chance to mint a
+                  trademark NFT.
+                </p>
+                <a
+                  href={NFT_MARKET_URL}
+                  target="_blacnk"
+                  className="text-green mt-4"
+                >
+                  Buy from NFT marketplace
+                </a>
+              </div>
+            }
           >
-            Mint trademark ({remainDrawCount})
-          </Button>
-          <Tooltip content={nft ? "coming soon" : ""} isOpen={showTooltip1}>
+            <Button
+              className="gradient-btn flex-1 py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mr-4"
+              onClick={handleMintTrademark}
+            >
+              Mint trademark ({remainDrawCount})
+            </Button>
+          </Tooltip>
+          <Tooltip
+            content={
+              <div className="flex flex-col py-2">
+                <p>
+                  You will need to collect all 4 trademark NFTs to mint Lynks.
+                </p>
+                <a
+                  href={NFT_MARKET_URL}
+                  target="_blacnk"
+                  className="text-green mt-4"
+                >
+                  Buy from NFT marketplace
+                </a>
+              </div>
+            }
+            isOpen={showTooltip1}
+          >
             <Button
               onClick={handleMintNow}
               onMouseEnter={() => nft && setShowTooltip1(true)}
@@ -358,6 +394,7 @@ export default function NovaCharacter() {
       </Modal>
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
+        size="xl"
         isOpen={drawModal.isOpen}
         onOpenChange={drawModal.onOpenChange}
       >
@@ -373,22 +410,7 @@ export default function NovaCharacter() {
               setDrawing(false);
             }}
           />
-          {/* <div className="grid grid-cols-2 place-content-center gap-4 w-auto mx-auto">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="flex items-center justify-center">
-                <img
-                  src={`/img/img-trademark-temp-${item}.png`}
-                  alt=""
-                  className="w-[160px] h-[160px]"
-                />
-              </div>
-            ))}
-          </div> */}
-          <p className="text-[#fff] text-[24px] font-normal my-2 text-center font-satoshi">
-            Draw Oppertunities:{" "}
-            <span className="text-[#43E3B5]">{remainDrawCount}</span>
-          </p>
-          <p className="text-center text-[#C0C0C0] mb-4">
+          <p className="text-left text-[#C0C0C0] mt-5 mb-4">
             With every three referrals, you'll have a chance to receive one of
             the four Trademark NFTs. However, you must mint your Trademark NFT
             before you can enter another lucky draw.
@@ -397,25 +419,27 @@ export default function NovaCharacter() {
             onClick={handleDrawAndMint}
             isDisabled={
               !isInvaidChain &&
-              (novaBalance === 0 || drawedNftId === 5 || remainDrawCount === 0) // 5 means no nft drawed
+              (novaBalance === 0 || drawedNftId === 4 || remainDrawCount === 0) // 5 means no nft drawed
             }
             isLoading={mintLoading || drawing}
-            className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+            className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
               {isInvaidChain && "Switch to Nova network to mint"}
-              {!isInvaidChain && (!drawedNftId || drawing) && "Draw & Mint"}
+              {!isInvaidChain &&
+                (!drawedNftId || drawing) &&
+                `Draw & Mint ( ${remainDrawCount} )`}
               {!isInvaidChain && !!drawedNftId && !drawing && "Mint"}
             </span>
           </Button>
-          <Button
+          {/* <Button
             onClick={() => window.open(NFT_MARKET_URL, "_blank")}
             isDisabled={!isInvaidChain && novaBalance === 0}
             isLoading={mintLoading}
             className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
           >
             <span>Trade in Alienswap</span>
-          </Button>
+          </Button> */}
         </ModalContent>
       </Modal>
 
@@ -427,7 +451,7 @@ export default function NovaCharacter() {
         className="trans"
       >
         <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
-          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
+          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
             {trademarkMintStatus === MintStatus.Minting && <span>Minting</span>}
             {trademarkMintStatus === MintStatus.Success && (
               <span>Congratulations</span>
@@ -436,7 +460,7 @@ export default function NovaCharacter() {
               <span>Transaction Failed</span>
             )}
           </ModalHeader>
-          <ModalBody className="pb-8">
+          <ModalBody className="">
             <TxResult>
               {trademarkMintStatus === MintStatus.Minting && (
                 <div className="flex flex-col items-center">
@@ -471,15 +495,16 @@ export default function NovaCharacter() {
               )}
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
+                  <p className="text-[#C0C0C0]">You have successfully minted</p>
                   <img
                     src={`/img/img-trademark-${
                       trademarkMintParams!.tokenId
                     }.png`}
                     alt=""
-                    className="w-[10rem] h-[10rem] rounded-3xl mb-4"
+                    className="w-[10rem] h-[10rem] rounded-xl my-4 bg-[#3C4550]"
                   />
-                  <p className="text-[#C0C0C0]">You have successfully minted</p>
-                  <p className="text-[#03D498]">
+
+                  <p className="text-[24px] font-inter font-normal">
                     {TRADEMARK_TOKEN_ID_MAP[trademarkMintParams!.tokenId]}
                   </p>
                 </div>
@@ -487,18 +512,18 @@ export default function NovaCharacter() {
               <div className="mt-6">
                 {trademarkMintStatus === MintStatus.Success && (
                   <Button
-                    className="w-full gradient-btn mb-6"
+                    className="w-full gradient-btn"
                     onClick={() => window.open(NFT_MARKET_URL, "_blank")}
                   >
                     Trade in Alienswap
                   </Button>
                 )}
-                <Button
+                {/* <Button
                   className="w-full default-btn"
                   onClick={() => trademarkMintModal.onClose()}
                 >
                   Close
-                </Button>
+                </Button> */}
               </div>
             </TxResult>
           </ModalBody>

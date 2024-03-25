@@ -24,21 +24,21 @@ export const NOVA_NFT_CONTRACT =
 export const TRADEMARK_NFT_CONTRACT =
   nodeType === "nexus-goerli"
     ? "0xA594bF8Ec851a7c58a348DF81Bb311cE0BCAD5C4"
-    : "";
+    : "0xDeEDf09C48E1284b59f8e7DC4e1fd45243002615";
 
 export const BOOSTER_NFT_CONTRACT =
   nodeType === "nexus-goerli"
     ? "0x7137B3c6Ec578ED324965393A52b130eC567DE4c"
-    : "";
+    : "0xE9c53534808388aD8d9A1b8fC5812B5C2185EBfD";
 
 export const LYNKS_NFT_CONTRACT =
   nodeType === "nexus-goerli"
     ? "0x8945f1D2EF8854B47B75f67832D46Be67b5ab068"
-    : "";
+    : "0xd6d05CBdb8A70d3839166926f1b14d74d9953A08";
 export const MYSTERY_BOX_CONTRACT =
   nodeType === "nexus-goerli"
     ? "0x8A9D6EF8350548CB3172d0cD9a83f57E860240eB"
-    : "";
+    : "0x7fE8510dD408327806baCACaAFE2A445D9f3E9ee";
 
 export const NOVA_START_TIME = 1710410400000; //1710410400000;
 

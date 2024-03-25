@@ -6,6 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Tooltip,
 } from "@nextui-org/react";
 import styled from "styled-components";
 import { CardBox } from "@/styles/common";
@@ -26,28 +27,13 @@ import { addNovaChain, sleep } from "@/utils";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
 const NftBox = styled.div`
   .nft-left {
-    width: 60%;
+    flex: 6;
     padding: 24px;
+    margin-right: 25px;
     .nft-chip:nth-child(3n) {
       margin-right: 0;
     }
-    .nft-left-title {
-      color: #fff;
-      font-family: Satoshi;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 24px; /* 150% */
-      letter-spacing: 0.96px;
-    }
-    .nft-left-sub-title {
-      color: #919192;
-      font-family: Satoshi;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 400;
-      letter-spacing: 0.96px;
-    }
+
     .nft-chip {
       border-radius: 16px;
       backdrop-filter: blur(15.800000190734863px);
@@ -85,8 +71,27 @@ const NftBox = styled.div`
       }
     }
   }
+  .nft-left,
   .nft-right {
-    width: 40%;
+    .nft-left-title {
+      color: #fff;
+      font-family: Satoshi;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 24px; /* 150% */
+      letter-spacing: 0.96px;
+    }
+    .nft-left-sub-title {
+      color: #919192;
+      font-family: Satoshi;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.96px;
+    }
+  }
+  .nft-right {
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -159,6 +164,7 @@ export default function NFTCard() {
   const [boxTokenIds, setBoxTokenIds] = useState<number[]>([]);
   const [mintParams, setMintParams] = useState<MysteryboxMintParams>();
   const [drawPrizeId, setDrawPrizeId] = useState<number>();
+  const [initied, setInitied] = useState(false);
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -197,10 +203,18 @@ export default function NFTCard() {
       openMysteryboxNFT(address).then((res) => {
         const { tokenId, nonce, signature, expiry } = res.result;
         setMintParams({ tokenId, nonce, signature, expiry });
-        // setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
+        setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
       });
     }
   }, [address, getMysteryboxNFT, update]);
+
+  useEffect(() => {
+    if (remainMintCount > 0 && !initied && !mintBoxModal.isOpen) {
+      setInitied(true);
+      mintBoxModal.onOpen();
+    }
+    return () => {};
+  }, [initied, remainMintCount, mintBoxModal]);
 
   useEffect(() => {
     (async () => {
@@ -226,6 +240,9 @@ export default function NFTCard() {
       }
       const lynksBalances = await getLynksNFT(address);
       console.log("lynksBalances: ", lynksBalances);
+      for (let i = 0; i < 4; i++) {
+        nfts.push({ ...ALL_NFTS[i + 11], balance: 0 });
+      }
       setAllNFTs(nfts);
       //TODO set lynks balance
     })();
@@ -280,7 +297,16 @@ export default function NFTCard() {
     if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
     try {
       setOpening(true);
-      await mysteryBoxNFT.write.burn([boxTokenIds[0]]);
+      await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
+      const res = await openMysteryboxNFT(address); // draw prize
+      if (res && res.result) {
+        const { tokenId, nonce, signature, expiry } = res.result;
+        setMintParams({ tokenId, nonce, signature, expiry });
+        //do the draw animation. tokenId means prize is bootster; no tokenId means prize is lynks,use 8 to make draw animation works
+        await drawRef?.current?.start(
+          tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
+        ); // use index of img for active
+      }
       getRemainMysteryboxOpenableCount(address).then((res) => {
         console.log("getRemainMysteryboxOpenableCount: ", res);
         setMintableCount(res.result);
@@ -318,6 +344,8 @@ export default function NFTCard() {
     }
     let params;
     try {
+      mintResultModal.onOpen();
+      setMintStatus(MintStatus.Minting);
       setDrawing(true);
       if (!mintParams) {
         const res = await openMysteryboxNFT(address);
@@ -325,32 +353,33 @@ export default function NFTCard() {
           const { tokenId, nonce, signature, expiry } = res.result;
           setMintParams({ tokenId, nonce, signature, expiry });
           //do the draw animation. tokenId means prize is bootster; no tokenId means prize is lynks,use 8 to make draw animation works
-          drawRef?.current?.start(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // use index of img for active
-          await sleep(5000); //wait for draw animation ends
+          // await drawRef?.current?.start(
+          //   tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
+          // ); // use index of img for active
+          // await sleep(3000); //show prize for 3s
+          setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
           params = res.result;
         }
       } else {
         params = { ...mintParams };
-        drawRef?.current?.start(
-          mintParams.tokenId ? PRIZE_ID_NFT_MAP[mintParams.tokenId] - 1 : 7
-        ); // use index of img for active
-        await sleep(10000); //wait for draw animation ends
       }
       if (!params) {
         toast.error("No mint oppertunities left.");
         return;
       }
-      setMintStatus(MintStatus.Minting);
-      mintResultModal.onOpen();
+
       await sendMysteryOpenMintTx(params);
       setMintStatus(MintStatus.Success);
       setUpdate((update) => update + 1);
+      setDrawPrizeId(-1);
     } catch (e) {
       console.error(e);
       setMintStatus(MintStatus.Failed);
       if (e.message) {
         if (e.message.includes("rejected the request")) {
           setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
         }
       }
     } finally {
@@ -370,7 +399,7 @@ export default function NFTCard() {
 
   return (
     <>
-      <NftBox className="flex justify-between  rounded-lg mt-8">
+      <NftBox className="flex justify-between flex-wrap rounded-lg mt-8">
         <CardBox className="nft-left">
           <div className="flex justify-between">
             <div>
@@ -379,12 +408,25 @@ export default function NFTCard() {
                 Invite to earn more pieces and upgrade your Nova Char
               </p>
             </div>
-            <Button className="gradient-btn">Buy</Button>
+            <Button
+              className="gradient-btn"
+              onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+            >
+              Buy
+            </Button>
           </div>
           <div className="grid grid-cols-3 gap-4 mt-8">
             {allNFTs.map((item, index) => (
-              <div className="nft-chip relative   w-[170px] " key={index}>
-                <img src={`/img/img-${item.img}`} alt="" />
+              <div
+                className="nft-chip relative   w-[170px] "
+                key={index}
+                style={{ opacity: item.balance > 0 ? "100%" : "40%" }}
+              >
+                <img
+                  src={`/img/img-${item.img}`}
+                  alt=""
+                  className="w-[85%] mx-auto"
+                />
                 {/* <div className='relative bg-slate-50 h-24 w-8/12 m-auto'> */}
                 <div className="nft-info">
                   <span className="nft-name">{item.name}</span>
@@ -396,13 +438,40 @@ export default function NFTCard() {
         </CardBox>
 
         <CardBox className="nft-right ml-10">
-          <div className="text-xl flex items-center mb-8">
-            <span>Mystery Box</span>
-            <img
-              src="/img/icon-tips-white.png"
-              alt=""
-              className="w-[14px] h-[14px] ml-1"
-            />
+          <div className="w-full flex justify-between items-center">
+            <div>
+              <div className=" flex items-center ">
+                <span className="nft-left-title">Mystery Box</span>
+                <Tooltip
+                  content={
+                    <div className="flex flex-col py-2">
+                      <p>
+                        Everyday, top 100 referral and 100 random Parade
+                        participant can receive a mystery box.
+                      </p>
+                      <a href={""} target="_blacnk" className="text-green mt-4">
+                        Learn More
+                      </a>
+                    </div>
+                  }
+                >
+                  <img
+                    src="/img/icon-tips-white.png"
+                    alt=""
+                    className="w-[14px] h-[14px] ml-2"
+                  />
+                </Tooltip>
+              </div>
+              <p className="nft-left-sub-title">
+                Invite more to earn Mystery Box!
+              </p>
+            </div>
+            <Button
+              className="gradient-btn"
+              onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+            >
+              Buy
+            </Button>
           </div>
           <div className=" w-[384px] h-[300px] mb-8">
             <img
@@ -413,22 +482,16 @@ export default function NFTCard() {
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onOpen}
-            disabled={boxCount === 0}
+            // disabled={boxCount === 0}
           >
-            Open Your Box ({boxCount})
+            Open Your Box
           </Button>
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onMint}
-            disabled={remainMintCount === 0}
+            // disabled={remainMintCount === 0}
           >
-            Mint Your Box ({remainMintCount})
-          </Button>
-          <Button
-            className="gradient-btn  w-full"
-            onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-          >
-            Trade in Alienswap
+            Mint Your Box
           </Button>
         </CardBox>
       </NftBox>
@@ -445,7 +508,7 @@ export default function NFTCard() {
               <ModalHeader className="flex flex-col gap-1">
                 Open the Mystery box
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="px-0 ">
                 <div className="flex flex-col items-center ">
                   <DrawAnimation
                     type="MysteryBox"
@@ -456,14 +519,15 @@ export default function NFTCard() {
                     sbtNFT={sbtNFT}
                     targetImageIndex={drawPrizeId}
                   />
-                  <p className="text-[#fff] text-[24px] font-normal my-2 text-center font-satoshi">
-                    Mystery Box Left:{" "}
-                    <span className="text-[#43E3B5]">{boxCount}</span>
-                  </p>
-                  <p className="text-center text-[#C0C0C0] mb-4">
+
+                  <p className="text-left text-[#C0C0C0] mt-4 mb-2 px-6 font-satoshi font-normal">
                     You will have a chance to randomly mint some booster NFT.
                     However, you must mint your booster NFT before you can enter
-                    another lucky draw.
+                    another lucky draw.{" "}
+                    <span className="font-bold">
+                      {" "}
+                      Please notice that the booster NFT is not tradeable.
+                    </span>
                   </p>
                 </div>
               </ModalBody>
@@ -471,33 +535,26 @@ export default function NFTCard() {
                 <div className="w-full">
                   <div className="w-full flex items-center justify-between gap-4">
                     <Button
-                      className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+                      className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onOpenSubmit}
                       isLoading={opening}
-                      isDisabled={boxCount === 0}
+                      isDisabled={boxCount === 0 || mintableCount > 0}
                     >
                       {isInvaidChain && "Switch Network"}
-                      {!isInvaidChain && opening ? "Opening" : "Open"}
+                      {!isInvaidChain && opening
+                        ? "Opening"
+                        : `Open Box (${boxCount})`}
                     </Button>
                     <Button
-                      className="gradient-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+                      className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onDrawMintSubmit}
                       isLoading={drawing}
                       isDisabled={mintableCount === 0}
                     >
                       {isInvaidChain && "Switch Network"}
-                      {!isInvaidChain && drawing ? "Minting" : "Mint"}
+                      {!isInvaidChain && drawing ? "Minting" : "Mint Booster"}
                     </Button>
                   </div>
-
-                  <Button
-                    className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
-                    onClick={() => {
-                      window.open(NFT_MARKET_URL, "_blacnk");
-                    }}
-                  >
-                    Buy from Alienswap
-                  </Button>
                 </div>
               </ModalFooter>
             </>
@@ -519,14 +576,13 @@ export default function NFTCard() {
               <ModalBody>
                 <div className="flex flex-col items-center ">
                   <img
-                    src="/img/img-mystery-box-temp.png"
-                    className="w-[330px] h-[330px] mb-6"
+                    src="/img/img-mystery-box.png"
+                    className="w-[240px] h-[240px] mb-6"
                   />
-                  <p className="text-[24px] font-satoshi ">
-                    Minting oppertunities:{" "}
-                    <span className="text-green">{remainMintCount}</span>
+                  <p className="font-inter text-[24px] mb-3">
+                    Nova Mystery Box
                   </p>
-                  <p className="text-gray text-[16px] font-normal">
+                  <p className="text-green text-[16px] font-normal">
                     Congratulation, now you can mint Mystery Box{" "}
                   </p>
                 </div>
@@ -539,7 +595,9 @@ export default function NFTCard() {
                     isLoading={mintLoading}
                   >
                     {isInvaidChain && "Switch to Nova network to mint"}
-                    {!isInvaidChain && mintLoading ? "Minting" : "Mint"}
+                    {!isInvaidChain && mintLoading
+                      ? "Minting"
+                      : `Mint (${remainMintCount})`}
                   </Button>
                 </div>
               </ModalFooter>
@@ -556,7 +614,7 @@ export default function NFTCard() {
         className="trans"
       >
         <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
-          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
+          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
             {mintStatus === MintStatus.Minting && <span>Minting</span>}
             {mintStatus === MintStatus.Success && <span>Congratulations</span>}
             {mintStatus === MintStatus.Failed && (
@@ -598,6 +656,7 @@ export default function NFTCard() {
               )}
               {mintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
+                  <p className="text-[#C0C0C0]">You have successfully minted</p>
                   <img
                     src={
                       mintBoxModal.isOpen
@@ -609,10 +668,10 @@ export default function NFTCard() {
                         : lynksNFTImg
                     }
                     alt=""
-                    className="w-[10rem] h-[10rem] rounded-3xl mb-4"
+                    className="w-[10rem] h-[10rem] rounded-xl my-4 bg-[#3C4550]"
                   />
-                  <p className="text-[#C0C0C0]">You have successfully minted</p>
-                  <p className="text-[#03D498]">
+
+                  <p className="text-[24px] font-inter font-normal">
                     {mintBoxModal.isOpen && "Mystery Box"}
                     {openBoxModal.isOpen && mintParams?.tokenId
                       ? "Point Booster"
@@ -629,12 +688,6 @@ export default function NFTCard() {
                     Trade in Alienswap
                   </Button>
                 )}
-                <Button
-                  className="w-full secondary-btn"
-                  onClick={() => mintResultModal.onClose()}
-                >
-                  Close
-                </Button>
               </div>
             </TxResult>
           </ModalBody>
