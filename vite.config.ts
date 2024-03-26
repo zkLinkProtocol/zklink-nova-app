@@ -23,6 +23,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/app-api/, ""),
       },
+      "/lynknft-test": {
+        // target: "https://app-api.zklink.io",
+        target: "https://zklink-nova-nft.s3.ap-northeast-1.amazonaws.com",
+        changeOrigin: true,
+      },
     },
   },
   build: {

@@ -5,6 +5,7 @@ import {
   BOOSTER_NFT_CONTRACT,
   LYNKS_NFT_CONTRACT,
   IS_MAINNET,
+  LYNKS_METADATA_PREFIX,
 } from "@/constants";
 import {
   usePublicClient,
@@ -30,7 +31,8 @@ import {
   encodeFunctionData,
 } from "viem";
 import { formatBalance, sleep } from "@/utils";
-import { packetToBytes } from "node_modules/viem/_types/utils/ens/packetToBytes";
+import axios from "axios";
+
 /**
  * fro trademark nft and mytestory box nft(booster and lynks nft)
  */
@@ -57,6 +59,7 @@ const useNovaDrawNFT = () => {
   const { address } = useAccount();
   const [loading, setLoading] = useState(false);
   const [isTrademarkApproved, setIsTrademarkApproved] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
 
   const publicClient = usePublicClient({ config, chainId });
   const { data: walletClient } = useWalletClient();
@@ -145,10 +148,28 @@ const useNovaDrawNFT = () => {
           .map((_, index) => lynksNFT.read.tokenURI([tokenIds[index]]))
       )) as string[];
       console.log("token uris: ", uris);
-      const nfts = uris.map((item: string) =>
-        item.substring(item.lastIndexOf("/"))
+
+      const nftRes = await Promise.all(
+        uris.map((item: string) =>
+          axios.get(
+            `${LYNKS_METADATA_PREFIX}/${item.substring(
+              item.lastIndexOf("/") + 1
+            )}`
+            // `/lynknft-test/${item.substring(item.lastIndexOf("/") + 1)}`
+          )
+        )
       );
-      return nfts;
+      const nfts = nftRes.map((item) => item.data);
+      console.log("nfts: ", nfts);
+      const map: Record<string, { name: string; balance: number }> = {};
+      for (const nft of nfts) {
+        if (!map[nft.name]) {
+          map[nft.name] = { name: nft.name, balance: 1 };
+        } else {
+          map[nft.name].balance++;
+        }
+      }
+      return Object.values(map);
     },
     [lynksNFT]
   );
@@ -317,6 +338,7 @@ const useNovaDrawNFT = () => {
   const sendTrademarkApproveTx = async (address: string) => {
     if (!address) return;
     try {
+      setIsApproving(true);
       const tx: WriteContractParameters = {
         address: TRADEMARK_NFT_CONTRACT as Hash,
         abi: NovaTrademarkNFT,
@@ -329,9 +351,12 @@ const useNovaDrawNFT = () => {
         hash,
       });
       console.log(res);
+      setIsTrademarkApproved(true);
     } catch (e) {
       console.error(e);
       return Promise.reject(e);
+    } finally {
+      setIsApproving(false);
     }
   };
 
@@ -362,7 +387,8 @@ const useNovaDrawNFT = () => {
     getMysteryboxNFT,
     sendUpgradeSBTTx,
     isTrademarkApproved,
-    sendTrademarkApproveTx
+    sendTrademarkApproveTx,
+    isApproving,
   };
 };
 

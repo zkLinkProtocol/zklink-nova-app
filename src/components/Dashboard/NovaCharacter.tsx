@@ -94,6 +94,7 @@ export default function NovaCharacter() {
     isTrademarkApproved,
     sendTrademarkApproveTx,
     sendUpgradeSBTTx,
+    isApproving,
   } = useNovaDrawNFT();
 
   const { updateRefreshBalanceId } = useMintStatus();
@@ -216,7 +217,6 @@ export default function NovaCharacter() {
         if (tokenId === 5) {
           // 5 means no prize
           setUpdate((update) => update + 1);
-          setTrademarkMintParams(undefined);
           // return;
         }
       }
@@ -357,6 +357,7 @@ export default function NovaCharacter() {
         img: `/img/img-${nft?.name}-LYNK.png`,
       });
       updateRefreshBalanceId();
+      setUpdate((update) => update + 1);
     } catch (e: any) {
       console.log(e);
       setTrademarkMintStatus(MintStatus.Failed);
@@ -554,9 +555,13 @@ export default function NovaCharacter() {
             <span>
               {isInvaidChain && "Switch to Nova network to mint"}
               {!isInvaidChain &&
-                (!drawedNftId || !trademarkMintParams || drawing) &&
+                (!drawedNftId || drawedNftId === 4 || drawing) &&
                 `Draw & Mint ( ${remainDrawCount} )`}
-              {!isInvaidChain && !!drawedNftId && !drawing && "Mint"}
+              {!isInvaidChain &&
+                !!drawedNftId &&
+                drawedNftId !== 4 &&
+                !drawing &&
+                "Mint"}
             </span>
           </Button>
           {/* <Button
@@ -579,7 +584,12 @@ export default function NovaCharacter() {
       >
         <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
-            {trademarkMintStatus === MintStatus.Minting && <span>Minting</span>}
+            {trademarkMintStatus === MintStatus.Minting && !isApproving && (
+              <span>Minting</span>
+            )}
+            {trademarkMintStatus === MintStatus.Minting && isApproving && (
+              <span>Approving</span>
+            )}
             {trademarkMintStatus === MintStatus.Success && (
               <span>Congratulations</span>
             )}

@@ -124,10 +124,10 @@ const ALL_NFTS = [
   { img: "point-booster-6.png", name: "Point Booster 6", balance: 0 },
   { img: "point-booster-7.png", name: "Point Booster 7", balance: 0 },
 
-  { img: "ENTP-LYNK.png", name: "ENTP-LYNK", balance: 0 },
-  { img: "ISTP-LYNK.png", name: "LSTP-LYNK", balance: 0 },
-  { img: "INFJ-LYNK.png", name: "INFJ-LYNK", balance: 0 },
-  { img: "ESFJ-LYNK.png", name: "ESFJ-LYNK", balance: 0 },
+  { img: "ENTP-LYNK.png", type: "ENTP", name: "ENTP-LYNK", balance: 0 },
+  { img: "ISTP-LYNK.png", type: "ISTP", name: "LSTP-LYNK", balance: 0 },
+  { img: "INFJ-LYNK.png", type: "INFJ", name: "INFJ-LYNK", balance: 0 },
+  { img: "ESFJ-LYNK.png", type: "ESFJ", name: "ESFJ-LYNK", balance: 0 },
 ];
 export default function NFTCard() {
   const openBoxModal = useDisclosure();
@@ -210,13 +210,13 @@ export default function NFTCard() {
     }
   }, [address, getMysteryboxNFT, update]);
 
-  useEffect(() => {
-    if (remainMintCount > 0 && !initied && !mintBoxModal.isOpen) {
-      setInitied(true);
-      mintBoxModal.onOpen();
-    }
-    return () => {};
-  }, [initied, remainMintCount, mintBoxModal]);
+  // useEffect(() => {
+  //   if (remainMintCount > 0 && !initied && !mintBoxModal.isOpen) {
+  //     setInitied(true);
+  //     mintBoxModal.onOpen();
+  //   }
+  //   return () => {};
+  // }, [initied, remainMintCount, mintBoxModal]);
 
   useEffect(() => {
     (async () => {
@@ -243,7 +243,10 @@ export default function NFTCard() {
       const lynksBalances = await getLynksNFT(address);
       console.log("lynksBalances: ", lynksBalances);
       for (let i = 0; i < 4; i++) {
-        nfts.push({ ...ALL_NFTS[i + 11], balance: 0 });
+        const nft = lynksBalances?.find((item) =>
+          item.name.includes(ALL_NFTS[i + 11].type!)
+        );
+        nfts.push({ ...ALL_NFTS[i + 11], balance: nft?.balance ?? 0 });
       }
       setAllNFTs(nfts);
       //TODO set lynks balance
@@ -492,16 +495,16 @@ export default function NFTCard() {
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onOpen}
-            // disabled={boxCount === 0}
+            disabled={boxCount === 0}
           >
-            Open Your Box
+            Open Your Box {boxCount > 0 ? `(${boxCount})` : ""}
           </Button>
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onMint}
-            // disabled={remainMintCount === 0}
+            disabled={remainMintCount === 0}
           >
-            Mint Your Box
+            Mint Your Box {remainMintCount > 0 ? `(${remainMintCount})` : ""}
           </Button>
         </CardBox>
       </NftBox>

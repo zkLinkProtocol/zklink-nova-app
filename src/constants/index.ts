@@ -65,3 +65,8 @@ export const enum MintStatus {
   Failed = "Failed",
   Success = "Success",
 }
+
+export const LYNKS_METADATA_PREFIX =
+  nodeType === "nexus-goerli"
+    ? "https://zklink-nova-nft.s3.ap-northeast-1.amazonaws.com/lynknft-test"
+    : "https://zklink-nova-nft.s3.ap-northeast-1.amazonaws.com/lynknft";
