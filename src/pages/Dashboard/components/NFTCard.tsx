@@ -215,16 +215,14 @@ export default function NFTCard() {
       getRemainMysteryboxOpenableCount(address).then((res) => {
         console.log("getRemainMysteryboxOpenableCount: ", res);
         setMintableCount(res.result);
+        if (res.result > 0) {
+          openMysteryboxNFT(address).then((res) => {
+            const { tokenId, nonce, signature, expiry } = res.result;
+            setMintParams({ tokenId, nonce, signature, expiry });
+            setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
+          });
+        }
       });
-      openMysteryboxNFT(address)
-        .then((res) => {
-          const { tokenId, nonce, signature, expiry } = res.result;
-          setMintParams({ tokenId, nonce, signature, expiry });
-          setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
-        })
-        .catch((error) => {
-          console.log(error); // has used up number
-        });
     }
   }, [address, getMysteryboxNFT, update]);
 
