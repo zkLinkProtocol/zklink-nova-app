@@ -240,35 +240,44 @@ export default function NFTCard() {
       if (!address || !trademarkNFT || !boosterNFT || !lynksNFT) {
         return;
       }
-      setRefreshing(true);
-      const nfts = [];
-      const trademarkBalances = await Promise.all(
-        [1, 2, 3, 4].map((item) => trademarkNFT.read.balanceOf([address, item]))
-      );
-      console.log("trademarkBalances: ", trademarkBalances);
-      for (let i = 0; i < 4; i++) {
-        nfts.push({ ...ALL_NFTS[i], balance: Number(trademarkBalances[i]) });
-      }
-      const boosterBalances = await Promise.all(
-        Object.keys(PRIZE_ID_NFT_MAP).map((item) =>
-          boosterNFT.read.balanceOf([address, item])
-        )
-      );
-      console.log("boosterBalances: ", boosterBalances);
-      for (let i = 0; i < 7; i++) {
-        nfts.push({ ...ALL_NFTS[i + 4], balance: Number(boosterBalances[i]) });
-      }
-      const lynksBalances = await getLynksNFT(address);
-      console.log("lynksBalances: ", lynksBalances);
-      for (let i = 0; i < 4; i++) {
-        const nft = lynksBalances?.find((item) =>
-          item.name.includes(ALL_NFTS[i + 11].type!)
+      try {
+        setRefreshing(true);
+        const nfts = [];
+        const trademarkBalances = await Promise.all(
+          [1, 2, 3, 4].map((item) =>
+            trademarkNFT.read.balanceOf([address, item])
+          )
         );
-        nfts.push({ ...ALL_NFTS[i + 11], balance: nft?.balance ?? 0 });
+        console.log("trademarkBalances: ", trademarkBalances);
+        for (let i = 0; i < 4; i++) {
+          nfts.push({ ...ALL_NFTS[i], balance: Number(trademarkBalances[i]) });
+        }
+        const boosterBalances = await Promise.all(
+          Object.keys(PRIZE_ID_NFT_MAP).map((item) =>
+            boosterNFT.read.balanceOf([address, item])
+          )
+        );
+        console.log("boosterBalances: ", boosterBalances);
+        for (let i = 0; i < 7; i++) {
+          nfts.push({
+            ...ALL_NFTS[i + 4],
+            balance: Number(boosterBalances[i]),
+          });
+        }
+        const lynksBalances = await getLynksNFT(address);
+        console.log("lynksBalances: ", lynksBalances);
+        for (let i = 0; i < 4; i++) {
+          const nft = lynksBalances?.find((item) =>
+            item.name.includes(ALL_NFTS[i + 11].type!)
+          );
+          nfts.push({ ...ALL_NFTS[i + 11], balance: nft?.balance ?? 0 });
+        }
+        setAllNFTs(nfts);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setRefreshing(false);
       }
-      setAllNFTs(nfts);
-      setRefreshing(false);
-      //TODO set lynks balance
     })();
   }, [
     address,
@@ -746,7 +755,7 @@ export default function NFTCard() {
                   </p>
                 </div>
               )}
-              <div className="mt-6">
+              {/* <div className="mt-6">
                 {mintStatus === MintStatus.Success && (
                   <Button
                     className="w-full gradient-btn mb-6"
@@ -755,7 +764,7 @@ export default function NFTCard() {
                     Trade in Alienswap
                   </Button>
                 )}
-              </div>
+              </div> */}
             </TxResult>
           </ModalBody>
         </ModalContent>

@@ -442,7 +442,7 @@ export default function NovaCharacter() {
               <Button
                 onClick={handleMintNow}
                 isLoading={fetchLoading || mintLoading}
-                isDisabled={!upgradable}
+                isDisabled={!!nft && !upgradable}
                 className={classNames(
                   "w-full gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
                 )}

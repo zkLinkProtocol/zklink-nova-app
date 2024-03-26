@@ -346,7 +346,6 @@ const useNovaDrawNFT = () => {
         args: [LYNKS_NFT_CONTRACT, true],
       };
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
-      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
       const res = await publicClient?.waitForTransactionReceipt({
         hash,
       });
