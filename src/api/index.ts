@@ -354,3 +354,8 @@ export const getTradeMarkRank = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/tradeMark/balance/rank`, {
     params: { address },
   });
+
+export const getTopInviteAndRandom = (date?: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/referrer/daily/topInviteAndRandom`, {
+    params: { date },
+  });
