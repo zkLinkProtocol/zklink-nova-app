@@ -152,7 +152,7 @@ export default function NFTCard() {
   const [drawing, setDrawing] = useState(false);
   const [update, setUpdate] = useState(0);
   const [boxCount, setBoxCount] = useState(0);
-  const chainId = useChainId();
+  // const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const [mintStatus, setMintStatus] = useState<MintStatus | undefined>();
   const [failMessage, setFailMessage] = useState("");
@@ -169,7 +169,7 @@ export default function NFTCard() {
     novaETHBalance,
     getMysteryboxNFT,
   } = useNovaNFT();
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const [allNFTs, setAllNFTs] =
     useState<{ img: string; name: string; balance: number }[]>(ALL_NFTS);
   const [mintableCount, setMintableCount] = useState(0);
@@ -628,9 +628,8 @@ export default function NFTCard() {
                       isDisabled={boxCount === 0 || mintableCount > 0}
                     >
                       {isInvaidChain && "Switch Network"}
-                      {!isInvaidChain && opening
-                        ? "Opening"
-                        : `Open Box (${boxCount})`}
+                      {!isInvaidChain && opening && "Opening"}
+                      {!isInvaidChain && !opening && `Open Box (${boxCount})`}
                     </Button>
                     <Button
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
@@ -639,7 +638,8 @@ export default function NFTCard() {
                       isDisabled={mintableCount === 0}
                     >
                       {isInvaidChain && "Switch Network"}
-                      {!isInvaidChain && drawing ? "Minting" : "Mint Booster"}
+                      {!isInvaidChain && drawing && "Minting"}
+                      {!isInvaidChain && !drawing && "Mint Booster"}
                     </Button>
                   </div>
                 </div>
