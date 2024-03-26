@@ -4,7 +4,7 @@ import NFTLuckWinner from "./components/NFTLuckWinner";
 import styled from "styled-components";
 import { useState } from "react";
 import { BgBox, BgCoverImg, TableBoxs } from "@/styles/common";
-import { Tooltip as ReactTooltip } from "react-tooltip";
+
 const TabItem = styled.div`
   border-radius: 1rem;
   backdrop-filter: blur(15.800000190734863px);
@@ -31,44 +31,25 @@ export default function Leaderboard() {
   return (
     <BgBox>
       <BgCoverImg />
-      <div className="md:px-[10.44rem] md:mt-[3rem] min-h-[50rem] overflow-auto z-[10] px-[1rem] mt-[1rem]">
+      <div className="md:px-[10.44rem] md:mt-[3rem] min-h-[50rem] overflow-auto z-[10] px-[1rem] mt-[1rem] relative z-1">
         {/* Tab btns */}
-        <div className="flex items-center md:gap-[2rem] gap-[1rem]">
-          <TabItem
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap bg-slate-700 ${
-              tabsActive === 0 ? "gradient-btn" : ""
-            }`}
-            onClick={() => setTabsActive(0)}
-          >
-            Points Leaderboard
-          </TabItem>
-
-          {/* <Tooltip content="coming soon"> */}
-          <TabItem
-            data-tooltip-id="coming-soon"
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500 ${
-              tabsActive === 1 ? "gradient-btn " : ""
-            }`}
-            // onClick={() => setTabsActive(1)}
-          >
-            Referral Leaderboard
-          </TabItem>
-          <TabItem
-            data-tooltip-id="coming-soon"
-            className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] opacity-40 cursor-not-allowed text-nowrap bg-slate-700/40 text-slate-500 ${
-              tabsActive === 2 ? "gradient-btn" : ""
-            }`}
-          >
-            Mystery Box Winners
-          </TabItem>
+        <div className="flex items-center md:gap-[2rem] gap-[1re]">
+          {[
+            "Points Leaderboard",
+            "Referral Leaderboard",
+            "Mystery Box Winners",
+          ].map((item, index) => (
+            <TabItem
+              key={index}
+              className={`md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] cursor-pointer text-nowrap bg-slate-700 ${
+                tabsActive === index ? "gradient-btn" : ""
+              }`}
+              onClick={() => setTabsActive(index)}
+            >
+              {item}
+            </TabItem>
+          ))}
         </div>
-
-        <ReactTooltip
-          id="coming-soon"
-          place="top"
-          style={{ fontSize: "14px" }}
-          content="coming soon"
-        />
 
         {/* Content: tab views */}
         <TableBoxs className="mt-[2rem]">

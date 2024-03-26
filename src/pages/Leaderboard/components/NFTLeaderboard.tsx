@@ -1,5 +1,6 @@
 import { getTradeMarkRank } from "@/api";
 import {
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -8,14 +9,15 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/react";
-import { result } from "lodash";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 export default function NFTLeaderboard() {
+  const { address } = useAccount();
+
   const columns = [
     {
-      key: "id",
+      key: "rank",
       label: "Rank",
     },
     {
@@ -24,95 +26,98 @@ export default function NFTLeaderboard() {
     },
     {
       key: "nftP1",
-      label: "NFT_P_1",
+      label: "Chess Knight",
     },
     {
       key: "nftP2",
-      label: "NFT_P_2",
+      label: "Binary Code Matrix Cube",
     },
     {
       key: "nftP3",
-      label: "NFT_P_3",
+      label: "Oak Tree Roots",
     },
     {
       key: "nftP4",
-      label: "NFT_P_4",
+      label: "Magnifying Glass",
     },
     {
       key: "balance",
-      label: "SUM",
+      label: "Summary",
     },
   ];
-
-  //   const rows = [
-  //     {
-  //       key: "1",
-  //       name: "0x1234567...12345",
-  //       rank: 6400,
-  //       nftP1: 123,
-  //       nftP2: 123,
-  //       nftP3: 123,
-  //       nftP4: 123,
-  //       sum: 123456,
-  //     },
-  //     {
-  //       key: "2",
-  //       name: "0x1234567...12345",
-  //       rank: 1,
-  //       nftP1: 123,
-  //       nftP2: 123,
-  //       nftP3: 123,
-  //       nftP4: 123,
-  //       sum: 123456,
-  //     },
-  //     {
-  //       key: "3",
-  //       name: "0x1234567...12345",
-  //       rank: 2,
-  //       nftP1: 123,
-  //       nftP2: 123,
-  //       nftP3: 123,
-  //       nftP4: 123,
-  //       sum: 123456,
-  //     },
-  //     {
-  //       key: "4",
-  //       name: "0x1234567...12345",
-  //       rank: 3,
-  //       nftP1: 123,
-  //       nftP2: 123,
-  //       nftP3: 123,
-  //       nftP4: 123,
-  //       sum: 123456,
-  //     },
-  //   ];
 
   const [data, setData] = useState<
     {
       address: string;
-      id: number;
+      rank: number;
+      nftP1: number;
+      nftP2: number;
+      nftP3: number;
+      nftP4: number;
     }[]
   >([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { address } = useAccount();
+  const showAccount = (acc: any) => {
+    if (!acc) return;
+    return `${acc.substr(0, 6)}******${acc.substr(-4)}`;
+  };
+
   const getTradeMarkRankFunc = async () => {
     if (!address) return;
-    const { result } = await getTradeMarkRank(address);
+    setIsLoading(true);
 
-    console.log("getTradeMarkRankFunc", result);
-    if (result && result?.ranks && Array.isArray(result.ranks)) {
-      console.log("ranks", result.ranks);
+    try {
+      const { result } = await getTradeMarkRank(address);
+      console.log("getTradeMarkRankFunc", result);
 
-      const arr = result.ranks.map((item: any) => {
-        return {
-          ...item,
-          nftP1: item?.detailBalance[0] || 0,
-          nftP2: item?.detailBalance[1] || 0,
-          nftP3: item?.detailBalance[2] || 0,
-          nftP4: item?.detailBalance[3] || 0,
+      let arr = [];
+
+      if (result && result?.ranks && Array.isArray(result.ranks)) {
+        // console.log("ranks", result.ranks);
+
+        arr = result.ranks.map(
+          (
+            item: { address: string; detailBalance: number[] },
+            index: number
+          ) => {
+            return {
+              ...item,
+              rank: index + 1,
+              nftP1: Number(item?.detailBalance[0]) || 0,
+              nftP2: Number(item?.detailBalance[1]) || 0,
+              nftP3: Number(item?.detailBalance[2]) || 0,
+              nftP4: Number(item?.detailBalance[3]) || 0,
+            };
+          }
+        );
+      }
+
+      if (address && result && result?.selfBalance) {
+        const { selfBalance } = result;
+        const selfData = {
+          address: showAccount(address),
+          rank: 0,
+          nftP1: selfBalance[0],
+          nftP2: selfBalance[1],
+          nftP3: selfBalance[2],
+          nftP4: selfBalance[3],
+          balance: selfBalance?.reduce(
+            (prev: number, item: number) => prev + Number(item),
+            0
+          ),
         };
-      });
+
+        arr.unshift(selfData);
+      }
+
+      console.log("ranks", arr);
+
       setData(arr);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -132,9 +137,13 @@ export default function NFTLeaderboard() {
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={data}>
+        <TableBody
+          items={data}
+          isLoading={isLoading}
+          loadingContent={<Spinner label="Loading..." />}
+        >
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.rank}>
               {(columnKey) => (
                 <TableCell>{getKeyValue(item, columnKey)}</TableCell>
               )}
