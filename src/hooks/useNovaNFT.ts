@@ -128,48 +128,53 @@ const useNovaDrawNFT = () => {
 
   const getLynksNFT = useCallback(
     async (address: string) => {
-      if (!lynksNFT) return;
-      const balance = await lynksNFT.read.balanceOf([address]);
-      if (BigNumber.from(balance).eq(0)) {
-        return;
-      }
-
-      const tokenIds = await Promise.all(
-        new Array(Number(balance))
-          .fill(undefined)
-          .map((_, index) =>
-            lynksNFT.read.tokenOfOwnerByIndex([address, index])
-          )
-      );
-      console.log("tokenIds: ", tokenIds);
-      const uris = (await Promise.all(
-        new Array(tokenIds.length)
-          .fill(undefined)
-          .map((_, index) => lynksNFT.read.tokenURI([tokenIds[index]]))
-      )) as string[];
-      console.log("token uris: ", uris);
-
-      const nftRes = await Promise.all(
-        uris.map((item: string) =>
-          axios.get(
-            `${LYNKS_METADATA_PREFIX}/${item.substring(
-              item.lastIndexOf("/") + 1
-            )}`
-            // `/lynknft-test/${item.substring(item.lastIndexOf("/") + 1)}`
-          )
-        )
-      );
-      const nfts = nftRes.map((item) => item.data);
-      console.log("nfts: ", nfts);
-      const map: Record<string, { name: string; balance: number }> = {};
-      for (const nft of nfts) {
-        if (!map[nft.name]) {
-          map[nft.name] = { name: nft.name, balance: 1 };
-        } else {
-          map[nft.name].balance++;
+      if (!lynksNFT) return [];
+      try {
+        const balance = await lynksNFT.read.balanceOf([address]);
+        if (BigNumber.from(balance).eq(0)) {
+          return;
         }
+
+        const tokenIds = await Promise.all(
+          new Array(Number(balance))
+            .fill(undefined)
+            .map((_, index) =>
+              lynksNFT.read.tokenOfOwnerByIndex([address, index])
+            )
+        );
+        console.log("tokenIds: ", tokenIds);
+        const uris = (await Promise.all(
+          new Array(tokenIds.length)
+            .fill(undefined)
+            .map((_, index) => lynksNFT.read.tokenURI([tokenIds[index]]))
+        )) as string[];
+        console.log("token uris: ", uris);
+
+        const nftRes = await Promise.all(
+          uris.map((item: string) =>
+            axios.get(
+              `${LYNKS_METADATA_PREFIX}/${item.substring(
+                item.lastIndexOf("/") + 1
+              )}`
+              // `/lynknft-test/${item.substring(item.lastIndexOf("/") + 1)}`
+            )
+          )
+        );
+        const nfts = nftRes.map((item) => item.data);
+        console.log("nfts: ", nfts);
+        const map: Record<string, { name: string; balance: number }> = {};
+        for (const nft of nfts) {
+          if (!map[nft.name]) {
+            map[nft.name] = { name: nft.name, balance: 1 };
+          } else {
+            map[nft.name].balance++;
+          }
+        }
+        return Object.values(map);
+      } catch (e) {
+        console.log(e);
+        return [];
       }
-      return Object.values(map);
     },
     [lynksNFT]
   );
