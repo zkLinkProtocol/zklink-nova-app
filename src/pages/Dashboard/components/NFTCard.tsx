@@ -26,12 +26,24 @@ import toast from "react-hot-toast";
 import { addNovaChain, sleep } from "@/utils";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
 import { useMintStatus } from "@/hooks/useMintStatus";
+import classNames from "classnames";
 const NftBox = styled.div`
   .nft-left {
     flex: 6;
     padding: 24px;
     .nft-chip:nth-child(3n) {
       margin-right: 0;
+    }
+    .spin {
+      animation: spin-animation 1s linear infinite;
+    }
+    @keyframes spin-animation {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .nft-chip {
@@ -165,6 +177,7 @@ export default function NFTCard() {
   const [mintParams, setMintParams] = useState<MysteryboxMintParams>();
   const [drawPrizeId, setDrawPrizeId] = useState<number>();
   const { updateRefreshBalanceId, refreshBalanceId } = useMintStatus();
+  const [refreshing, setRefreshing] = useState(false);
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -225,6 +238,7 @@ export default function NFTCard() {
       if (!address || !trademarkNFT || !boosterNFT || !lynksNFT) {
         return;
       }
+      setRefreshing(true);
       const nfts = [];
       const trademarkBalances = await Promise.all(
         [1, 2, 3, 4].map((item) => trademarkNFT.read.balanceOf([address, item]))
@@ -251,6 +265,7 @@ export default function NFTCard() {
         nfts.push({ ...ALL_NFTS[i + 11], balance: nft?.balance ?? 0 });
       }
       setAllNFTs(nfts);
+      setRefreshing(false);
       //TODO set lynks balance
     })();
   }, [
@@ -432,7 +447,10 @@ export default function NFTCard() {
                 <img
                   src="/img/icon-refresh.svg"
                   alt=""
-                  className="cursor-pointer w-6 h-6 mr-6"
+                  className={classNames(
+                    "cursor-pointer w-6 h-6 mr-6",
+                    refreshing ? "spin" : ""
+                  )}
                   onClick={() => updateRefreshBalanceId()}
                 />
               </Tooltip>
