@@ -109,7 +109,7 @@ export default function NFTLuckWinner() {
   //   }, [top100, random100]);
 
   const getUtcTime = (ts: number) => {
-    return moment(ts).utc().format("DD/MM/YYYY hh:mm:ss");
+    return moment(ts).utc().format("MM/DD/YYYY hh:mm:ss");
   };
 
   const handlePrevDate = (ts: number) => {
