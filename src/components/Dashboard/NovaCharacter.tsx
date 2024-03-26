@@ -417,23 +417,18 @@ export default function NovaCharacter() {
                   With every three referrals, you'll have a chance to mint a
                   trademark NFT.
                 </p>
-                <a
-                  href={NFT_MARKET_URL}
-                  target="_blacnk"
-                  className="text-green mt-4"
-                >
-                  Buy from NFT marketplace
-                </a>
               </div>
             }
           >
-            <Button
-              className="gradient-btn flex-1 py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mr-4"
-              onClick={handleMintTrademark}
-              isDisabled={remainDrawCount === 0}
-            >
-              Mint trademark ({remainDrawCount})
-            </Button>
+            <div className="grow mr-4">
+              <Button
+                className="gradient-btn flex-1 py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
+                onClick={handleMintTrademark}
+                isDisabled={remainDrawCount === 0}
+              >
+                Mint trademark ({remainDrawCount})
+              </Button>
+            </div>
           </Tooltip>
           <Tooltip
             content={
@@ -441,38 +436,29 @@ export default function NovaCharacter() {
                 <p>
                   You will need to collect all 4 trademark NFTs to mint Lynks.
                 </p>
-                <a
-                  href={NFT_MARKET_URL}
-                  target="_blacnk"
-                  className="text-green mt-4"
-                >
-                  Buy from NFT marketplace
-                </a>
               </div>
             }
-            isOpen={showTooltip1}
           >
-            <Button
-              onClick={handleMintNow}
-              onMouseEnter={() => nft && setShowTooltip1(true)}
-              onMouseLeave={() => nft && setShowTooltip1(false)}
-              onTouchStart={() => nft && setShowTooltip1((prev) => !prev)}
-              isLoading={fetchLoading || mintLoading}
-              isDisabled={!upgradable}
-              className={classNames(
-                "gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
-              )}
-            >
-              <span>{nft ? "Upgrade" : "Mint SBT"}</span>
-              {nft ? (
-                <img
-                  src="/img/icon-info.svg"
-                  className="w-[0.875rem] h-[0.875rem]"
-                />
-              ) : (
-                ""
-              )}
-            </Button>
+            <div className="grow">
+              <Button
+                onClick={handleMintNow}
+                isLoading={fetchLoading || mintLoading}
+                isDisabled={!upgradable}
+                className={classNames(
+                  "w-full gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
+                )}
+              >
+                <span>{nft ? "Upgrade" : "Mint SBT"}</span>
+                {nft ? (
+                  <img
+                    src="/img/icon-info.svg"
+                    className="w-[0.875rem] h-[0.875rem]"
+                  />
+                ) : (
+                  ""
+                )}
+              </Button>
+            </div>
           </Tooltip>
         </div>
       </CardBox>

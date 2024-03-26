@@ -30,7 +30,6 @@ const NftBox = styled.div`
   .nft-left {
     flex: 6;
     padding: 24px;
-    margin-right: 25px;
     .nft-chip:nth-child(3n) {
       margin-right: 0;
     }
@@ -165,8 +164,7 @@ export default function NFTCard() {
   const [boxTokenIds, setBoxTokenIds] = useState<number[]>([]);
   const [mintParams, setMintParams] = useState<MysteryboxMintParams>();
   const [drawPrizeId, setDrawPrizeId] = useState<number>();
-  const [initied, setInitied] = useState(false);
-  const { refreshBalanceId } = useMintStatus();
+  const { updateRefreshBalanceId, refreshBalanceId } = useMintStatus();
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -202,11 +200,15 @@ export default function NFTCard() {
         console.log("getRemainMysteryboxOpenableCount: ", res);
         setMintableCount(res.result);
       });
-      openMysteryboxNFT(address).then((res) => {
-        const { tokenId, nonce, signature, expiry } = res.result;
-        setMintParams({ tokenId, nonce, signature, expiry });
-        setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
-      });
+      openMysteryboxNFT(address)
+        .then((res) => {
+          const { tokenId, nonce, signature, expiry } = res.result;
+          setMintParams({ tokenId, nonce, signature, expiry });
+          setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
+        })
+        .catch((error) => {
+          console.log(error); // has used up number
+        });
     }
   }, [address, getMysteryboxNFT, update]);
 
@@ -418,20 +420,29 @@ export default function NFTCard() {
             <div>
               <p className="nft-left-title">Nova NFTs</p>
               <p className="nft-left-sub-title">
-                Invite to earn more pieces and upgrade your Nova Char
+                Invite to earn more Trademark NFTs and Lynks
               </p>
             </div>
-            <Button
-              className="gradient-btn"
-              onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-            >
-              Buy
-            </Button>
+            <div className="flex items-center">
+              <Tooltip
+                content={
+                  "If your NFT aren't showing up on the list, simply click this button. "
+                }
+              >
+                <img
+                  src="/img/icon-refresh.svg"
+                  alt=""
+                  className="cursor-pointer w-6 h-6 mr-6"
+                  onClick={() => updateRefreshBalanceId()}
+                />
+              </Tooltip>
+              <Button className="gradient-btn">Buy</Button>
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
             {allNFTs.map((item, index) => (
               <div
-                className="nft-chip relative   w-[170px] "
+                className="nft-chip relative  w-[150px] md:w-[170px] "
                 key={index}
                 style={{ opacity: item.balance > 0 ? "100%" : "40%" }}
               >
@@ -450,7 +461,7 @@ export default function NFTCard() {
           </div>
         </CardBox>
 
-        <CardBox className="nft-right ml-10">
+        <CardBox className="nft-right mt-6 md:mt-0 md:ml-10">
           <div className="w-full flex justify-between items-center">
             <div>
               <div className=" flex items-center ">
@@ -462,7 +473,13 @@ export default function NFTCard() {
                         Everyday, top 100 referral and 100 random Parade
                         participant can receive a mystery box.
                       </p>
-                      <a href={""} target="_blacnk" className="text-green mt-4">
+                      <a
+                        href={
+                          "https://blog.zk.link/get-your-hands-on-zklinks-exclusive-nova-lynks-nft-collection-9f2c082f79fa"
+                        }
+                        target="_blacnk"
+                        className="text-green mt-4"
+                      >
                         Learn More
                       </a>
                     </div>
@@ -476,7 +493,7 @@ export default function NFTCard() {
                 </Tooltip>
               </div>
               <p className="nft-left-sub-title">
-                Invite more to earn Mystery Box!
+                Invite more to win Mystery Box!
               </p>
             </div>
             <Button
@@ -486,7 +503,7 @@ export default function NFTCard() {
               Buy
             </Button>
           </div>
-          <div className=" w-[384px] h-[300px] mb-8">
+          <div className=" md:w-[384px] md:h-[300px] mb-8">
             <img
               src="/img/img-mystery-box.png"
               className="h-[100%] mx-auto object-contain"
