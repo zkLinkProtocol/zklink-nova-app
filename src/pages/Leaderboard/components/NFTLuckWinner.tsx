@@ -12,9 +12,12 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 
+import moment from "moment";
+
 type TopInviteAndRandomRes = {
   address: string;
   invitenNumber: number;
+  createdAt: string;
 };
 
 type TopInviteAndRandom = TopInviteAndRandomRes & {
@@ -23,7 +26,10 @@ type TopInviteAndRandom = TopInviteAndRandomRes & {
 };
 
 export default function NFTLuckWinner() {
-  const [epochTime, setEpochTime] = useState("03/18/2024 UTC 10:00");
+  const [epochTime, setEpochTime] = useState(0);
+  const [lastEpochTime, setLastEpochTime] = useState(0);
+  const [dateParams, setDateParams] = useState("");
+
   const columns = [
     {
       key: "rank",
@@ -43,58 +49,19 @@ export default function NFTLuckWinner() {
     },
   ];
 
-  const rows = [
-    {
-      key: "1",
-      name: "0x1234567...12345",
-      rank: 6400,
-      nftP1: 123,
-      nftP2: 123,
-      nftP3: 123,
-      nftP4: 123,
-      sum: 123456,
-    },
-    {
-      key: "2",
-      name: "0x1234567...12345",
-      rank: 1,
-      nftP1: 123,
-      nftP2: 123,
-      nftP3: 123,
-      nftP4: 123,
-      sum: 123456,
-    },
-    {
-      key: "3",
-      name: "0x1234567...12345",
-      rank: 2,
-      nftP1: 123,
-      nftP2: 123,
-      nftP3: 123,
-      nftP4: 123,
-      sum: 123456,
-    },
-    {
-      key: "4",
-      name: "0x1234567...12345",
-      rank: 3,
-      nftP1: 123,
-      nftP2: 123,
-      nftP3: 123,
-      nftP4: 123,
-      sum: 123456,
-    },
-  ];
-
-  const [top100, setTop100] = useState<TopInviteAndRandom[]>([]);
-  const [random100, setRandom100] = useState<TopInviteAndRandom[]>([]);
+  const [inviteAndRandomList, setInviteAndRandomList] = useState<
+    TopInviteAndRandom[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getTopInviteAndRandomFunc = async () => {
+  const getTopInviteAndRandomFunc = async (date?: string) => {
     setIsLoading(true);
     try {
-      const { result } = await getTopInviteAndRandom();
+      const { result } = await getTopInviteAndRandom(date);
       console.log("getTopInviteAndRandom", result);
+
+      let top100Arr: TopInviteAndRandom[] = [];
+      let random100Arr: TopInviteAndRandom[] = [];
 
       if (result && result?.top100 && Array.isArray(result.top100)) {
         const { top100 } = result;
@@ -106,7 +73,7 @@ export default function NFTLuckWinner() {
             rank: index + 1,
           })
         );
-        setTop100(arr);
+        top100Arr = arr;
       }
 
       if (result && result?.top100 && Array.isArray(result.random100)) {
@@ -119,8 +86,17 @@ export default function NFTLuckWinner() {
             rank: index + 1,
           })
         );
-        setRandom100(arr);
+        random100Arr = arr;
       }
+
+      const all = top100Arr.concat(random100Arr);
+      if (!date && all.length > 0) {
+        const ts = new Date(all[0].createdAt).getTime();
+        setEpochTime(ts);
+        setLastEpochTime(ts);
+      }
+
+      setInviteAndRandomList(all);
     } catch (error) {
       console.error(error);
     } finally {
@@ -128,9 +104,54 @@ export default function NFTLuckWinner() {
     }
   };
 
-  const inviteAndRandomList = useMemo(() => {
-    return top100.concat(random100);
-  }, [top100, random100]);
+  //   const inviteAndRandomList = useMemo(() => {
+  //     return top100.concat(random100);
+  //   }, [top100, random100]);
+
+  const getUtcTime = (ts: number) => {
+    return moment(ts).utc().format("DD/MM/YYYY hh:mm:ss");
+  };
+
+  const handlePrevDate = (ts: number) => {
+    if (!ts) return;
+    const prevTs = ts - 86400000;
+    const prevDate = moment(prevTs).format("YYYY-MM-DD");
+
+    setEpochTime(prevTs);
+    setDateParams(prevDate);
+    console.log(prevDate);
+
+    getTopInviteAndRandomFunc(prevDate);
+  };
+
+  const isLast = useMemo(() => {
+    if (epochTime >= lastEpochTime) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [epochTime, lastEpochTime]);
+
+  const handleNextDate = (ts: number) => {
+    if (!ts || isLast) return;
+    const prevTs = ts + 86400000;
+    const prevDate = moment(prevTs).format("YYYY-MM-DD");
+
+    setEpochTime(prevTs);
+    setDateParams(prevDate);
+    console.log(prevDate);
+
+    getTopInviteAndRandomFunc(prevDate);
+  };
+
+  //   useEffect(() => {
+  //     if (inviteAndRandomList && inviteAndRandomList.length > 0) {
+  //       const timestr = new Date(inviteAndRandomList[0].createdAt).getTime();
+  //       setEpochTime(timestr);
+  //     } else {
+  //       setEpochTime(0);
+  //     }
+  //   }, [inviteAndRandomList, epochTime]);
 
   useEffect(() => {
     getTopInviteAndRandomFunc();
@@ -138,19 +159,33 @@ export default function NFTLuckWinner() {
 
   return (
     <div className="relative z-1">
-      <div className="flex justify-end items-center py-4 px-2">
-        <span className="text-[16px]">Epoch</span>
+      {Boolean(epochTime) && (
+        <div className="flex justify-end items-center py-4 px-2">
+          <span className="text-[16px]">Epoch</span>
 
-        <div className="flex items-center gap-2 text-[16px]">
-          <span className="px-4 cursor-pointer">
-            <AiFillCaretLeft />
-          </span>
-          <span>from {epochTime}</span>
-          <span className="px-4 cursor-pointer">
-            <AiFillCaretRight />
-          </span>
+          <div className="flex items-center gap-2 text-[16px]">
+            <span
+              className="px-4 cursor-pointer"
+              onClick={() => handlePrevDate(epochTime)}
+            >
+              <AiFillCaretLeft />
+            </span>
+            <span>
+              from {getUtcTime(epochTime - 86400000)} UTC to{" "}
+              {getUtcTime(epochTime)} UTC
+            </span>
+            <span
+              className={`px-4 cursor-pointer ${
+                isLast ? "cursor-not-allowed opacity-40" : ""
+              }`}
+              onClick={() => handleNextDate(epochTime)}
+            >
+              <AiFillCaretRight />
+            </span>
+          </div>
         </div>
-      </div>
+      )}
+
       <Table
         removeWrapper
         className="table min-h-[30rem]"
@@ -166,13 +201,14 @@ export default function NFTLuckWinner() {
           isLoading={isLoading}
           loadingContent={<Spinner label="Loading..." />}
         >
-          {(item) => (
-            <TableRow key={item.rank}>
-              {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-              )}
+          {inviteAndRandomList.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell>{index + 1}</TableCell>
+              <TableCell>{item.address}</TableCell>
+              <TableCell>{item.invitenNumber}</TableCell>
+              <TableCell>{item.rewardType}</TableCell>
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
     </div>
