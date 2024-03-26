@@ -625,7 +625,9 @@ export default function NFTCard() {
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onOpenSubmit}
                       isLoading={opening}
-                      isDisabled={boxCount === 0 || mintableCount > 0}
+                      isDisabled={
+                        !isInvaidChain && (boxCount === 0 || mintableCount > 0)
+                      }
                     >
                       {isInvaidChain && "Switch Network"}
                       {!isInvaidChain && opening && "Opening"}
@@ -635,7 +637,7 @@ export default function NFTCard() {
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onDrawMintSubmit}
                       isLoading={drawing}
-                      isDisabled={mintableCount === 0}
+                      isDisabled={!isInvaidChain && mintableCount === 0}
                     >
                       {isInvaidChain && "Switch Network"}
                       {!isInvaidChain && drawing && "Minting"}
