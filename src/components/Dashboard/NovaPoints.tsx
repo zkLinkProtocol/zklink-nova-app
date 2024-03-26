@@ -34,7 +34,8 @@ export interface OtherPointsItem {
   eigenlayerName: string;
   pointsValue: number;
   eigenlayerValue: number;
-  tooltip?: string;
+  eigenlayerTips?: string;
+  pointsTips?: string;
 }
 
 export const OtherPointsItem: React.FC<OtherPointsItem> = ({
@@ -43,7 +44,8 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
   pointsValue,
   eigenlayerName,
   eigenlayerValue,
-  tooltip,
+  pointsTips,
+  eigenlayerTips,
 }) => {
   return (
     <div>
@@ -51,7 +53,15 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
         <div className="flex items-center gap-2">
           <img src={icon} className="w-[1.5rem]" />
           <span className="font-[700]">{pointsName}</span>
+          {pointsTips && (
+            <img
+              data-tooltip-id={`${pointsName.trim()}`}
+              src="/img/icon-info.svg"
+              className="w-[0.875rem] h-[0.875rem] opacity-40"
+            />
+          )}
         </div>
+
         <span>{formatNumberWithUnit(pointsValue)}</span>
       </div>
 
@@ -61,7 +71,7 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
             Eigenlayer Points ({eigenlayerName})
           </span>
 
-          {tooltip && (
+          {eigenlayerTips && (
             <img
               data-tooltip-id={`${eigenlayerName.trim()}`}
               src="/img/icon-info.svg"
@@ -72,7 +82,20 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
         <span>{formatNumberWithUnit(eigenlayerValue)}</span>
       </div>
 
-      {tooltip && (
+      {pointsTips && (
+        <ReactTooltip
+          id={`${pointsName.trim()}`}
+          place="top"
+          style={{
+            maxWidth: "20rem",
+            fontSize: "14px",
+            borderRadius: "16px",
+          }}
+          content={pointsTips}
+        />
+      )}
+
+      {eigenlayerTips && (
         <ReactTooltip
           id={`${eigenlayerName.trim()}`}
           place="top"
@@ -81,7 +104,7 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
             fontSize: "14px",
             borderRadius: "16px",
           }}
-          content={tooltip}
+          content={eigenlayerTips}
         />
       )}
     </div>
@@ -110,7 +133,7 @@ export default function NovaPoints(props: INovaPointsProps) {
         eigenlayerName: "Puffer",
         pointsValue: pufferPoints,
         eigenlayerValue: pufferEigenlayerPoints,
-        tooltip:
+        eigenlayerTips:
           "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points.",
       },
       {
@@ -119,13 +142,16 @@ export default function NovaPoints(props: INovaPointsProps) {
         eigenlayerName: "Renzo",
         pointsValue: renzoPoints,
         eigenlayerValue: renzoEigenLayerPoints,
+        pointsTips:
+          "Your ezPoints will be visible one hour after you deposit your ezETH.",
       },
+      // TODO: get EigenPie (points & eigenlayer points) num
       {
         icon: "/img/icon-eigenpie.png",
         pointsName: "EigenPie Points",
         eigenlayerName: "EigenPie",
-        pointsValue: 0,
-        eigenlayerValue: 0,
+        pointsValue: 0, // TODO
+        eigenlayerValue: 0, // TODO
       },
     ];
     if (isHidePoints) {
@@ -273,7 +299,8 @@ export default function NovaPoints(props: INovaPointsProps) {
             eigenlayerName={item.eigenlayerName}
             pointsValue={item.pointsValue}
             eigenlayerValue={item.eigenlayerValue}
-            tooltip={item.tooltip}
+            pointsTips={item?.pointsTips}
+            eigenlayerTips={item?.eigenlayerTips}
           />
         ))}
       </CardBox>
