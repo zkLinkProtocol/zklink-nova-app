@@ -135,7 +135,7 @@ const useNovaDrawNFT = () => {
       }
 
       const tokenIds = await Promise.all(
-        new Array(balance)
+        new Array(Number(balance))
           .fill(undefined)
           .map((_, index) =>
             lynksNFT.read.tokenOfOwnerByIndex([address, index])

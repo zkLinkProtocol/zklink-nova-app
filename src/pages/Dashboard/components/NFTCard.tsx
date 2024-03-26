@@ -178,6 +178,8 @@ export default function NFTCard() {
   const [drawPrizeId, setDrawPrizeId] = useState<number>();
   const { updateRefreshBalanceId, refreshBalanceId } = useMintStatus();
   const [refreshing, setRefreshing] = useState(false);
+  const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
+
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -304,6 +306,10 @@ export default function NFTCard() {
       await sendMysteryMintTx(res.result);
       setUpdate((update) => update + 1);
       setMintStatus(MintStatus.Success);
+      setMintResult({
+        name: "Mystery Box",
+        img: "/img/img-mystery-box.png",
+      });
     } catch (e) {
       setMintStatus(MintStatus.Failed);
       console.error(e);
@@ -342,13 +348,16 @@ export default function NFTCard() {
         setMintableCount(res.result);
       });
       setUpdate(() => update + 1);
+      const boxTokenIdRes = await getMysteryboxNFT(address);
+      setBoxTokenIds(boxTokenIdRes ?? []);
+      setBoxCount(boxTokenIdRes?.length ?? 0);
       setOpening(false);
     } catch (e) {
       console.error(e);
     } finally {
       setOpening(false);
     }
-  }, [address, boxTokenIds, mysteryBoxNFT, update]);
+  }, [address, boxTokenIds, getMysteryboxNFT, mysteryBoxNFT, update]);
 
   /**
    * Open process:
@@ -402,6 +411,24 @@ export default function NFTCard() {
       setMintStatus(MintStatus.Success);
       setUpdate((update) => update + 1);
       setDrawPrizeId(-1);
+      let resultName = "",
+        resultImg = "";
+      if (mintBoxModal.isOpen) {
+        resultName = "Mystery Box";
+        resultImg = "/img/img-mystery-box.png";
+      } else if (openBoxModal.isOpen && params?.tokenId) {
+        resultName = "Point Booster";
+        resultImg = `/img/img-point-booster-${
+          PRIZE_ID_NFT_MAP[params.tokenId]
+        }.png`;
+      } else if (openBoxModal.isOpen && !params?.tokenId) {
+        resultName = "Lynks NFT";
+        resultImg = lynksNFTImg ?? "";
+      }
+      setMintResult({
+        name: resultName,
+        img: resultImg,
+      });
     } catch (e) {
       console.error(e);
       setMintStatus(MintStatus.Failed);
@@ -419,10 +446,13 @@ export default function NFTCard() {
     address,
     drawing,
     isInvaidChain,
+    lynksNFTImg,
+    mintBoxModal.isOpen,
     mintParams,
     mintResultModal,
     mintStatus,
     novaETHBalance,
+    openBoxModal.isOpen,
     sendMysteryOpenMintTx,
     switchChain,
   ]);
@@ -706,25 +736,13 @@ export default function NFTCard() {
                 <div className="flex flex-col items-center">
                   <p className="text-[#C0C0C0]">You have successfully minted</p>
                   <img
-                    src={
-                      mintBoxModal.isOpen
-                        ? "/img/img-mystery-box.png"
-                        : mintParams?.tokenId
-                        ? `/img/img-point-booster-${
-                            PRIZE_ID_NFT_MAP[mintParams.tokenId]
-                          }.png`
-                        : lynksNFTImg
-                    }
+                    src={mintResult?.img}
                     alt=""
                     className="w-[10rem] h-[10rem] rounded-xl my-4 bg-[#3C4550]"
                   />
 
                   <p className="text-[24px] font-inter font-normal">
-                    {mintBoxModal.isOpen && "Mystery Box"}
-                    {openBoxModal.isOpen &&
-                      mintParams?.tokenId &&
-                      "Point Booster"}
-                    {openBoxModal.isOpen && "Lynks NFT"}
+                    {mintResult?.name}
                   </p>
                 </div>
               )}
