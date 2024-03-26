@@ -186,7 +186,7 @@ export default function NovaCharacter() {
   }, [drawModal, remainDrawCount]);
 
   const handleDrawAndMint = useCallback(async () => {
-    if (!address || !trademarkNFT || remainDrawCount === 0) return;
+    if (!address || remainDrawCount === 0) return;
     if (isInvaidChain) {
       switchChain(
         { chainId: NOVA_CHAIN_ID },
@@ -269,7 +269,6 @@ export default function NovaCharacter() {
     switchChain,
     trademarkMintModal,
     trademarkMintParams,
-    trademarkNFT,
     updateRefreshBalanceId,
   ]);
 

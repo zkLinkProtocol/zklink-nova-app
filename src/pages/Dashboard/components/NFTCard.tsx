@@ -530,9 +530,9 @@ export default function NFTCard() {
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onOpen}
-            disabled={boxCount === 0}
+            // disabled={mintableCount === 0}
           >
-            Open Your Box {boxCount > 0 ? `(${boxCount})` : ""}
+            Open Your Box
           </Button>
           <Button
             className="gradient-btn mb-2 w-full"
@@ -721,9 +721,10 @@ export default function NFTCard() {
 
                   <p className="text-[24px] font-inter font-normal">
                     {mintBoxModal.isOpen && "Mystery Box"}
-                    {openBoxModal.isOpen && mintParams?.tokenId
-                      ? "Point Booster"
-                      : "Lynks NFT"}
+                    {openBoxModal.isOpen &&
+                      mintParams?.tokenId &&
+                      "Point Booster"}
+                    {openBoxModal.isOpen && "Lynks NFT"}
                   </p>
                 </div>
               )}
