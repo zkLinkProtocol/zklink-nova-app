@@ -133,6 +133,8 @@ export default function NovaPoints(props: INovaPointsProps) {
         eigenlayerName: "Puffer",
         pointsValue: pufferPoints,
         eigenlayerValue: pufferEigenlayerPoints,
+        pointsTips:
+          "Your Puffer Points will be visible one hour after you deposit your pufETH.",
         eigenlayerTips:
           "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points.",
       },
