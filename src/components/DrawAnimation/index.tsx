@@ -85,7 +85,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   };
 
   useEffect(() => {
-    if (targetImageIndex) {
+    if (targetImageIndex !== undefined) {
       setCurrentImageIndex(targetImageIndex);
     } else {
       setCurrentImageIndex(undefined);

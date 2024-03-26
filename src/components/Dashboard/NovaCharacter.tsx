@@ -84,8 +84,8 @@ export default function NovaCharacter() {
   const drawModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
   const upgradeModal = useDisclosure();
-  const { address } = useAccount();
-  const chainId = useChainId();
+  const { address, chainId } = useAccount();
+  // const chainId = useChainId({ config });
   const { switchChain } = useSwitchChain();
   const {
     trademarkNFT,

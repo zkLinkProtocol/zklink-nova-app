@@ -94,7 +94,7 @@ export const useTokenBalanceList = () => {
           );
           tokens.push({
             ...token,
-            multiplier: findClosestMultiplier(token.multipliers),
+            multiplier: findClosestMultiplier(token.multipliers ?? []),
             address: item.l1Address,
             networkKey,
             networkName: item.chain,
