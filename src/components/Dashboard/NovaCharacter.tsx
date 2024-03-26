@@ -597,6 +597,13 @@ export default function NovaCharacter() {
                   <p className="text-[#C0C0C0] font-normal text-lg">
                     Please sign the transaction in your wallet.
                   </p>
+                  {isApproving && (
+                    <p className="text-[#C0C0C0] font-normal text-lg">
+                      If you receive a warning about approving all your NFTs,
+                      please don't panic. The Lynks contract requires approval
+                      to burn your trademark NFTs in order to mint Lynks.
+                    </p>
+                  )}
                 </div>
               )}
               {trademarkMintStatus === MintStatus.Failed && (
