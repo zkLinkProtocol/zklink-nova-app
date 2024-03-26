@@ -29,7 +29,8 @@ import { useMintStatus } from "@/hooks/useMintStatus";
 import classNames from "classnames";
 const NftBox = styled.div`
   .nft-left {
-    flex: 6;
+    /* flex: 6;
+    */
     padding: 24px;
     .nft-chip:nth-child(3n) {
       margin-right: 0;
@@ -469,7 +470,7 @@ export default function NFTCard() {
   return (
     <>
       <NftBox className="flex justify-between flex-wrap rounded-lg mt-8">
-        <CardBox className="nft-left">
+        <CardBox className="nft-left grow mb-5">
           <div className="flex justify-between">
             <div>
               <p className="nft-left-title">Nova NFTs</p>
@@ -518,7 +519,7 @@ export default function NFTCard() {
           </div>
         </CardBox>
 
-        <CardBox className="nft-right mt-6 md:mt-0 md:ml-10">
+        <CardBox className="nft-right mt-6 mb-5 md:mt-0 md:ml-10">
           <div className="w-full flex justify-between items-center">
             <div>
               <div className=" flex items-center ">
