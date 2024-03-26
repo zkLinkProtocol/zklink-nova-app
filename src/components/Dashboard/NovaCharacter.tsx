@@ -507,6 +507,7 @@ export default function NovaCharacter() {
         </ModalContent>
       </Modal>
       <Modal
+        isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
         size="xl"
         isOpen={drawModal.isOpen}
@@ -561,6 +562,7 @@ export default function NovaCharacter() {
       </Modal>
 
       <Modal
+        isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         isOpen={trademarkMintModal.isOpen}

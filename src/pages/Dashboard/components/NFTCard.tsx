@@ -585,6 +585,7 @@ export default function NFTCard() {
       </NftBox>
 
       <Modal
+        isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
         size="xl"
         isOpen={openBoxModal.isOpen}
@@ -650,6 +651,7 @@ export default function NFTCard() {
         </ModalContent>
       </Modal>
       <Modal
+        isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
         size="md"
         isOpen={mintBoxModal.isOpen}
@@ -695,6 +697,7 @@ export default function NFTCard() {
       </Modal>
 
       <Modal
+        isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
         isOpen={mintResultModal.isOpen}
