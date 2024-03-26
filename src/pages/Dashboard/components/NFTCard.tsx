@@ -567,17 +567,17 @@ export default function NFTCard() {
           </div>
           <Button
             className="gradient-btn mb-2 w-full"
-            onClick={onOpen}
-            // disabled={mintableCount === 0}
-          >
-            Open Your Box
-          </Button>
-          <Button
-            className="gradient-btn mb-2 w-full"
             onClick={onMint}
             disabled={remainMintCount === 0}
           >
             Mint Your Box {remainMintCount > 0 ? `(${remainMintCount})` : ""}
+          </Button>
+          <Button
+            className="gradient-btn mb-2 w-full"
+            onClick={onOpen}
+            // disabled={mintableCount === 0}
+          >
+            Open Your Box
           </Button>
         </CardBox>
       </NftBox>
