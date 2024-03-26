@@ -124,7 +124,7 @@ export default function NovaCharacter() {
       getRemainDrawCount(address).then((res) => {
         console.log("remain draw count: ", res);
         const { remainNumber, tokenId } = res.result;
-        tokenId && setDrawedNftId(Number(tokenId) - 1);
+        tokenId && setDrawedNftId(Number(tokenId));
         setRemainDrawCount(remainNumber);
       });
     }
@@ -205,7 +205,7 @@ export default function NovaCharacter() {
     }
 
     // 5 - 1 = 4, 5 means no prize. Draw again
-    if (!drawedNftId || drawedNftId === 4) {
+    if (!drawedNftId || drawedNftId === 5) {
       setDrawing(true);
       const res = await drawTrademarkNFT(address);
       if (res && res.result) {
@@ -213,7 +213,7 @@ export default function NovaCharacter() {
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
         await drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
         // await sleep(2000);
-        setDrawedNftId(Number(tokenId) - 1);
+        setDrawedNftId(Number(tokenId));
         if (tokenId === 5) {
           // 5 means no prize
           setUpdate((update) => update + 1);
@@ -519,7 +519,7 @@ export default function NovaCharacter() {
           <DrawAnimation
             type="Trademark"
             ref={drawRef}
-            targetImageIndex={drawedNftId}
+            targetImageIndex={drawedNftId ? drawedNftId - 1 : undefined}
             onDrawEnd={() => {
               setDrawing(false);
             }}
@@ -540,11 +540,11 @@ export default function NovaCharacter() {
             <span>
               {isInvaidChain && "Switch to Nova network to mint"}
               {!isInvaidChain &&
-                (!drawedNftId || drawedNftId === 4 || drawing) &&
+                (!drawedNftId || drawedNftId === 5 || drawing) &&
                 `Draw & Mint ( ${remainDrawCount} )`}
               {!isInvaidChain &&
                 !!drawedNftId &&
-                drawedNftId !== 4 &&
+                drawedNftId !== 5 &&
                 !drawing &&
                 "Mint"}
             </span>
