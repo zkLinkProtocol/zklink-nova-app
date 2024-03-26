@@ -54,6 +54,7 @@ export default function NFTLeaderboard() {
       nftP2: number;
       nftP3: number;
       nftP4: number;
+      balance: number;
     }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,19 +94,22 @@ export default function NFTLeaderboard() {
         );
       }
 
-      if (address && result && result?.selfBalance) {
+      if (address) {
         const { selfBalance } = result;
         const selfData = {
-          address: showAccount(address),
-          rank: 0,
-          nftP1: selfBalance[0],
-          nftP2: selfBalance[1],
-          nftP3: selfBalance[2],
-          nftP4: selfBalance[3],
-          balance: selfBalance?.reduce(
-            (prev: number, item: number) => prev + Number(item),
-            0
-          ),
+          address: address,
+          rank: result?.selfRank,
+          nftP1: Number(selfBalance[0]) || 0,
+          nftP2: Number(selfBalance[1]) || 0,
+          nftP3: Number(selfBalance[2]) || 0,
+          nftP4: Number(selfBalance[3]) || 0,
+          balance:
+            Number(
+              selfBalance?.reduce(
+                (prev: number, item: number) => prev + Number(item),
+                0
+              )
+            ) || 0,
         };
 
         arr.unshift(selfData);
@@ -142,13 +146,42 @@ export default function NFTLeaderboard() {
           isLoading={isLoading}
           loadingContent={<Spinner label="Loading..." />}
         >
-          {(item) => (
+          {data.map((item, index) =>
+            index === 0 && address === item.address ? (
+              <TableRow
+                key={index}
+                className="self-data border-b-1 border-slate-600"
+              >
+                <TableCell>{item.rank}</TableCell>
+                <TableCell>
+                  {showAccount(item.address)}{" "}
+                  <span className="ml-[0.5rem]">(Your Address)</span>
+                </TableCell>
+                <TableCell>{item.nftP1}</TableCell>
+                <TableCell>{item.nftP2}</TableCell>
+                <TableCell>{item.nftP3}</TableCell>
+                <TableCell>{item.nftP4}</TableCell>
+                <TableCell>{item.balance}</TableCell>
+              </TableRow>
+            ) : (
+              <TableRow key={index}>
+                <TableCell>{item.rank}</TableCell>
+                <TableCell>{item.address}</TableCell>
+                <TableCell>{item.nftP1}</TableCell>
+                <TableCell>{item.nftP2}</TableCell>
+                <TableCell>{item.nftP3}</TableCell>
+                <TableCell>{item.nftP4}</TableCell>
+                <TableCell>{item.balance}</TableCell>
+              </TableRow>
+            )
+          )}
+          {/* {(item) => (
             <TableRow key={item.rank}>
               {(columnKey) => (
                 <TableCell>{getKeyValue(item, columnKey)}</TableCell>
               )}
             </TableRow>
-          )}
+          )} */}
         </TableBody>
       </Table>
     </>
