@@ -60,7 +60,7 @@ export const IS_MAINNET = nodeType === "nexus";
 
 export const TWEET_SHARE_TEXT = "ZkLink Nova Campaign blablablablabla";
 
-export const NFT_MARKET_URL = "";
+export const NFT_MARKET_URL = "https://alienswap.xyz/";
 
 export const enum MintStatus {
   Minting = "Minting",
