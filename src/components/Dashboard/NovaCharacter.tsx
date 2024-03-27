@@ -647,12 +647,17 @@ export default function NovaCharacter() {
               )}
               <div className="mt-6">
                 {trademarkMintStatus === MintStatus.Success && (
-                  <Button
-                    className="w-full gradient-btn"
-                    onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-                  >
-                    Trade in Alienswap
-                  </Button>
+                  <Tooltip content="Comming Soon">
+                    <span>
+                      <Button
+                        className="w-full gradient-btn"
+                        onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+                        isDisabled={true}
+                      >
+                        Trade in Alienswap
+                      </Button>
+                    </span>
+                  </Tooltip>
                 )}
                 {/* <Button
                   className="w-full default-btn"

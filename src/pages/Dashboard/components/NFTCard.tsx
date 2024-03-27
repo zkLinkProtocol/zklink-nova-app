@@ -492,7 +492,17 @@ export default function NFTCard() {
                   onClick={() => updateRefreshBalanceId()}
                 />
               </Tooltip>
-              <Button className="gradient-btn">Buy</Button>
+              <Tooltip content="Comming Soon">
+                <span>
+                  <Button
+                    className="gradient-btn"
+                    onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+                    isDisabled={true}
+                  >
+                    Buy
+                  </Button>
+                </span>
+              </Tooltip>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
@@ -553,12 +563,17 @@ export default function NFTCard() {
                 Invite more to win Mystery Box!
               </p>
             </div>
-            <Button
-              className="gradient-btn"
-              onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-            >
-              Buy
-            </Button>
+            <Tooltip content="Comming Soon">
+              <span>
+                <Button
+                  className="gradient-btn"
+                  onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+                  isDisabled={true}
+                >
+                  Buy
+                </Button>{" "}
+              </span>
+            </Tooltip>
           </div>
           <div className=" md:w-[384px] md:h-[300px] mb-8">
             <img
