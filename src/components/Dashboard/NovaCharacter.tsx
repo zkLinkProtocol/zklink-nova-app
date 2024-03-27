@@ -550,6 +550,12 @@ export default function NovaCharacter() {
                 "Mint"}
             </span>
           </Button>
+          <Button
+            className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
+            onClick={() => mintModal.onClose()}
+          >
+            Close
+          </Button>
           {/* <Button
             onClick={() => window.open(NFT_MARKET_URL, "_blank")}
             isDisabled={!isInvaidChain && novaBalance === 0}
