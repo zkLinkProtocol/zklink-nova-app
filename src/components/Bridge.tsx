@@ -226,6 +226,12 @@ export const TokenYieldBox = styled.div`
   & .token-yield-6 {
     background: linear-gradient(90deg, #3e9d8f -0.39%, #205049 99.76%);
   }
+  & .token-yield-7 {
+    background: linear-gradient(90deg, #2e2758 -0.39%, #1e1839 99.76%);
+  }
+  & .token-yield-8 {
+    background: linear-gradient(90deg, #075a5a -0.39%, #000404 99.76%);
+  }
 `;
 
 const LoyaltyBoostBox = styled.div`
@@ -1349,9 +1355,15 @@ export default function Bridge(props: IBridgeComponentProps) {
                       )}
                       {(item.symbol === "Stone" ||
                         item.symbol === "wUSDm" ||
-                        item.symbol === "Manta" ||
-                        item.symbol === "rsETH" ||
-                        item.symbol === "mstETH" ||
+                        item.symbol === "Manta") && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
+                          <span className={`token-yield token-yield-6`}>
+                            Extra Nova
+                          </span>
+                        </TokenYieldBox>
+                      )}
+
+                      {(item.symbol === "mstETH" ||
                         item.symbol === "mswETH" ||
                         item.symbol === "mmETH" ||
                         item.symbol === "mwBETH") && (
@@ -1359,12 +1371,23 @@ export default function Bridge(props: IBridgeComponentProps) {
                           <span className={`token-yield token-yield-6`}>
                             Extra Nova
                           </span>
-                          {/* <span className={`token-yield token-yield-5`}>
-                          EL Points
-                        </span>
-                        <span className={`token-yield token-yield-1`}>
-                          EigenLayer Points
-                        </span> */}
+                          <span className={`token-yield token-yield-1`}>
+                            EL Points
+                          </span>
+                          <span className={`token-yield token-yield-7`}>
+                            Eigenpie Points
+                          </span>
+                        </TokenYieldBox>
+                      )}
+
+                      {item.symbol === "rsETH" && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-8`}>
+                            Kelp Miles
+                          </span>
                         </TokenYieldBox>
                       )}
                     </div>
@@ -1392,9 +1415,15 @@ export default function Bridge(props: IBridgeComponentProps) {
 
                     {(item.symbol === "Stone" ||
                       item.symbol === "wUSDm" ||
-                      item.symbol === "Manta" ||
-                      item.symbol === "rsETH" ||
-                      item.symbol === "mstETH" ||
+                      item.symbol === "Manta") && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-6`}>
+                          Extra Nova
+                        </span>
+                      </TokenYieldBox>
+                    )}
+
+                    {(item.symbol === "mstETH" ||
                       item.symbol === "mswETH" ||
                       item.symbol === "mmETH" ||
                       item.symbol === "mwBETH") && (
@@ -1402,12 +1431,23 @@ export default function Bridge(props: IBridgeComponentProps) {
                         <span className={`token-yield token-yield-6`}>
                           Extra Nova
                         </span>
-                        {/* <span className={`token-yield token-yield-5`}>
-                          EL Points
-                        </span>
                         <span className={`token-yield token-yield-1`}>
                           EigenLayer Points
-                        </span> */}
+                        </span>
+                        <span className={`token-yield token-yield-7`}>
+                          Eigenpie Points
+                        </span>
+                      </TokenYieldBox>
+                    )}
+
+                    {item.symbol === "rsETH" && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span>
+                        <span className={`token-yield token-yield-8`}>
+                          Kelp Miles
+                        </span>
                       </TokenYieldBox>
                     )}
                   </div>

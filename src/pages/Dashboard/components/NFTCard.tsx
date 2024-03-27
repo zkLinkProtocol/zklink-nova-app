@@ -10,7 +10,12 @@ import {
 } from "@nextui-org/react";
 import styled from "styled-components";
 import { CardBox } from "@/styles/common";
-import { NFT_MARKET_URL, NOVA_CHAIN_ID, MintStatus } from "@/constants";
+import {
+  TRADEMARK_NFT_MARKET_URL,
+  MYSTERYBOX_NFT_MARKET_URL,
+  NOVA_CHAIN_ID,
+  MintStatus,
+} from "@/constants";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import DrawAnimation from "@/components/DrawAnimation";
 import useSBTNFT from "@/hooks/useNFT";
@@ -492,17 +497,12 @@ export default function NFTCard() {
                   onClick={() => updateRefreshBalanceId()}
                 />
               </Tooltip>
-              <Tooltip content="Comming Soon">
-                <span>
-                  <Button
-                    className="gradient-btn"
-                    onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-                    isDisabled={true}
-                  >
-                    Buy
-                  </Button>
-                </span>
-              </Tooltip>
+              <Button
+                className="gradient-btn"
+                onClick={() => window.open(TRADEMARK_NFT_MARKET_URL, "_blank")}
+              >
+                Buy
+              </Button>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
@@ -567,7 +567,9 @@ export default function NFTCard() {
               <span>
                 <Button
                   className="gradient-btn"
-                  onClick={() => window.open(NFT_MARKET_URL, "_blank")}
+                  onClick={() =>
+                    window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
+                  }
                   isDisabled={true}
                 >
                   Buy
@@ -777,16 +779,6 @@ export default function NFTCard() {
                   </p>
                 </div>
               )}
-              {/* <div className="mt-6">
-                {mintStatus === MintStatus.Success && (
-                  <Button
-                    className="w-full gradient-btn mb-6"
-                    onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-                  >
-                    Trade in Alienswap
-                  </Button>
-                )}
-              </div> */}
             </TxResult>
           </ModalBody>
         </ModalContent>

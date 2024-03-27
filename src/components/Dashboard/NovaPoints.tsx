@@ -155,6 +155,14 @@ export default function NovaPoints(props: INovaPointsProps) {
         pointsValue: 0, // TODO
         eigenlayerValue: 0, // TODO
       },
+      // TODO: get Kelp (points & eigenlayer points) num
+      {
+        icon: "/img/icon-kelp.png",
+        pointsName: "Kelp Miles",
+        eigenlayerName: "KelpDao",
+        pointsValue: 0, // TODO
+        eigenlayerValue: 0, // TODO
+      },
     ];
     if (isHidePoints) {
       setOtherPointsList(otherPoints.filter((item) => item.pointsValue >= 0.1));

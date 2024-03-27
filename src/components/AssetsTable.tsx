@@ -574,6 +574,44 @@ export default function AssetsTable(props: IAssetsTableProps) {
                           </span>
                         </TokenYieldBox>
                       )}
+
+                      {(item?.symbol === "Stone" ||
+                        item?.symbol === "wUSDm" ||
+                        item?.symbol === "Manta") && (
+                        <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                          <span className={`token-yield token-yield-6`}>
+                            Extra Nova
+                          </span>
+                        </TokenYieldBox>
+                      )}
+
+                      {(item?.symbol === "mstETH" ||
+                        item?.symbol === "mswETH" ||
+                        item?.symbol === "mmETH" ||
+                        item?.symbol === "mwBETH") && (
+                        <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                          <span className={`token-yield token-yield-6`}>
+                            Extra Nova
+                          </span>
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-7`}>
+                            Eigenpie Points
+                          </span>
+                        </TokenYieldBox>
+                      )}
+
+                      {item?.symbol === "rsETH" && (
+                        <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-8`}>
+                            Kelp Miles
+                          </span>
+                        </TokenYieldBox>
+                      )}
                     </TableItem>
                   </TableCell>
                   <TableCell>

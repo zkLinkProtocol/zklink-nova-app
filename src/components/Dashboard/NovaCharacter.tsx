@@ -1,4 +1,9 @@
-import { NFT_MARKET_URL, NOVA_CHAIN_ID, MintStatus } from "@/constants";
+import {
+  TRADEMARK_NFT_MARKET_URL,
+  LYNKS_NFT_MARKET_URL,
+  NOVA_CHAIN_ID,
+  MintStatus,
+} from "@/constants";
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import { CardBox } from "@/styles/common";
 import { addNovaChain, formatBalance, sleep } from "@/utils";
@@ -492,7 +497,7 @@ export default function NovaCharacter() {
           </div>
           <p className="text-[#A0A5AD] text-xs my-6">
             Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
-            through collecting 4 different types of trademark NFT through our
+            through collecting different types of 4 trademark NFTs with our
             referral program.
           </p>
           <Button
@@ -557,14 +562,6 @@ export default function NovaCharacter() {
           >
             Close
           </Button>
-          {/* <Button
-            onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-            isDisabled={!isInvaidChain && novaBalance === 0}
-            isLoading={mintLoading}
-            className="secondary-btn w-full h-[58px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  "
-          >
-            <span>Trade in Alienswap</span>
-          </Button> */}
         </ModalContent>
       </Modal>
 
@@ -647,24 +644,20 @@ export default function NovaCharacter() {
               )}
               <div className="mt-6">
                 {trademarkMintStatus === MintStatus.Success && (
-                  <Tooltip content="Comming Soon">
-                    <span>
-                      <Button
-                        className="w-full gradient-btn"
-                        onClick={() => window.open(NFT_MARKET_URL, "_blank")}
-                        isDisabled={true}
-                      >
-                        Trade in Alienswap
-                      </Button>
-                    </span>
-                  </Tooltip>
+                  <Button
+                    className="w-full gradient-btn"
+                    onClick={() =>
+                      window.open(
+                        mintResult?.name.includes("Lynks")
+                          ? LYNKS_NFT_MARKET_URL
+                          : TRADEMARK_NFT_MARKET_URL,
+                        "_blank"
+                      )
+                    }
+                  >
+                    Trade in Alienswap
+                  </Button>
                 )}
-                {/* <Button
-                  className="w-full default-btn"
-                  onClick={() => trademarkMintModal.onClose()}
-                >
-                  Close
-                </Button> */}
               </div>
             </TxResult>
           </ModalBody>
@@ -685,6 +678,7 @@ export default function NovaCharacter() {
             <div className="grid grid-cols-2 gap-4">
               {[1, 2, 3, 4].map((item) => (
                 <img
+                  key={item}
                   src={`/img/img-trademark-${item}.png`}
                   alt=""
                   className="w-[80px] md:h-[80px] rounded-xl bg-[#3C4550]"
