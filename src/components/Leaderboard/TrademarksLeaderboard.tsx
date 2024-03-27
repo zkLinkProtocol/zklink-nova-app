@@ -42,7 +42,7 @@ export default function NFTLeaderboard() {
     },
     {
       key: "balance",
-      label: "Summary",
+      label: "Sum",
     },
   ];
 
@@ -131,6 +131,11 @@ export default function NFTLeaderboard() {
 
   return (
     <>
+      <p className="py-2 mb-[1rem] text-[14px] text-[#C6D3DD] font-[400]">
+        Please note that we capture the previous day's data at 10:00 UTC and
+        publish it an hour later. Therefore, you may not be able to view your
+        data immediately..
+      </p>
       <Table
         removeWrapper
         className="table min-h-[30rem]"

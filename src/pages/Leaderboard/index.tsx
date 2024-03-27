@@ -1,6 +1,6 @@
-import PointsLeaderboard from "@/components/PointsLeaderboard";
-import NFTLeaderboard from "./components/NFTLeaderboard";
-import NFTLuckWinner from "./components/NFTLuckWinner";
+import PointsLeaderboard from "@/components/Leaderboard/PointsLeaderboard";
+import TrademarksLeaderboard from "@/components/Leaderboard/TrademarksLeaderboard";
+import MysteryBoxWinners from "@/components/Leaderboard/MysteryBoxWinners";
 import styled from "styled-components";
 import { useState } from "react";
 import { BgBox, BgCoverImg, TableBoxs } from "@/styles/common";
@@ -36,7 +36,7 @@ export default function Leaderboard() {
         <div className="flex items-center md:gap-[2rem] gap-[1re]">
           {[
             "Points Leaderboard",
-            "Referral Leaderboard",
+            "Trademarks Leaderboard",
             "Mystery Box Winners",
           ].map((item, index) => (
             <TabItem
@@ -54,8 +54,8 @@ export default function Leaderboard() {
         {/* Content: tab views */}
         <TableBoxs className="mt-[2rem]">
           {tabsActive === 0 && <PointsLeaderboard />}
-          {tabsActive === 1 && <NFTLeaderboard />}
-          {tabsActive === 2 && <NFTLuckWinner />}
+          {tabsActive === 1 && <TrademarksLeaderboard />}
+          {tabsActive === 2 && <MysteryBoxWinners />}
         </TableBoxs>
       </div>
     </BgBox>
