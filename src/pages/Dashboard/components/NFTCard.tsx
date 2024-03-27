@@ -685,9 +685,10 @@ export default function NFTCard() {
                     isLoading={mintLoading}
                   >
                     {isInvaidChain && "Switch to Nova network to mint"}
-                    {!isInvaidChain && mintLoading
-                      ? "Minting"
-                      : `Mint (${remainMintCount})`}
+                    {!isInvaidChain && mintLoading && "Minting"}
+                    {!isInvaidChain &&
+                      !mintLoading &&
+                      `Mint (${remainMintCount})`}
                   </Button>
                 </div>
               </ModalFooter>
