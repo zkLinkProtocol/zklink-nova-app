@@ -413,7 +413,7 @@ export default function NovaCharacter() {
             content={
               <div className="flex flex-col py-2">
                 <p>
-                  With every three referrals, you'll have a chance to mint a
+                  For every three referrals, you'll get a chance to mint a
                   trademark NFT.
                 </p>
               </div>
@@ -433,7 +433,8 @@ export default function NovaCharacter() {
             content={
               <div className="flex flex-col py-2">
                 <p>
-                  You will need to collect all 4 trademark NFTs to mint Lynks.
+                  You can instantly mint your SBT, and if you wish to upgrade
+                  SBT to Lynks, you'll need to collect all 4 trademark NFTs.
                 </p>
               </div>
             }
@@ -709,7 +710,7 @@ export default function NovaCharacter() {
               1. Mint a trademark NFT by for every 3 successful referrals
             </p>
             <p className="">
-              2. You can go to NFT Marketplace to purchase trademark NFT
+              2. Go to NFT Marketplace to purchase Trademark NFTs
             </p>
           </div>
 

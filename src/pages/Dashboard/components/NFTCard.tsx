@@ -123,18 +123,18 @@ const PRIZE_ID_NFT_MAP: Record<number, number> = {
 };
 
 const ALL_NFTS = [
-  { img: "trademark-1.png", name: "Trade mark", balance: 0 },
-  { img: "trademark-2.png", name: "Trade mark", balance: 0 },
-  { img: "trademark-3.png", name: "Trade mark", balance: 0 },
-  { img: "trademark-4.png", name: "Trade mark", balance: 0 },
+  { img: "trademark-1.png", name: "Oak Tree Roots", balance: 0 },
+  { img: "trademark-2.png", name: "Magnifying Glass", balance: 0 },
+  { img: "trademark-3.png", name: "Chess Knight", balance: 0 },
+  { img: "trademark-4.png", name: "Binary Code metrix Cube", balance: 0 },
 
-  { img: "point-booster-1.png", name: "Point Booster 1", balance: 0 },
-  { img: "point-booster-2.png", name: "Point Booster 2", balance: 0 },
-  { img: "point-booster-3.png", name: "Point Booster 3", balance: 0 },
-  { img: "point-booster-4.png", name: "Point Booster 4", balance: 0 },
-  { img: "point-booster-5.png", name: "Point Booster 5", balance: 0 },
-  { img: "point-booster-6.png", name: "Point Booster 6", balance: 0 },
-  { img: "point-booster-7.png", name: "Point Booster 7", balance: 0 },
+  { img: "point-booster-1.png", name: "Nova x3 Booster", balance: 0 },
+  { img: "point-booster-2.png", name: "Nova x4 Booster", balance: 0 },
+  { img: "point-booster-3.png", name: "Nova +100 Booster", balance: 0 },
+  { img: "point-booster-4.png", name: "Nova +300 Booster", balance: 0 },
+  { img: "point-booster-5.png", name: "Nova +500 Booster", balance: 0 },
+  { img: "point-booster-6.png", name: "Nova +1000 Booster", balance: 0 },
+  { img: "point-booster-7.png", name: "Nova +2000 Booster", balance: 0 },
 
   { img: "ENTP-LYNK.png", type: "ENTP", name: "ENTP-LYNK", balance: 0 },
   { img: "ISTP-LYNK.png", type: "ISTP", name: "LSTP-LYNK", balance: 0 },
@@ -526,8 +526,9 @@ export default function NFTCard() {
                   content={
                     <div className="flex flex-col py-2">
                       <p>
-                        Everyday, top 100 referral and 100 random Parade
-                        participant can receive a mystery box.
+                        Every day, the top 100 referrals and 100 randomly
+                        selected Parade participants can mint a tradable mystery
+                        box.
                       </p>
                       <a
                         href={
@@ -608,12 +609,13 @@ export default function NFTCard() {
                   />
 
                   <p className="text-left text-[#C0C0C0] mt-4 mb-2 px-6 font-satoshi font-normal">
-                    You will have a chance to randomly mint some booster NFT.
-                    However, you must mint your booster NFT before you can enter
-                    another lucky draw.{" "}
+                    After opening your Mystery Box (which is then burned),
+                    you'll have the chance to randomly mint a booster NFT.
+                    However, you must mint your booster NFT before opening
+                    another Mystery Box..{" "}
                     <span className="font-bold">
                       {" "}
-                      Please notice that the booster NFT is not tradeable.
+                      Please be aware that the booster NFT is non-tradable.
                     </span>
                   </p>
                 </div>
