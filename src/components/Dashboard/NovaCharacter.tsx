@@ -492,7 +492,7 @@ export default function NovaCharacter() {
           </div>
           <p className="text-[#A0A5AD] text-xs my-6">
             Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
-            through collecting 4 different types of trademark NFT through our
+            through collecting different types of 4 trademark NFTs with our
             referral program.
           </p>
           <Button

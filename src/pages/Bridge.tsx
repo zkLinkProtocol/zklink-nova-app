@@ -86,7 +86,8 @@ export default function Bridge() {
       </p>
       <p className="mt-6">
         <span className="font-bold"> Deposit Multiplier: </span>
-        After making a valid deposit, you will instantly receive a x10 Nova Points boost.
+        After making a valid deposit, you will instantly receive a x10 Nova
+        Points boost.
       </p>
       <p className="mt-6">
         <span className="font-bold"> Group Multiplier: </span>
@@ -129,8 +130,8 @@ export default function Bridge() {
         </div>
         <p className="font-medium text-[16px] text-[#A0A5AD]">
           Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
-          through collecting 4 different types of 100 NFT with our referral
-          program.
+          through collecting different types of 4 trademark NFTs with our
+          referral program.
         </p>
         <p className="font-medium text-[16px] text-[#A0A5AD]">
           You will get a trademark NFT airdrop for each 3 referrals <br />
