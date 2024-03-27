@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 
 import moment from "moment";
+import { useAccount } from "wagmi";
 
 type TopInviteAndRandomRes = {
   address: string;
@@ -26,6 +27,7 @@ type TopInviteAndRandom = TopInviteAndRandomRes & {
 };
 
 export default function NFTLuckWinner() {
+  const { address: walletAddress } = useAccount();
   const columns = [
     {
       key: "rank",
@@ -127,7 +129,14 @@ export default function NFTLuckWinner() {
         random100Arr = arr;
       }
 
-      const all = top100Arr.concat(random100Arr);
+      const all = top100Arr
+        .concat(random100Arr)
+        .map((item, index) => ({ ...item, rank: index + 1 }));
+
+      const self = all.find((item) => item.address === walletAddress);
+      if (self) {
+        all.unshift(self);
+      }
 
       setInviteAndRandomList(all);
     } catch (error) {
@@ -215,8 +224,27 @@ export default function NFTLuckWinner() {
             loadingContent={<Spinner label="Loading..." />}
           >
             {inviteAndRandomList.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
+              <TableRow
+                key={index}
+                className={`${
+                  index === 0 &&
+                  item?.address?.toLowerCase() === walletAddress?.toLowerCase()
+                    ? "self-data border-b-1 border-slate-600"
+                    : ""
+                }`}
+              >
+                <TableCell>
+                  {index === 0 &&
+                  item?.address?.toLowerCase() ===
+                    walletAddress?.toLowerCase() ? (
+                    <img
+                      src="/img/icon-self-winner.svg"
+                      className="w-[24px] h-[24px]"
+                    />
+                  ) : (
+                    item.rank
+                  )}
+                </TableCell>
                 <TableCell>{item.address}</TableCell>
                 <TableCell>{item.invitenNumber}</TableCell>
                 <TableCell>{item.rewardType}</TableCell>
