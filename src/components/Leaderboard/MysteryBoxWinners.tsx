@@ -58,11 +58,13 @@ export default function NFTLuckWinner() {
 
   const isPrevDisabled = useMemo(() => {
     const firstEpochTs = 1711620000000;
-    if (isLoading || selectedEndTs <= firstEpochTs) {
+    console.log("selectedEndTs", selectedEndTs);
+    if (isLoading || selectedEndTs < firstEpochTs) {
       return true;
+    } else {
+      return false;
     }
-    return false;
-  }, [isLoading]);
+  }, [isLoading, selectedEndTs]);
 
   const isNextDisabled = useMemo(() => {
     const currentTs = new Date().getTime();
@@ -145,7 +147,7 @@ export default function NFTLuckWinner() {
       `${year}-${month}-${date} 10:00 utc`
     ).getTime();
     const currentTs = now.getTime();
-    // const currentTs = 1711533660000;
+    // const currentTs = 171183660000;
 
     const ts =
       currentTs >= todayReadyTime ? todayReadyTime + oneDay : todayReadyTime;
@@ -225,11 +227,11 @@ export default function NFTLuckWinner() {
         {isNextDisabled && (
           <div className="absolute top-0 left-0 px-4  w-full h-full bg-[rgba(0,0,0,.8)] flex justify-center items-center rounded-[1rem]">
             <div className="text-[#C6D3DD] text-[20px] text-[center] leading-[24px]">
-              <p>
+              <p className="text-center">
                 The Mystery Box winner list for this period is still being
                 calculated.
               </p>
-              <p>
+              <p className="text-center">
                 The results will be published after 11:00 UTC on{" "}
                 {formatUtcDate(selectedEndTs + oneDay, "MM/DD/YYYY")}.
               </p>
