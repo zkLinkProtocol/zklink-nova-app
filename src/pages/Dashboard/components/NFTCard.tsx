@@ -126,7 +126,7 @@ const ALL_NFTS = [
   { img: "trademark-1.png", name: "Oak Tree Roots", balance: 0 },
   { img: "trademark-2.png", name: "Magnifying Glass", balance: 0 },
   { img: "trademark-3.png", name: "Chess Knight", balance: 0 },
-  { img: "trademark-4.png", name: "Binary Code metrix Cube", balance: 0 },
+  { img: "trademark-4.png", name: "Binary Code Metrix Cube", balance: 0 },
 
   { img: "point-booster-1.png", name: "Nova x3 Booster", balance: 0 },
   { img: "point-booster-2.png", name: "Nova x4 Booster", balance: 0 },

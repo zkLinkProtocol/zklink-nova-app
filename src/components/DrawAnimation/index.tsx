@@ -21,7 +21,7 @@ const TrademarkItems = [
   { name: "Oak Tree Roots", img: "img-trademark-1.png" },
   { name: "Magnifying Glass", img: "img-trademark-2.png" },
   { name: "Chess Knight", img: "img-trademark-3.png" },
-  { name: "Binary Code metrix Cube", img: "img-trademark-4.png" },
+  { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
   { name: "Thanks for joining", img: "img-trademark-5.png" },
 ];
 

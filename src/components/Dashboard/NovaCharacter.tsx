@@ -77,7 +77,7 @@ const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   1: "Oak Tree Roots",
   2: "Magnifying Glass",
   3: "Chess Knight",
-  4: "Binary Code metrix Cube",
+  4: "Binary Code Metrix Cube",
 };
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
@@ -527,8 +527,8 @@ export default function NovaCharacter() {
             }}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With every three referrals, you'll have a chance to receive one of
-            the four Trademark NFTs. However, you must mint your Trademark NFT
+            With every three referrals, you'll have the chance to randomly mint
+            one of the four Trademarks. However, you must mint your Trademark
             before you can enter another lucky draw.
           </p>
           <Button

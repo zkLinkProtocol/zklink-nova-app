@@ -78,10 +78,9 @@ export default function TvlSummary(props: ITvlSummaryProps) {
               isOpen={showTooltip4}
               content={
                 <p className="text-[1rem] max-w-[25rem]">
-                  In the later phase, we might consider raising the spots to the
-                  referral code; it is crucial to have the cap here at the start
-                  to allow all participants an equal chance of growing their
-                  group's size.
+                  For every 1 ETH or equivalent deposit, you'll receive an extra
+                  invitation spot. The increase in invite spots will be updated
+                  daily at 11:00 UTC.
                 </p>
               }
             >
