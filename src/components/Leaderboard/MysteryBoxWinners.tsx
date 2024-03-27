@@ -61,7 +61,7 @@ export default function NFTLuckWinner() {
   const isPrevDisabled = useMemo(() => {
     const firstEpochTs = 1711620000000;
     console.log("selectedEndTs", selectedEndTs);
-    if (isLoading || selectedEndTs < firstEpochTs) {
+    if (isLoading || selectedEndTs <= firstEpochTs) {
       return true;
     } else {
       return false;
