@@ -137,7 +137,7 @@ const ALL_NFTS = [
   { img: "point-booster-7.png", name: "Nova +2000 Booster", balance: 0 },
 
   { img: "ENTP-LYNK.png", type: "ENTP", name: "ENTP-LYNK", balance: 0 },
-  { img: "ISTP-LYNK.png", type: "ISTP", name: "LSTP-LYNK", balance: 0 },
+  { img: "ISTP-LYNK.png", type: "ISTP", name: "ISTP-LYNK", balance: 0 },
   { img: "INFJ-LYNK.png", type: "INFJ", name: "INFJ-LYNK", balance: 0 },
   { img: "ESFJ-LYNK.png", type: "ESFJ", name: "ESFJ-LYNK", balance: 0 },
 ];
