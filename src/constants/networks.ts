@@ -17,6 +17,8 @@ import {
   mantle,
   zkSync,
   manta,
+  optimism,
+  base,
 } from "@wagmi/core/chains";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
@@ -117,6 +119,14 @@ export const l1Networks = {
   blast: {
     ...blast,
     name: "Blast Mainnet",
+  },
+  optimism: {
+    ...optimism,
+    name: "Optimism Mainnet",
+  },
+  base: {
+    ...base,
+    name: "Base Mainnet",
   },
 } as const;
 export type L1Network = Chain;
@@ -255,6 +265,38 @@ export const nexusNode: ZkSyncNetwork[] = [
     isEthGasToken: true,
     l1Network: l1Networks.blast,
   },
+  {
+    id: 810180,
+    key: "optimism",
+    name: "zkLink Nova",
+    rpcUrl: "https://rpc.zklink.io",
+    logoUrl: "/img/optimism.svg",
+    blockExplorerUrl: "https://explorer.zklink.io",
+    blockExplorerApi: "https://explorer-api.zklink.io",
+    withdrawalFinalizerApi: "https://withdrawal-api.zklink.io",
+    mainContract: "0x46C8D02E93d5a03899dFa7Cf8A40A07589A3fA1b",
+    erc20BridgeL1: "0x5Bd51296423A9079b931414C1De65e7057326EaA",
+    erc20BridgeL2: "0x6aAdaA7Bf9F5283cAF3eb2E40573D1A4d02C8B15",
+    l1Gateway: "0x668e8F67adB8219e1816C2E5bBEa055A78AF3026",
+    isEthGasToken: true,
+    l1Network: l1Networks.optimism,
+  },
+  {
+    id: 810180,
+    key: "base",
+    name: "zkLink Nova",
+    rpcUrl: "https://rpc.zklink.io",
+    logoUrl: "/img/base.svg",
+    blockExplorerUrl: "https://explorer.zklink.io",
+    blockExplorerApi: "https://explorer-api.zklink.io",
+    withdrawalFinalizerApi: "https://withdrawal-api.zklink.io",
+    mainContract: "0xE473ce141b1416Fe526eb63Cf7433b7B8d7264Dd",
+    erc20BridgeL1: "0x80d12A78EfE7604F00ed07aB2f16F643301674D5",
+    erc20BridgeL2: "0xa03248B029b4e348F156f4b1d93CB433a4e1361e",
+    l1Gateway: "0x4eEA93966AA5cd658225E0D43b665A5a491d2b7E",
+    isEthGasToken: true,
+    l1Network: l1Networks.base,
+  },
 ];
 
 export const nexusGoerliNode: ZkSyncNetwork[] = [
@@ -352,6 +394,8 @@ export const chains: readonly [Chain, ...Chain[]] =
         mantle,
         createEraChain(nexusNode[0]) as Chain,
         blast,
+        optimism,
+        base,
       ];
 // export const wagmiConfig = defaultWagmiConfig({
 //   chains: chains,

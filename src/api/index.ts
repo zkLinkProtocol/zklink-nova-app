@@ -19,8 +19,7 @@ export const BASE_URL_POINTS = `${BASE_URL}/points`;
 export const BASE_URL_TOKENS = `${BASE_URL}/tokens`;
 export const BASE_URL_TWITTER = `${BASE_URL}/twitter`;
 export const BASE_URL_LRT_POINTS = `${BASE_URL}/lrt-points`;
-
-console.log("isProd", isProd);
+export const BASE_URL_QUEST = `${BASE_URL}/quest-api`;
 
 export type BindInviteCodeWithAddressParams = {
   address: string;
@@ -72,7 +71,7 @@ export const getRemainMysteryboxDrawCount = (
 export const mintMysteryboxNFT = (address: string): Promise<Response> => {
   return http.post(`${BASE_URL_API}/invite/mint/mysterybox`, {
     address,
-  });
+  });   
 };
 
 export const openMysteryboxNFT = (address: string): Promise<Response> => {
@@ -169,9 +168,13 @@ export type TokenPriceInfo = {
   iconURL: string;
 };
 
-export const getAccountRefferalsTVL = (address: string): Promise<Response> =>
+export const getAccountRefferalsTVL = (
+  address: string,
+  page = 1,
+  limit = 100
+): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRefferalsTVL`, {
-    params: { address },
+    params: { address, page, limit },
   });
 
 export const getSupportTokens = (): Promise<SupportToken[]> =>
@@ -346,3 +349,11 @@ export const getRenzoPoints = (address: string): Promise<RenzoResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/renzo/points`, {
     params: { address },
   });
+<<<<<<< HEAD
+=======
+
+export const getTradeMarkRank = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/referrer/tradeMark/balance/rank`, {
+    params: { address },
+  });
+>>>>>>> main

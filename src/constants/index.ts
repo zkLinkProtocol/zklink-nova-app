@@ -50,6 +50,8 @@ export const NexusEstimateArrivalTimes: Record<string, number> = {
   manta: 1,
   mantle: 1,
   blast: 1,
+  optimism: 1,
+  base: 1,
 };
 
 export const NexusGoerliEstimateArrivalTimes = {};

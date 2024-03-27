@@ -481,8 +481,16 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
       <div className="mt-[1rem]">
         <Input
+          data-hover={false}
           isClearable
           placeholder="Please enter the token symbol."
+          className="rounded-lg"
+          classNames={{
+            base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
+            mainWrapper: ["bg-transparent", "hover:bg-transparent"],
+            inputWrapper: ["bg-transparent", "hover:bg-transparent"],
+            input: ["bg-transparent", "hover:bg-transparent"],
+          }}
           startContent={
             <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
           }
@@ -539,7 +547,10 @@ export default function AssetsTable(props: IAssetsTableProps) {
                       </p>
 
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
-                        {item?.multipliers && Array.isArray(item.multipliers) ? findClosestMultiplier(item?.multipliers) : 0}x Boost
+                        {item?.multipliers && Array.isArray(item.multipliers)
+                          ? findClosestMultiplier(item?.multipliers)
+                          : 0}
+                        x Boost
                       </span>
 
                       {item?.symbol === "pufETH" && (
@@ -630,7 +641,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         isOpen={bridgeModal.isOpen}
         onOpenChange={bridgeModal.onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           {(onClose) => (
             <>
               <ModalHeader>Bridge</ModalHeader>

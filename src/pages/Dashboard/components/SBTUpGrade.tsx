@@ -51,7 +51,7 @@ export default function SBTUpGrade() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">

@@ -223,6 +223,9 @@ export const TokenYieldBox = styled.div`
   & .token-yield-5 {
     background: linear-gradient(90deg, #ace730 -0.39%, #324900 99.76%);
   }
+  & .token-yield-6 {
+    background: linear-gradient(90deg, #3e9d8f -0.39%, #205049 99.76%);
+  }
 `;
 
 const LoyaltyBoostBox = styled.div`
@@ -396,6 +399,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [fromActive, connectorName]);
 
   useEffect(() => {
+    console.log("tokenList=====", tokenList);
     if (category === "ALL") {
       let arr = [...tokenList];
 
@@ -964,7 +968,10 @@ export default function Bridge(props: IBridgeComponentProps) {
             />
             <p className="text-[#C57D10] ">
               Should you wish to participate in the Aggregation Parade, the
-              minimum deposit value should be {minDepositValue} ETH.
+              minimum deposit value in a{" "}
+              <span className="font-bold">single transaction</span> should be{" "}
+              {minDepositValue} ETH or equivalence. To participate OKX
+              Cryptopedia, there is no minimum deposit value.
             </p>
           </div>
         )}
@@ -1159,7 +1166,10 @@ export default function Bridge(props: IBridgeComponentProps) {
             />
             <p className="text-[#C57D10] ">
               Should you wish to participate in the Aggregation Parade, the
-              minimum deposit value should be {minDepositValue} ETH.
+              minimum deposit value in a{" "}
+              <span className="font-bold">single transaction</span> should be{" "}
+              {minDepositValue} ETH or equivalence. To participate OKX
+              Cryptopedia, there is no minimum deposit value.
             </p>
           </div>
         )}
@@ -1248,7 +1258,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         onOpenChange={fromModal.onOpenChange}
         scrollBehavior="inside"
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           <ModalHeader className="flex flex-col gap-1 text-[1.25rem] md:text-3xl">
             From
           </ModalHeader>
@@ -1278,7 +1288,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         isOpen={tokenModal.isOpen}
         onOpenChange={tokenModal.onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           <ModalHeader className="flex flex-col gap-1 text-[1.25rem] md:text-3xl">
             Choose Token
           </ModalHeader>
@@ -1318,13 +1328,43 @@ export default function Bridge(props: IBridgeComponentProps) {
                     <div className="text-xl ml-4 ">
                       <span>{item?.symbol}</span>
                       {item.symbol === "pufETH" && (
-                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden ">
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
                           <span className={`token-yield token-yield-1`}>
                             EigenLayer Points
                           </span>
                           <span className={`token-yield token-yield-2`}>
                             Puffer Points
                           </span>
+                        </TokenYieldBox>
+                      )}
+                      {item.symbol === "ezETH" && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
+                          <span className={`token-yield token-yield-1`}>
+                            EigenLayer Points
+                          </span>
+                          <span className={`token-yield token-yield-5`}>
+                            ezPoints
+                          </span>
+                        </TokenYieldBox>
+                      )}
+                      {(item.symbol === "Stone" ||
+                        item.symbol === "wUSDm" ||
+                        item.symbol === "Manta" ||
+                        item.symbol === "rsETH" ||
+                        item.symbol === "mstETH" ||
+                        item.symbol === "mswETH" ||
+                        item.symbol === "mmETH" ||
+                        item.symbol === "mwBETH") && (
+                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
+                          <span className={`token-yield token-yield-6`}>
+                            Extra Nova
+                          </span>
+                          {/* <span className={`token-yield token-yield-5`}>
+                          EL Points
+                        </span>
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span> */}
                         </TokenYieldBox>
                       )}
                     </div>
@@ -1349,6 +1389,27 @@ export default function Bridge(props: IBridgeComponentProps) {
                         </span>
                       </TokenYieldBox>
                     )}
+
+                    {(item.symbol === "Stone" ||
+                      item.symbol === "wUSDm" ||
+                      item.symbol === "Manta" ||
+                      item.symbol === "rsETH" ||
+                      item.symbol === "mstETH" ||
+                      item.symbol === "mswETH" ||
+                      item.symbol === "mmETH" ||
+                      item.symbol === "mwBETH") && (
+                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
+                        <span className={`token-yield token-yield-6`}>
+                          Extra Nova
+                        </span>
+                        {/* <span className={`token-yield token-yield-5`}>
+                          EL Points
+                        </span>
+                        <span className={`token-yield token-yield-1`}>
+                          EigenLayer Points
+                        </span> */}
+                      </TokenYieldBox>
+                    )}
                   </div>
 
                   <span className="text-base">{item?.formatedBalance}</span>
@@ -1366,7 +1427,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         onOpenChange={transLoadModal.onOpenChange}
         className="trans"
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           <ModalBody className="pb-8">
             <Trans>
               <Button
@@ -1399,7 +1460,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         onOpenChange={transSuccModal.onOpenChange}
         className="trans"
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           <ModalBody className="pb-8">
             <Trans>
               <img src="/img/transSuccess.png" alt="" className="statusImg" />
@@ -1427,7 +1488,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         isOpen={transFailModal.isOpen}
         onOpenChange={transFailModal.onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="mb-[3.75rem]">
           <ModalBody className="pb-8">
             <Trans>
               <img src="/img/transFail.png" alt="" className="statusImg" />
