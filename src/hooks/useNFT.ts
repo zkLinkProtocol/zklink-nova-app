@@ -78,6 +78,8 @@ const useNovaNFT = () => {
     // }
     const type = uri.substr(-4);
     const result = {
+      name: type,
+      description: type,
       image: `/img/${type}.svg`,
     };
     return result;

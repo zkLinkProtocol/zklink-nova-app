@@ -136,7 +136,7 @@ export default function NovaPoints(props: INovaPointsProps) {
         pointsTips:
           "Your Puffer Points will be visible one hour after you deposit your pufETH.",
         eigenlayerTips:
-          "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points.",
+          "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points. According to Puffer, new users who join puffer after February 9th will not receive Eigenlayer points.",
       },
       {
         icon: "/img/icon-ezPoints.png",
