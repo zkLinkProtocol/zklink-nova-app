@@ -513,7 +513,7 @@ export default function NovaCharacter() {
         isOpen={drawModal.isOpen}
         onOpenChange={drawModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
+        <ModalContent className="mt-[2rem] py-4 px-4">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Draw and Mint your Trademark NFTs
           </ModalHeader>
@@ -575,7 +575,7 @@ export default function NovaCharacter() {
         onOpenChange={trademarkMintModal.onOpenChange}
         className="trans"
       >
-        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
+        <ModalContent className="mt-[2rem] py-4 px-4">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
             {trademarkMintStatus === MintStatus.Minting && !isApproving && (
               <span>Minting</span>
@@ -671,7 +671,7 @@ export default function NovaCharacter() {
         isOpen={upgradeModal.isOpen}
         onOpenChange={upgradeModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
+        <ModalContent className="mt-[2rem] py-4 px-4">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Upgrade your Nova SBT
           </ModalHeader>
