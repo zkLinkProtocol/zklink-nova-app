@@ -71,7 +71,7 @@ export const getRemainMysteryboxDrawCount = (
 export const mintMysteryboxNFT = (address: string): Promise<Response> => {
   return http.post(`${BASE_URL_API}/invite/mint/mysterybox`, {
     address,
-  });   
+  });
 };
 
 export const openMysteryboxNFT = (address: string): Promise<Response> => {
@@ -349,11 +349,8 @@ export const getRenzoPoints = (address: string): Promise<RenzoResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/renzo/points`, {
     params: { address },
   });
-<<<<<<< HEAD
-=======
 
 export const getTradeMarkRank = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/tradeMark/balance/rank`, {
     params: { address },
   });
->>>>>>> main
