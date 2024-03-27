@@ -47,6 +47,47 @@ export const checkInviteCode = (code: string): Promise<Response> => {
   });
 };
 
+export const getRemainDrawCount = (address: string): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/draw/nft/remain`, {
+    params: { address },
+  });
+};
+
+export const drawTrademarkNFT = (address: string): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/draw/nft`, {
+    address,
+  });
+};
+
+export const getRemainMysteryboxDrawCount = (
+  address: string
+): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/draw/mysterybox/remain`, {
+    params: { address },
+  });
+};
+
+// for mint box params
+export const mintMysteryboxNFT = (address: string): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/mint/mysterybox`, {
+    address,
+  });   
+};
+
+export const openMysteryboxNFT = (address: string): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/open/mysterybox`, {
+    address,
+  });
+};
+
+export const getRemainMysteryboxOpenableCount = (
+  address: string
+): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/open/mysterybox/remain`, {
+    params: { address },
+  });
+};
+
 export const getMintSignature = (address: string): Promise<Response> => {
   return http.get(`${BASE_URL_API}/invite/validate/nft`, {
     params: { address, projectId: "NOVA-SBT-1" },
@@ -308,8 +349,11 @@ export const getRenzoPoints = (address: string): Promise<RenzoResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/renzo/points`, {
     params: { address },
   });
+<<<<<<< HEAD
+=======
 
 export const getTradeMarkRank = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/tradeMark/balance/rank`, {
     params: { address },
   });
+>>>>>>> main

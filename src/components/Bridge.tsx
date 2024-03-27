@@ -288,14 +288,14 @@ export default function Bridge(props: IBridgeComponentProps) {
   // const web3Modal = useWeb3Modal();
   const { openConnectModal } = useConnectModal();
 
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, chainId } = useAccount();
   const fromModal = useDisclosure();
   const tokenModal = useDisclosure();
   const transLoadModal = useDisclosure();
   const transSuccModal = useDisclosure();
   const transFailModal = useDisclosure();
   const [failMessage, setFailMessage] = useState("");
-  const chainId = useChainId();
+  // const chainId = useChainId();
   const { switchChainAsync } = useSwitchChain();
   const { sendDepositTx, loading } = useBridgeTx();
   const [amount, setAmount] = useState("");
@@ -505,9 +505,12 @@ export default function Bridge(props: IBridgeComponentProps) {
           (item) => item.networkKey === token.networkKey
         );
         let index = 0;
-        const fromIndex = fromList.findIndex(
+        let fromIndex = fromList.findIndex(
           (item) => item.networkKey === token.networkKey
         );
+        if (fromIndex < 0) {
+          fromIndex = 0;
+        }
         const from = fromList[fromIndex];
         if (token.address !== ETH_ADDRESS) {
           index = _tokenList.findIndex(
