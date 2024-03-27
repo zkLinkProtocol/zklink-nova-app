@@ -285,7 +285,7 @@ export default function Dashboard() {
 
       <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
         <span className="text-[#03d498]">
-          Kelp Points and Eigenpie Points are undergoing synchronization at the
+          Kelp Miles and Eigenpie Points are undergoing synchronization at the
           moment. Your point balances may not be visible until this process is
           complete.
         </span>

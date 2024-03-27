@@ -158,7 +158,7 @@ export default function NovaPoints(props: INovaPointsProps) {
       // TODO: get Kelp (points & eigenlayer points) num
       {
         icon: "/img/icon-kelp.png",
-        pointsName: "EigenPie Miles",
+        pointsName: "Kelp Miles",
         eigenlayerName: "KelpDao",
         pointsValue: 0, // TODO
         eigenlayerValue: 0, // TODO
