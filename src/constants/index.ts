@@ -60,7 +60,14 @@ export const IS_MAINNET = nodeType === "nexus";
 
 export const TWEET_SHARE_TEXT = "ZkLink Nova Campaign blablablablabla";
 
-export const NFT_MARKET_URL = "https://alienswap.xyz/";
+export const TRADEMARK_NFT_MARKET_URL =
+  "https://alienswap.xyz/collection/zklink-nova/0xdeedf09c48e1284b59f8e7dc4e1fd45243002615";
+
+export const LYNKS_NFT_MARKET_URL =
+  "https://alienswap.xyz/collection/zklink-nova/nova-lynks-fe69";
+
+export const MYSTERYBOX_NFT_MARKET_URL =
+  "https://alienswap.xyz/collection/zklink-nova/nova-mystery-box-ac81";
 
 export const enum MintStatus {
   Minting = "Minting",
