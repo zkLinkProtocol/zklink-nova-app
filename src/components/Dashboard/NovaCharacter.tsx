@@ -685,6 +685,7 @@ export default function NovaCharacter() {
             <div className="grid grid-cols-2 gap-4">
               {[1, 2, 3, 4].map((item) => (
                 <img
+                  key={item}
                   src={`/img/img-trademark-${item}.png`}
                   alt=""
                   className="w-[80px] md:h-[80px] rounded-xl bg-[#3C4550]"
