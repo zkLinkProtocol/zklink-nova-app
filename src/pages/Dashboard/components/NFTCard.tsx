@@ -347,7 +347,6 @@ export default function NFTCard() {
    * we burn box here
    *  */
   const onOpenSubmit = useCallback(async () => {
-    if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
     if (isInvaidChain) {
       switchChain(
         { chainId: NOVA_CHAIN_ID },
@@ -360,6 +359,7 @@ export default function NFTCard() {
       );
       return;
     }
+    if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
     try {
       setOpening(true);
       await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
