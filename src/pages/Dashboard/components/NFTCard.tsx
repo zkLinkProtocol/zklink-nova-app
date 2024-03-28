@@ -587,19 +587,12 @@ export default function NFTCard() {
                 Invite more to win Mystery Box!
               </p>
             </div>
-            <Tooltip content="Comming Soon">
-              <span>
-                <Button
-                  className="gradient-btn"
-                  onClick={() =>
-                    window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
-                  }
-                  isDisabled={true}
-                >
-                  Buy
-                </Button>{" "}
-              </span>
-            </Tooltip>
+            <Button
+              className="gradient-btn"
+              onClick={() => window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")}
+            >
+              Buy
+            </Button>
           </div>
           <div className=" md:w-[384px] md:h-[300px] mb-8">
             <img
@@ -812,6 +805,17 @@ export default function NFTCard() {
                     >
                       Share on Twitter/X
                     </a>
+                  )}
+                  {mintResult?.name === "Mystery Box" && (
+                    <Button
+                      className="
+                    gradient-btn mt-4 px-6"
+                      onClick={() =>
+                        window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
+                      }
+                    >
+                      Trade in Alienswap
+                    </Button>
                   )}
                 </div>
               )}
