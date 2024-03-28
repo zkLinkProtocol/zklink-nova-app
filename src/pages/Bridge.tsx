@@ -10,7 +10,7 @@ import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const BgBox = styled.div`
+export const BgBox = styled.div`
   position: relative;
   padding-top: 5.5rem;
   padding-bottom: 2rem;

@@ -17,6 +17,7 @@ import Bridge from "@/pages/Bridge";
 import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About";
+import UnwrapETH from "@/pages/UnwrapETH";
 import { useDispatch } from "react-redux";
 import { setInviteCode } from "./store/modules/airdrop";
 import Maintenance from "./components/Maintenance";
@@ -97,6 +98,14 @@ export default function App() {
             element={
               <Suspense fallback="">
                 <Bridge />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/unwrap"
+            element={
+              <Suspense fallback="">
+                <UnwrapETH />
               </Suspense>
             }
           />

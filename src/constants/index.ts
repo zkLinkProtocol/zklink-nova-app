@@ -40,6 +40,11 @@ export const MYSTERY_BOX_CONTRACT =
     ? "0x8A9D6EF8350548CB3172d0cD9a83f57E860240eB"
     : "0x7fE8510dD408327806baCACaAFE2A445D9f3E9ee";
 
+export const WETH_CONTRACT =
+  nodeType === "nexus-goerli"
+    ? ""
+    : "0x8280a4e7D5B3B658ec4580d3Bc30f5e50454F169";
+
 export const NOVA_START_TIME = 1710410400000; //1710410400000;
 
 export const NexusEstimateArrivalTimes: Record<string, number> = {
