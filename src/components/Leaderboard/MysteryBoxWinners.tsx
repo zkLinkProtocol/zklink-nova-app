@@ -27,8 +27,7 @@ type TopInviteAndRandom = TopInviteAndRandomRes & {
 };
 
 export default function NFTLuckWinner() {
-  // const { address: walletAddress } = useAccount();
-  const walletAddress = "0x204cACD0AE85CfEA2ec6118082F600180A11498E";
+  const { address: walletAddress } = useAccount();
   const columns = [
     {
       key: "rank",
@@ -135,7 +134,7 @@ export default function NFTLuckWinner() {
         .map((item, index) => ({ ...item, rank: index + 1 }));
 
       const self = all.find(
-        (item) => item.address.toLowerCase() === walletAddress.toLowerCase()
+        (item) => item.address.toLowerCase() === walletAddress?.toLowerCase()
       );
       if (self) {
         all.unshift(self);
