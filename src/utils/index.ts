@@ -318,6 +318,10 @@ export const getTweetShareText = (inviteCode: string) => {
   return text;
 };
 
+export const getTweetShareTextForMysteryBox = (inviteCode: string) => {
+  return `🌟 Can't contain my excitement! Just won a Nova Mystery Box!🎁 Ready to light up the %23zkLinkNovaAggParade event with my referral code https://app.zklink.io/aggregation-parade?inviteCode=${inviteCode} in this Mega Yield Journey on @zkLinkNova🚀`;
+};
+
 export const scrollToTop = () => {
   window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;

@@ -28,10 +28,13 @@ import {
 } from "@/api";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import toast from "react-hot-toast";
-import { addNovaChain, sleep } from "@/utils";
+import { addNovaChain, getTweetShareTextForMysteryBox, sleep } from "@/utils";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import classNames from "classnames";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+
 const NftBox = styled.div`
   .nft-left {
     /* flex: 6;
@@ -185,6 +188,7 @@ export default function NFTCard() {
   const { updateRefreshBalanceId, refreshBalanceId } = useMintStatus();
   const [refreshing, setRefreshing] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
+  const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const onOpen = () => {
     openBoxModal.onOpen();
@@ -301,7 +305,7 @@ export default function NFTCard() {
         {
           onError: (e) => {
             console.log(e);
-            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+            // addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
@@ -344,6 +348,18 @@ export default function NFTCard() {
    *  */
   const onOpenSubmit = useCallback(async () => {
     if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+            // addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+          },
+        }
+      );
+      return;
+    }
     try {
       setOpening(true);
       await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
@@ -370,7 +386,15 @@ export default function NFTCard() {
     } finally {
       setOpening(false);
     }
-  }, [address, boxTokenIds, getMysteryboxNFT, mysteryBoxNFT, update]);
+  }, [
+    address,
+    boxTokenIds,
+    getMysteryboxNFT,
+    isInvaidChain,
+    mysteryBoxNFT,
+    switchChain,
+    update,
+  ]);
 
   /**
    * Open process:
@@ -384,7 +408,7 @@ export default function NFTCard() {
         {
           onError: (e) => {
             console.log(e);
-            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+            // addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
@@ -777,6 +801,18 @@ export default function NFTCard() {
                   <p className="text-[24px] font-inter font-normal">
                     {mintResult?.name}
                   </p>
+                  {mintResult?.name === "Mystery Box" && (
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${getTweetShareTextForMysteryBox(
+                        invite?.code ?? ""
+                      )}`}
+                      className="gradient-btn px-6 py-2 mt-4 hover:opacity-85"
+                      data-show-count="false"
+                      target="_blank"
+                    >
+                      Share on Twitter/X
+                    </a>
+                  )}
                 </div>
               )}
             </TxResult>
