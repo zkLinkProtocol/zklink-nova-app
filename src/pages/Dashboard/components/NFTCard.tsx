@@ -809,7 +809,7 @@ export default function NFTCard() {
                   {mintResult?.name === "Mystery Box" && (
                     <Button
                       className="
-                    gradient-btn"
+                    gradient-btn mt-4 px-6"
                       onClick={() =>
                         window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
                       }
