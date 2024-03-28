@@ -373,6 +373,9 @@ export default function Header() {
               <NavLink to="/bridge">Bridge</NavLink>
             </NavbarItem>
             <NavbarItem>
+              <NavLink to="/unwrap">Unwrap ETH</NavLink>
+            </NavbarItem>
+            <NavbarItem>
               <a
                 href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
                 target="_blank"

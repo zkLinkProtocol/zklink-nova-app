@@ -157,7 +157,7 @@ const Container = styled.div`
     /* display: flex; */
   }
 `;
-const SelectBox = styled.div`
+export const SelectBox = styled.div`
   & {
     background: #23262d;
     border-radius: 16px;
