@@ -23,10 +23,13 @@ import {
 } from "@/api";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import toast from "react-hot-toast";
-import { addNovaChain, sleep } from "@/utils";
+import { addNovaChain, getTweetShareTextForMysteryBox, sleep } from "@/utils";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import classNames from "classnames";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+
 const NftBox = styled.div`
   .nft-left {
     /* flex: 6;
@@ -180,6 +183,7 @@ export default function NFTCard() {
   const { updateRefreshBalanceId, refreshBalanceId } = useMintStatus();
   const [refreshing, setRefreshing] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
+  const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const onOpen = () => {
     openBoxModal.onOpen();
@@ -757,6 +761,18 @@ export default function NFTCard() {
                   <p className="text-[24px] font-inter font-normal">
                     {mintResult?.name}
                   </p>
+                  {mintResult?.name === "Mystery Box" && (
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${getTweetShareTextForMysteryBox(
+                        invite?.code ?? ""
+                      )}`}
+                      className="gradient-btn px-6 py-2 mt-4 hover:opacity-85"
+                      data-show-count="false"
+                      target="_blank"
+                    >
+                      Share on Twitter/X
+                    </a>
+                  )}
                 </div>
               )}
               {/* <div className="mt-6">
