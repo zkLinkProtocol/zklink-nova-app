@@ -36,7 +36,7 @@ import toast from "react-hot-toast";
 export default function Swap() {
   const resultModal = useDisclosure();
   const [amount, setAmount] = useState("");
-  const [fromToken, setFromToken] = useState<"ETH" | "wETH">("ETH");
+  const [fromToken, setFromToken] = useState<"ETH" | "wETH">("wETH");
   const { address, chainId } = useAccount();
   const queryClient = useQueryClient();
   const inputRef1 = useRef<HTMLInputElement>(null);
@@ -157,6 +157,7 @@ export default function Swap() {
           ? "Wrap ETH successfully!"
           : "Unwrap ETH successfully!"
       );
+      queryClient.invalidateQueries();
     } catch (e) {
       console.error(e);
     } finally {
@@ -169,6 +170,7 @@ export default function Swap() {
     invalidChain,
     nativeTokenBalance,
     publicClient,
+    queryClient,
     switchChainAsync,
     wethContract,
   ]);
@@ -176,6 +178,14 @@ export default function Swap() {
   return (
     <BgBox>
       <div className="my-10 mx-auto w-[40rem]">
+        <div className="px-8 py-6 bg-[#022738] mb-4">
+          <p className="font-satoshi text-2xl font-bold mb-4">
+            Wrap or Unwrap your WETH
+          </p>
+          <p className="font-satoshi text-[#8F9193] font-normal">
+            You could unwrap your WETH to continue accumulating nova points
+          </p>
+        </div>
         <SelectBox className="px-6 py-6 md:px-6 mb-6">
           <div className="flex items-center gap-4">
             <span className="font-bold text-[24px]">From</span>
@@ -211,7 +221,9 @@ export default function Swap() {
                     <Avatar
                       src={item.data?.value === "ETH" ? ETHIcon : wethIcon}
                     ></Avatar>
-                    <span className="text-[#fff]">{item.data?.label}</span>
+                    <span className="text-[#fff] font-satoshi font-normal text-[18px]">
+                      {item.data?.label}
+                    </span>
                   </div>
                 ));
               }}
@@ -248,11 +260,14 @@ export default function Swap() {
 
             <div className=" flex items-center gap-2 px-4 py-4 rounded-3xl cursor-pointer">
               <Avatar src={fromToken === "ETH" ? wethIcon : ETHIcon}></Avatar>
+              <span className="text-[#fff] font-satoshi font-normal text-[18px]">
+                {fromToken == "ETH" ? "wETH" : "ETH"}
+              </span>
             </div>
           </div>
         </SelectBox>
         <Button
-          className="gradient-btn w-full rounded-full "
+          className="gradient-btn w-full rounded-full mt-8"
           style={{ display: "flex", alignItems: "center" }}
           disableAnimation
           size="lg"
