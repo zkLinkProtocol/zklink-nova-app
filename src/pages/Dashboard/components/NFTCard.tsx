@@ -305,7 +305,7 @@ export default function NFTCard() {
         {
           onError: (e) => {
             console.log(e);
-            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+            // addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
@@ -348,6 +348,18 @@ export default function NFTCard() {
    *  */
   const onOpenSubmit = useCallback(async () => {
     if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+            // addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+          },
+        }
+      );
+      return;
+    }
     try {
       setOpening(true);
       await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
@@ -374,7 +386,15 @@ export default function NFTCard() {
     } finally {
       setOpening(false);
     }
-  }, [address, boxTokenIds, getMysteryboxNFT, mysteryBoxNFT, update]);
+  }, [
+    address,
+    boxTokenIds,
+    getMysteryboxNFT,
+    isInvaidChain,
+    mysteryBoxNFT,
+    switchChain,
+    update,
+  ]);
 
   /**
    * Open process:
@@ -388,7 +408,7 @@ export default function NFTCard() {
         {
           onError: (e) => {
             console.log(e);
-            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+            // addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );

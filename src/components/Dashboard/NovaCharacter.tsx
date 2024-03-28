@@ -198,7 +198,7 @@ export default function NovaCharacter() {
         {
           onError: (e) => {
             console.log(e);
-            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
+            // addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
@@ -295,7 +295,6 @@ export default function NovaCharacter() {
         {
           onError: (e) => {
             console.log(e);
-            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
@@ -341,7 +340,6 @@ export default function NovaCharacter() {
         {
           onError: (e) => {
             console.log(e);
-            addNovaChain().then(() => switchChain({ chainId: NOVA_CHAIN_ID }));
           },
         }
       );
