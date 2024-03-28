@@ -372,7 +372,7 @@ export default function Header() {
               <NavLink to="/bridge">Bridge</NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/unwrap">Unwrap wETH</NavLink>
+              <NavLink to="/unwrap">Unwrap ETH</NavLink>
             </NavbarItem>
             <NavbarItem>
               <a
