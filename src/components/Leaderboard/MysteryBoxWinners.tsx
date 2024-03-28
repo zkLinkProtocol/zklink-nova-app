@@ -133,7 +133,9 @@ export default function NFTLuckWinner() {
         .concat(random100Arr)
         .map((item, index) => ({ ...item, rank: index + 1 }));
 
-      const self = all.find((item) => item.address === walletAddress);
+      const self = all.find(
+        (item) => item.address.toLowerCase() === walletAddress?.toLowerCase()
+      );
       if (self) {
         all.unshift(self);
       }
@@ -155,11 +157,9 @@ export default function NFTLuckWinner() {
     const todayReadyTime = new Date(
       `${year}-${month}-${date} 10:00 utc`
     ).getTime();
-    const currentTs = now.getTime();
-    // const currentTs = 171183660000;
-
-    const ts =
-      currentTs >= todayReadyTime ? todayReadyTime + oneDay : todayReadyTime;
+    // const currentTs = now.getTime();
+    const ts = todayReadyTime;
+    // currentTs >= todayReadyTime ? todayReadyTime + oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
     getTopInviteAndRandomFunc();
