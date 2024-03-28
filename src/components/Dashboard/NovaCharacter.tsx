@@ -556,7 +556,7 @@ export default function NovaCharacter() {
           </Button>
           <Button
             className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
-            onClick={() => mintModal.onClose()}
+            onClick={() => drawModal.onClose()}
           >
             Close
           </Button>
