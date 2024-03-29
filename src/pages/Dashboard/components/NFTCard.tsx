@@ -612,7 +612,7 @@ export default function NFTCard() {
             onClick={onOpen}
             // disabled={mintableCount === 0}
           >
-            Open Your Box
+            Open Your Box ({boxCount})
           </Button>
         </CardBox>
       </NftBox>
