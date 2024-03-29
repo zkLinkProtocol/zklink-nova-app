@@ -18,7 +18,6 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@nextui-org/react";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import {
   AiOutlineCheck,

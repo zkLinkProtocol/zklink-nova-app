@@ -33,7 +33,6 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
 import qs from "qs";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -375,9 +374,7 @@ export default function SoftKYC() {
 
   useEffect(() => {
     setIsCheckedTwitter(
-      isValidTwitterAccess
-        ? Boolean(twitterAccessToken)
-        : true
+      isValidTwitterAccess ? Boolean(twitterAccessToken) : true
     );
   }, [isValidTwitterAccess, twitterAuthCode, twitterAccessToken]);
 

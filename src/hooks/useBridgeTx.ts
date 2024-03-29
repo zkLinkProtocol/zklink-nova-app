@@ -1,4 +1,3 @@
-import { useA } from "@web3modal/wagmi/react";
 import {
   PRIMARY_CHAIN_KEY,
   nexusGoerliNode,
