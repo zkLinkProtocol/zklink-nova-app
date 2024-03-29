@@ -167,14 +167,16 @@ export default function NFTLuckWinner() {
 
   return (
     <div className="relative z-1">
-      <p className="py-2 text-[14px] text-[#C6D3DD] font-[400]">
-        Each day, the top 100 referrers and 100 randomly selected parade
-        participants have the opportunity to mint a mystery box (Every 1 ETH
-        deposit could earn you an additional referral spot. ). If multiple users
-        have the same referral ranking, we will randomly select some users to
-        maintain the daily distribution of top referrers to 100. Please note
-        that we capture the previous day's data at 10:00 UTC and publish it an
-        hour later.
+      <p className="py-2 text-[20px] font-satoshi text-[#B9C7D0] font-[700]">
+        <span className="text-green">
+          Each day, top 100 referrers of previous day and 100 randomly chosen
+          parade participants can mint a mystery box.
+        </span>{" "}
+        Additionally, every 1 ETH deposit can earn you an extra referral spot.
+        In cases where multiple users have the same referral ranking, we
+        randomly select some users to ensure that the daily distribution of top
+        referrers remains at 100. It's important to note that we collect data
+        from the previous day at 10:00 UTC and publish it an hour later.
       </p>
       <div className="flex items-center py-4 px-2">
         <div className="flex items-center gap-2 text-[16px]">
