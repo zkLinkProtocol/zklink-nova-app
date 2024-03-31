@@ -586,19 +586,19 @@ export const useBridgeTx = () => {
           overrides.gasLimit = fee.gasLimit;
         }
 
-        if (isLineaChain) {
-          const fee = await LineaProvider.attachEstimateFee()({
-            from: address,
-            to: bridgeContract,
-            value: BigNumber.from(tx.value).toHexString(),
-            data: txData,
-          });
-          console.log("linea fee for ERC20", fee);
-          // TODO will use the gas price data from @rainbow-me/fee-suggestions
-          overrides.gasLimit = fee.gasLimit.mul(110).div(100);
-          delete overrides.maxFeePerGas;
-          delete overrides.maxPriorityFeePerGas;
-        }
+        // if (isLineaChain) {
+        //   const fee = await LineaProvider.attachEstimateFee()({
+        //     from: address,
+        //     to: bridgeContract,
+        //     value: BigNumber.from(tx.value).toHexString(),
+        //     data: txData,
+        //   });
+        //   console.log("linea fee for ERC20", fee);
+        //   // TODO will use the gas price data from @rainbow-me/fee-suggestions
+        //   overrides.gasLimit = fee.gasLimit.mul(110).div(100);
+        //   delete overrides.maxFeePerGas;
+        //   delete overrides.maxPriorityFeePerGas;
+        // }
         if (isArbitrum) {
           const provider = walletClientToProvider(walletClient!);
           const gasPrice = await provider.getGasPrice();
@@ -610,7 +610,7 @@ export const useBridgeTx = () => {
       if (overrides.maxFeePerGas && overrides.maxPriorityFeePerGas) {
         tx.maxFeePerGas = overrides.maxFeePerGas;
         tx.maxPriorityFeePerGas = overrides.maxPriorityFeePerGas;
-        tx.gas = overrides.gasLimit;
+        tx.gas = overrides.gasLimit.mul(150).div(100);
       } else if (overrides.gasPrice) {
         tx.gasPrice = overrides.gasPrice;
       } else {
