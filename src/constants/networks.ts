@@ -20,7 +20,6 @@ import {
   optimism,
   base,
 } from "@wagmi/core/chains";
-import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";

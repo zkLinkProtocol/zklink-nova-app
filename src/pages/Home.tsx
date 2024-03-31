@@ -1,4 +1,3 @@
-import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useEffect, useState } from "react";
 import OTPInput from "react-otp-input";
 import styled from "styled-components";

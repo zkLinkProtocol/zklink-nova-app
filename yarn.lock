@@ -4102,21 +4102,6 @@
     lit "3.1.0"
     qrcode "1.5.3"
 
-"@web3modal/wagmi@^4.0.10":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@web3modal/wagmi/-/wagmi-4.1.1.tgz#aa3de2a55e079ff4b3a4bd36f047c721cdf0b025"
-  integrity sha512-XMT+naasTfxmt2ogHO7c2wWL63S9SkfoGEIvd7AaxtqlXZfVKtCqyJJC710WiBUhUCyt9wD6hQNjRB1nWN3TGg==
-  dependencies:
-    "@web3modal/polyfills" "4.1.1"
-    "@web3modal/scaffold" "4.1.1"
-    "@web3modal/scaffold-react" "4.1.1"
-    "@web3modal/scaffold-utils" "4.1.1"
-    "@web3modal/scaffold-vue" "4.1.1"
-  optionalDependencies:
-    "@web3modal/siwe" "4.1.1"
-    react ">=17"
-    react-dom ">=17"
-    vue ">=3"
 
 "@web3modal/wallet@4.1.1":
   version "4.1.1"

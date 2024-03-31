@@ -15,7 +15,6 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
 import {
   useAccount,
   useDisconnect,
