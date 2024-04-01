@@ -625,6 +625,12 @@ export default function Header() {
               Bridge
             </NavLink>
           </NavbarMenuItem>
+          <NavbarMenuItem isActive={location.pathname === "/bridge"}>
+            <NavLink to="/unwrap" className="block">
+              Unwrap wETH
+            </NavLink>
+          </NavbarMenuItem>
+
           <NavbarMenuItem>
             <a
               href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
