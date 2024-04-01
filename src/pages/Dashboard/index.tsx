@@ -18,6 +18,7 @@ import {
   getSupportTokens,
   getTokenPrice,
   getTotalTvlByToken,
+  getMagPiePoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useSelector } from "react-redux";
@@ -30,7 +31,6 @@ import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
-import { forEach } from "lodash";
 import Decimal from "decimal.js";
 
 const TabsBox = styled.div`
@@ -225,6 +225,31 @@ export default function Dashboard() {
     }
   };
 
+  const [magpiePointsData, setMagpiePointsData] = useState<{
+    points: number;
+    layerPoints: number;
+  }>({
+    points: 0,
+    layerPoints: 0,
+  });
+
+  const getMagpiePointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getMagPiePoints(address);
+    if (data && Array.isArray(data) && data.length > 0) {
+      setMagpiePointsData({
+        points: data.reduce(
+          (prev, cur) => prev + Number(cur.points.eigenpiePoints),
+          0
+        ),
+        layerPoints: data.reduce(
+          (prev, cur) => prev + Number(cur.points.eigenLayerPoints),
+          0
+        ),
+      });
+    }
+  };
+
   const [renzoPoints, setRenzoPoints] = useState(0);
   const [renzoEigenLayerPoints, setRenzoEigenLayerPoints] = useState(0);
   const getRenzoPointsFunc = async () => {
@@ -258,6 +283,7 @@ export default function Dashboard() {
     getPufferPointsFunc();
     getRenzoPointsFunc();
     getAccountTvlFunc();
+    getMagpiePointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -302,6 +328,7 @@ export default function Dashboard() {
             pufferPoints={pufferPoints}
             renzoPoints={renzoPoints}
             renzoEigenLayerPoints={renzoEigenLayerPoints}
+            magpiePointsData={magpiePointsData}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}

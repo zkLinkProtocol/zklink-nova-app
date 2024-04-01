@@ -330,6 +330,27 @@ export const getEigenlayerPoints = (address: string) =>
 export const getPufferPoints = (address: string) =>
   http.get(`${BASE_URL_LRT_POINTS}/points/${address}/pufferpoints`);
 
+export interface MagPieResponse {
+  errno: number;
+  errmsg: string;
+  data: [
+    {
+      address: string;
+      tokenAddress: string;
+      points: {
+        eigenpiePoints: number;
+        eigenLayerPoints: number;
+      };
+      updatedAt: number;
+    }
+  ];
+}
+
+export const getMagPiePoints = (address: string): Promise<MagPieResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/magpie/points`, {
+    params: { address },
+  });
+
 export interface RenzoResponse {
   errno: number;
   errmsg: string;
