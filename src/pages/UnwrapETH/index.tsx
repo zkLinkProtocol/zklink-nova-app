@@ -11,7 +11,6 @@ import {
   SelectItem,
   Avatar,
 } from "@nextui-org/react";
-import styled from "styled-components";
 
 import {
   useAccount,
@@ -25,8 +24,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { config } from "@/constants/networks";
 import { NOVA_CHAIN_ID, WETH_CONTRACT } from "@/constants";
 import { formatBalance } from "@/utils";
-const wethIcon =
-  "https://assets.coingecko.com/coins/images/2518/large/weth.png?169650333";
+import wethIcon from "@/assets/img/weth.svg";
 import ETHIcon from "@/assets/img/eth.svg";
 import { BgBox } from "@/pages/Bridge";
 import { SelectBox } from "@/components/Bridge";
@@ -177,8 +175,8 @@ export default function Swap() {
 
   return (
     <BgBox>
-      <div className="my-10 mx-auto w-[40rem]">
-        <div className="px-8 py-6 bg-[#022738] mb-4">
+      <div className="my-10 px-3 mx-auto md:w-[40rem]">
+        <div className="px-4 md:px-8 py-4 md:py-6 bg-[#022738] mb-4">
           <p className="font-satoshi text-2xl font-bold mb-4">
             Wrap or Unwrap your WETH
           </p>
@@ -186,7 +184,7 @@ export default function Swap() {
             You could unwrap your WETH to continue accumulating nova points
           </p>
         </div>
-        <SelectBox className="px-6 py-6 md:px-6 mb-6">
+        <SelectBox className="px-4 py-4 md:py-6 md:px-6 mb-6">
           <div className="flex items-center gap-4">
             <span className="font-bold text-[24px]">From</span>
 
@@ -211,7 +209,10 @@ export default function Swap() {
                 label: item,
                 value: item,
               }))}
-              classNames={{ base: "w-[200px]", trigger: "h-[58px]" }}
+              classNames={{
+                base: "w-[220px]",
+                trigger: "h-[38px] md:h-[58px]",
+              }}
               variant="bordered"
               onChange={(e) => setFromToken(e.target.value as "ETH" | "wETH")}
               selectedKeys={[fromToken]}
@@ -220,8 +221,9 @@ export default function Swap() {
                   <div className="flex gap-2 items-center">
                     <Avatar
                       src={item.data?.value === "ETH" ? ETHIcon : wethIcon}
+                      className="h-6 w-6 md:h-10 md:w-10"
                     ></Avatar>
-                    <span className="text-[#fff] font-satoshi font-normal text-[18px]">
+                    <span className="text-[#fff] font-satoshi font-normal text-[16px] md:text-lg">
                       {item.data?.label}
                     </span>
                   </div>
@@ -233,6 +235,7 @@ export default function Swap() {
                   <div className="flex gap-2 items-center">
                     <Avatar
                       src={item.value === "ETH" ? ETHIcon : wethIcon}
+                      className="h-6 w-6 md:h-10 md:w-10"
                     ></Avatar>
                     <span>{item.label}</span>
                   </div>
@@ -241,7 +244,7 @@ export default function Swap() {
             </Select>
           </div>
         </SelectBox>
-        <SelectBox className="px-6 py-6 md:px-6">
+        <SelectBox className="px-4 py-4 md:py-6 md:px-6">
           <div className="flex items-center gap-4">
             <span className="font-bold text-[24px]">To</span>
           </div>
@@ -259,8 +262,11 @@ export default function Swap() {
             />
 
             <div className=" flex items-center gap-2 px-4 py-4 rounded-3xl cursor-pointer">
-              <Avatar src={fromToken === "ETH" ? wethIcon : ETHIcon}></Avatar>
-              <span className="text-[#fff] font-satoshi font-normal text-[18px]">
+              <Avatar
+                src={fromToken === "ETH" ? wethIcon : ETHIcon}
+                className="h-6 w-6 md:h-10 md:w-10"
+              ></Avatar>
+              <span className="text-[#fff] font-satoshi font-normal text-[16px] md:text-lg">
                 {fromToken == "ETH" ? "wETH" : "ETH"}
               </span>
             </div>
