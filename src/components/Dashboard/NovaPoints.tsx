@@ -26,6 +26,7 @@ interface INovaPointsProps {
   pufferPoints: number;
   renzoPoints: number;
   renzoEigenLayerPoints: number;
+  magpiePointsData: { points: number; layerPoints: number };
 }
 
 export interface OtherPointsItem {
@@ -119,6 +120,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     pufferPoints,
     renzoPoints,
     renzoEigenLayerPoints,
+    magpiePointsData,
   } = props;
   const eralyBirdBooster = 1.5;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -152,8 +154,10 @@ export default function NovaPoints(props: INovaPointsProps) {
         icon: "/img/icon-eigenpie.png",
         pointsName: "EigenPie Points",
         eigenlayerName: "EigenPie",
-        pointsValue: 0, // TODO
-        eigenlayerValue: 0, // TODO
+        pointsValue: magpiePointsData.points,
+        eigenlayerValue: magpiePointsData.layerPoints,
+        pointsTips:
+          "Your EngenPie Points will be visible one hour after you deposit your mxETH",
       },
       // TODO: get Kelp (points & eigenlayer points) num
       {
@@ -175,6 +179,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoPoints,
     renzoEigenLayerPoints,
     isHidePoints,
+    magpiePointsData,
   ]);
 
   return (
