@@ -98,8 +98,9 @@ export default function Swap() {
 
   const actionBtnDisabled = useMemo(() => {
     if (
-      !nativeTokenBalance ||
-      new BigNumber(nativeTokenBalance.toString()).eq(0)
+      !invalidChain &&
+      (!nativeTokenBalance ||
+        new BigNumber(nativeTokenBalance.toString()).eq(0))
     ) {
       return true;
     } else if (

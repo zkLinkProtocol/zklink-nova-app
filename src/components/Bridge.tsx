@@ -393,7 +393,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         return "Binance wallet may not support Mantle Network.";
       } else if (
         connectorName.toLowerCase().includes("gate") &&
-        ["ethereum", "arbitrum", "zksync"].includes(
+        !["ethereum", "arbitrum", "zksync", "optimism"].includes(
           fromList[fromActive].networkKey
         )
       ) {
@@ -585,8 +585,9 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   const actionBtnDisabled = useMemo(() => {
     if (
-      !nativeTokenBalance ||
-      new BigNumber(nativeTokenBalance.toString()).eq(0)
+      !invalidChain &&
+      (!nativeTokenBalance ||
+        new BigNumber(nativeTokenBalance.toString()).eq(0))
     ) {
       return true;
     } else if (unsupportedChainWithConnector) {
