@@ -88,6 +88,7 @@ export const useTokenBalanceList = () => {
         const item = token.address.find((item) =>
           isSameNetwork(networkKey, item.chain)
         );
+        if (!item?.l1Address) continue;
         if (item) {
           const imgItem = allTokens.find((at) =>
             isSameAddress(at.l1Address, item.l1Address)
