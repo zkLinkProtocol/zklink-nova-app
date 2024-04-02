@@ -7,6 +7,10 @@ import {
   ModalBody,
   ModalFooter,
   Tooltip,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
 import styled from "styled-components";
 import { CardBox } from "@/styles/common";
@@ -15,6 +19,7 @@ import {
   MYSTERYBOX_NFT_MARKET_URL,
   NOVA_CHAIN_ID,
   MintStatus,
+  LYNKS_NFT_MARKET_URL,
 } from "@/constants";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import DrawAnimation from "@/components/DrawAnimation";
@@ -136,6 +141,11 @@ const ALL_NFTS = [
   { img: "trademark-3.png", name: "Chess Knight", balance: 0 },
   { img: "trademark-4.png", name: "Binary Code Metrix Cube", balance: 0 },
 
+  { img: "ENTP-LYNK.png", type: "ENTP", name: "Points x3 Booster", balance: 0 },
+  { img: "ISTP-LYNK.png", type: "ISTP", name: "Points x3 Booster", balance: 0 },
+  { img: "INFJ-LYNK.png", type: "INFJ", name: "Points x3 Booster", balance: 0 },
+  { img: "ESFJ-LYNK.png", type: "ESFJ", name: "Points x3 Booster", balance: 0 },
+
   { img: "point-booster-1.png", name: "Nova x3 Booster", balance: 0 },
   { img: "point-booster-2.png", name: "Nova x4 Booster", balance: 0 },
   { img: "point-booster-3.png", name: "Nova +100 Booster", balance: 0 },
@@ -143,11 +153,6 @@ const ALL_NFTS = [
   { img: "point-booster-5.png", name: "Nova +500 Booster", balance: 0 },
   { img: "point-booster-6.png", name: "Nova +1000 Booster", balance: 0 },
   { img: "point-booster-7.png", name: "Nova +2000 Booster", balance: 0 },
-
-  { img: "ENTP-LYNK.png", type: "ENTP", name: "Points x3 Booster", balance: 0 },
-  { img: "ISTP-LYNK.png", type: "ISTP", name: "Points x3 Booster", balance: 0 },
-  { img: "INFJ-LYNK.png", type: "INFJ", name: "Points x3 Booster", balance: 0 },
-  { img: "ESFJ-LYNK.png", type: "ESFJ", name: "Points x3 Booster", balance: 0 },
 ];
 export default function NFTCard() {
   const openBoxModal = useDisclosure();
@@ -521,12 +526,24 @@ export default function NFTCard() {
                   onClick={() => updateRefreshBalanceId()}
                 />
               </Tooltip>
-              <Button
-                className="gradient-btn"
-                onClick={() => window.open(TRADEMARK_NFT_MARKET_URL, "_blank")}
-              >
-                Buy
-              </Button>
+
+              <Dropdown disableAnimation>
+                <DropdownTrigger>
+                  <Button className="gradient-btn">Buy</Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  onAction={(key) => {
+                    window.open(key as string, "_blank");
+                  }}
+                >
+                  <DropdownItem key={LYNKS_NFT_MARKET_URL}>
+                    <span>Buy Lynks</span>
+                  </DropdownItem>
+                  <DropdownItem key={TRADEMARK_NFT_MARKET_URL}>
+                    Buy Trademarks
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
