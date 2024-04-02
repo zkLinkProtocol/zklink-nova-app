@@ -369,6 +369,14 @@ export default function Header() {
               <NavLink to="/about">About</NavLink>
             </NavbarItem>
             <NavbarItem>
+              <a
+                href="https://zklink.io/merge/"
+                target="_blank"
+              >
+                Merge Token
+              </a>
+            </NavbarItem>
+            <NavbarItem>
               <NavLink to="/bridge">Bridge</NavLink>
             </NavbarItem>
             <NavbarItem>

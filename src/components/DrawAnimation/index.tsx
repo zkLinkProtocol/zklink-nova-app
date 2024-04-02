@@ -33,7 +33,7 @@ const MysteryboxItems = [
   { name: "Nova +500 Booster", img: "/img/img-point-booster-5.png" },
   { name: "Nova +1000 Booster", img: "/img/img-point-booster-6.png" },
   { name: "Nova +2000 Booster", img: "/img/img-point-booster-7.png" },
-  { name: "Lynks", img: "" },
+  { name: "Points x3 Booster", img: "" },
 ];
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   const { targetImageIndex, onDrawEnd, type, sbtNFT } = props;

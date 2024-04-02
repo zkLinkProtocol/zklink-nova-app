@@ -144,10 +144,10 @@ const ALL_NFTS = [
   { img: "point-booster-6.png", name: "Nova +1000 Booster", balance: 0 },
   { img: "point-booster-7.png", name: "Nova +2000 Booster", balance: 0 },
 
-  { img: "ENTP-LYNK.png", type: "ENTP", name: "ENTP-LYNK", balance: 0 },
-  { img: "ISTP-LYNK.png", type: "ISTP", name: "ISTP-LYNK", balance: 0 },
-  { img: "INFJ-LYNK.png", type: "INFJ", name: "INFJ-LYNK", balance: 0 },
-  { img: "ESFJ-LYNK.png", type: "ESFJ", name: "ESFJ-LYNK", balance: 0 },
+  { img: "ENTP-LYNK.png", type: "ENTP", name: "Points x3 Booster", balance: 0 },
+  { img: "ISTP-LYNK.png", type: "ISTP", name: "Points x3 Booster", balance: 0 },
+  { img: "INFJ-LYNK.png", type: "INFJ", name: "Points x3 Booster", balance: 0 },
+  { img: "ESFJ-LYNK.png", type: "ESFJ", name: "Points x3 Booster", balance: 0 },
 ];
 export default function NFTCard() {
   const openBoxModal = useDisclosure();

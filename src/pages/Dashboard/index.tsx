@@ -32,6 +32,7 @@ import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import Decimal from "decimal.js";
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -309,13 +310,17 @@ export default function Dashboard() {
       <BgCoverImg />
       {isLoading && <Loading />}
 
-      <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
-        <span className="text-[#03d498]">
-          Kelp Miles and Eigenpie Points are undergoing synchronization at the
-          moment. Your point balances may not be visible until this process is
-          complete.
-        </span>
-      </div>
+      <a href="https://zklink.io/merge/">
+        <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded flex items-center justify-center gap-2">
+          <span className="text-[#03d498]">
+            🔥🎉Merge Token is now live! Click here to merge your tokens and
+            explore the Nova Ecosystems.
+          </span>
+          <span className="text-[#03d498]">
+            <AiOutlineArrowRight />
+          </span>
+        </div>
+      </a>
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[3rem]">
         {/* Left: nova points ... data */}
