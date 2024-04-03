@@ -198,6 +198,7 @@ export type AssetsListItem = {
     multiplier: number;
     timestamp: number;
   }[];
+  isNova: boolean;
   chain?: string;
 };
 
@@ -378,6 +379,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         type: item?.type,
         yieldType: item?.yieldType,
         multipliers: item?.multipliers,
+        isNova: item.address[0]?.chain === "Nova" ? true : false,
       };
 
       // sum all chains token amount/tvl
@@ -416,7 +418,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
     arr.splice(4, 0, ezEthItem[0]);
 
     console.log("account tvl list========>", arr);
-    setTableList(arr);
+    setTableList(arr.filter((item) => !item.isNova));
   }, [
     isMyHolding,
     assetsTabsActive,
