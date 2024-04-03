@@ -72,7 +72,9 @@ export default function TvlSummary(props: ITvlSummaryProps) {
             </a>
           </p>
           <p className="mt-[1rem] text-[1rem] leading-[rem] text-center text-[#7E7E7E] flex items-center gap-[0.5rem]">
-            Your Invite Code (Remaining {invite?.canInviteNumber || 0})
+            {`Your Invite Code (Remaining ${invite?.canInviteNumber || 0}/${
+              invite?.maxInviteNumber || 0
+            })`}
             <Tooltip
               className="p-[1rem]"
               isOpen={showTooltip4}
