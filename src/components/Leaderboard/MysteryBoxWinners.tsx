@@ -162,7 +162,7 @@ export default function NFTLuckWinner() {
     // currentTs >= todayReadyTime ? todayReadyTime + oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
-    getTopInviteAndRandomFunc();
+    getTopInviteAndRandomFunc(formatUtcDate(ts, "YYYY-MM-DD"));
   }, []);
 
   return (
