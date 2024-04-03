@@ -418,7 +418,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
     // arr.splice(4, 0, ezEthItem[0]);
 
     console.log("account tvl list========>", arr);
-    setTableList(arr.filter((item) => !item.isNova));
+    setTableList(arr);
   }, [
     isMyHolding,
     assetsTabsActive,
