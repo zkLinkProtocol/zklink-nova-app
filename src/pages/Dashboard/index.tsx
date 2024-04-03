@@ -343,8 +343,8 @@ export default function Dashboard() {
       <a href="https://zklink.io/merge/">
         <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded flex items-center justify-center gap-2">
           <span className="text-[#03d498]">
-            🔥🎉Merge Token is now live! Click here to merge your tokens and
-            explore the Nova Ecosystems.
+            🔥🎉 Token Merge is now live! Click here to merge your tokens and
+            explore zkLink Nova's Ecosystem..
           </span>
           <span className="text-[#03d498]">
             <AiOutlineArrowRight />
