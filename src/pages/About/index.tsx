@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import "@/styles/otp-input.css";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 const BgBox = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -123,13 +125,36 @@ const BannerText = styled.div`
     }
   }
 `;
-
 export default function About() {
+  const [searchParams] = useSearchParams();
+
+  const scrollToAnchor = () => {
+    const anchorName = searchParams.get("anchor");
+
+    if (!!anchorName) {
+      let anchorElement = document.getElementById(anchorName);
+      if (anchorElement) {
+        const scrollTop = anchorElement.offsetTop - 100;
+        window.scrollTo(0, scrollTop);
+        document.documentElement.scrollTop = scrollTop;
+        document.body.scrollTop = scrollTop;
+      }
+    }
+  };
+
+  useEffect(() => {
+    scrollToAnchor();
+  }, [searchParams]);
+
   return (
     <BgBox className="relative pb-[3rem]">
       <div className="md:pt-[8.5rem] pt-[5rem] md:px-[252px] px-[20px] box-content ">
         <div className="flex relative ">
-          <img src="/img/about-banner.png" className="banner" />
+          <img
+            src="/img/about-banner.png"
+            className="banner"
+            onLoad={scrollToAnchor}
+          />
 
           <BannerText className="absolute flex flex-col justify-center items-center">
             <p className="text text-center">zkLink Nova Campaign</p>
@@ -164,10 +189,21 @@ export default function About() {
         <div className="paragraph1 title big">How to earn Nova points?</div>
         <div className="paragraph">
           You can see the detail and formula of how we calculate Nova points{" "}
-          <a className="jump" href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank">here</a>.
+          <a
+            className="jump"
+            href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+            target="_blank"
+          >
+            here
+          </a>
+          .
         </div>
         <div>
-          <img src="/img/image4.svg" className="w-full" />
+          <img
+            src="/img/image4.svg"
+            className="w-full"
+            onLoad={scrollToAnchor}
+          />
         </div>
         <div className="paragraph">
           <div className="title mt-4">Minimal Entry:</div>
@@ -193,13 +229,28 @@ export default function About() {
         <div className="paragraph">
           <div className="title">Holding assets on Nova</div>
           <div>
-            Holding any supported assets on Nova allows you to accrue Nova points every 8 hours until the final Nova Point computation date. Check how your Nova points are computed by holding Value <a className="jump" href="https://blog.zk.link/aggregation-parade-7997d31ca8e1" target="_blank">here</a>.
+            Holding any supported assets on Nova allows you to accrue Nova
+            points every 8 hours until the final Nova Point computation date.
+            Check how your Nova points are computed by holding Value{" "}
+            <a
+              className="jump"
+              href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+              target="_blank"
+            >
+              here
+            </a>
+            .
           </div>
-          <img src="/img/image2.svg" className="w-full" />
+          <img
+            src="/img/image2.svg"
+            className="w-full"
+            onLoad={scrollToAnchor}
+          />
         </div>
         <div className="paragraph">
           <div>
-            Tokens are categorized into three classes, with higher liquidity tokens receiving more Nova Points.
+            Tokens are categorized into three classes, with higher liquidity
+            tokens receiving more Nova Points.
           </div>
           <ul>
             <li className="before">Class I: Multiplier 2x</li>
@@ -241,7 +292,8 @@ export default function About() {
         </div>
         <div className="paragraph">
           <div>
-            <span className="title">Deposit Multiplier:</span> After making a valid deposit, you will instantly receive a x10 Nova Points boost.
+            <span className="title">Deposit Multiplier:</span> After making a
+            valid deposit, you will instantly receive a x10 Nova Points boost.
           </div>
         </div>
         <div className="paragraph">
@@ -253,7 +305,11 @@ export default function About() {
           </div>
         </div>
         <div className="paragraph">
-          <img src="/img/image3.svg" className="w-full" />
+          <img
+            src="/img/image3.svg"
+            className="w-full"
+            onLoad={scrollToAnchor}
+          />
         </div>
         <div className="paragraph title big">How to earn Nova NFTs?</div>
         <div className="paragraph">
@@ -271,7 +327,11 @@ export default function About() {
                     <img src="/img/1.png" alt="" className='person'/>
                 </div> */}
         <div className="mb-[1rem]">
-          <img src="/img/image5.svg" className="w-full" />
+          <img
+            src="/img/image5.svg"
+            className="w-full"
+            onLoad={scrollToAnchor}
+          />
         </div>
         <div className="paragraph">
           <div>
@@ -324,8 +384,79 @@ export default function About() {
           </div>
         </div>
         <div className="paragraph">
-          <img src="/img/image1.svg" className="w-full" />
+          <img
+            src="/img/image1.svg"
+            className="w-full"
+            onLoad={scrollToAnchor}
+          />
         </div>
+
+        <div id="disclaimer">
+          <div className="paragraph title big">
+            Disclaimer: Aggregation Parade Online Campaign
+          </div>
+          <div className="paragraph">
+            By participating in the Aggregation Parade Online Campaign, you
+            agree to the following terms and conditions:
+          </div>
+
+          <div className="paragraph">
+            <span className="title">Campaign Rules: </span> We reserve the right
+            to modify the campaign rules at any time without prior notice.
+            Participants are responsible for regularly reviewing the rules to
+            stay informed of any changes.
+          </div>
+          <div className="paragraph">
+            <span className="title">Distribution in the Event of Sybil: </span>
+            In the event of suspected Sybil activity, where participants create
+            multiple accounts to manipulate outcomes, we reserve the right to
+            adjust distribution methods and outcomes accordingly. Our decision
+            in such matters is final.
+          </div>
+          <div className="paragraph">
+            <span className="title">Rights Reserved: </span> We hold the final
+            rights to interpret, explain, and enforce the rules and regulations
+            of the campaign. Our decisions regarding any aspect of the campaign,
+            including but not limited to participant eligibility, rule
+            enforcement, and prize distribution, are binding and not subject to
+            dispute.
+          </div>
+          <div className="paragraph">
+            <span className="title">Participant Responsibility: </span>
+            Participants are responsible for familiarizing themselves with the
+            campaign rules and complying with them. Ignorance of the rules will
+            not be accepted as an excuse for non-compliance.
+          </div>
+          <div className="paragraph">
+            <span className="title">Liability: </span>
+            Liability: We shall not be held liable for any loss, damage,
+            inconvenience, or other adverse outcomes sustained by participants
+            or third parties arising from participation in the campaign, except
+            in cases of willful misconduct or gross negligence on our part.
+          </div>
+          <div className="paragraph">
+            <span className="title">Consent to Use of Likeness: </span>
+            By participating in the campaign, participants consent to the use of
+            their likeness, including but not limited to twitter handles, NFTs,
+            and other identifying information, for promotional purposes related
+            to the campaign, without any compensation.
+          </div>
+          <div className="paragraph">
+            <span className="title">Indemnification: </span>
+            Participants agree to indemnify and hold harmless the campaign
+            organizers, sponsors, partners, and affiliates from and against any
+            claims, losses, damages, liabilities, costs, and expenses arising
+            out of or relating to their participation in the campaign.
+          </div>
+          <div className="paragraph">
+            By participating in the Aggregation Parade Online Campaign, you
+            acknowledge that you have read, understood, and agree to abide by
+            these terms and conditions. Failure to comply with these terms may
+            result in disqualification from the campaign and forfeiture of any
+            prizes or benefits.
+          </div>
+        </div>
+
         <div className="paragraph title big">About zkLink Nova Network</div>
         <div className="paragraph3">
           zkLink Nova is the pioneering Aggregated Layer 3 Rollup zkEVM network
