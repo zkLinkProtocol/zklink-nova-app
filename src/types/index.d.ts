@@ -47,10 +47,11 @@ export interface FullDepositFee {
 export type Invite = {
   address: string;
   code: string | null;
-  canInviteNumber?: number;
+  canInviteNumber: number;
+  maxInviteNumber: number;
   isLeader?: boolean;
   twitterName: string | null;
   twitterHandler: string | null;
   beInvited?: boolean;
-  kolGroup?: boolean
+  kolGroup?: boolean;
 };
