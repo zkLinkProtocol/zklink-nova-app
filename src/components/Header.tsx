@@ -300,7 +300,10 @@ export default function Header() {
     }
   };
   useEffect(() => {
-    scrollToTop();
+    const anchor = searchParams.get("anchor");
+    if (!anchor) {
+      scrollToTop();
+    }
   }, [location.pathname]);
 
   return (

@@ -22,7 +22,7 @@ import {
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import NovaCharacter from "@/components/Dashboard/NovaCharacter";
 import NovaPoints from "@/components/Dashboard/NovaPoints";
@@ -68,6 +68,36 @@ export type AccountTvlItem = {
   symbol: string;
   iconURL: string | null;
 };
+
+export function DisclaimerFooter() {
+  return (
+    <div className="flex justify-between items-center">
+      <div className="right-[6rem] bottom-[1rem] flex justify-end items-end">
+        <div className="flex items-center gap-[1rem]">
+          <a href="https://blog.zk.link/" target="_blank">
+            <img src="/img/icon-medium.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+          <a href="https://discord.com/invite/zklink" target="_blank">
+            <img src="/img/icon-dc.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+          <a href="https://t.me/zkLinkorg">
+            <img src="/img/icon-tg.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+          <a href="https://twitter.com/zkLink_Official" target="_blank">
+            <img
+              src="/img/icon-twitter.svg"
+              className="w-[0.75rem] h-[0.75rem]"
+            />
+          </a>
+          <a href="https://github.com/zkLinkProtocol" target="_blank">
+            <img src="/img/icon-github.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+        </div>
+      </div>
+      <Link to="/about?anchor=disclaimer">zkLink Nova Disclaimer</Link>
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const { isConnected, address } = useAccount();
@@ -388,6 +418,10 @@ export default function Dashboard() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="relative mt-[3rem] md:pl-[4.75rem] md:pr-[6rem] px-[1rem] z-[1]">
+        <DisclaimerFooter />
       </div>
     </BgBox>
   );
