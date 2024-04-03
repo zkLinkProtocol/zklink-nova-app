@@ -198,6 +198,7 @@ export type AssetsListItem = {
     multiplier: number;
     timestamp: number;
   }[];
+  isNova: boolean;
   chain?: string;
 };
 
@@ -378,6 +379,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         type: item?.type,
         yieldType: item?.yieldType,
         multipliers: item?.multipliers,
+        isNova: item.address[0]?.chain === "Nova" ? true : false,
       };
 
       // sum all chains token amount/tvl
@@ -411,12 +413,12 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
     arr = arr.sort((a, b) => +b.totalTvl - +a.totalTvl);
 
-    const ezEthIndex = arr.findIndex((item) => item.symbol === "ezETH");
-    const ezEthItem = arr.splice(ezEthIndex, 1);
-    arr.splice(4, 0, ezEthItem[0]);
+    // const ezEthIndex = arr.findIndex((item) => item.symbol === "ezETH");
+    // const ezEthItem = arr.splice(ezEthIndex, 1);
+    // arr.splice(4, 0, ezEthItem[0]);
 
     console.log("account tvl list========>", arr);
-    setTableList(arr);
+    setTableList(arr.filter((item) => !item.isNova));
   }, [
     isMyHolding,
     assetsTabsActive,
@@ -541,10 +543,13 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         src={item?.iconURL}
                         className="flex rounded-full w-[2.125rem] h-[2.125rem]"
                       />
-                      <p className="value ml-[0.5rem]">
-                        {item?.symbol}
+                      <div className="value ml-[0.5rem]">
+                        <p>{item?.symbol}</p>
+                        {item?.isNova && (
+                          <p className="text-[#8f9193]">Merged Token</p>
+                        )}
                         {/* {item?.chain && `.${item.chain}`} */}
-                      </p>
+                      </div>
 
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
                         {item?.multipliers && Array.isArray(item.multipliers)
