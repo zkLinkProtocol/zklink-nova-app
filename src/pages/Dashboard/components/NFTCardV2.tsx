@@ -17,14 +17,14 @@ import {
   MintStatus,
 } from "@/constants";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import DrawAnimation from "@/components/DrawAnimation";
+import DrawAnimationV2 from "@/components/DrawAnimationV2";
 import useSBTNFT from "@/hooks/useNFT";
 import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
 import {
-  getRemainMysteryboxDrawCount,
-  mintMysteryboxNFT,
-  openMysteryboxNFT,
-  getRemainMysteryboxOpenableCount,
+  getRemainMysteryboxDrawCountV2,
+  mintMysteryboxNFTV2,
+  openMysteryboxNFTV2,
+  getRemainMysteryboxOpenableCountV2,
 } from "@/api";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import toast from "react-hot-toast";
@@ -38,7 +38,7 @@ import { RootState } from "@/store";
 const NftBox = styled.div`
   .nft-left {
     /* flex: 6;
-    */
+      */
     padding: 24px;
     .nft-chip:nth-child(3n) {
       margin-right: 0;
@@ -165,10 +165,10 @@ const ALL_NFTS = [
   { img: "point-booster-7.png", name: "Nova +2000 Booster", balance: 0 },
 ];
 
-interface NFTCardProps {
-  switchPhase: (p: number) => void;
+interface NFTCardV2Props {
+  switchPhase: (version: number) => void;
 }
-export default function NFTCard({ switchPhase }: NFTCardProps) {
+export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
   const openBoxModal = useDisclosure();
   const mintBoxModal = useDisclosure();
   const mintResultModal = useDisclosure();
@@ -190,13 +190,13 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
     boosterNFT,
     boosterNFTV2,
     lynksNFT,
-    mysteryBoxNFT,
+    mysteryBoxNFTV2,
     getLynksNFT,
-    sendMysteryOpenMintTx,
-    sendMysteryMintTx,
+    sendMysteryOpenMintTxV2,
+    sendMysteryMintTxV2,
     loading: mintLoading,
     novaETHBalance,
-    getMysteryboxNFT,
+    getMysteryboxNFTV2,
   } = useNovaNFT();
   const { address, chainId } = useAccount();
   const [allNFTs, setAllNFTs] =
@@ -230,22 +230,22 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
   useEffect(() => {
     //fetch box count remain
     if (address) {
-      getRemainMysteryboxDrawCount(address).then((res) => {
+      getRemainMysteryboxDrawCountV2(address).then((res) => {
         const remainNumber = res.result;
         setRemainMintCount(remainNumber);
       });
       //TODO get mystery box balance
 
-      getMysteryboxNFT(address).then((res) => {
+      getMysteryboxNFTV2(address).then((res) => {
         setBoxTokenIds(res ?? []);
         setBoxCount(res?.length ?? 0);
       });
       //TODO get mintabel count
-      getRemainMysteryboxOpenableCount(address).then((res) => {
-        console.log("getRemainMysteryboxOpenableCount: ", res);
+      getRemainMysteryboxOpenableCountV2(address).then((res) => {
+        console.log("getRemainMysteryboxOpenableCountV2: ", res);
         setMintableCount(res.result);
         if (res.result > 0) {
-          openMysteryboxNFT(address).then((res) => {
+          openMysteryboxNFTV2(address).then((res) => {
             const { tokenId, nonce, signature, expiry } = res.result;
             setMintParams({ tokenId, nonce, signature, expiry });
             setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
@@ -253,7 +253,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
         }
       });
     }
-  }, [address, getMysteryboxNFT, update]);
+  }, [address, getMysteryboxNFTV2, update]);
 
   // useEffect(() => {
   //   if (remainMintCount > 0 && !initied && !mintBoxModal.isOpen) {
@@ -299,7 +299,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
         // TODO: new nova points booster NFTs
         const boosterBalancesV2 = await Promise.all(
           Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
-            boosterNFTV2.read.balanceOf([address, item])
+            boosterNFT.read.balanceOf([address, item])
           )
         );
         for (let i = 0; i < 5; i++) {
@@ -362,8 +362,8 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
       setMinting(true);
       setMintStatus(MintStatus.Minting);
       mintResultModal.onOpen();
-      const res = await mintMysteryboxNFT(address);
-      await sendMysteryMintTx(res.result);
+      const res = await mintMysteryboxNFTV2(address);
+      await sendMysteryMintTxV2(res.result);
       setUpdate((update) => update + 1);
       setMintStatus(MintStatus.Success);
       setMintResult({
@@ -402,11 +402,11 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
       );
       return;
     }
-    if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
+    if (!mysteryBoxNFTV2 || !address || boxTokenIds.length === 0) return;
     try {
       setOpening(true);
-      await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
-      const res = await openMysteryboxNFT(address); // draw prize
+      await mysteryBoxNFTV2.write.burn([boxTokenIds[0]]); // burn first
+      const res = await openMysteryboxNFTV2(address); // draw prize
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
         setMintParams({ tokenId, nonce, signature, expiry });
@@ -415,12 +415,12 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
           tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
         ); // use index of img for active
       }
-      getRemainMysteryboxOpenableCount(address).then((res) => {
-        console.log("getRemainMysteryboxOpenableCount: ", res);
+      getRemainMysteryboxOpenableCountV2(address).then((res) => {
+        console.log("getRemainMysteryboxOpenableCountV2: ", res);
         setMintableCount(res.result);
       });
       setUpdate(() => update + 1);
-      const boxTokenIdRes = await getMysteryboxNFT(address);
+      const boxTokenIdRes = await getMysteryboxNFTV2(address);
       setBoxTokenIds(boxTokenIdRes ?? []);
       setBoxCount(boxTokenIdRes?.length ?? 0);
       setOpening(false);
@@ -432,9 +432,9 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
   }, [
     address,
     boxTokenIds,
-    getMysteryboxNFT,
+    getMysteryboxNFTV2,
     isInvaidChain,
-    mysteryBoxNFT,
+    mysteryBoxNFTV2,
     switchChain,
     update,
   ]);
@@ -467,7 +467,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
       setMintStatus(MintStatus.Minting);
       setDrawing(true);
       if (!mintParams) {
-        const res = await openMysteryboxNFT(address);
+        const res = await openMysteryboxNFTV2(address);
         if (res && res.result) {
           const { tokenId, nonce, signature, expiry } = res.result;
           setMintParams({ tokenId, nonce, signature, expiry });
@@ -487,7 +487,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
         return;
       }
 
-      await sendMysteryOpenMintTx(params);
+      await sendMysteryOpenMintTxV2(params);
       setMintStatus(MintStatus.Success);
       setUpdate((update) => update + 1);
       setDrawPrizeId(-1);
@@ -533,7 +533,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
     mintStatus,
     novaETHBalance,
     openBoxModal.isOpen,
-    sendMysteryOpenMintTx,
+    sendMysteryOpenMintTxV2,
     switchChain,
   ]);
 
@@ -597,25 +597,23 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
         <CardBox className="nft-right mt-6 mb-5 md:mt-0 md:ml-10">
           <div className="w-full flex justify-between items-center">
             <div>
-              <div className=" flex items-center ">
-                <span className="nft-left-title">Mystery Box - Phase I</span>
+              <div className="flex items-center ">
+                <span className="nft-left-title">Mystery Box - Phase II</span>
               </div>
               <p className="nft-left-sub-title">
-                You can still open the box here
+                Invite more to win Mystery Box!
               </p>
             </div>
             <Button
               className="gradient-btn"
-              onClick={() => {
-                switchPhase(2);
-              }}
+              onClick={() => window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")}
             >
-              Back
+              Buy
             </Button>
           </div>
           <div className=" md:w-[384px] md:h-[300px] mb-8">
             <img
-              src="/img/img-mystery-box.png"
+              src="/img/img-mystery-box-v2.png"
               className="h-[100%] mx-auto object-contain"
             />
           </div>
@@ -633,13 +631,12 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
           >
             Open Your Box ({boxCount})
           </Button>
+
           <Button
             className="gradient-btn mb-2 w-full"
-            onClick={() => {
-              switchPhase(2);
-            }}
+            onClick={() => switchPhase(1)}
           >
-            Back to Mystery Box Phase II
+            Back to Mystery Box Phase I
           </Button>
         </CardBox>
       </NftBox>
@@ -659,7 +656,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
               </ModalHeader>
               <ModalBody className="px-0 ">
                 <div className="flex flex-col items-center ">
-                  <DrawAnimation
+                  <DrawAnimationV2
                     type="MysteryBox"
                     ref={drawRef}
                     onDrawEnd={() => {
@@ -836,7 +833,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
                   {mintResult?.name === "Mystery Box" && (
                     <Button
                       className="
-                    gradient-btn mt-4 px-6"
+                      gradient-btn mt-4 px-6"
                       onClick={() =>
                         window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
                       }

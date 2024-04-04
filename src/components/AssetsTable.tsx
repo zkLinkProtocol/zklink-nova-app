@@ -198,6 +198,7 @@ export type AssetsListItem = {
     multiplier: number;
     timestamp: number;
   }[];
+  isNova: boolean;
   chain?: string;
 };
 
@@ -378,6 +379,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         type: item?.type,
         yieldType: item?.yieldType,
         multipliers: item?.multipliers,
+        isNova: item.address[0]?.chain === "Nova" ? true : false,
       };
 
       // sum all chains token amount/tvl
@@ -406,7 +408,9 @@ export default function AssetsTable(props: IAssetsTableProps) {
             : obj.iconURL;
       });
 
-      arr.push(obj);
+      if (!obj.isNova) {
+        arr.push(obj);
+      }
     });
 
     arr = arr.sort((a, b) => +b.totalTvl - +a.totalTvl);

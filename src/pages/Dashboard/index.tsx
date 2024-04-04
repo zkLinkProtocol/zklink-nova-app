@@ -22,7 +22,7 @@ import {
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import NovaCharacter from "@/components/Dashboard/NovaCharacter";
 import NovaPoints from "@/components/Dashboard/NovaPoints";
@@ -31,6 +31,7 @@ import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
+import NFTCardV2 from "./components/NFTCardV2";
 import Decimal from "decimal.js";
 
 const TabsBox = styled.div`
@@ -69,6 +70,36 @@ export type AccountTvlItem = {
   iconURL: string | null;
 };
 
+export function DisclaimerFooter() {
+  return (
+    <div className="flex justify-between items-center">
+      <div className="right-[6rem] bottom-[1rem] flex justify-end items-end">
+        <div className="flex items-center gap-[1rem]">
+          <a href="https://blog.zk.link/" target="_blank">
+            <img src="/img/icon-medium.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+          <a href="https://discord.com/invite/zklink" target="_blank">
+            <img src="/img/icon-dc.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+          <a href="https://t.me/zkLinkorg">
+            <img src="/img/icon-tg.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+          <a href="https://twitter.com/zkLink_Official" target="_blank">
+            <img
+              src="/img/icon-twitter.svg"
+              className="w-[0.75rem] h-[0.75rem]"
+            />
+          </a>
+          <a href="https://github.com/zkLinkProtocol" target="_blank">
+            <img src="/img/icon-github.svg" className="w-[1rem] h-[1rem]" />
+          </a>
+        </div>
+      </div>
+      <Link to="/about?anchor=disclaimer">zkLink Nova Disclaimer</Link>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { isConnected, address } = useAccount();
 
@@ -88,7 +119,7 @@ export default function Dashboard() {
   const [referralTvl, setReferralTvl] = useState(0);
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
-
+  const [nftPhase, setNftPhase] = useState(2); // default: phase 2
   const navigatorTo = useNavigate();
 
   const getAccountPointFunc = async () => {
@@ -311,9 +342,9 @@ export default function Dashboard() {
 
       <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
         <span className="text-[#03d498]">
-          Kelp Miles and Eigenpie Points are undergoing synchronization at the
-          moment. Your point balances may not be visible until this process is
-          complete.
+          Kelp Miles and Eigenpie Points and ezPoints are undergoing
+          synchronization at the moment. Your point balances may not be visible
+          until this process is complete.
         </span>
       </div>
 
@@ -375,7 +406,16 @@ export default function Dashboard() {
               />
             )}
             {/* Tabs view: Trademark NFTs */}
-            {tabsActive === 1 && <NFTCard />}
+            {tabsActive === 1 && (
+              <>
+                {nftPhase === 1 && (
+                  <NFTCard switchPhase={(p) => setNftPhase(p)} />
+                )}
+                {nftPhase === 2 && (
+                  <NFTCardV2 switchPhase={(p) => setNftPhase(p)} />
+                )}
+              </>
+            )}
 
             {/* Tabs view: Referral */}
             {tabsActive === 2 && (
@@ -388,6 +428,10 @@ export default function Dashboard() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="relative mt-[3rem] md:pl-[4.75rem] md:pr-[6rem] px-[1rem] z-[1]">
+        <DisclaimerFooter />
       </div>
     </BgBox>
   );
