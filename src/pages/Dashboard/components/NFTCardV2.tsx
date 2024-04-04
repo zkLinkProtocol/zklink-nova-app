@@ -19,7 +19,7 @@ import {
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import DrawAnimationV2 from "@/components/DrawAnimationV2";
 import useSBTNFT from "@/hooks/useNFT";
-import useNovaNFTV2, { MysteryboxMintParams } from "@/hooks/useNovaNFTV2";
+import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
 import {
   getRemainMysteryboxDrawCountV2,
   mintMysteryboxNFTV2,
@@ -130,6 +130,15 @@ const PRIZE_ID_NFT_MAP: Record<number, number> = {
   2000: 7,
 };
 
+const PRIZE_ID_NFT_MAP_V2: Record<number, number> = {
+  1: 1,
+  50: 2,
+  100: 3,
+  200: 4,
+  500: 5,
+  1000: 6,
+};
+
 const ALL_NFTS = [
   { img: "trademark-1.png", name: "Oak Tree Roots", balance: 0 },
   { img: "trademark-2.png", name: "Magnifying Glass", balance: 0 },
@@ -179,15 +188,16 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
   const {
     trademarkNFT,
     boosterNFT,
+    boosterNFTV2,
     lynksNFT,
-    mysteryBoxNFT,
+    mysteryBoxNFTV2,
     getLynksNFT,
-    sendMysteryOpenMintTx,
-    sendMysteryMintTx,
+    sendMysteryOpenMintTxV2,
+    sendMysteryMintTxV2,
     loading: mintLoading,
     novaETHBalance,
-    getMysteryboxNFT,
-  } = useNovaNFTV2();
+    getMysteryboxNFTV2,
+  } = useNovaNFT();
   const { address, chainId } = useAccount();
   const [allNFTs, setAllNFTs] =
     useState<{ img: string; name: string; balance: number }[]>(ALL_NFTS);
@@ -226,7 +236,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       });
       //TODO get mystery box balance
 
-      getMysteryboxNFT(address).then((res) => {
+      getMysteryboxNFTV2(address).then((res) => {
         setBoxTokenIds(res ?? []);
         setBoxCount(res?.length ?? 0);
       });
@@ -243,7 +253,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         }
       });
     }
-  }, [address, getMysteryboxNFT, update]);
+  }, [address, getMysteryboxNFTV2, update]);
 
   // useEffect(() => {
   //   if (remainMintCount > 0 && !initied && !mintBoxModal.isOpen) {
@@ -255,7 +265,13 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
 
   useEffect(() => {
     (async () => {
-      if (!address || !trademarkNFT || !boosterNFT || !lynksNFT) {
+      if (
+        !address ||
+        !trademarkNFT ||
+        !boosterNFT ||
+        !boosterNFTV2 ||
+        !lynksNFT
+      ) {
         return;
       }
       try {
@@ -281,10 +297,15 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         }
 
         // TODO: new nova points booster NFTs
+        const boosterBalancesV2 = await Promise.all(
+          Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
+            boosterNFT.read.balanceOf([address, item])
+          )
+        );
         for (let i = 0; i < 5; i++) {
           nfts.push({
             ...ALL_NFTS[i + 8],
-            balance: 0, // TODO: get balance
+            balance: Number(boosterBalancesV2[i]),
           });
         }
 
@@ -311,6 +332,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
   }, [
     address,
     boosterNFT,
+    boosterNFTV2,
     lynksNFT,
     trademarkNFT,
     getLynksNFT,
@@ -341,7 +363,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       setMintStatus(MintStatus.Minting);
       mintResultModal.onOpen();
       const res = await mintMysteryboxNFTV2(address);
-      await sendMysteryMintTx(res.result);
+      await sendMysteryMintTxV2(res.result);
       setUpdate((update) => update + 1);
       setMintStatus(MintStatus.Success);
       setMintResult({
@@ -380,10 +402,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       );
       return;
     }
-    if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
+    if (!mysteryBoxNFTV2 || !address || boxTokenIds.length === 0) return;
     try {
       setOpening(true);
-      await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
+      await mysteryBoxNFTV2.write.burn([boxTokenIds[0]]); // burn first
       const res = await openMysteryboxNFTV2(address); // draw prize
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
@@ -398,7 +420,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         setMintableCount(res.result);
       });
       setUpdate(() => update + 1);
-      const boxTokenIdRes = await getMysteryboxNFT(address);
+      const boxTokenIdRes = await getMysteryboxNFTV2(address);
       setBoxTokenIds(boxTokenIdRes ?? []);
       setBoxCount(boxTokenIdRes?.length ?? 0);
       setOpening(false);
@@ -410,9 +432,9 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
   }, [
     address,
     boxTokenIds,
-    getMysteryboxNFT,
+    getMysteryboxNFTV2,
     isInvaidChain,
-    mysteryBoxNFT,
+    mysteryBoxNFTV2,
     switchChain,
     update,
   ]);
@@ -465,7 +487,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         return;
       }
 
-      await sendMysteryOpenMintTx(params);
+      await sendMysteryOpenMintTxV2(params);
       setMintStatus(MintStatus.Success);
       setUpdate((update) => update + 1);
       setDrawPrizeId(-1);
@@ -511,7 +533,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
     mintStatus,
     novaETHBalance,
     openBoxModal.isOpen,
-    sendMysteryOpenMintTx,
+    sendMysteryOpenMintTxV2,
     switchChain,
   ]);
 

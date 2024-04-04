@@ -130,6 +130,15 @@ const PRIZE_ID_NFT_MAP: Record<number, number> = {
   2000: 7,
 };
 
+const PRIZE_ID_NFT_MAP_V2: Record<number, number> = {
+  1: 1,
+  50: 2,
+  100: 3,
+  200: 4,
+  500: 5,
+  1000: 6,
+};
+
 const ALL_NFTS = [
   { img: "trademark-1.png", name: "Oak Tree Roots", balance: 0 },
   { img: "trademark-2.png", name: "Magnifying Glass", balance: 0 },
@@ -179,6 +188,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
   const {
     trademarkNFT,
     boosterNFT,
+    boosterNFTV2,
     lynksNFT,
     mysteryBoxNFT,
     getLynksNFT,
@@ -255,7 +265,13 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
 
   useEffect(() => {
     (async () => {
-      if (!address || !trademarkNFT || !boosterNFT || !lynksNFT) {
+      if (
+        !address ||
+        !trademarkNFT ||
+        !boosterNFT ||
+        !boosterNFTV2 ||
+        !lynksNFT
+      ) {
         return;
       }
       try {
@@ -281,10 +297,15 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
         }
 
         // TODO: new nova points booster NFTs
+        const boosterBalancesV2 = await Promise.all(
+          Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
+            boosterNFTV2.read.balanceOf([address, item])
+          )
+        );
         for (let i = 0; i < 5; i++) {
           nfts.push({
             ...ALL_NFTS[i + 8],
-            balance: 0, // TODO: get balance
+            balance: Number(boosterBalancesV2[i]),
           });
         }
 
@@ -311,6 +332,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
   }, [
     address,
     boosterNFT,
+    boosterNFTV2,
     lynksNFT,
     trademarkNFT,
     getLynksNFT,
