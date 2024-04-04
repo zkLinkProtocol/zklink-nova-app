@@ -31,6 +31,7 @@ import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
+import NFTCardV2 from "./components/NFTCardV2";
 import Decimal from "decimal.js";
 
 const TabsBox = styled.div`
@@ -118,7 +119,7 @@ export default function Dashboard() {
   const [referralTvl, setReferralTvl] = useState(0);
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
-
+  const [nftPhase, setNftPhase] = useState(2); // default: phase 2
   const navigatorTo = useNavigate();
 
   const getAccountPointFunc = async () => {
@@ -405,7 +406,16 @@ export default function Dashboard() {
               />
             )}
             {/* Tabs view: Trademark NFTs */}
-            {tabsActive === 1 && <NFTCard />}
+            {tabsActive === 1 && (
+              <>
+                {nftPhase === 1 && (
+                  <NFTCard switchPhase={(p) => setNftPhase(p)} />
+                )}
+                {nftPhase === 2 && (
+                  <NFTCardV2 switchPhase={(p) => setNftPhase(p)} />
+                )}
+              </>
+            )}
 
             {/* Tabs view: Referral */}
             {tabsActive === 2 && (
