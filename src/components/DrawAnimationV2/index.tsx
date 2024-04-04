@@ -46,10 +46,6 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   }));
   const [currentImageIndex, setCurrentImageIndex] = useState<number>();
 
-  useEffect(() => {
-    console.log("currentImageIndex", currentImageIndex);
-  });
-
   const lynksNFTImg = useMemo(() => {
     if (type === "MysteryBox" && sbtNFT) {
       return `/img/img-mystery-box-lynks-${sbtNFT.name}.png`;
@@ -92,7 +88,6 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   };
 
   useEffect(() => {
-    console.log("targetImageIndex", targetImageIndex);
     if (targetImageIndex !== undefined) {
       setCurrentImageIndex(targetImageIndex);
     } else {
