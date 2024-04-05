@@ -650,13 +650,12 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
           >
             <span className="gradient-text"> Back to Mystery Box Phase II</span>
           </Button>
+
           <Button
-            className="gradient-btn mb-2 w-full"
-            onClick={() => {
-              switchPhase(2);
-            }}
+            className="gradient-border mb-2 w-full"
+            onClick={() => switchPhase(2)}
           >
-            Back to Mystery Box Phase II
+            <span className="gradient-text"> Back to Mystery Box Phase II</span>
           </Button>
         </CardBox>
       </NftBox>
