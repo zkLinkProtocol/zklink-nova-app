@@ -299,7 +299,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         // TODO: new nova points booster NFTs
         const boosterBalancesV2 = await Promise.all(
           Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
-            boosterNFT.read.balanceOf([address, item])
+            boosterNFTV2.read.balanceOf([address, item])
           )
         );
         for (let i = 0; i < 5; i++) {
