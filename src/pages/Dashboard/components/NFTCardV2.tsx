@@ -498,7 +498,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         resultImg = "/img/img-mystery-box-v2.png";
       } else if (openBoxModal.isOpen && params?.tokenId) {
         resultName = "Point Booster";
-        resultImg = `/img/img-point-booster-${
+        resultImg = `/img/img-point-booster-v2-${
           PRIZE_ID_NFT_MAP_V2[params.tokenId]
         }.png`;
       } else if (openBoxModal.isOpen && !params?.tokenId) {
