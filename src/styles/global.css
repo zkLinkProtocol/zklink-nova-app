@@ -14,6 +14,22 @@
   font-family: "Satoshi";
 }
 
+.gradient-border {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #021523, #021523),
+    linear-gradient(90deg, #48ecae, #3e52fc, #49ced7);
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #48ecae, #3e52fc, #49ced7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .gradient-btn {
   background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
   color: #fff;
@@ -83,7 +99,6 @@
     background-color: rgba(0, 0, 0, 0.9);
   }
 }
-
 
 .bg-transparent {
   background: transparent !important;

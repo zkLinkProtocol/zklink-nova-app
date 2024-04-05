@@ -606,7 +606,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
             </div>
             <Button
               className="gradient-btn"
-              onClick={() => window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")}
+              isDisabled={true}
+              disabled={true}
+              // TODO
+              // onClick={() => window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")}
             >
               Buy
             </Button>
@@ -633,10 +636,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           </Button>
 
           <Button
-            className="gradient-btn mb-2 w-full"
+            className="gradient-border mb-2 w-full"
             onClick={() => switchPhase(1)}
           >
-            Back to Mystery Box Phase I
+            <span className="gradient-text">Back to Mystery Box Phase I</span>
           </Button>
         </CardBox>
       </NftBox>
@@ -832,11 +835,13 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                   )}
                   {mintResult?.name === "Mystery Box" && (
                     <Button
-                      className="
-                      gradient-btn mt-4 px-6"
-                      onClick={() =>
-                        window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
-                      }
+                      className="gradient-btn mt-4 px-6"
+                      isDisabled={true}
+                      disabled={true}
+                      // TODO
+                      // onClick={() =>
+                      //   window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
+                      // }
                     >
                       Trade in Alienswap
                     </Button>
