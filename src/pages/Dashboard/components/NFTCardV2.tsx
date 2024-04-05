@@ -368,7 +368,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       setMintStatus(MintStatus.Success);
       setMintResult({
         name: "Mystery Box",
-        img: "/img/img-mystery-box.png",
+        img: "/img/img-mystery-box-v2.png",
       });
     } catch (e) {
       setMintStatus(MintStatus.Failed);
@@ -495,7 +495,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         resultImg = "";
       if (mintBoxModal.isOpen) {
         resultName = "Mystery Box";
-        resultImg = "/img/img-mystery-box.png";
+        resultImg = "/img/img-mystery-box-v2.png";
       } else if (openBoxModal.isOpen && params?.tokenId) {
         resultName = "Point Booster";
         resultImg = `/img/img-point-booster-${
@@ -726,7 +726,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
               <ModalBody>
                 <div className="flex flex-col items-center ">
                   <img
-                    src="/img/img-mystery-box.png"
+                    src="/img/img-mystery-box-v2.png"
                     className="w-[240px] h-[240px] mb-6"
                   />
                   <p className="font-inter text-[24px] mb-3">
