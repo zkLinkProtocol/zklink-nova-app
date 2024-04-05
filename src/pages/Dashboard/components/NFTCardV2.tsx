@@ -248,7 +248,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           openMysteryboxNFTV2(address).then((res) => {
             const { tokenId, nonce, signature, expiry } = res.result;
             setMintParams({ tokenId, nonce, signature, expiry });
-            setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
+            setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP_V2[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
           });
         }
       });
@@ -412,7 +412,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         setMintParams({ tokenId, nonce, signature, expiry });
         //do the draw animation. tokenId means prize is bootster; no tokenId means prize is lynks,use 8 to make draw animation works
         await drawRef?.current?.start(
-          tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
+          tokenId ? PRIZE_ID_NFT_MAP_V2[tokenId] - 1 : 7
         ); // use index of img for active
       }
       getRemainMysteryboxOpenableCountV2(address).then((res) => {
@@ -476,7 +476,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           //   tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
           // ); // use index of img for active
           // await sleep(3000); //show prize for 3s
-          setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
+          setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP_V2[tokenId] - 1 : 7); // should use index for active in DrawAnimation component
           params = res.result;
         }
       } else {
@@ -499,7 +499,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       } else if (openBoxModal.isOpen && params?.tokenId) {
         resultName = "Point Booster";
         resultImg = `/img/img-point-booster-${
-          PRIZE_ID_NFT_MAP[params.tokenId]
+          PRIZE_ID_NFT_MAP_V2[params.tokenId]
         }.png`;
       } else if (openBoxModal.isOpen && !params?.tokenId) {
         resultName = "Lynks NFT";
