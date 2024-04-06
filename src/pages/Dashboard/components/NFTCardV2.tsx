@@ -131,15 +131,15 @@ const PRIZE_ID_NFT_MAP: Record<number, number> = {
 };
 
 const PRIZE_ID_NFT_MAP_V2: Record<number, number> = {
-  50: 1,
-  100: 2,
-  200: 3,
-  500: 4,
-  1000: 5,
-  1: 6,
-  2: 7,
-  3: 8,
-  4: 9,
+  50: 0,
+  100: 1,
+  200: 2,
+  500: 3,
+  1000: 4,
+  1: 5,
+  2: 6,
+  3: 7,
+  4: 8,
 };
 
 const ALL_NFTS = [
@@ -258,7 +258,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
             console.log("tokenId", tokenId);
             // debugger;
             const drawPrizeId =
-              Number(tokenId) === 88 ? 9 : PRIZE_ID_NFT_MAP_V2[tokenId] - 1;
+              Number(tokenId) === 88 ? 9 : PRIZE_ID_NFT_MAP_V2[tokenId];
             console.log("drawPrizeId", drawPrizeId);
             setDrawPrizeId(drawPrizeId); // should use index for active in DrawAnimation component
           });
@@ -490,7 +490,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           // await sleep(3000); //show prize for 3s
           console.log("tokenId", tokenId);
           const drawPrizeId =
-            Number(tokenId) === 88 ? 9 : PRIZE_ID_NFT_MAP_V2[tokenId] - 1;
+            Number(tokenId) === 88 ? 9 : PRIZE_ID_NFT_MAP_V2[tokenId];
           console.log("drawPrizeId", drawPrizeId);
           setDrawPrizeId(drawPrizeId); // should use index for active in DrawAnimation component
           params = res.result;
@@ -519,7 +519,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         if (params.tokenId < 5) {
           resultName = "Trademark NFT";
           resultImg = `/img/img-trademark-${
-            PRIZE_ID_NFT_MAP_V2[params.tokenId] - 5
+            PRIZE_ID_NFT_MAP_V2[params.tokenId] - 4
           }.png`;
         } else if (openBoxModal.isOpen && params?.tokenId === 88) {
           resultName = "Lynks NFT";
@@ -527,7 +527,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         } else {
           resultName = "Point Booster";
           resultImg = `/img/img-point-booster-v2-${
-            PRIZE_ID_NFT_MAP_V2[params.tokenId]
+            PRIZE_ID_NFT_MAP_V2[params.tokenId] + 1
           }.png`;
         }
       }

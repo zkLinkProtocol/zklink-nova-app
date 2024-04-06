@@ -64,7 +64,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
       let step = 0;
       let speed = 2;
       const Loops = type === "Trademark" ? 3 : 2;
-      const count = type === "Trademark" ? 6 : 9;
+      const count = type === "Trademark" ? 6 : 10;
       const totalSteps = count * Loops + targetImageIndex; // run four loops and end on target
       const stopAnimation = () => {
         clearTimeout(timeout);
