@@ -104,7 +104,6 @@ const useNovaDrawNFT = () => {
     });
   }, [publicClient, walletClient]);
 
-
   const boosterNFTV2 = useMemo(() => {
     if (!publicClient) return null;
     return getContract({
@@ -116,7 +115,6 @@ const useNovaDrawNFT = () => {
       },
     });
   }, [publicClient, walletClient]);
-
 
   const lynksNFT = useMemo(() => {
     if (!publicClient) return null;
@@ -304,6 +302,38 @@ const useNovaDrawNFT = () => {
     }
   };
 
+  const sendTrademarkMintTxV2 = async (params: TrademarkMintParams) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: TRADEMARK_NFT_CONTRACT,
+        abi: NovaTrademarkNFT,
+        functionName: "safeMint2",
+        args: [
+          address,
+          params.nonce,
+          params.tokenId,
+          1,
+          params.expiry,
+          params.signature,
+        ],
+      };
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const sendMysteryMintTx = async (params: MysteryboxMintParams) => {
     if (!address) return;
     try {
@@ -393,23 +423,24 @@ const useNovaDrawNFT = () => {
 
   const sendMysteryOpenMintTxV2 = async (params: MysteryboxOpenParams) => {
     if (!address) return;
-    const isLynks = !params.tokenId;
+    const isTrademark = params?.tokenId && Number(params.tokenId) < 5;
+
     try {
       setLoading(true);
       const tx: WriteContractParameters = {
-        address: (isLynks ? LYNKS_NFT_CONTRACT : BOOSTER_NFT_CONTRACT_V2) as Hash,
-        abi: isLynks ? NovaLynksNFT : NovaBoosterNFT,
-        functionName: isLynks ? "safeMintWithAuth" : "safeMint",
-        args: isLynks
-          ? [address, params.nonce, params.expiry, params.signature]
-          : [
-              address,
-              params.nonce,
-              params.tokenId,
-              1,
-              params.expiry,
-              params.signature,
-            ],
+        address: (isTrademark
+          ? TRADEMARK_NFT_CONTRACT
+          : BOOSTER_NFT_CONTRACT_V2) as Hash,
+        abi: isTrademark ? NovaTrademarkNFT : NovaBoosterNFT,
+        functionName: isTrademark ? "safeMint2" : "safeMint",
+        args: [
+          address,
+          params.nonce,
+          params.tokenId,
+          1,
+          params.expiry,
+          params.signature,
+        ],
       };
       await insertEstimateFee(tx);
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
@@ -497,6 +528,7 @@ const useNovaDrawNFT = () => {
     publicClient,
     getLynksNFT,
     sendTrademarkMintTx,
+    sendTrademarkMintTxV2,
     sendMysteryOpenMintTx,
     sendMysteryOpenMintTxV2,
     sendMysteryMintTx,

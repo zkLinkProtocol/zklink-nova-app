@@ -131,12 +131,15 @@ const PRIZE_ID_NFT_MAP: Record<number, number> = {
 };
 
 const PRIZE_ID_NFT_MAP_V2: Record<number, number> = {
-  1: 1,
-  50: 2,
-  100: 3,
-  200: 4,
-  500: 5,
-  1000: 6,
+  50: 1,
+  100: 2,
+  200: 3,
+  500: 4,
+  1000: 5,
+  1: 6,
+  2: 7,
+  3: 8,
+  4: 9,
 };
 
 const ALL_NFTS = [
@@ -248,7 +251,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           openMysteryboxNFTV2(address).then((res) => {
             const { tokenId, nonce, signature, expiry } = res.result;
             setMintParams({ tokenId, nonce, signature, expiry });
-            setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP_V2[tokenId] - 1 : 5); // should use index for active in DrawAnimation component
+            setDrawPrizeId(PRIZE_ID_NFT_MAP_V2[tokenId]); // should use index for active in DrawAnimation component
           });
         }
       });
@@ -411,9 +414,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         const { tokenId, nonce, signature, expiry } = res.result;
         setMintParams({ tokenId, nonce, signature, expiry });
         //do the draw animation. tokenId means prize is bootster; no tokenId means prize is lynks,use 8 to make draw animation works
-        await drawRef?.current?.start(
-          tokenId ? PRIZE_ID_NFT_MAP_V2[tokenId] - 1 : 5
-        ); // use index of img for active
+        await drawRef?.current?.start(PRIZE_ID_NFT_MAP_V2[tokenId]); // use index of img for active
       }
       getRemainMysteryboxOpenableCountV2(address).then((res) => {
         console.log("getRemainMysteryboxOpenableCountV2: ", res);
@@ -476,7 +477,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           //   tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
           // ); // use index of img for active
           // await sleep(3000); //show prize for 3s
-          setDrawPrizeId(tokenId ? PRIZE_ID_NFT_MAP_V2[tokenId] - 1 : 5); // should use index for active in DrawAnimation component
+          setDrawPrizeId(PRIZE_ID_NFT_MAP_V2[tokenId]); // should use index for active in DrawAnimation component
           params = res.result;
         }
       } else {
@@ -497,10 +498,17 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         resultName = "Mystery Box";
         resultImg = "/img/img-mystery-box-v2.png";
       } else if (openBoxModal.isOpen && params?.tokenId) {
-        resultName = "Point Booster";
-        resultImg = `/img/img-point-booster-v2-${
-          PRIZE_ID_NFT_MAP_V2[params.tokenId]
-        }.png`;
+        if (params.tokenId < 5) {
+          resultName = "Trademark NFT";
+          resultImg = `/img/img-trademark-${
+            PRIZE_ID_NFT_MAP_V2[params.tokenId] - 5
+          }.png`;
+        } else {
+          resultName = "Point Booster";
+          resultImg = `/img/img-point-booster-v2-${
+            PRIZE_ID_NFT_MAP_V2[params.tokenId]
+          }.png`;
+        }
       } else if (openBoxModal.isOpen && !params?.tokenId) {
         resultName = "Lynks NFT";
         resultImg = lynksNFTImg ?? "";

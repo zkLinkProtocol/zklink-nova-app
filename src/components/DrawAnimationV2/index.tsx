@@ -31,7 +31,12 @@ const MysteryboxItems = [
   { name: "Nova +200 Booster", img: "/img/img-point-booster-v2-3.png" },
   { name: "Nova +500 Booster", img: "/img/img-point-booster-v2-4.png" },
   { name: "Nova +1000 Booster", img: "/img/img-point-booster-v2-5.png" },
-  { name: "Lynks", img: "" },
+  { name: "Oak Tree Roots", img: "/img/img-trademark-1.png" },
+  { name: "Magnifying Glass", img: "/img/img-trademark-2.png" },
+  { name: "Chess Knight", img: "/img/img-trademark-3.png" },
+  { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
+
+  // { name: "Lynks", img: "" },
 ];
 
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
@@ -124,7 +129,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
               }`}
             >
               <div className="img-bg">
-                <img src={index === 5 ? lynksNFTImg : item.img} alt="Image 1" />
+                <img src={item.img} alt="Image 1" />
               </div>
               <div className="item-name">{item.name}</div>
             </div>
