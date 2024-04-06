@@ -35,8 +35,7 @@ const MysteryboxItems = [
   { name: "Magnifying Glass", img: "/img/img-trademark-2.png" },
   { name: "Chess Knight", img: "/img/img-trademark-3.png" },
   { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
-
-  // { name: "Lynks", img: "" },
+  { name: "Lynks", img: "" },
 ];
 
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
@@ -46,6 +45,10 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
     start: (targetImageIndex: number) => start(targetImageIndex),
   }));
   const [currentImageIndex, setCurrentImageIndex] = useState<number>();
+
+  useEffect(() => {
+    console.log("currentImageIndex", currentImageIndex);
+  });
 
   const lynksNFTImg = useMemo(() => {
     if (type === "MysteryBox" && sbtNFT) {
@@ -89,6 +92,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   };
 
   useEffect(() => {
+    console.log("targetImageIndex", targetImageIndex);
     if (targetImageIndex !== undefined) {
       setCurrentImageIndex(targetImageIndex);
     } else {
@@ -125,11 +129,11 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
             <div
               key={item.name}
               className={`lottery-item ${
-                currentImageIndex === index  ? "active" : ""
+                currentImageIndex === index ? "active" : ""
               }`}
             >
               <div className="img-bg">
-                <img src={item.img} alt="Image 1" />
+                <img src={index === 9 ? lynksNFTImg : item.img} alt="Image 1" />
               </div>
               <div className="item-name">{item.name}</div>
             </div>

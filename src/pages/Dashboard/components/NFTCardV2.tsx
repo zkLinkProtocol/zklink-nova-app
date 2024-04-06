@@ -213,6 +213,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
   const { invite } = useSelector((store: RootState) => store.airdrop);
 
+  useEffect(() => {
+    console.log("drawPrizeId", drawPrizeId);
+  }, [drawPrizeId]);
+
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -251,7 +255,12 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           openMysteryboxNFTV2(address).then((res) => {
             const { tokenId, nonce, signature, expiry } = res.result;
             setMintParams({ tokenId, nonce, signature, expiry });
-            setDrawPrizeId(PRIZE_ID_NFT_MAP_V2[tokenId]); // should use index for active in DrawAnimation component
+            console.log("tokenId", tokenId);
+            // debugger;
+            const drawPrizeId =
+              Number(tokenId) === 88 ? 9 : PRIZE_ID_NFT_MAP_V2[tokenId] - 1;
+            console.log("drawPrizeId", drawPrizeId);
+            setDrawPrizeId(drawPrizeId); // should use index for active in DrawAnimation component
           });
         }
       });
@@ -301,13 +310,12 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
 
         // TODO: new nova points booster NFTs
         const boosterBalancesV2 = await Promise.all(
-
           Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
             boosterNFTV2.read.balanceOf([address, item])
           )
         );
 
-        console.log("boosterBalancesV2: ", boosterBalancesV2)
+        console.log("boosterBalancesV2: ", boosterBalancesV2);
         for (let i = 0; i < 5; i++) {
           nfts.push({
             ...ALL_NFTS[i + 8],
@@ -480,7 +488,11 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           //   tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
           // ); // use index of img for active
           // await sleep(3000); //show prize for 3s
-          setDrawPrizeId(PRIZE_ID_NFT_MAP_V2[tokenId]); // should use index for active in DrawAnimation component
+          console.log("tokenId", tokenId);
+          const drawPrizeId =
+            Number(tokenId) === 88 ? 9 : PRIZE_ID_NFT_MAP_V2[tokenId] - 1;
+          console.log("drawPrizeId", drawPrizeId);
+          setDrawPrizeId(drawPrizeId); // should use index for active in DrawAnimation component
           params = res.result;
         }
       } else {
@@ -491,12 +503,15 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         return;
       }
 
+      console.log("sendMysteryOpenMintTxV2 params", params);
       await sendMysteryOpenMintTxV2(params);
       setMintStatus(MintStatus.Success);
       setUpdate((update) => update + 1);
       setDrawPrizeId(-1);
       let resultName = "",
         resultImg = "";
+
+      // debugger;
       if (mintBoxModal.isOpen) {
         resultName = "Mystery Box";
         resultImg = "/img/img-mystery-box-v2.png";
@@ -506,16 +521,18 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           resultImg = `/img/img-trademark-${
             PRIZE_ID_NFT_MAP_V2[params.tokenId] - 5
           }.png`;
+        } else if (openBoxModal.isOpen && params?.tokenId === 88) {
+          resultName = "Lynks NFT";
+          resultImg = lynksNFTImg ?? "";
         } else {
           resultName = "Point Booster";
           resultImg = `/img/img-point-booster-v2-${
             PRIZE_ID_NFT_MAP_V2[params.tokenId]
           }.png`;
         }
-      } else if (openBoxModal.isOpen && !params?.tokenId) {
-        resultName = "Lynks NFT";
-        resultImg = lynksNFTImg ?? "";
       }
+
+      console.log("setMintResult", resultName, resultImg);
       setMintResult({
         name: resultName,
         img: resultImg,
