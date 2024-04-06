@@ -617,7 +617,11 @@ export const useBridgeTx = () => {
         tx.gas = overrides.gasLimit;
       }
       if (new BigNum(tx.value.toString()).gt(nativeBalance.toString())) {
-        return Promise.reject(new Error("Insufficient Gas Token Balance"));
+        return Promise.reject(
+          new Error(
+            `"Insufficient Gas Token Balance. Tx value: ${tx.value.toString()}, base cost: ${baseCost.toString()},  gas balance: ${nativeBalance.toString()}`
+          )
+        );
       }
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       console.log("tx hash: ", hash);
