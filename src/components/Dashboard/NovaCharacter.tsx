@@ -94,7 +94,7 @@ export default function NovaCharacter() {
   const { switchChain } = useSwitchChain();
   const {
     trademarkNFT,
-    sendTrademarkMintTxV2,
+    sendTrademarkMintTx,
     lynksNFT,
     isTrademarkApproved,
     sendTrademarkApproveTx,
@@ -241,7 +241,7 @@ export default function NovaCharacter() {
           mintParams = { tokenId, nonce, signature, expiry };
         }
       }
-      await sendTrademarkMintTxV2(mintParams as TrademarkMintParams);
+      await sendTrademarkMintTx(mintParams as TrademarkMintParams);
       setTrademarkMintStatus(MintStatus.Success);
       setMintResult({
         name: TRADEMARK_TOKEN_ID_MAP[mintParams.tokenId!],
@@ -270,7 +270,7 @@ export default function NovaCharacter() {
     isInvaidChain,
     novaBalance,
     remainDrawCount,
-    sendTrademarkMintTxV2,
+    sendTrademarkMintTx,
     switchChain,
     trademarkMintModal,
     trademarkMintParams,
