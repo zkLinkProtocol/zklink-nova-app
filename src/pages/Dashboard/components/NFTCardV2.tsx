@@ -219,6 +219,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
     console.log("drawPrizeId", drawPrizeId);
   }, [drawPrizeId]);
 
+  useEffect(() => {
+    console.log("drawPrizeId", drawPrizeId);
+  }, [drawPrizeId]);
+
   const onOpen = () => {
     openBoxModal.onOpen();
   };
@@ -318,7 +322,6 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
 
         // TODO: new nova points booster NFTs
         const boosterBalancesV2 = await Promise.all(
-
           Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
             boosterNFTV2.read.balanceOf([address, item])
           )
