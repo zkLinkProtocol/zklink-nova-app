@@ -212,6 +212,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
   const { invite } = useSelector((store: RootState) => store.airdrop);
+  const [mintBoosterLoading, setMintBoosterLoading] = useState(false);
 
   useEffect(() => {
     console.log("drawPrizeId", drawPrizeId);
@@ -248,7 +249,11 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         setBoxCount(res?.length ?? 0);
       });
       //TODO get mintabel count
+
+      setMintBoosterLoading(true);
       getRemainMysteryboxOpenableCountV2(address).then((res) => {
+        setMintBoosterLoading(false);
+
         console.log("getRemainMysteryboxOpenableCountV2: ", res);
         setMintableCount(res.result);
         if (res.result > 0) {
@@ -427,7 +432,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         //do the draw animation. tokenId means prize is bootster; no tokenId means prize is lynks,use 8 to make draw animation works
         await drawRef?.current?.start(PRIZE_ID_NFT_MAP_V2[tokenId]); // use index of img for active
       }
+
+      setMintBoosterLoading(true);
       getRemainMysteryboxOpenableCountV2(address).then((res) => {
+        setMintBoosterLoading(false);
         console.log("getRemainMysteryboxOpenableCountV2: ", res);
         setMintableCount(res.result);
       });
@@ -658,7 +666,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onOpen}
-            // disabled={mintableCount === 0}
+            disabled={boxCount === 0 && mintableCount === 0}
           >
             Open Your Box ({boxCount})
           </Button>
@@ -727,7 +735,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                     <Button
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onDrawMintSubmit}
-                      isLoading={drawing}
+                      isLoading={drawing || mintBoosterLoading}
                       isDisabled={!isInvaidChain && mintableCount === 0}
                     >
                       {isInvaidChain && "Switch Network"}
@@ -773,6 +781,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                   <Button
                     className="w-full gradient-btn"
                     onClick={onMintSubmit}
+                    isDisabled={remainMintCount === 0}
                     isLoading={mintLoading}
                   >
                     {isInvaidChain && "Switch to Nova network to mint"}
@@ -791,12 +800,16 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       <Modal
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
-        style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
+        style={{
+          width: "400px",
+          minHeight: "300px",
+          backgroundColor: "rgb(38, 43, 51)",
+        }}
         isOpen={mintResultModal.isOpen}
         onOpenChange={mintResultModal.onOpenChange}
         className="trans"
       >
-        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
+        <ModalContent className="mt-[2rem] py-5 mb-[5.75rem]">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
             {mintStatus === MintStatus.Minting && <span>Minting</span>}
             {mintStatus === MintStatus.Success && <span>Congratulations</span>}

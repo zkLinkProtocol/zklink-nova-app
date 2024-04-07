@@ -105,6 +105,7 @@ export default function NovaCharacter() {
   const { updateRefreshBalanceId } = useMintStatus();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
+
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
   const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
   const [update, setUpdate] = useState(0);
@@ -124,6 +125,12 @@ export default function NovaCharacter() {
   const [upgradable, setUpgradable] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
   const [lynksBalance, setLynksBalance] = useState(0);
+
+  useEffect(() => {
+    console.log("nft: ", nft);
+    console.log("upgradable: ", upgradable);
+  }, [nft, upgradable]);
+
   useEffect(() => {
     if (address) {
       getRemainDrawCount(address).then((res) => {
