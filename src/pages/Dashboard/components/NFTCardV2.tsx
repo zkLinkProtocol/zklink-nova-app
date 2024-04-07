@@ -617,8 +617,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
               >
                 <img
                   src={`/img/img-${item.img}`}
-                  alt=""
-                  className="w-[85%] mx-auto"
+                  className="w-[85%] mx-auto rounded-[8px]"
                 />
                 {/* <div className='relative bg-slate-50 h-24 w-8/12 m-auto'> */}
                 <div className="nft-info">
