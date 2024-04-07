@@ -673,7 +673,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
             isLoading={boxCountLoading || mintableCountLoading}
             disabled={boxCount === 0 && mintableCount === 0}
           >
-            Open Your Box ({boxCount})
+            Open Your Box {boxCount > 0 ? `(${boxCount})` : ""}
           </Button>
 
           <Button
