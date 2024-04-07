@@ -348,7 +348,7 @@ export default function Dashboard() {
         </span>
       </div>
 
-      <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[3rem]">
+      <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[7.5rem] md:pt-[3rem]">
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem]">
           <NovaCharacter />

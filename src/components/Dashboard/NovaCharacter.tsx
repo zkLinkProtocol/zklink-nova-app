@@ -412,7 +412,7 @@ export default function NovaCharacter() {
         <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           Your Nova Character
         </p>
-        <div className="md:w-[24rem] md:h-[18.75rem] bg-[#65E7E5] rounded-[1rem]">
+        <div className="md:w-[24rem] md:h-[24rem] bg-[#65E7E5] rounded-[1rem]">
           <img
             src={nftImage}
             className="text-center block mx-auto h-auto rounded-[1rem]"
