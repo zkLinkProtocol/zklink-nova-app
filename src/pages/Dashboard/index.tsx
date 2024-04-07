@@ -21,7 +21,7 @@ import {
   getMagPiePoints,
 } from "@/api";
 import { useAccount } from "wagmi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import NovaCharacter from "@/components/Dashboard/NovaCharacter";
@@ -33,6 +33,17 @@ import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
 import Decimal from "decimal.js";
+import {
+  Button,
+  Checkbox,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
+import { setIsAdHide } from "@/store/modules/airdrop";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -103,7 +114,7 @@ export function DisclaimerFooter() {
 export default function Dashboard() {
   const { isConnected, address } = useAccount();
 
-  const { invite } = useSelector((store: RootState) => store.airdrop);
+  const { invite, isAdHide } = useSelector((store: RootState) => store.airdrop);
   const [tabsActive, setTabsActive] = useState(0);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [stakingUsdValue, setStakingUsdValue] = useState(0);
@@ -120,6 +131,8 @@ export default function Dashboard() {
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
   const [nftPhase, setNftPhase] = useState(2); // default: phase 2
+  const adModal = useDisclosure();
+
   const navigatorTo = useNavigate();
 
   const getAccountPointFunc = async () => {
@@ -285,7 +298,7 @@ export default function Dashboard() {
   const [renzoEigenLayerPoints, setRenzoEigenLayerPoints] = useState(0);
   const getRenzoPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getRenzoPoints(address);
+    const { data } = await getRenzoPoints('0xd754Ff5e8a6f257E162F72578A4bB0493c0681d8');
 
     if (data && Array.isArray(data) && data.length > 0) {
       setRenzoPoints(
@@ -328,10 +341,35 @@ export default function Dashboard() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+
+  const dispatch = useDispatch();
+  const handleAdClose = () => {
+    console.log("dontShowAgain", dontShowAgain);
+    if (dontShowAgain) {
+      dispatch(setIsAdHide(true));
+    }
+    adModal.onClose();
+  };
+
+  const handleAdJump = () => {
+    console.log("dontShowAgain", dontShowAgain);
+    if (dontShowAgain) {
+      dispatch(setIsAdHide(true));
+    }
+    window.open(
+      "https://www.okx.com/web3/discover/cryptopedia/event/28",
+      "_blank"
+    );
+  };
+
   useEffect(() => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      if (!isAdHide) {
+        adModal.onOpen();
+      }
     }, 1000);
   }, []);
 
@@ -340,15 +378,20 @@ export default function Dashboard() {
       <BgCoverImg />
       {isLoading && <Loading />}
 
-      <div className="absolute md:w-full md:text-center top-[5rem] md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3 rounded">
-        <span className="text-[#03d498]">
-          Kelp Miles and Eigenpie Points and ezPoints are undergoing
-          synchronization at the moment. Your point balances may not be visible
-          until this process is complete.
-        </span>
-      </div>
-
-      <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[7.5rem] md:pt-[3rem]">
+      <a
+        href="https://www.okx.com/web3/discover/cryptopedia/event/28"
+        target="_blank"
+        className="relative block md:ml-[4.75rem] md:mr-[6rem] mx-[1rem] h-[72px] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
+      >
+        <p className="relative ml-[1.5rem] text-[1rem] leading-[72px] z-10">
+          Join Nova Cryptopedia Event and Win{" "}
+          <b className="text-[#03d498]">300K</b> USD worth of $ZKL in Rewards!
+        </p>
+        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-center opacity-40 md:opacity-100">
+          <img src="/img/bg-okx-ad.png" className="h-[72px] object-cover" />
+        </div>
+      </a>
+      <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem]">
           <NovaCharacter />
@@ -433,6 +476,55 @@ export default function Dashboard() {
       <div className="relative mt-[3rem] md:pl-[4.75rem] md:pr-[6rem] px-[1rem] z-[1]">
         <DisclaimerFooter />
       </div>
+
+      <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        size="md"
+        hideCloseButton
+        isOpen={adModal.isOpen}
+        onOpenChange={adModal.onOpenChange}
+      >
+        <ModalContent className="mb-[3.75rem]">
+          {(onClose) => (
+            <>
+              <ModalHeader className="text-center text-[1.5rem]">
+                Join Nova Cryptopedia Event and Win $300k in Rewards!
+              </ModalHeader>
+              <ModalBody className="pb-8">
+                <div>
+                  <img src="/img/join-nova-cryptopedia.png" />
+                </div>
+
+                <div className="flex justify-end">
+                  <Checkbox
+                    className="flex-1 text-[0.75rem] whitespace-nowrap"
+                    isSelected={dontShowAgain}
+                    onValueChange={setDontShowAgain}
+                  >
+                    {"Don't show again"}
+                  </Checkbox>
+                </div>
+
+                <div>
+                  <Button
+                    className="gradient-btn mt-4 w-full h-[2.1875rem] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1rem]"
+                    onClick={handleAdJump}
+                  >
+                    Join & Verify Now
+                  </Button>
+
+                  <Button
+                    className="mt-4 w-full h-[2.1875rem] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
+                    onClick={handleAdClose}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </BgBox>
   );
 }
