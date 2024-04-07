@@ -444,14 +444,16 @@ export const useBridgeTx = () => {
     try {
       setLoading(true);
 
-      const l2GasLimit = await estimateDefaultBridgeDepositL2Gas(
-        token,
-        amount,
-        address
-      );
-      const baseCost = await getBaseCost(l2GasLimit);
-      console.log("l2GasLimit: ", l2GasLimit.toString());
+      // const l2GasLimit = await estimateDefaultBridgeDepositL2Gas(
+      //   token,
+      //   amount,
+      //   address
+      // );
+      // const baseCost = await getBaseCost(l2GasLimit);
+      // console.log("l2GasLimit: ", l2GasLimit.toString());
       const fee = await getEstimateFee(token);
+      const baseCost = fee?.baseCost;
+      const l2GasLimit = fee?.l2GasLimit;
       const overrides = {
         gasPrice: fee?.gasPrice,
         gasLimit: fee?.l1GasLimit,
