@@ -17,6 +17,7 @@ export type Token = {
   type: string;
   yieldType: string[];
   multiplier: number;
+  l2Address: string;
 };
 import { useQueryClient } from "@tanstack/react-query";
 import { findClosestMultiplier, formatBalance, isSameAddress } from "@/utils";
@@ -100,6 +101,7 @@ export const useTokenBalanceList = () => {
             networkKey,
             networkName: item.chain,
             icon: imgItem?.iconURL,
+            l2Address: item.l2Address,
           });
         }
       }
