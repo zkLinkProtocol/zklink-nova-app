@@ -212,7 +212,8 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
   const { invite } = useSelector((store: RootState) => store.airdrop);
-  const [mintBoosterLoading, setMintBoosterLoading] = useState(false);
+  const [mintableCountLoading, setMintBoosterLoading] = useState(false);
+  const [boxCountLoading, setBoxCountLoading] = useState(false);
 
   useEffect(() => {
     console.log("drawPrizeId", drawPrizeId);
@@ -244,9 +245,11 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       });
       //TODO get mystery box balance
 
+      setBoxCountLoading(true);
       getMysteryboxNFTV2(address).then((res) => {
         setBoxTokenIds(res ?? []);
         setBoxCount(res?.length ?? 0);
+        setBoxCountLoading(false);
       });
       //TODO get mintabel count
 
@@ -440,9 +443,11 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         setMintableCount(res.result);
       });
       setUpdate(() => update + 1);
+      setBoxCountLoading(true);
       const boxTokenIdRes = await getMysteryboxNFTV2(address);
       setBoxTokenIds(boxTokenIdRes ?? []);
       setBoxCount(boxTokenIdRes?.length ?? 0);
+      setBoxCountLoading(false);
       setOpening(false);
     } catch (e) {
       console.error(e);
@@ -665,6 +670,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onOpen}
+            isLoading={boxCountLoading || mintableCountLoading}
             disabled={boxCount === 0 && mintableCount === 0}
           >
             Open Your Box ({boxCount})
@@ -722,7 +728,9 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                     <Button
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onOpenSubmit}
-                      isLoading={opening}
+                      isLoading={
+                        opening || boxCountLoading || mintableCountLoading
+                      }
                       isDisabled={
                         !isInvaidChain && (boxCount === 0 || mintableCount > 0)
                       }
@@ -734,7 +742,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                     <Button
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onDrawMintSubmit}
-                      isLoading={drawing || mintBoosterLoading}
+                      isLoading={drawing || mintableCountLoading}
                       isDisabled={!isInvaidChain && mintableCount === 0}
                     >
                       {isInvaidChain && "Switch Network"}

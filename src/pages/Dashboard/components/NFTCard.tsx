@@ -209,6 +209,8 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
   const { invite } = useSelector((store: RootState) => store.airdrop);
+  const [mintableCountLoading, setMintBoosterLoading] = useState(false);
+  const [boxCountLoading, setBoxCountLoading] = useState(false);
 
   const onOpen = () => {
     openBoxModal.onOpen();
@@ -235,15 +237,18 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
         setRemainMintCount(remainNumber);
       });
       //TODO get mystery box balance
-
+      setBoxCountLoading(true);
       getMysteryboxNFT(address).then((res) => {
+        setBoxCountLoading(false);
         setBoxTokenIds(res ?? []);
         setBoxCount(res?.length ?? 0);
       });
       //TODO get mintabel count
+      setMintBoosterLoading(true);
       getRemainMysteryboxOpenableCount(address).then((res) => {
         console.log("getRemainMysteryboxOpenableCount: ", res);
         setMintableCount(res.result);
+        setMintBoosterLoading(false);
         if (res.result > 0) {
           openMysteryboxNFT(address).then((res) => {
             const { tokenId, nonce, signature, expiry } = res.result;
@@ -415,14 +420,18 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
           tokenId ? PRIZE_ID_NFT_MAP[tokenId] - 1 : 7
         ); // use index of img for active
       }
+      setMintBoosterLoading(true);
       getRemainMysteryboxOpenableCount(address).then((res) => {
         console.log("getRemainMysteryboxOpenableCount: ", res);
         setMintableCount(res.result);
+        setMintBoosterLoading(false);
       });
       setUpdate(() => update + 1);
+      setBoxCountLoading(true);
       const boxTokenIdRes = await getMysteryboxNFT(address);
       setBoxTokenIds(boxTokenIdRes ?? []);
       setBoxCount(boxTokenIdRes?.length ?? 0);
+      setBoxCountLoading(false);
       setOpening(false);
     } catch (e) {
       console.error(e);
@@ -629,7 +638,8 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onOpen}
-            // disabled={mintableCount === 0}
+            isLoading={boxCountLoading || mintableCountLoading}
+            disabled={boxCount === 0 && mintableCount === 0}
           >
             Open Your Box ({boxCount})
           </Button>
@@ -686,7 +696,9 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
                     <Button
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onOpenSubmit}
-                      isLoading={opening}
+                      isLoading={
+                        opening || boxCountLoading || mintableCountLoading
+                      }
                       isDisabled={
                         !isInvaidChain && (boxCount === 0 || mintableCount > 0)
                       }
@@ -698,7 +710,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
                     <Button
                       className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
                       onClick={onDrawMintSubmit}
-                      isLoading={drawing}
+                      isLoading={drawing || mintableCountLoading}
                       isDisabled={!isInvaidChain && mintableCount === 0}
                     >
                       {isInvaidChain && "Switch Network"}
