@@ -473,8 +473,8 @@ export default function Header() {
                 onClick={() =>
                   window.open(
                     nodeType === "nexus-goerli"
-                      ? "https://goerli.portal.zklink.io/bridge/transfers"
-                      : "https://portal.zklink.io/bridge/transfers",
+                      ? "https://goerli.portal.zklink.io/transfers"
+                      : "https://portal.zklink.io/transfers",
                     "_blank"
                   )
                 }
