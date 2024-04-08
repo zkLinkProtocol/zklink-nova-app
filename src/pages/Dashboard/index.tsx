@@ -35,7 +35,6 @@ import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
 import Decimal from "decimal.js";
-import EcoDApps from "@/components/Dashboard/EcoDApps";
 import {
   Button,
   Checkbox,
@@ -47,6 +46,7 @@ import {
 } from "@nextui-org/react";
 import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
+import EcoDApps from "@/components/Dashboard/EcoDApps";
 
 const TabsBox = styled.div`
   .tab-item {
