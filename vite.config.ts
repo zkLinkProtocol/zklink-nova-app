@@ -51,11 +51,6 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/app-api/, ""),
       },
-      "/lrt-points": {
-        target: "https://lrt-points.zklink.io",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/lrt-points/, ""),
-      },
     },
   },
   build: {

@@ -18,9 +18,7 @@ export const BASE_URL_API = `${BASE_URL}/api`;
 export const BASE_URL_POINTS = `${BASE_URL}/points`;
 export const BASE_URL_TOKENS = `${BASE_URL}/tokens`;
 export const BASE_URL_TWITTER = `${BASE_URL}/twitter`;
-export const BASE_URL_LRT_POINTS = isProd
-  ? `https://lrt-points.zklink.io`
-  : "/lrt-points";
+export const BASE_URL_LRT_POINTS = `${BASE_URL}/lrt-points`;
 export const BASE_URL_QUEST = `${BASE_URL}/quest-api`;
 
 export type BindInviteCodeWithAddressParams = {
