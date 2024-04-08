@@ -594,17 +594,6 @@ export default function Dashboard() {
                     Close
                   </Button>
                 </div>
-
-                {/* <div className="flex justify-end">
-                  <Checkbox
-                    className="flex-1  whitespace-nowrap"
-                    classNames={{ label: "text-[0.75rem] text-[#999]" }}
-                    isSelected={dontShowAgain}
-                    onValueChange={setDontShowAgain}
-                  >
-                    {"Don't show again"}
-                  </Checkbox>
-                </div> */}
               </ModalBody>
             </>
           )}
