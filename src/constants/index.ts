@@ -34,7 +34,7 @@ export const BOOSTER_NFT_CONTRACT =
 export const BOOSTER_NFT_CONTRACT_V2 =
   nodeType === "nexus-goerli"
     ? "0xFBF7B16ee753367709c50EdF2c681e180f8AE8BA"
-    : "0xFBF7B16ee753367709c50EdF2c681e180f8AE8BA";
+    : "0xe8184919c7200EF09e7007DFaB89BA4a99CeDc98";
 
 export const LYNKS_NFT_CONTRACT =
   nodeType === "nexus-goerli"
@@ -48,7 +48,7 @@ export const MYSTERY_BOX_CONTRACT =
 export const MYSTERY_BOX_CONTRACT_V2 =
   nodeType === "nexus-goerli"
     ? "0x1F2bCBf3005EB588091aF2C84160681d18a0D09D"
-    : "0x1F2bCBf3005EB588091aF2C84160681d18a0D09D";
+    : "0x831EeF41bf63c9cEF1ed53c226356eBF2D349cD6";
 
 export const WETH_CONTRACT =
   nodeType === "nexus-goerli"
