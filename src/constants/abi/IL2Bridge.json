@@ -1,5 +1,13 @@
 {
+  "_format": "hh-zksolc-artifact-1",
+  "contractName": "IL2Bridge",
+  "sourceName": "cache-zk/solpp-generated-contracts/bridge/interfaces/IL2Bridge.sol",
   "abi": [
+    {
+      "inputs": [],
+      "name": "FunctionNotSupported",
+      "type": "error"
+    },
     {
       "anonymous": false,
       "inputs": [
@@ -29,6 +37,43 @@
         }
       ],
       "name": "FinalizeDeposit",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "l1Sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "l2Receiver",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "l2Token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "mergeToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "FinalizeDepositToMerge",
       "type": "event"
     },
     {
@@ -92,7 +137,40 @@
       ],
       "name": "finalizeDeposit",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_l1Sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_l2Receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_l1Token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "finalizeDepositToMerge",
+      "outputs": [],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -169,5 +247,10 @@
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  ]
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "factoryDeps": {}
 }
