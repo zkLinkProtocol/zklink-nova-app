@@ -19,6 +19,7 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getMagPiePoints,
+  getLrtNovaPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -306,9 +307,7 @@ export default function Dashboard() {
   const [renzoEigenLayerPoints, setRenzoEigenLayerPoints] = useState(0);
   const getRenzoPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getRenzoPoints(
-      "0xd754Ff5e8a6f257E162F72578A4bB0493c0681d8"
-    );
+    const { data } = await getRenzoPoints(address);
 
     if (data && Array.isArray(data) && data.length > 0) {
       setRenzoPoints(
@@ -318,6 +317,22 @@ export default function Dashboard() {
       setRenzoEigenLayerPoints(
         data.reduce((prev, item) => prev + +item.points.eigenLayerPoints, 0)
       );
+    }
+  };
+
+  const [lrtNovaPoints, setLrtNovaPoints] = useState(0);
+
+  const getLayerBankPoints = async () => {
+    if (!address) return;
+    const { data } = await getLrtNovaPoints(
+      "0x84a7b80b2139914c325102dfe1ff2a3feb512e11"
+    );
+    if (data && Array.isArray(data) && data.length > 0) {
+      const points = data.reduce((prev, item) => prev + item.realPoints, 0);
+
+      setLrtNovaPoints(points);
+
+      console.log("lrtNovaPoints", points);
     }
   };
 
@@ -338,6 +353,7 @@ export default function Dashboard() {
     getRenzoPointsFunc();
     getAccountTvlFunc();
     getMagpiePointsFunc();
+    getLayerBankPoints();
   }, [address]);
 
   useEffect(() => {
@@ -472,7 +488,9 @@ export default function Dashboard() {
             </TabsBox>
 
             {/* Tabs view: Assets */}
-            {tabsActive === TabType.Eco && <EcoDApps />}
+            {tabsActive === TabType.Eco && (
+              <EcoDApps lrtNovaPoints={lrtNovaPoints} />
+            )}
 
             {/* Tabs view: Assets */}
             {tabsActive === TabType.Assets && (

@@ -1,17 +1,17 @@
-import { CardBox } from "@/styles/common";
+import { CardBox, GradientText } from "@/styles/common";
 import styled from "styled-components";
-// import { Tooltip as ReactTooltip } from "react-tooltip";
 import { AiFillCaretUp } from "react-icons/ai";
 import {
   Button,
-  Checkbox,
   Modal,
   ModalBody,
   ModalContent,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import { formatNumberWithUnit } from "@/utils";
 
 const Tag = styled.span`
   border-radius: 0.375rem;
@@ -53,9 +53,51 @@ const SubTh = styled.div`
   letter-spacing: -0.00438rem;
 `;
 
-export default function EcoDApps() {
+interface EcoDAppsProps {
+  lrtNovaPoints: number;
+}
+
+export default function EcoDApps({ lrtNovaPoints }: EcoDAppsProps) {
   const warningModal = useDisclosure();
   const [recognize, setRecognize] = useState(false);
+
+  const [pointsList, setPointsList] = useState<
+    {
+      name: string;
+      value: number | string;
+    }[]
+  >([
+    {
+      name: "Nova Points",
+      value: 0,
+    },
+    {
+      name: "LayerBank Points",
+      value: "Comming soon",
+    },
+    {
+      name: "Puffer Points",
+      value: 0,
+    },
+    {
+      name: "Eigenlayer Points",
+      value: 0,
+    },
+  ]);
+
+  useEffect(() => {
+    setPointsList((prev) =>
+      prev.map((item) => {
+        if (item.name === "Nova Points") {
+          return {
+            ...item,
+            value: formatNumberWithUnit(lrtNovaPoints),
+          };
+        }
+        return item;
+      })
+    );
+  }, [lrtNovaPoints]);
 
   return (
     <>
@@ -71,11 +113,11 @@ export default function EcoDApps() {
             <Th className="flex items-center gap-1">
               <span>Your Earned</span>
 
-              <img
+              {/* <
                 data-tooltip-id="your-eraned"
                 src="/img/icon-info.svg"
                 className="w-[0.875rem] h-[0.875rem] opacity-40"
-              ></img>
+              /> */}
             </Th>
           </div>
 
@@ -116,16 +158,32 @@ export default function EcoDApps() {
             </Td>
             <Td className="flex justify-between items-center">
               <div>
-                <p className="text-[1rem]">
-                  <span className="text-[#0BC48F] font-[700] whitespace-nowrap">
-                    14.2
-                  </span>{" "}
-                  Nova Points
-                </p>
-                <p className="text-[1rem] whitespace-nowrap">
-                  <span className="text-[#0BC48F] font-[700]">14.2</span>{" "}
-                  LayerBank Points
-                </p>
+                <GradientText data-tooltip-id="layerbank-points">
+                  {pointsList.length} Points
+                </GradientText>
+                <ReactTooltip
+                  id="layerbank-points"
+                  place="bottom"
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    width: "16.5rem",
+                  }}
+                  render={() => (
+                    <div>
+                      {pointsList.map((item, index) => (
+                        <p
+                          key={index}
+                          className="py-[0.25rem] flex justify-between items-center"
+                        >
+                          <span>{item.name}</span>
+                          <span className="font-[700]">{item.value}</span>
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                />
               </div>
               <Tag className="px-[1rem] py-[0.12rem] flex items-center gap-1">
                 <span className="text text-[#fff] whitespace-nowrap">
