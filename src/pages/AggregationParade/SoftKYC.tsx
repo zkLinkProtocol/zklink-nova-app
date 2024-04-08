@@ -460,6 +460,7 @@ export default function SoftKYC() {
         dispatch(setDepositTx(depositTxHash));
         dispatch(setDepositChainId(selectedChainId));
         verifyDepositModal.onClose();
+        toast.success("Your code has been successfully verified.");
       } else {
         setDepositStatus(VerifyResult.FAILED);
       }
@@ -762,7 +763,11 @@ export default function SoftKYC() {
                     navigate("/bridge");
                   }}
                 >
-                  <span className="ml-[0.5rem]">Bridge</span>
+                  <Tooltip
+                    content={`If you're new, simply click on 'bridge' to make a deposit.`}
+                  >
+                    <span className="ml-[0.5rem]">Bridge</span>
+                  </Tooltip>
                 </Button>
 
                 <Tooltip content="Connect your wallet and sign the message before verifying.">
