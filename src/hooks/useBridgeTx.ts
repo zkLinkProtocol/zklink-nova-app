@@ -447,21 +447,25 @@ export const useBridgeTx = () => {
     try {
       setLoading(true);
 
-      const l2GasLimit = await estimateDefaultBridgeDepositL2Gas(
-        token,
-        amount,
-        address,
-        isMergeSelected
-      );
-      const baseCost = await getBaseCost(l2GasLimit);
-      console.log("l2GasLimit: ", l2GasLimit.toString());
+      // const l2GasLimit = await estimateDefaultBridgeDepositL2Gas(
+      //   token,
+      //   amount,
+      //   address
+      // );
+      // const baseCost = await getBaseCost(l2GasLimit);
+      // console.log("l2GasLimit: ", l2GasLimit.toString());
       const fee = await getEstimateFee(token);
-      const overrides = {
-        gasPrice: fee?.gasPrice,
-        gasLimit: fee?.l1GasLimit,
-        maxFeePerGas: fee?.maxFeePerGas,
-        maxPriorityFeePerGas: fee?.maxPriorityFeePerGas,
-      };
+      const baseCost = fee?.baseCost;
+      const l2GasLimit = fee?.l2GasLimit;
+      const overrides =
+        networkKey === "ethereum"
+          ? { gasPrice: fee?.gasPrice, gasLimit: fee?.l1GasLimit }
+          : {
+              gasPrice: fee?.gasPrice,
+              gasLimit: fee?.l1GasLimit,
+              maxFeePerGas: fee?.maxFeePerGas,
+              maxPriorityFeePerGas: fee?.maxPriorityFeePerGas,
+            };
       if (overrides.gasPrice && overrides.maxFeePerGas) {
         overrides.gasPrice = undefined;
       }
