@@ -408,3 +408,22 @@ export const getTopInviteAndRandom = (date?: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/daily/topInviteAndRandom`, {
     params: { date },
   });
+
+export interface LrtNovaPointsData {
+  address: string;
+  points: string;
+  realPoints: number;
+  balance: string;
+  tokenAddress: string;
+  updated_at: number;
+}
+
+export interface LrtNovaPoints {
+  errno: number;
+  errmsg: string;
+  total_points: string;
+  data: LrtNovaPointsData[];
+}
+
+export const getLrtNovaPoints = (address: string): Promise<LrtNovaPoints> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/points`, { params: { address } });
