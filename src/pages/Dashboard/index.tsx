@@ -34,7 +34,15 @@ import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
 import Decimal from "decimal.js";
 import EcoDApps from "@/components/Dashboard/EcoDApps";
-import { Button, Checkbox, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/react";
+import {
+  Button,
+  Checkbox,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 import { setIsAdHide } from "@/store/modules/airdrop";
 
 const TabsBox = styled.div`
