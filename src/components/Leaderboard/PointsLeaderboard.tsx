@@ -112,7 +112,7 @@ export default function PointsLeaderboard() {
 
   const showAccount = (acc: any) => {
     if (!acc) return;
-    return `${acc.substr(0, 8)}...${acc.substr(-12)}`;
+    return `${acc.substr(0, 8)}...${acc.substr(-8)}`;
   };
 
   useEffect(() => {
