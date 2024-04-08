@@ -180,7 +180,7 @@ export default function NFTLuckWinner() {
       </p>
       <div className="flex items-center py-4 px-2">
         <div className="flex items-center gap-2 text-[16px]">
-          <span
+          {/* <span
             className={`px-2 ${
               isPrevDisabled
                 ? "cursor-not-allowed opacity-40"
@@ -189,14 +189,14 @@ export default function NFTLuckWinner() {
             onClick={() => !isPrevDisabled && handleSwitchDate("PREV")}
           >
             <AiFillCaretLeft />
-          </span>
+          </span> */}
           <span className="text-[#C6D3DD] font-[400]">from</span>
           <b className="font-[700]">
             {formatUtcDate(selectedStartTs)} 10:00 UTC
           </b>
           <span className="text-[#C6D3DD] font-[400]">to</span>
           <b className="font-[700]">{formatUtcDate(selectedEndTs)} 10:00 UTC</b>
-          <span
+          {/* <span
             className={`px-2 ${
               isNextDisabled
                 ? "cursor-not-allowed opacity-40"
@@ -205,7 +205,7 @@ export default function NFTLuckWinner() {
             onClick={() => !isNextDisabled && handleSwitchDate("NEXT")}
           >
             <AiFillCaretRight />
-          </span>
+          </span> */}
         </div>
       </div>
 
@@ -254,7 +254,7 @@ export default function NFTLuckWinner() {
             ))}
           </TableBody>
         </Table>
-        {isNextDisabled && (
+        {inviteAndRandomList.length === 0 && (
           <div className="absolute top-0 left-0 px-4  w-full h-full bg-[rgba(0,0,0,.8)] flex justify-center items-center rounded-[1rem]">
             <div className="text-[#C6D3DD] text-[20px] text-[center] leading-[24px]">
               <p className="text-center">
