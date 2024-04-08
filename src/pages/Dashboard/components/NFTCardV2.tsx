@@ -670,7 +670,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
           <Button
             className="gradient-btn mb-2 w-full"
             onClick={onOpen}
-            isLoading={boxCountLoading || mintableCountLoading}
+            // isLoading={boxCountLoading || mintableCountLoading}
             disabled={boxCount === 0 && mintableCount === 0}
           >
             Open Your Box {boxCount > 0 ? `(${boxCount})` : ""}
