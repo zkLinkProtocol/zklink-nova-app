@@ -351,7 +351,7 @@ export default function Dashboard() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(true);
 
   const dispatch = useDispatch();
   const handleAdClose = () => {
@@ -391,16 +391,36 @@ export default function Dashboard() {
       <a
         href="https://www.okx.com/web3/discover/cryptopedia/event/28"
         target="_blank"
-        className="relative block md:ml-[4.75rem] md:mr-[6rem] mx-[1rem] h-[72px] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
+        className="hidden md:block relative ml-[4.75rem] mr-[6rem]  h-[4.75rem] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
       >
         <p className="relative ml-[1.5rem] text-[1rem] leading-[72px] z-10">
           Join Nova Cryptopedia Event and Win{" "}
           <b className="text-[#03d498]">300K</b> USD worth of $ZKL in Rewards!
         </p>
-        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-center opacity-40 md:opacity-100">
-          <img src="/img/bg-okx-ad.png" className="h-[72px] object-cover" />
+        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-center">
+          <img src="/img/bg-okx-ad.png" className="h-[4.75rem] object-cover" />
         </div>
       </a>
+
+      <a
+        href="https://www.okx.com/web3/discover/cryptopedia/event/28"
+        target="_blank"
+        className="block md:hidden relative mx-[1rem] h-[4.5rem] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
+      >
+        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-cente">
+          <div className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.5)] z-0"></div>
+          <img
+            src="/img/bg-okx-ad-mobile.png"
+            className="h-[4.5rem] object-cover"
+          />
+        </div>
+
+        <p className="relative ml-[1.5rem] text-[1rem] leading-[72px] z-10">
+          Join Nova Cryptopedia Event and Win{" "}
+          <b className="text-[#03d498]">300K</b> USD worth in Rewards!
+        </p>
+      </a>
+
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem]">
@@ -510,9 +530,11 @@ export default function Dashboard() {
                   <img src="/img/join-nova-cryptopedia.png" />
                 </div>
 
-                <div className="flex justify-end">
+                <div>
                   <Checkbox
-                    className="flex-1 text-[0.75rem] whitespace-nowrap"
+                    classNames={{
+                      label: "text-[0.75rem] text-[#999] whitespace-nowrap",
+                    }}
                     isSelected={dontShowAgain}
                     onValueChange={setDontShowAgain}
                   >
@@ -535,6 +557,17 @@ export default function Dashboard() {
                     Close
                   </Button>
                 </div>
+
+                {/* <div className="flex justify-end">
+                  <Checkbox
+                    className="flex-1  whitespace-nowrap"
+                    classNames={{ label: "text-[0.75rem] text-[#999]" }}
+                    isSelected={dontShowAgain}
+                    onValueChange={setDontShowAgain}
+                  >
+                    {"Don't show again"}
+                  </Checkbox>
+                </div> */}
               </ModalBody>
             </>
           )}
