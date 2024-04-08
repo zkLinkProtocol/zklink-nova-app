@@ -457,12 +457,15 @@ export const useBridgeTx = () => {
       const fee = await getEstimateFee(token);
       const baseCost = fee?.baseCost;
       const l2GasLimit = fee?.l2GasLimit;
-      const overrides = {
-        gasPrice: fee?.gasPrice,
-        gasLimit: fee?.l1GasLimit,
-        maxFeePerGas: fee?.maxFeePerGas,
-        maxPriorityFeePerGas: fee?.maxPriorityFeePerGas,
-      };
+      const overrides =
+        networkKey === "ethereum"
+          ? { gasPrice: fee?.gasPrice, gasLimit: fee?.l1GasLimit }
+          : {
+              gasPrice: fee?.gasPrice,
+              gasLimit: fee?.l1GasLimit,
+              maxFeePerGas: fee?.maxFeePerGas,
+              maxPriorityFeePerGas: fee?.maxPriorityFeePerGas,
+            };
       if (overrides.gasPrice && overrides.maxFeePerGas) {
         overrides.gasPrice = undefined;
       }
