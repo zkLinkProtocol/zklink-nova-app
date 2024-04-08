@@ -308,7 +308,7 @@ export default function Dashboard() {
   const [renzoEigenLayerPoints, setRenzoEigenLayerPoints] = useState(0);
   const getRenzoPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getRenzoPoints('0xd754Ff5e8a6f257E162F72578A4bB0493c0681d8');
+    const { data } = await getRenzoPoints(address);
 
     if (data && Array.isArray(data) && data.length > 0) {
       setRenzoPoints(
@@ -594,6 +594,17 @@ export default function Dashboard() {
                     Close
                   </Button>
                 </div>
+
+                {/* <div className="flex justify-end">
+                  <Checkbox
+                    className="flex-1  whitespace-nowrap"
+                    classNames={{ label: "text-[0.75rem] text-[#999]" }}
+                    isSelected={dontShowAgain}
+                    onValueChange={setDontShowAgain}
+                  >
+                    {"Don't show again"}
+                  </Checkbox>
+                </div> */}
               </ModalBody>
             </>
           )}
