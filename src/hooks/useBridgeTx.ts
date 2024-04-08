@@ -147,6 +147,7 @@ export const useBridgeTx = () => {
     token: Address,
     amount: BigNumberish,
     to: Address,
+    isMergeSelected?: boolean,
     from?: Address
   ): Promise<BigNumber> => {
     // If the `from` address is not provided, we use a random address, because
@@ -175,7 +176,8 @@ export const useBridgeTx = () => {
         from,
         to,
         amount,
-        provider1
+        provider1,
+        isMergeSelected
       );
 
       return await providerL2.estimateL1ToL2Execute({
@@ -435,7 +437,8 @@ export const useBridgeTx = () => {
   const sendDepositTx = async (
     token: Address,
     amount: BigNumberish,
-    nativeBalance: BigNumberish
+    nativeBalance: BigNumberish,
+    isMergeSelected?: boolean
   ) => {
     const network = nodeConfig.find((item) => item.key === networkKey);
     if (!address || !network) {
@@ -549,13 +552,14 @@ export const useBridgeTx = () => {
         tx = {
           address: bridgeContract!,
           abi: IL1Bridge.abi as Abi,
-          functionName: "deposit",
+          functionName: isMergeSelected ? "depositToMerge" : "deposit",
           args: [
             address,
             token,
             amount,
             l2GasLimit,
             REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
+            address
           ],
         };
         tx.value = baseCost.toBigInt();
@@ -570,13 +574,17 @@ export const useBridgeTx = () => {
         }
         //handle zksync and linea gas
         const face = new Interface(IL1Bridge.abi);
-        const txData = face.encodeFunctionData("deposit", [
-          address,
-          token,
-          amount,
-          l2GasLimit,
-          REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
-        ]) as `0x${string}`;
+        const txData = face.encodeFunctionData(
+          isMergeSelected ? "depositToMerge" : "deposit",
+          [
+            address,
+            token,
+            amount,
+            l2GasLimit,
+            REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
+            address
+          ]
+        ) as `0x${string}`;
         if (isZkSyncChain) {
           const fee = await zkSyncProvider.attachEstimateFee()({
             from: address,

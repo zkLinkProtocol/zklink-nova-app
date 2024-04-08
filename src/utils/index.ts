@@ -102,16 +102,14 @@ export async function getERC20BridgeCalldata(
   l1Sender: string,
   l2Receiver: string,
   amount: BigNumberish,
-  provider: ethers.providers.Provider
+  provider: ethers.providers.Provider,
+  isMergeSelected?: boolean
 ): Promise<string> {
   const gettersData = await getERC20GettersData(l1TokenAddress, provider);
-  return L2_BRIDGE_ABI.encodeFunctionData("finalizeDeposit", [
-    l1Sender,
-    l2Receiver,
-    l1TokenAddress,
-    amount,
-    gettersData,
-  ]);
+  return L2_BRIDGE_ABI.encodeFunctionData(
+    isMergeSelected ? "finalizeDepositToMerge" : "finalizeDeposit",
+    [l1Sender, l2Receiver, l1TokenAddress, amount, gettersData]
+  );
 }
 const ADDRESS_MODULO = BigNumber.from(2).pow(160);
 

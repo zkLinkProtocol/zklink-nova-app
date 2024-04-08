@@ -2,7 +2,9 @@ import {
   TRADEMARK_NFT_CONTRACT,
   NOVA_CHAIN_ID,
   MYSTERY_BOX_CONTRACT,
+  MYSTERY_BOX_CONTRACT_V2,
   BOOSTER_NFT_CONTRACT,
+  BOOSTER_NFT_CONTRACT_V2,
   LYNKS_NFT_CONTRACT,
   IS_MAINNET,
   LYNKS_METADATA_PREFIX,
@@ -102,6 +104,18 @@ const useNovaDrawNFT = () => {
     });
   }, [publicClient, walletClient]);
 
+  const boosterNFTV2 = useMemo(() => {
+    if (!publicClient) return null;
+    return getContract({
+      address: BOOSTER_NFT_CONTRACT_V2 as Hash,
+      abi: NovaBoosterNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
+  }, [publicClient, walletClient]);
+
   const lynksNFT = useMemo(() => {
     if (!publicClient) return null;
     return getContract({
@@ -118,6 +132,18 @@ const useNovaDrawNFT = () => {
     if (!publicClient) return null;
     return getContract({
       address: MYSTERY_BOX_CONTRACT as Hash,
+      abi: NovaMysteryBoxNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
+  }, [publicClient, walletClient]);
+
+  const mysteryBoxNFTV2 = useMemo(() => {
+    if (!publicClient) return null;
+    return getContract({
+      address: MYSTERY_BOX_CONTRACT_V2 as Hash,
       abi: NovaMysteryBoxNFT,
       client: {
         public: publicClient,
@@ -201,6 +227,28 @@ const useNovaDrawNFT = () => {
     [mysteryBoxNFT]
   );
 
+  const getMysteryboxNFTV2 = useCallback(
+    async (address: string) => {
+      if (!mysteryBoxNFTV2) return;
+      const balance = await mysteryBoxNFTV2.read.balanceOf([address]);
+      if (BigNumber.from(balance).eq(0)) {
+        return;
+      }
+
+      const tokenIds = await Promise.all(
+        new Array(Number(balance))
+          .fill(undefined)
+          .map((_, index) =>
+            mysteryBoxNFTV2.read.tokenOfOwnerByIndex([address, index])
+          )
+      );
+      console.log("tokenIds: ", tokenIds);
+
+      return tokenIds.map((item) => Number(item));
+    },
+    [mysteryBoxNFTV2]
+  );
+
   const insertEstimateFee = async (tx: WriteContractParameters) => {
     const txData = encodeFunctionData({
       abi: tx.abi,
@@ -254,12 +302,70 @@ const useNovaDrawNFT = () => {
     }
   };
 
+  const sendTrademarkMintTxV2 = async (params: TrademarkMintParams) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: TRADEMARK_NFT_CONTRACT,
+        abi: NovaTrademarkNFT,
+        functionName: "safeMint2",
+        args: [
+          address,
+          params.nonce,
+          params.tokenId,
+          1,
+          params.expiry,
+          params.signature,
+        ],
+      };
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const sendMysteryMintTx = async (params: MysteryboxMintParams) => {
     if (!address) return;
     try {
       setLoading(true);
       const tx: WriteContractParameters = {
         address: MYSTERY_BOX_CONTRACT as Hash,
+        abi: NovaMysteryBoxNFT,
+        functionName: "safeMint",
+        args: [params.nonce, params.expiry, params.signature],
+      };
+
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendMysteryMintTxV2 = async (params: MysteryboxMintParams) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: MYSTERY_BOX_CONTRACT_V2 as Hash,
         abi: NovaMysteryBoxNFT,
         functionName: "safeMint",
         args: [params.nonce, params.expiry, params.signature],
@@ -289,6 +395,55 @@ const useNovaDrawNFT = () => {
         address: (isLynks ? LYNKS_NFT_CONTRACT : BOOSTER_NFT_CONTRACT) as Hash,
         abi: isLynks ? NovaLynksNFT : NovaBoosterNFT,
         functionName: isLynks ? "safeMintWithAuth" : "safeMint",
+        args: isLynks
+          ? [address, params.nonce, params.expiry, params.signature]
+          : [
+              address,
+              params.nonce,
+              params.tokenId,
+              1,
+              params.expiry,
+              params.signature,
+            ],
+      };
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendMysteryOpenMintTxV2 = async (params: MysteryboxOpenParams) => {
+    if (!address) return;
+    const isLynks = params?.tokenId === 88;
+    const isTrademark = params?.tokenId && Number(params.tokenId) < 5;
+
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: (isLynks
+          ? LYNKS_NFT_CONTRACT
+          : isTrademark
+          ? TRADEMARK_NFT_CONTRACT
+          : BOOSTER_NFT_CONTRACT_V2) as Hash,
+        abi: isLynks
+          ? NovaLynksNFT
+          : isTrademark
+          ? NovaTrademarkNFT
+          : NovaBoosterNFT,
+        functionName: isLynks
+          ? "safeMintWithAuth"
+          : isTrademark
+          ? "safeMint2"
+          : "safeMint",
         args: isLynks
           ? [address, params.nonce, params.expiry, params.signature]
           : [
@@ -379,16 +534,22 @@ const useNovaDrawNFT = () => {
   return {
     trademarkNFT,
     boosterNFT,
+    boosterNFTV2,
     lynksNFT,
     mysteryBoxNFT,
+    mysteryBoxNFTV2,
     publicClient,
     getLynksNFT,
     sendTrademarkMintTx,
+    sendTrademarkMintTxV2,
     sendMysteryOpenMintTx,
+    sendMysteryOpenMintTxV2,
     sendMysteryMintTx,
+    sendMysteryMintTxV2,
     loading,
     novaETHBalance,
     getMysteryboxNFT,
+    getMysteryboxNFTV2,
     sendUpgradeSBTTx,
     isTrademarkApproved,
     sendTrademarkApproveTx,
