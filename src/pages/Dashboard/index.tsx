@@ -32,6 +32,7 @@ import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import Decimal from "decimal.js";
+import EcoDApps from "@/components/Dashboard/EcoDApps";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -68,6 +69,13 @@ export type AccountTvlItem = {
   symbol: string;
   iconURL: string | null;
 };
+
+export enum TabType {
+  Eco = 0,
+  Assets = 1,
+  NFTs = 2,
+  Referral = 3,
+}
 
 export function DisclaimerFooter() {
   return (
@@ -382,21 +390,26 @@ export default function Dashboard() {
           <div className="mt-[2rem]">
             {/* Tabs btn: Assets | Trademark NFTs | Referral  */}
             <TabsBox className="flex items-center gap-[1.5rem] overflow-x-auto">
-              {["Assets", "Nova NFTs", "Referral"].map((item, index) => (
-                <span
-                  key={index}
-                  className={`tab-item whitespace-nowrap ${
-                    tabsActive === index ? "active" : ""
-                  }`}
-                  onClick={() => setTabsActive(index)}
-                >
-                  {item}
-                </span>
-              ))}
+              {["Eco dApps", "Assets", "Nova NFTs", "Referral"].map(
+                (item, index) => (
+                  <span
+                    key={index}
+                    className={`tab-item whitespace-nowrap ${
+                      tabsActive === index ? "active" : ""
+                    }`}
+                    onClick={() => setTabsActive(index)}
+                  >
+                    {item}
+                  </span>
+                )
+              )}
             </TabsBox>
 
             {/* Tabs view: Assets */}
-            {tabsActive === 0 && (
+            {tabsActive === TabType.Eco && <EcoDApps />}
+
+            {/* Tabs view: Assets */}
+            {tabsActive === TabType.Assets && (
               <AssetsTable
                 ethUsdPrice={ethUsdPrice}
                 supportTokens={supportTokens}
@@ -405,10 +418,10 @@ export default function Dashboard() {
               />
             )}
             {/* Tabs view: Trademark NFTs */}
-            {tabsActive === 1 && <NFTCard />}
+            {tabsActive === TabType.NFTs && <NFTCard />}
 
             {/* Tabs view: Referral */}
-            {tabsActive === 2 && (
+            {tabsActive === TabType.Referral && (
               <CardBox className="mt-[2rem] min-h-[30rem]">
                 <ReferralList
                   data={referrersTvlList}
