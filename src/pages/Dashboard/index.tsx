@@ -385,9 +385,9 @@ export default function Dashboard() {
         target="_blank"
         className="hidden md:block relative ml-[4.75rem] mr-[6rem]  h-[4.75rem] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
       >
-        <p className="relative ml-[1.5rem] text-[1rem] leading-[72px] z-10">
+        <p className="relative ml-[1.5rem] text-[1rem] leading-[4.75rem] z-10">
           Join Nova Cryptopedia Event and Win{" "}
-          <b className="text-[#03d498]">300K</b> USD worth of $ZKL in Rewards!
+          <b className="text-[#03d498]">$300K</b> USD worth of $ZKL in Rewards!
         </p>
         <div className="absolute right-0 top-0 bottom-0 z-0 flex items-center">
           <img src="/img/bg-okx-ad.png" className="h-[4.75rem] object-cover" />
@@ -407,9 +407,9 @@ export default function Dashboard() {
           />
         </div>
 
-        <p className="relative ml-[1.5rem] text-[1rem] leading-[72px] z-10">
+        <p className="relative text-center text-[0.9rem] leading-[4.75rem] z-10">
           Join Nova Cryptopedia Event and Win{" "}
-          <b className="text-[#03d498]">300K</b> USD worth in Rewards!
+          <b className="text-[#03d498]">$300K</b> in Rewards!
         </p>
       </a>
 
