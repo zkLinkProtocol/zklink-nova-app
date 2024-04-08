@@ -338,10 +338,10 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   const inputRef1 = useRef<HTMLInputElement>(null);
   const inputRef2 = useRef<HTMLInputElement>(null);
-  const [isMergeSelected, setIsMergeSelected] = useState(false);
+  const [isMergeSelected, setIsMergeSelected] = useState(true);
   const [mergeTokenInfo, setMergeTokenInfo] = useState<SourceTokenInfo>();
 
-  // const { fetchMergeTokenInfo } = useMergeToken();
+  const { fetchMergeTokenInfo } = useMergeToken();
 
   useEffect(() => {
     //https://github.com/ant-design/ant-design-mobile/issues/5174
@@ -368,26 +368,25 @@ export default function Bridge(props: IBridgeComponentProps) {
     // return () => clearInterval(timer);
   }, [refreshTokenBalanceList]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const token = tokenFiltered[tokenActive];
-  //     if (token && token.l2Address) {
-  //       const info = await fetchMergeTokenInfo(token.l2Address);
-  //       console.log("mergeInfo: ", info);
-  //       setMergeTokenInfo(info);
-  //     } else {
-  //       setMergeTokenInfo(undefined);
-  //     }
-  //   })();
-  // }, [fetchMergeTokenInfo, tokenActive, tokenFiltered]);
+  useEffect(() => {
+    (async () => {
+      const token = tokenFiltered[tokenActive];
+      if (token && token.l2Address) {
+        const info = await fetchMergeTokenInfo(token.l2Address);
+        console.log("mergeInfo: ", info);
+        setMergeTokenInfo(info);
+      } else {
+        setMergeTokenInfo(undefined);
+      }
+    })();
+  }, [fetchMergeTokenInfo, tokenActive, tokenFiltered]);
 
   const mergeSupported = useMemo(() => {
-    // return mergeTokenInfo?.isSupported && !mergeTokenInfo?.isLocked;
+    return mergeTokenInfo?.isSupported && !mergeTokenInfo?.isLocked;
     return false;
-  }, []);
+  }, [mergeTokenInfo]);
 
   const mergeLimitExceeds = useMemo(() => {
-    return false;
     if (!amount) return false;
     const amountVal = parseUnits(
       String(amount),
@@ -801,6 +800,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     onClose?.();
   }, [
     address,
+    nativeTokenBalance,
     invalidChain,
     amount,
     transLoadModal,
@@ -811,7 +811,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     sendDepositTx,
     tokenFiltered,
     tokenActive,
-    nativeTokenBalance,
+    isMergeSelected,
     addTxHash,
     dispatch,
     transSuccModal,
