@@ -67,9 +67,23 @@ export const getRemainMysteryboxDrawCount = (
   });
 };
 
+export const getRemainMysteryboxDrawCountV2 = (
+  address: string
+): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/draw/mysterybox/v2/remain`, {
+    params: { address },
+  });
+};
+
 // for mint box params
 export const mintMysteryboxNFT = (address: string): Promise<Response> => {
   return http.post(`${BASE_URL_API}/invite/mint/mysterybox`, {
+    address,
+  });
+};
+
+export const mintMysteryboxNFTV2 = (address: string): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/mint/mysterybox/v2`, {
     address,
   });
 };
@@ -80,10 +94,24 @@ export const openMysteryboxNFT = (address: string): Promise<Response> => {
   });
 };
 
+export const openMysteryboxNFTV2 = (address: string): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/open/mysterybox/v2`, {
+    address,
+  });
+};
+
 export const getRemainMysteryboxOpenableCount = (
   address: string
 ): Promise<Response> => {
   return http.get(`${BASE_URL_API}/invite/open/mysterybox/remain`, {
+    params: { address },
+  });
+};
+
+export const getRemainMysteryboxOpenableCountV2 = (
+  address: string
+): Promise<Response> => {
+  return http.get(`${BASE_URL_API}/invite/open/mysterybox/v2/remain`, {
     params: { address },
   });
 };

@@ -1,5 +1,5 @@
 import { chains } from "./networks";
-import { Address } from "viem";
+import { Address, createClient } from "viem";
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
 import {
@@ -497,8 +497,7 @@ export const wagmiDefaultConfig = createConfig({
     }),
   ],
   multiInjectedProviderDiscovery: true,
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
+  client: ({ chain }) => {
+    return createClient({ chain, transport: http() });
   },
 });

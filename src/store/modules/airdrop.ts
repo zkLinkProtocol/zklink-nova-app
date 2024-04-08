@@ -19,6 +19,7 @@ export interface airdropState {
   isCheckedInviteCode: boolean;
   signatureAddress: string;
   isOkxFlag: boolean;
+  isAdHide: boolean;
 }
 
 const initialState: airdropState = {
@@ -40,6 +41,7 @@ const initialState: airdropState = {
   isCheckedInviteCode: false,
   signatureAddress: "",
   isOkxFlag: false,
+  isAdHide: false,
 };
 
 export const airdrop = createSlice({
@@ -97,6 +99,9 @@ export const airdrop = createSlice({
     setIsOkxFlag(state, action: PayloadAction<boolean>) {
       state.isOkxFlag = action.payload;
     },
+    setIsAdHide(state, action: PayloadAction<boolean>) {
+      state.isAdHide = action.payload;
+    },
   },
 });
 
@@ -118,5 +123,6 @@ export const {
   setIsCheckedInviteCode,
   setSignatureAddress,
   setIsOkxFlag,
+  setIsAdHide,
 } = airdrop.actions;
 export default airdrop.reducer;
