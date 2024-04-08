@@ -479,13 +479,14 @@ export const useBridgeTx = () => {
           tx = {
             address: bridgeContract!,
             abi: IL1Bridge.abi as Abi,
-            functionName: "deposit",
+            functionName: isMergeSelected ? "depositToMerge" : "deposit",
             args: [
               address,
               WRAPPED_MNT,
               amount,
               l2GasLimit,
               REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
+              address,
             ],
           };
           tx.value = baseCost.toBigInt();
@@ -559,7 +560,7 @@ export const useBridgeTx = () => {
             amount,
             l2GasLimit,
             REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
-            address
+            address,
           ],
         };
         tx.value = baseCost.toBigInt();
@@ -582,7 +583,7 @@ export const useBridgeTx = () => {
             amount,
             l2GasLimit,
             REQUIRED_L1_TO_L2_GAS_PER_PUBDATA_LIMIT,
-            address
+            address,
           ]
         ) as `0x${string}`;
         if (isZkSyncChain) {
