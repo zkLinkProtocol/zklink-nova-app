@@ -59,6 +59,8 @@ import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useConnections } from "wagmi";
+import { Switch, cn } from "@nextui-org/react";
+import { SourceTokenInfo, useMergeToken } from "@/hooks/useMergeToken";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -246,12 +248,12 @@ const LoyaltyBoostBox = styled.div`
 `;
 
 const LoyaltyBoostTooltipContent = styled.div`
-  background: #666666;
-  padding: 12px 16px;
+  /* background: #666666; */
+  /* padding: 12px 16px; */
   border-radius: 8px;
   font-weight: 400;
   font-size: 16px;
-  font-family: "Space Mono";
+  /* font-family: "Space Mono"; */
 `;
 
 const AssetTypes = [
@@ -336,6 +338,10 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   const inputRef1 = useRef<HTMLInputElement>(null);
   const inputRef2 = useRef<HTMLInputElement>(null);
+  const [isMergeSelected, setIsMergeSelected] = useState(true);
+  const [mergeTokenInfo, setMergeTokenInfo] = useState<SourceTokenInfo>();
+
+  const { fetchMergeTokenInfo } = useMergeToken();
 
   useEffect(() => {
     //https://github.com/ant-design/ant-design-mobile/issues/5174
@@ -361,6 +367,44 @@ export default function Bridge(props: IBridgeComponentProps) {
     // }, 5000);
     // return () => clearInterval(timer);
   }, [refreshTokenBalanceList]);
+
+  useEffect(() => {
+    (async () => {
+      const token = tokenFiltered[tokenActive];
+      if (token && token.l2Address) {
+        const info = await fetchMergeTokenInfo(token.l2Address);
+        console.log("mergeInfo: ", info);
+        setMergeTokenInfo(info);
+      } else {
+        setMergeTokenInfo(undefined);
+      }
+    })();
+  }, [fetchMergeTokenInfo, tokenActive, tokenFiltered]);
+
+  const mergeSupported = useMemo(() => {
+    return mergeTokenInfo?.isSupported && !mergeTokenInfo?.isLocked;
+  }, [mergeTokenInfo]);
+
+  const mergeLimitExceeds = useMemo(() => {
+    if (!amount) return false;
+    const amountVal = parseUnits(
+      String(amount),
+      tokenFiltered[tokenActive]?.decimals
+    );
+    const exceeds = new BigNumber(amountVal.toString())
+      .plus(mergeTokenInfo?.balance.toString() ?? 0)
+      .gt(mergeTokenInfo?.depositLimit.toString() ?? 0);
+    console.log("exceeds: ", exceeds);
+    return mergeSupported && isMergeSelected && exceeds;
+  }, [
+    amount,
+    tokenFiltered,
+    tokenActive,
+    mergeTokenInfo?.balance,
+    mergeTokenInfo?.depositLimit,
+    mergeSupported,
+    isMergeSelected,
+  ]);
 
   useEffect(() => {
     (async () => {
@@ -430,13 +474,18 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, []);
 
   const errorInputMsg = useMemo(() => {
+    if (mergeLimitExceeds) {
+      return "Input amount exceeds the merge limit.";
+    }
     const token = tokenFiltered[tokenActive];
     const [_, decimals] = amount.split(".");
     if (token && decimals && decimals.length > token.decimals) {
       return `Max decimal length for ${token.symbol} is ${token.decimals}`;
     }
     return "";
-  }, [tokenActive, tokenFiltered, amount]);
+  }, [tokenActive, tokenFiltered, amount, mergeLimitExceeds]);
+
+  console.log("errorInputMsg: ", errorInputMsg);
 
   const computePoints = debounce(() => {
     if (!amount || !tokenFiltered[tokenActive]) {
@@ -584,7 +633,9 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [chainId, fromActive]);
 
   const actionBtnDisabled = useMemo(() => {
-    if (
+    if (!invalidChain && mergeLimitExceeds) {
+      return true;
+    } else if (
       !invalidChain &&
       (!nativeTokenBalance ||
         new BigNumber(nativeTokenBalance.toString()).eq(0))
@@ -612,6 +663,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     tokenActive,
     amount,
     errorInputMsg,
+    mergeLimitExceeds,
   ]);
 
   const isDepositErc20 = useMemo(() => {
@@ -694,7 +746,8 @@ export default function Bridge(props: IBridgeComponentProps) {
         tokenFiltered[tokenActive]?.address as `0x${string}`,
         // utils.parseEther(String(amount))
         parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals),
-        nativeTokenBalance!
+        nativeTokenBalance!,
+        isMergeSelected,
       );
       if (!hash) {
         return;
@@ -858,7 +911,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                   className="w-[14px] cursor-pointer ml-1 mr-4"
                 />
               </Tooltip>
-              <div className="flex items-center justify-center bg-green-800 h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
+              <div className="flex items-center justify-center bg-[#1B4C4A] h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
                 10x Boost
               </div>
               {loyalPoints > 0 && (
@@ -913,6 +966,64 @@ export default function Bridge(props: IBridgeComponentProps) {
             <span>Est.fee</span>
             <span>0.002 ETH</span>
           </div> */}
+          {mergeSupported && (
+            <div className="flex items-center justify-between mb-2 points-box">
+              <div className="flex items-center">
+                <span>Merge Token</span>
+
+                <Tooltip
+                  showArrow={true}
+                  classNames={{
+                    content: "max-w-[300px] p-4",
+                  }}
+                  content={
+                    <LoyaltyBoostTooltipContent>
+                      All supported source tokens with the same entity from
+                      different networks can be merged into a single merged
+                      token.{" "}
+                      <a
+                        href="https://docs.zklink.io/how-it-works/token-merge"
+                        target="_blank"
+                        className="text-[#03D498]"
+                      >
+                        Learn more.
+                      </a>
+                    </LoyaltyBoostTooltipContent>
+                  }
+                >
+                  <img
+                    src={"/img/icon-tooltip.png"}
+                    className="w-[14px] cursor-pointer ml-1 mr-4"
+                  />
+                </Tooltip>
+                <div className="flex items-center justify-center bg-[#1B4C4A] h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
+                  4x Booster
+                </div>
+              </div>
+              <span>
+                <span className="text-white align-super">
+                  {isMergeSelected ? "Merge" : ""}{" "}
+                </span>
+                <Switch
+                  isSelected={isMergeSelected}
+                  onValueChange={setIsMergeSelected}
+                  classNames={{
+                    base: cn("-mr-2"),
+                    wrapper: "p-0 h-4 overflow-visible",
+                    thumb: cn(
+                      "w-6 h-6 shadow-lg bg-white",
+                      //selected
+                      "group-data-[selected=true]:ml-6",
+                      "group-data-[selected=true]:bg-green",
+                      // pressed
+                      "group-data-[pressed=true]:w-7",
+                      "group-data-[selected]:group-data-[pressed]:ml-4"
+                    ),
+                  }}
+                ></Switch>
+              </span>
+            </div>
+          )}
         </SelectBox>
         <div className="mt-8">
           {isConnected ? (
@@ -1057,7 +1168,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                   className="w-[14px] cursor-pointer ml-1 mr-4"
                 />
               </Tooltip>
-              <div className="flex items-center justify-center bg-green-800 h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
+              <div className="flex items-center justify-center h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F] bg-[#1B4C4A]">
                 10x Boost
               </div>
               {loyalPoints > 0 && (
@@ -1104,7 +1215,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             <div className="flex items-center justify-between mb-2 points-box">
               <span>Estimated Time of Arrival</span>
               <span className="text-white">
-                ~ {NexusEstimateArrivalTimes[networkKey]} minutes
+                ~ {NexusEstimateArrivalTimes[networkKey]} mins
               </span>
             </div>
           )}
@@ -1112,6 +1223,62 @@ export default function Bridge(props: IBridgeComponentProps) {
             <span>Est.fee</span>
             <span>0.002 ETH</span>
           </div> */}
+          <div className="flex items-center justify-between mb-2 points-box">
+            <div className="flex items-center">
+              <span>Merge Token</span>
+
+              <Tooltip
+                showArrow={true}
+                classNames={{
+                  content: "max-w-[300px] p-4",
+                }}
+                content={
+                  <LoyaltyBoostTooltipContent>
+                    All supported source tokens with the same entity from
+                    different networks can be merged into a single merged token.{" "}
+                    <a
+                      href="https://docs.zklink.io/how-it-works/token-merge"
+                      target="_blank"
+                      className="text-[#03D498]"
+                    >
+                      Learn more.
+                    </a>
+                  </LoyaltyBoostTooltipContent>
+                }
+              >
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                />
+              </Tooltip>
+            </div>
+            <span className="flex justify-end w-12 gap-[0.25rem]">
+              <span className="text-white align-super">
+                {isMergeSelected ? "" : "Merge"}
+              </span>
+              <Switch
+                isSelected={isMergeSelected}
+                onValueChange={setIsMergeSelected}
+                classNames={{
+                  base: cn("-mr-2"),
+                  wrapper: "p-0 h-4 overflow-visible",
+                  thumb: cn(
+                    "w-6 h-6 shadow-lg bg-green",
+                    //selected
+                    "group-data-[selected=true]:ml-6",
+                    "group-data-[selected=true]:bg-white",
+                    // pressed
+                    "group-data-[selected]:group-data-[pressed]:ml-10"
+                  ),
+                }}
+              ></Switch>
+            </span>
+          </div>
+          <div className="flex">
+            <div className="bg-[#1B4C4A] h-[28px] leading-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
+              4x Booster
+            </div>
+          </div>
         </SelectBox>
         <div className="mt-8">
           {isConnected ? (
