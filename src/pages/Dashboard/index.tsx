@@ -298,9 +298,7 @@ export default function Dashboard() {
   const [renzoEigenLayerPoints, setRenzoEigenLayerPoints] = useState(0);
   const getRenzoPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getRenzoPoints(
-      "0xd754Ff5e8a6f257E162F72578A4bB0493c0681d8"
-    );
+    const { data } = await getRenzoPoints(address);
 
     if (data && Array.isArray(data) && data.length > 0) {
       setRenzoPoints(
