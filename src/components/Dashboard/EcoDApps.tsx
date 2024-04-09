@@ -172,7 +172,7 @@ export default function EcoDApps({
           </div>
 
           {!isCollapsed && (
-            <div className="px-[1.5rem] py-[1rem] flex justify-between items-center border-b-1 border-[#292A2A]">
+            <div className="px-[1.5rem] py-[1rem] flex justify-between border-b-1 border-[#292A2A]">
               <div>
                 <SubTh>Status</SubTh>
                 <p className="text-[0.875rem] ">Live</p>
