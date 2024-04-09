@@ -461,6 +461,15 @@ export default function Bridge(props: IBridgeComponentProps) {
     return "";
   }, [fromActive, connectorName]);
 
+  const mergeTokenBooster = useMemo(() => {
+    const token = tokenFiltered[tokenActive];
+    if (token?.symbol.toUpperCase() === "WBTC") {
+      return 2.5;
+    } else {
+      return 3;
+    }
+  }, [tokenActive, tokenFiltered]);
+
   useEffect(() => {
     console.log("tokenList=====", tokenList);
     if (category === "ALL") {
@@ -1011,9 +1020,11 @@ export default function Bridge(props: IBridgeComponentProps) {
                     className="w-[14px] cursor-pointer ml-1 mr-4"
                   />
                 </Tooltip>
-                <div className="flex items-center justify-center bg-[#1B4C4A] h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
-                  4x Booster
-                </div>
+                {isMergeSelected && (
+                  <div className="flex items-center justify-center bg-[#1B4C4A] h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
+                    {mergeTokenBooster}x Booster
+                  </div>
+                )}
               </div>
               <span>
                 <span className="text-white align-super">
@@ -1026,7 +1037,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                     base: cn("-mr-2"),
                     wrapper: "p-0 h-4 overflow-visible",
                     thumb: cn(
-                      "w-6 h-6 shadow-lg bg-white",
+                      "w-6 h-6 shadow-lg bg-[#888C91]",
                       //selected
                       "group-data-[selected=true]:ml-6",
                       "group-data-[selected=true]:bg-green",
@@ -1292,11 +1303,13 @@ export default function Bridge(props: IBridgeComponentProps) {
                   ></Switch>
                 </span>
               </div>
-              <div className="flex">
-                <div className="bg-[#1B4C4A] h-[28px] leading-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
-                  4x Booster
+              {isMergeSelected && (
+                <div className="flex">
+                  <div className="bg-[#1B4C4A] h-[28px] leading-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
+                    {mergeTokenBooster}x Booster
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           )}
         </SelectBox>
