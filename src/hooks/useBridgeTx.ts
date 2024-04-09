@@ -451,7 +451,8 @@ export const useBridgeTx = () => {
       const l2GasLimit = await estimateDefaultBridgeDepositL2Gas(
         token,
         amount,
-        address
+        address,
+        isMergeSelected
       );
       const baseCost = await getBaseCost(l2GasLimit);
       console.log("l2GasLimit: ", l2GasLimit.toString());
