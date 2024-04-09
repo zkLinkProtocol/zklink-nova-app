@@ -1,6 +1,6 @@
 import { CardBox, GradientText } from "@/styles/common";
 import styled from "styled-components";
-import { AiFillCaretUp } from "react-icons/ai";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import {
   Button,
   Modal,
@@ -88,133 +88,127 @@ export default function EcoDApps({
     ];
   }, [layerbankNovaPoints, layerbankPufferPoints, layerbankEigenlayerPoints]);
 
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   return (
     <>
-      <CardBox className="mt-[1.5rem] min-h-[30rem] min-w-[820px]">
-        <div>
-          <div className="px-[1.5rem] py-[0.5rem] rounded-[1rem] bg-[#081A23] flex items-center">
-            {/* {["Name", "Type", "Your Earned"].map((item, index) => (
-          <Th key={index}>{item}</Th>
-        ))} */}
+      <CardBox className="relative mt-[1.5rem] min-h-[30rem] overflow-auto">
+        <div className="min-w-[820px]">
+          <div>
+            <div className="px-[1.5rem] py-[0.5rem] rounded-[1rem] bg-[#081A23] flex items-center">
+              {["Name", "Type", "Your Earned"].map((item, index) => (
+                <Th key={index}>{item}</Th>
+              ))}
+            </div>
 
-            <Th>Name</Th>
-            <Th>Type</Th>
-            <Th className="flex items-center gap-1">
-              <span>Your Earned</span>
-
-              {/* <
-                data-tooltip-id="your-eraned"
-                src="/img/icon-info.svg"
-                className="w-[0.875rem] h-[0.875rem] opacity-40"
-              /> */}
-            </Th>
+            <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
+              <Td className="flex items-center gap-[0.5rem]">
+                <img
+                  src="/img/icon-layerbank.svg"
+                  className="w-[2.25rem] h-[2.25rem]"
+                />
+                <div>
+                  <p
+                    className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
+                    onClick={() => warningModal.onOpen()}
+                  >
+                    <span>LayerBank</span>
+                    <img
+                      src="/img/icon-open-in-new.svg"
+                      className="w-[1rem] h-[1rem]"
+                    />
+                  </p>
+                  <p className="text-[0.625rem] text-[#0AC18D] font-[700]">
+                    @LayerBankFi
+                  </p>
+                </div>
+                <Tag className="px-[1rem] py-[0.12rem]">
+                  <span className="text text-[#0bc48f]">2x boost</span>
+                </Tag>
+              </Td>
+              <Td>
+                <p className="text-[1rem] font-[700]">Lending</p>
+              </Td>
+              <Td className="flex justify-between items-center">
+                <div>
+                  <GradientText data-tooltip-id="layerbank-points">
+                    {points.length} Points
+                  </GradientText>
+                  <ReactTooltip
+                    id="layerbank-points"
+                    place="bottom"
+                    style={{
+                      fontSize: "14px",
+                      background: "#666",
+                      borderRadius: "0.5rem",
+                      width: "16.5rem",
+                    }}
+                    render={() => (
+                      <div>
+                        {points.map((item, index) => (
+                          <p
+                            key={index}
+                            className="py-[0.25rem] flex justify-between items-center"
+                          >
+                            <span>{item.name}</span>
+                            <span className="font-[700]">{item.value}</span>
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </div>
+                <Tag
+                  className="px-[1rem] py-[0.12rem] flex items-center gap-1"
+                  onClick={() => setIsCollapsed(!isCollapsed)}
+                >
+                  <span className="text text-[#fff] whitespace-nowrap cursor-pointer">
+                    How to Earn
+                  </span>
+                  {isCollapsed ? <AiFillCaretDown /> : <AiFillCaretUp />}
+                </Tag>
+              </Td>
+            </div>
           </div>
 
-          {/* <ReactTooltip
-        id="your-eraned"
-        place="top"
-        style={{ fontSize: "14px", borderRadius: "16px" }}
-        content="More points will be listed here soon."
-      /> */}
-
-          <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
-            <Td className="flex items-center gap-[0.5rem]">
-              <img
-                src="/img/icon-layerbank.svg"
-                className="w-[2.25rem] h-[2.25rem]"
-              />
+          {!isCollapsed && (
+            <div className="px-[1.5rem] py-[1rem] flex justify-between items-center border-b-1 border-[#292A2A]">
               <div>
+                <SubTh>Status</SubTh>
+                <p className="text-[0.875rem] ">Live</p>
+              </div>
+              <div>
+                <SubTh>Multiplier</SubTh>
+                <p className="text-[0.875rem]">2x Nova Points</p>
+              </div>
+              <div>
+                <SubTh>Description</SubTh>
+                <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
+                  The liquidity is in a pool you earn points multiplied by the
+                  liquidity you provided
+                </p>
+              </div>
+              <div className="text-right">
+                <SubTh>Action</SubTh>
                 <p
-                  className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
+                  className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
                   onClick={() => warningModal.onOpen()}
                 >
-                  <span>LayerBank</span>
+                  <span>Provide Liquidity</span>
                   <img
                     src="/img/icon-open-in-new.svg"
                     className="w-[1rem] h-[1rem]"
                   />
                 </p>
-                <p className="text-[0.625rem] text-[#0AC18D] font-[700]">
-                  @LayerBankFi
-                </p>
               </div>
-              <Tag className="px-[1rem] py-[0.12rem]">
-                <span className="text text-[#0bc48f]">2x boost</span>
-              </Tag>
-            </Td>
-            <Td>
-              <p className="text-[1rem] font-[700]">Lending</p>
-            </Td>
-            <Td className="flex justify-between items-center">
-              <div>
-                <GradientText data-tooltip-id="layerbank-points">
-                  {points.length} Points
-                </GradientText>
-                <ReactTooltip
-                  id="layerbank-points"
-                  place="bottom"
-                  style={{
-                    fontSize: "14px",
-                    background: "#666",
-                    borderRadius: "0.5rem",
-                    width: "16.5rem",
-                  }}
-                  render={() => (
-                    <div>
-                      {points.map((item, index) => (
-                        <p
-                          key={index}
-                          className="py-[0.25rem] flex justify-between items-center"
-                        >
-                          <span>{item.name}</span>
-                          <span className="font-[700]">{item.value}</span>
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                />
-              </div>
-              <Tag className="px-[1rem] py-[0.12rem] flex items-center gap-1">
-                <span className="text text-[#fff] whitespace-nowrap">
-                  How to Earn
-                </span>
-                <AiFillCaretUp />
-              </Tag>
-            </Td>
-          </div>
+            </div>
+          )}
         </div>
-        <div>
-          <div className="px-[1.5rem] py-[1rem] flex justify-between items-center">
-            <div>
-              <SubTh>Status</SubTh>
-              <p className="text-[0.875rem] ">Live</p>
-            </div>
-            <div>
-              <SubTh>Multiplier</SubTh>
-              <p className="text-[0.875rem]">2x Nova Points</p>
-            </div>
-            <div>
-              <SubTh>Description</SubTh>
-              <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
-                For each block that liquidity is in a pool you earn points
-                multiplied by the liquidity you provided
-              </p>
-            </div>
-            <div className="text-right">
-              <SubTh>Action</SubTh>
-              <p
-                className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
-                onClick={() => warningModal.onOpen()}
-              >
-                <span>Provide Liquidity</span>
-                <img
-                  src="/img/icon-open-in-new.svg"
-                  className="w-[1rem] h-[1rem]"
-                />
-              </p>
-            </div>
-          </div>
-        </div>
+
+        <p className="absolute top-[40%] px-[1rem] py-[5rem] w-full text-[#999] text-[1rem] text-center">
+          More zkLink Nova ecosystem dApps will be supported soon, and all Nova
+          Points earned prior to dApp support will be retained.
+        </p>
       </CardBox>
 
       <Modal

@@ -47,6 +47,7 @@ import {
 } from "@nextui-org/react";
 import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
+import SwapperAds from "@/components/SwapperAds";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -417,38 +418,9 @@ export default function Dashboard() {
       <BgCoverImg />
       {isLoading && <Loading />}
 
-      <a
-        href="https://www.okx.com/web3/discover/cryptopedia/event/28"
-        target="_blank"
-        className="hidden md:block relative ml-[4.75rem] mr-[6rem]  h-[4.75rem] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
-      >
-        <p className="relative ml-[1.5rem] text-[1rem] leading-[4.75rem] z-10">
-          Join Nova Cryptopedia Event and Win{" "}
-          <b className="text-[#03d498]">$300K</b> USD worth of $ZKL in Rewards!
-        </p>
-        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-center">
-          <img src="/img/bg-okx-ad.png" className="h-[4.75rem] object-cover" />
-        </div>
-      </a>
-
-      <a
-        href="https://www.okx.com/web3/discover/cryptopedia/event/28"
-        target="_blank"
-        className="block md:hidden relative mx-[1rem] h-[4.5rem] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
-      >
-        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-cente">
-          <div className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.5)] z-0"></div>
-          <img
-            src="/img/bg-okx-ad-mobile.png"
-            className="h-[4.5rem] object-cover"
-          />
-        </div>
-
-        <p className="relative text-center text-[0.9rem] leading-[4.75rem] z-10">
-          Join Nova Cryptopedia Event and Win{" "}
-          <b className="text-[#03d498]">$300K</b> in Rewards!
-        </p>
-      </a>
+      <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
+        <SwapperAds />
+      </div>
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
