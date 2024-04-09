@@ -35,7 +35,7 @@ export default function swapperAds() {
             target="_blank"
           >
             <img
-              src="/img/banner-okx.png"
+              src="/img/banner-okx@2x.png"
               className="hidden md:block w-full h-auto block"
             />
 
@@ -48,7 +48,7 @@ export default function swapperAds() {
         <SwiperSlide>
           <a href="https://zklink.io/merge" target="_blank">
             <img
-              src="/img/banner-merge-token.png"
+              src="/img/banner-merge-token@2x.png"
               className="hidden md:block w-full h-auto block"
             />
             <img

@@ -157,9 +157,9 @@ export default function NFTLuckWinner() {
     const todayReadyTime = new Date(
       `${year}-${month}-${date} 10:00 utc`
     ).getTime();
-    // const currentTs = now.getTime();
-    const ts = todayReadyTime - oneDay;
-    // currentTs >= todayReadyTime ? todayReadyTime + oneDay : todayReadyTime;
+    const currentTs = now.getTime();
+    const ts =
+      currentTs < todayReadyTime ? todayReadyTime - oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
     getTopInviteAndRandomFunc(formatUtcDate(ts, "YYYY-MM-DD"));
