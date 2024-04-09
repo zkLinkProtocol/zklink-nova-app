@@ -94,3 +94,6 @@ export const LYNKS_METADATA_PREFIX =
   nodeType === "nexus-goerli"
     ? "https://zklink-nova-nft.s3.ap-northeast-1.amazonaws.com/lynknft-test"
     : "https://zklink-nova-nft.s3.ap-northeast-1.amazonaws.com/lynknft";
+
+export const PUFFER_TOKEN_ADDRESS =
+  "0xdd6105865380984716C6B2a1591F9643e6ED1C48";

@@ -9,7 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { formatNumberWithUnit } from "@/utils";
 
@@ -54,50 +54,39 @@ const SubTh = styled.div`
 `;
 
 interface EcoDAppsProps {
-  lrtNovaPoints: number;
+  layerbankNovaPoints: number;
+  layerbankPufferPoints: number;
+  layerbankEigenlayerPoints: number;
 }
 
-export default function EcoDApps({ lrtNovaPoints }: EcoDAppsProps) {
+export default function EcoDApps({
+  layerbankNovaPoints,
+  layerbankPufferPoints,
+  layerbankEigenlayerPoints,
+}: EcoDAppsProps) {
   const warningModal = useDisclosure();
   const [recognize, setRecognize] = useState(false);
 
-  const [pointsList, setPointsList] = useState<
-    {
-      name: string;
-      value: number | string;
-    }[]
-  >([
-    {
-      name: "Nova Points",
-      value: 0,
-    },
-    {
-      name: "LayerBank Points",
-      value: "Comming soon",
-    },
-    {
-      name: "Puffer Points",
-      value: 0,
-    },
-    {
-      name: "Eigenlayer Points",
-      value: 0,
-    },
-  ]);
-
-  useEffect(() => {
-    setPointsList((prev) =>
-      prev.map((item) => {
-        if (item.name === "Nova Points") {
-          return {
-            ...item,
-            value: formatNumberWithUnit(lrtNovaPoints),
-          };
-        }
-        return item;
-      })
-    );
-  }, [lrtNovaPoints]);
+  const points = useMemo(() => {
+    return [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(layerbankNovaPoints),
+      },
+      {
+        name: "LayerBank Points",
+        value: "Comming soon",
+      },
+      {
+        name: "Puffer Points",
+        value: formatNumberWithUnit(layerbankPufferPoints),
+      },
+      // {
+      //   name: "Eigenlayer Points",
+      //   value: formatNumberWithUnit(layerbankEigenlayerPoints),
+      // },
+    ];
+  }, [layerbankNovaPoints, layerbankPufferPoints, layerbankEigenlayerPoints]);
 
   return (
     <>
@@ -159,7 +148,7 @@ export default function EcoDApps({ lrtNovaPoints }: EcoDAppsProps) {
             <Td className="flex justify-between items-center">
               <div>
                 <GradientText data-tooltip-id="layerbank-points">
-                  {pointsList.length} Points
+                  {points.length} Points
                 </GradientText>
                 <ReactTooltip
                   id="layerbank-points"
@@ -172,7 +161,7 @@ export default function EcoDApps({ lrtNovaPoints }: EcoDAppsProps) {
                   }}
                   render={() => (
                     <div>
-                      {pointsList.map((item, index) => (
+                      {points.map((item, index) => (
                         <p
                           key={index}
                           className="py-[0.25rem] flex justify-between items-center"
