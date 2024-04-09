@@ -19,6 +19,8 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getMagPiePoints,
+  getLayerbankNovaPoints,
+  getLayerbankTokenPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,17 +35,19 @@ import { getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
 import Decimal from "decimal.js";
+import EcoDApps from "@/components/Dashboard/EcoDApps";
 import {
   Button,
   Checkbox,
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
 import { setIsAdHide } from "@/store/modules/airdrop";
+import { PUFFER_TOKEN_ADDRESS } from "@/constants";
+import SwapperAds from "@/components/SwapperAds";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -80,6 +84,13 @@ export type AccountTvlItem = {
   symbol: string;
   iconURL: string | null;
 };
+
+export enum TabType {
+  Eco = 0,
+  Assets = 1,
+  NFTs = 2,
+  Referral = 3,
+}
 
 export function DisclaimerFooter() {
   return (
@@ -311,6 +322,33 @@ export default function Dashboard() {
     }
   };
 
+  const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
+  const [layerbankPufferPoints, setLayerbankPufferPoints] = useState(0);
+  const [layerbankEigenlayerPoints, setLayerbankEigenlayerPoints] = useState(0);
+
+  const getLayerbankNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getLayerbankNovaPoints(address);
+    if (data && Array.isArray(data) && data.length > 0) {
+      const points = data.reduce((prev, item) => prev + item.realPoints, 0);
+      console.log("layerbankNovaPoints", points);
+      setLayerbankNovaPoints(points);
+    }
+  };
+
+  const getLayerbankTokenPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getLayerbankTokenPoints(
+      address,
+      PUFFER_TOKEN_ADDRESS
+    );
+    if (data && Array.isArray(data) && data.length > 0) {
+      const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+      console.log("setLayerbankPufferPoints", points);
+      setLayerbankPufferPoints(points);
+    }
+  };
+
   /**
    * Init: Get data from server
    */
@@ -328,6 +366,8 @@ export default function Dashboard() {
     getRenzoPointsFunc();
     getAccountTvlFunc();
     getMagpiePointsFunc();
+    getLayerbankNovaPointsFunc();
+    getLayerbankTokenPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -378,38 +418,9 @@ export default function Dashboard() {
       <BgCoverImg />
       {isLoading && <Loading />}
 
-      <a
-        href="https://www.okx.com/web3/discover/cryptopedia/event/28"
-        target="_blank"
-        className="hidden md:block relative ml-[4.75rem] mr-[6rem]  h-[4.75rem] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
-      >
-        <p className="relative ml-[1.5rem] text-[1rem] leading-[4.75rem] z-10">
-          Join Nova Cryptopedia Event and Win{" "}
-          <b className="text-[#03d498]">$300K</b> USD worth of $ZKL in Rewards!
-        </p>
-        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-center">
-          <img src="/img/bg-okx-ad.png" className="h-[4.75rem] object-cover" />
-        </div>
-      </a>
-
-      <a
-        href="https://www.okx.com/web3/discover/cryptopedia/event/28"
-        target="_blank"
-        className="block md:hidden relative mx-[1rem] h-[4.5rem] bg-[#000] z-10 rounded-[1rem] overflow-hidden"
-      >
-        <div className="absolute right-0 top-0 bottom-0 z-0 flex items-cente">
-          <div className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.5)] z-0"></div>
-          <img
-            src="/img/bg-okx-ad-mobile.png"
-            className="h-[4.5rem] object-cover"
-          />
-        </div>
-
-        <p className="relative text-center text-[0.9rem] leading-[4.75rem] z-10">
-          Join Nova Cryptopedia Event and Win{" "}
-          <b className="text-[#03d498]">$300K</b> in Rewards!
-        </p>
-      </a>
+      <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
+        <SwapperAds />
+      </div>
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
@@ -423,6 +434,8 @@ export default function Dashboard() {
             renzoPoints={renzoPoints}
             renzoEigenLayerPoints={renzoEigenLayerPoints}
             magpiePointsData={magpiePointsData}
+            layerbankNovaPoints={layerbankNovaPoints}
+            layerbankPufferPoints={layerbankPufferPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}
@@ -446,21 +459,32 @@ export default function Dashboard() {
           <div className="mt-[2rem]">
             {/* Tabs btn: Assets | Trademark NFTs | Referral  */}
             <TabsBox className="flex items-center gap-[1.5rem] overflow-x-auto">
-              {["Assets", "Nova NFTs", "Referral"].map((item, index) => (
-                <span
-                  key={index}
-                  className={`tab-item whitespace-nowrap ${
-                    tabsActive === index ? "active" : ""
-                  }`}
-                  onClick={() => setTabsActive(index)}
-                >
-                  {item}
-                </span>
-              ))}
+              {["Eco dApps", "Assets", "Nova NFTs", "Referral"].map(
+                (item, index) => (
+                  <span
+                    key={index}
+                    className={`tab-item whitespace-nowrap ${
+                      tabsActive === index ? "active" : ""
+                    }`}
+                    onClick={() => setTabsActive(index)}
+                  >
+                    {item}
+                  </span>
+                )
+              )}
             </TabsBox>
 
             {/* Tabs view: Assets */}
-            {tabsActive === 0 && (
+            {tabsActive === TabType.Eco && (
+              <EcoDApps
+                layerbankNovaPoints={layerbankNovaPoints}
+                layerbankPufferPoints={layerbankPufferPoints}
+                layerbankEigenlayerPoints={layerbankEigenlayerPoints}
+              />
+            )}
+
+            {/* Tabs view: Assets */}
+            {tabsActive === TabType.Assets && (
               <AssetsTable
                 ethUsdPrice={ethUsdPrice}
                 supportTokens={supportTokens}
@@ -469,7 +493,7 @@ export default function Dashboard() {
               />
             )}
             {/* Tabs view: Trademark NFTs */}
-            {tabsActive === 1 && (
+            {tabsActive === TabType.NFTs && (
               <>
                 {nftPhase === 1 && (
                   <NFTCard switchPhase={(p) => setNftPhase(p)} />
@@ -481,7 +505,7 @@ export default function Dashboard() {
             )}
 
             {/* Tabs view: Referral */}
-            {tabsActive === 2 && (
+            {tabsActive === TabType.Referral && (
               <CardBox className="mt-[2rem] min-h-[30rem]">
                 <ReferralList
                   data={referrersTvlList}

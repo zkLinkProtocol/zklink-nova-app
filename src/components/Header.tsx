@@ -372,6 +372,11 @@ export default function Header() {
               <NavLink to="/about">About</NavLink>
             </NavbarItem>
             <NavbarItem>
+              <a href="https://zklink.io/merge" target="_blank">
+                Merge Token
+              </a>
+            </NavbarItem>
+            <NavbarItem>
               <NavLink to="/bridge">Bridge</NavLink>
             </NavbarItem>
             <NavbarItem>
@@ -622,6 +627,11 @@ export default function Header() {
             <NavLink to="/about" className="block">
               About
             </NavLink>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            <a href="https://zklink.io/merge" target="_blank" className="block">
+              Merge Token
+            </a>
           </NavbarMenuItem>
           <NavbarMenuItem isActive={location.pathname === "/bridge"}>
             <NavLink to="/bridge" className="block">

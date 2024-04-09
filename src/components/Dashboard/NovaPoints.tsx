@@ -27,6 +27,8 @@ interface INovaPointsProps {
   renzoPoints: number;
   renzoEigenLayerPoints: number;
   magpiePointsData: { points: number; layerPoints: number };
+  layerbankNovaPoints: number;
+  layerbankPufferPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -121,6 +123,8 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoPoints,
     renzoEigenLayerPoints,
     magpiePointsData,
+    layerbankNovaPoints,
+    layerbankPufferPoints,
   } = props;
   const eralyBirdBooster = 1.5;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -133,7 +137,7 @@ export default function NovaPoints(props: INovaPointsProps) {
         icon: "/img/icon-puffer-points.png",
         pointsName: "Puffer Points",
         eigenlayerName: "Puffer",
-        pointsValue: pufferPoints,
+        pointsValue: pufferPoints + layerbankPufferPoints,
         eigenlayerValue: pufferEigenlayerPoints,
         pointsTips:
           "Your Puffer Points will be visible one hour after you deposit your pufETH.",
@@ -180,6 +184,8 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoEigenLayerPoints,
     isHidePoints,
     magpiePointsData,
+    layerbankNovaPoints,
+    layerbankPufferPoints,
   ]);
 
   return (
@@ -211,7 +217,9 @@ export default function NovaPoints(props: INovaPointsProps) {
             data-tooltip-id="nova-points"
           >
             {formatNumberWithUnit(
-              (+accountPoint.novaPoint || 0) + (+accountPoint.referPoint || 0)
+              (+accountPoint.novaPoint || 0) +
+                (+accountPoint.referPoint || 0) +
+                layerbankNovaPoints
             )}
           </span>
 
@@ -228,6 +236,10 @@ export default function NovaPoints(props: INovaPointsProps) {
                 <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                   <span>Earned By Referring Friends</span>
                   <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
+                </p>
+                <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                  <span>Earned by interacting with dApp</span>
+                  <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
                 </p>
               </div>
             )}

@@ -408,9 +408,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
             : obj.iconURL;
       });
 
-      if (!obj.isNova) {
-        arr.push(obj);
-      }
+      arr.push(obj);
     });
 
     arr = arr.sort((a, b) => +b.totalTvl - +a.totalTvl);
@@ -450,7 +448,12 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => reg.test(item.symbol));
     }
 
-    setFilterTableList(arr);
+    const notNovaFilters = arr.filter((item) => !item.isNova);
+    const novaFilters = arr.filter((item) => item.isNova);
+
+    const newArr = [...novaFilters, ...notNovaFilters];
+
+    setFilterTableList(newArr);
   }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
 
   return (
@@ -545,10 +548,14 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         src={item?.iconURL}
                         className="flex rounded-full w-[2.125rem] h-[2.125rem]"
                       />
-                      <p className="value ml-[0.5rem]">
-                        {item?.symbol}
-                        {/* {item?.chain && `.${item.chain}`} */}
-                      </p>
+                      <div>
+                        <p className="value ml-[0.5rem]">{item?.symbol}</p>
+                        {item?.isNova && (
+                          <p className="ml-[0.5rem] text-[#999] text-[0.75rem]">
+                            Merged Token
+                          </p>
+                        )}
+                      </div>
 
                       <span className="tag tag-green ml-[0.44rem] px-[1rem] py-[0.12rem] whitespace-nowrap">
                         {item?.multipliers && Array.isArray(item.multipliers)
@@ -659,15 +666,27 @@ export default function AssetsTable(props: IAssetsTableProps) {
                     </TableItem>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      className="bg-[#0BC48F] text-[#000] text-[1rem]"
-                      onClick={() => {
-                        console.log("item: ", item);
-                        handleBridgeMore(item?.symbol);
-                      }}
-                    >
-                      Bridge More
-                    </Button>
+                    <div className="flex items-center gap-2 justify-end">
+                      {item?.isNova && (
+                        <Button
+                          className="bg-[#0BC48F] text-[#000] text-[1rem]"
+                          onClick={() => {
+                            window.open("https://zklink.io/merge", "_blank");
+                          }}
+                        >
+                          Merge Now
+                        </Button>
+                      )}
+                      <Button
+                        className="bg-[#0BC48F] text-[#000] text-[1rem]"
+                        onClick={() => {
+                          console.log("item: ", item);
+                          handleBridgeMore(item?.symbol);
+                        }}
+                      >
+                        Bridge More
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               );
