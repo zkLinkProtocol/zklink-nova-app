@@ -381,33 +381,6 @@ export default function Bridge(props: IBridgeComponentProps) {
   //   })();
   // }, [fetchMergeTokenInfo, tokenActive, tokenFiltered]);
 
-  const mergeSupported = useMemo(() => {
-    // return mergeTokenInfo?.isSupported && !mergeTokenInfo?.isLocked;
-    return false;
-  }, []);
-
-  const mergeLimitExceeds = useMemo(() => {
-    return false;
-    if (!amount) return false;
-    const amountVal = parseUnits(
-      String(amount),
-      tokenFiltered[tokenActive]?.decimals
-    );
-    const exceeds = new BigNumber(amountVal.toString())
-      .plus(mergeTokenInfo?.balance.toString() ?? 0)
-      .gt(mergeTokenInfo?.depositLimit.toString() ?? 0);
-    console.log("exceeds: ", exceeds);
-    return mergeSupported && isMergeSelected && exceeds;
-  }, [
-    amount,
-    tokenFiltered,
-    tokenActive,
-    mergeTokenInfo?.balance,
-    mergeTokenInfo?.depositLimit,
-    mergeSupported,
-    isMergeSelected,
-  ]);
-
   useEffect(() => {
     (async () => {
       const token = tokenFiltered[tokenActive];
