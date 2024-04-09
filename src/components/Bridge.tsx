@@ -1004,7 +1004,8 @@ export default function Bridge(props: IBridgeComponentProps) {
                     <LoyaltyBoostTooltipContent>
                       All supported source tokens with the same entity from
                       different networks can be merged into a single merged
-                      token.{" "}
+                      token. Holding or using merged token to engage with
+                      supported dApps could receive higher multipliers.{" "}
                       <a
                         href="https://docs.zklink.io/how-it-works/token-merge"
                         target="_blank"
@@ -1264,7 +1265,8 @@ export default function Bridge(props: IBridgeComponentProps) {
                       <LoyaltyBoostTooltipContent>
                         All supported source tokens with the same entity from
                         different networks can be merged into a single merged
-                        token.{" "}
+                        token. Holding or using merged token to engage with
+                        supported dApps could receive higher multipliers.{" "}
                         <a
                           href="https://docs.zklink.io/how-it-works/token-merge"
                           target="_blank"
