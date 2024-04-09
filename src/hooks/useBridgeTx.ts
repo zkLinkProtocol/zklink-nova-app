@@ -431,6 +431,7 @@ export const useBridgeTx = () => {
       return fee;
     } catch (e) {
       console.log(e);
+      return Promise.reject(e);
     }
   };
 
