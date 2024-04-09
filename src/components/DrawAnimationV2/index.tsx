@@ -129,7 +129,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
             <div
               key={item.name}
               className={`lottery-item ${
-                currentImageIndex === index + 1 ? "active" : ""
+                currentImageIndex === index ? "active" : ""
               }`}
             >
               <div className="img-bg">

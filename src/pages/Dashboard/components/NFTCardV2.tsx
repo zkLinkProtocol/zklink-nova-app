@@ -219,10 +219,6 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
     console.log("drawPrizeId", drawPrizeId);
   }, [drawPrizeId]);
 
-  useEffect(() => {
-    console.log("drawPrizeId", drawPrizeId);
-  }, [drawPrizeId]);
-
   const onOpen = () => {
     openBoxModal.onOpen();
   };
