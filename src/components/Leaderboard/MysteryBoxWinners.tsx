@@ -158,7 +158,7 @@ export default function NFTLuckWinner() {
       `${year}-${month}-${date} 10:00 utc`
     ).getTime();
     // const currentTs = now.getTime();
-    const ts = todayReadyTime;
+    const ts = todayReadyTime - oneDay;
     // currentTs >= todayReadyTime ? todayReadyTime + oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
