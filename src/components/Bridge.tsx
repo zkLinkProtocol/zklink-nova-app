@@ -462,13 +462,8 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [fromActive, connectorName]);
 
   const mergeTokenBooster = useMemo(() => {
-    const token = tokenFiltered[tokenActive];
-    if (token?.symbol.toUpperCase() === "WBTC") {
-      return 2.5;
-    } else {
-      return 3;
-    }
-  }, [tokenActive, tokenFiltered]);
+    return "Extra";
+  }, []);
 
   useEffect(() => {
     console.log("tokenList=====", tokenList);
@@ -1023,7 +1018,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 </Tooltip>
                 {isMergeSelected && (
                   <div className="flex items-center justify-center bg-[#1B4C4A] h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
-                    {mergeTokenBooster}x Booster
+                    {mergeTokenBooster} Booster
                   </div>
                 )}
               </div>
@@ -1308,7 +1303,7 @@ export default function Bridge(props: IBridgeComponentProps) {
               {isMergeSelected && (
                 <div className="flex">
                   <div className="bg-[#1B4C4A] h-[28px] leading-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
-                    {mergeTokenBooster}x Booster
+                    {mergeTokenBooster} Booster
                   </div>
                 </div>
               )}
