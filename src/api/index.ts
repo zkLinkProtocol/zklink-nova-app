@@ -425,5 +425,15 @@ export interface LrtNovaPoints {
   data: LrtNovaPointsData[];
 }
 
-export const getLrtNovaPoints = (address: string): Promise<LrtNovaPoints> =>
+export const getLayerbankNovaPoints = (
+  address: string
+): Promise<LrtNovaPoints> =>
   http.get(`${BASE_URL_LRT_POINTS}/nova/points`, { params: { address } });
+
+export const getLayerbankTokenPoints = (
+  address: string,
+  tokenAddress: string
+): Promise<LrtNovaPoints> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/points/token`, {
+    params: { address, tokenAddress },
+  });

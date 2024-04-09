@@ -19,7 +19,8 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getMagPiePoints,
-  getLrtNovaPoints,
+  getLayerbankNovaPoints,
+  getLayerbankTokenPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,11 +42,11 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
 import { setIsAdHide } from "@/store/modules/airdrop";
+import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -320,17 +321,30 @@ export default function Dashboard() {
     }
   };
 
-  const [lrtNovaPoints, setLrtNovaPoints] = useState(0);
+  const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
+  const [layerbankPufferPoints, setLayerbankPufferPoints] = useState(0);
+  const [layerbankEigenlayerPoints, setLayerbankEigenlayerPoints] = useState(0);
 
-  const getLayerBankPoints = async () => {
+  const getLayerbankNovaPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getLrtNovaPoints(address);
+    const { data } = await getLayerbankNovaPoints(address);
     if (data && Array.isArray(data) && data.length > 0) {
       const points = data.reduce((prev, item) => prev + item.realPoints, 0);
+      console.log("layerbankNovaPoints", points);
+      setLayerbankNovaPoints(points);
+    }
+  };
 
-      setLrtNovaPoints(points);
-
-      console.log("lrtNovaPoints", points);
+  const getLayerbankTokenPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getLayerbankTokenPoints(
+      address,
+      PUFFER_TOKEN_ADDRESS
+    );
+    if (data && Array.isArray(data) && data.length > 0) {
+      const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+      console.log("setLayerbankPufferPoints", points);
+      setLayerbankPufferPoints(points);
     }
   };
 
@@ -351,7 +365,8 @@ export default function Dashboard() {
     getRenzoPointsFunc();
     getAccountTvlFunc();
     getMagpiePointsFunc();
-    getLayerBankPoints();
+    getLayerbankNovaPointsFunc();
+    getLayerbankTokenPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -447,6 +462,8 @@ export default function Dashboard() {
             renzoPoints={renzoPoints}
             renzoEigenLayerPoints={renzoEigenLayerPoints}
             magpiePointsData={magpiePointsData}
+            layerbankNovaPoints={layerbankNovaPoints}
+            layerbankPufferPoints={layerbankPufferPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}
@@ -487,7 +504,11 @@ export default function Dashboard() {
 
             {/* Tabs view: Assets */}
             {tabsActive === TabType.Eco && (
-              <EcoDApps lrtNovaPoints={lrtNovaPoints} />
+              <EcoDApps
+                layerbankNovaPoints={layerbankNovaPoints}
+                layerbankPufferPoints={layerbankPufferPoints}
+                layerbankEigenlayerPoints={layerbankEigenlayerPoints}
+              />
             )}
 
             {/* Tabs view: Assets */}
