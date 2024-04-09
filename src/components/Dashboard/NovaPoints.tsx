@@ -238,7 +238,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                   <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
                 </p>
                 <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                  <span>Earned by interact with Eco dApp</span>
+                  <span>Earned by interacting with dApp</span>
                   <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
                 </p>
               </div>

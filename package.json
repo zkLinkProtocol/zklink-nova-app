@@ -38,6 +38,7 @@
     "react-tooltip": "^5.26.3",
     "redux-persist": "^6.0.0",
     "styled-components": "^6.1.8",
+    "swiper": "^11.1.0",
     "viem": "2.x",
     "wagmi": "^2.5.7",
     "zksync-web3": "^0.17.1",
