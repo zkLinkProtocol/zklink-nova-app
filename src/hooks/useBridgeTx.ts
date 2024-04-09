@@ -399,9 +399,9 @@ export const useBridgeTx = () => {
       if (token !== ETH_ADDRESS && fee && fee.l1GasLimit) {
         //TODO this is a temp fix for mantel network;
         fee.l1GasLimit = fee.l1GasLimit.mul(2); //maybe mul(3).div(2) is better
-        if (networkKey === "mantle") {
-        } else {
-        }
+        // if (networkKey === "mantle") {
+        // } else {
+        // }
       }
 
       if (fee) {
@@ -448,16 +448,15 @@ export const useBridgeTx = () => {
     try {
       setLoading(true);
 
-      // const l2GasLimit = await estimateDefaultBridgeDepositL2Gas(
-      //   token,
-      //   amount,
-      //   address
-      // );
-      // const baseCost = await getBaseCost(l2GasLimit);
-      // console.log("l2GasLimit: ", l2GasLimit.toString());
+      const l2GasLimit = await estimateDefaultBridgeDepositL2Gas(
+        token,
+        amount,
+        address,
+        isMergeSelected
+      );
+      const baseCost = await getBaseCost(l2GasLimit);
+      console.log("l2GasLimit: ", l2GasLimit.toString());
       const fee = await getEstimateFee(token);
-      const baseCost = fee?.baseCost;
-      const l2GasLimit = fee?.l2GasLimit;
       const overrides =
         networkKey === "ethereum"
           ? { gasPrice: fee?.gasPrice, gasLimit: fee?.l1GasLimit }

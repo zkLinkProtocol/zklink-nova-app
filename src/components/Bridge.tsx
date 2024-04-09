@@ -765,7 +765,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         // utils.parseEther(String(amount))
         parseUnits(String(amount), tokenFiltered[tokenActive]?.decimals),
         nativeTokenBalance!,
-        isMergeSelected
+        mergeSupported && isMergeSelected
       );
       if (!hash) {
         return;
