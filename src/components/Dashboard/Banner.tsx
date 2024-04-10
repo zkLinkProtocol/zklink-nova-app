@@ -1,18 +1,12 @@
-// import React, { useRef, useState } from "react";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import "./styles.css";
+import { Autoplay } from "swiper/modules";
 
-// import required modules
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-
-export default function swapperAds() {
+export default function Banner() {
   return (
     <>
       <Swiper
