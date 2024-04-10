@@ -47,7 +47,7 @@ import {
 } from "@nextui-org/react";
 import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
-import SwapperAds from "@/components/SwapperAds";
+import Banner from "@/components/Dashboard/Banner";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -418,8 +418,16 @@ export default function Dashboard() {
       <BgCoverImg />
       {isLoading && <Loading />}
 
-      <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
-        <SwapperAds />
+      <div className="md:w-full md:text-center md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3">
+        <span className="text-[#03d498]">
+          All other projects points are undergoing synchronization at the
+          moment. Your point balances may not be visible until this process is
+          complete.
+        </span>
+      </div>
+
+      <div className="mt-4 md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
+        <Banner />
       </div>
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
