@@ -63,7 +63,7 @@ const useNovaDrawNFT = () => {
   const [isTrademarkApproved, setIsTrademarkApproved] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
 
-  const publicClient = usePublicClient({ config, chainId });
+  const publicClient = usePublicClient({ config, chainId: NOVA_CHAIN_ID });
   const { data: walletClient } = useWalletClient();
 
   const { data: nativeTokenBalance } = useBalance({
