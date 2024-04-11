@@ -508,7 +508,7 @@ export default function Dashboard() {
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
-        <div className="md:w-[27.125rem]">
+        <div className="md:w-[27.125rem] z-2">
           <NovaCharacter />
           <NovaPoints
             groupTvl={groupTvl}
