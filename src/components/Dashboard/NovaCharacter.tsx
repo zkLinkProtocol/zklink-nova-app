@@ -79,10 +79,15 @@ export const TxResult = styled.div`
 `;
 
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
-  1: "Oak Tree Roots",
-  2: "Magnifying Glass",
-  3: "Chess Knight",
-  4: "Binary Code Metrix Cube",
+  1: "1 points",
+  2: "5 points",
+  3: "10 points",
+  4: "50 points",
+  5: "Binary Code Metrix Cube",
+  6: "Chess Knight",
+  7: "Magnifying Glass",
+  8: "Oak Tree Roots",
+  9: "Lynks",
 };
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
@@ -423,8 +428,8 @@ export default function NovaCharacter() {
             content={
               <div className="flex flex-col py-2">
                 <p>
-                  For every three referrals, you'll get a chance to mint a
-                  trademark NFT.
+                  For every three referrals, you'll get a chance to open an
+                  invite box.
                 </p>
               </div>
             }
@@ -435,7 +440,7 @@ export default function NovaCharacter() {
                 onClick={handleMintTrademark}
                 isDisabled={remainDrawCount === 0}
               >
-                Mint trademark ({remainDrawCount})
+                Open Invite Box ({remainDrawCount})
               </Button>
             </div>
           </Tooltip>
@@ -526,7 +531,7 @@ export default function NovaCharacter() {
       >
         <ModalContent className="mt-[2rem] py-4 px-4">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
-            Draw and Mint your Trademark NFTs
+            Draw and Mint your Invite Boxs
           </ModalHeader>
           <DrawAnimation
             type="Trademark"
@@ -535,6 +540,7 @@ export default function NovaCharacter() {
             onDrawEnd={() => {
               setDrawing(false);
             }}
+            sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
             With every three referrals, you'll have the chance to randomly mint
