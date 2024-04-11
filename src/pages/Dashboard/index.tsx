@@ -473,12 +473,12 @@ export default function Dashboard() {
       handler: "@LinkswapFinance",
       link: "https://linkswap.finance/earn",
       iconURL: "/img/icon-linkswap.svg",
-      booster: "2x",
+      booster: "1.5x",
       type: "Dex",
       points: linkswapPoints,
       earned: `${linkswapPoints.length} Points + Yield`,
       status: "Syncing Data",
-      multiplier: "2x Nova Points",
+      multiplier: "1.5x Nova Points",
       description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
     };
     return [layerbank, linkswap];
