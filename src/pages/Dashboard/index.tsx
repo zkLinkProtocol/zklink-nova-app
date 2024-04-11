@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import AssetsTable from "@/components/AssetsTable";
 import { BgBox, BgCoverImg, CardBox } from "@/styles/common";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
 import {
@@ -31,7 +31,7 @@ import NovaPoints from "@/components/Dashboard/NovaPoints";
 import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
-import { getCheckOkxPoints } from "@/utils";
+import { formatNumberWithUnit, getCheckOkxPoints } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
 import Decimal from "decimal.js";
@@ -413,6 +413,61 @@ export default function Dashboard() {
     }, 1000);
   }, []);
 
+  const ecoDappsData = useMemo(() => {
+    const lauyerbankPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(layerbankNovaPoints),
+      },
+      {
+        name: "LayerBank Points",
+        value: "Comming soon",
+      },
+      {
+        name: "Puffer Points",
+        value: formatNumberWithUnit(layerbankPufferPoints),
+      },
+      // {
+      //   name: "Eigenlayer Points",
+      //   value: formatNumberWithUnit(layerbankEigenlayerPoints),
+      // },
+    ];
+    const layerbank = {
+      name: "LayerBank",
+      handler: "@LayerBankFi",
+      link: "https://zklink.layerbank.finance/",
+      iconURL: "/img/icon-layerbank.svg",
+      booster: "2x",
+      type: "Lending",
+      points: lauyerbankPoints,
+      earned: `${lauyerbankPoints.length} Points`,
+      status: "Live",
+      multiplier: "2x Nova Points",
+      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+    };
+
+    const linkswapPoints = [
+      {
+        name: "Nova Points",
+        value: 0, // TODO
+      },
+    ];
+    const linkswap = {
+      name: "Linkswap",
+      handler: "@LinkswapFinance",
+      link: "https://linkswap.finance/earn",
+      iconURL: "/img/icon-linkswap.svg",
+      booster: "2x",
+      type: "Dex",
+      points: linkswapPoints,
+      earned: `${linkswapPoints.length} Points + Yield`,
+      status: "Syncing Data",
+      multiplier: "2x Nova Points",
+      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+    };
+    return [layerbank, linkswap];
+  }, [layerbankNovaPoints, layerbankPufferPoints, layerbankEigenlayerPoints]);
+
   return (
     <BgBox>
       <BgCoverImg />
@@ -483,13 +538,7 @@ export default function Dashboard() {
             </TabsBox>
 
             {/* Tabs view: Assets */}
-            {tabsActive === TabType.Eco && (
-              <EcoDApps
-                layerbankNovaPoints={layerbankNovaPoints}
-                layerbankPufferPoints={layerbankPufferPoints}
-                layerbankEigenlayerPoints={layerbankEigenlayerPoints}
-              />
-            )}
+            {tabsActive === TabType.Eco && <EcoDApps data={ecoDappsData} />}
 
             {/* Tabs view: Assets */}
             {tabsActive === TabType.Assets && (
