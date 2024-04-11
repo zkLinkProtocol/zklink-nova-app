@@ -54,162 +54,143 @@ const SubTh = styled.div`
 `;
 
 interface EcoDAppsProps {
-  layerbankNovaPoints: number;
-  layerbankPufferPoints: number;
-  layerbankEigenlayerPoints: number;
+  name: string;
+  handler: string;
+  link: string;
+  iconURL: string;
+  booster: string;
+  type: string;
+  points: {
+    name: string;
+    value: string;
+  }[];
+  status: string;
+  multiplier: string;
+  description: string;
+}
+interface EcoDAppsItemProps {
+  name: string;
+  handler: string;
+  link: string;
+  iconURL: string;
+  booster: string;
+  type: string;
+  points: {
+    name: string;
+    value: string;
+  }[];
+  status: string;
+  multiplier: string;
+  description: string;
 }
 
-export default function EcoDApps({
-  layerbankNovaPoints,
-  layerbankPufferPoints,
-  layerbankEigenlayerPoints,
-}: EcoDAppsProps) {
+export function EcoDAppsItem({ data }: { data: EcoDAppsItemProps }) {
   const warningModal = useDisclosure();
   const [recognize, setRecognize] = useState(false);
-
-  const points = useMemo(() => {
-    return [
-      {
-        name: "Nova Points",
-        value: formatNumberWithUnit(layerbankNovaPoints),
-      },
-      {
-        name: "LayerBank Points",
-        value: "Comming soon",
-      },
-      {
-        name: "Puffer Points",
-        value: formatNumberWithUnit(layerbankPufferPoints),
-      },
-      // {
-      //   name: "Eigenlayer Points",
-      //   value: formatNumberWithUnit(layerbankEigenlayerPoints),
-      // },
-    ];
-  }, [layerbankNovaPoints, layerbankPufferPoints, layerbankEigenlayerPoints]);
 
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
     <>
-      <CardBox className="relative mt-[1.5rem] min-h-[30rem] overflow-auto">
-        <div className="min-w-[820px]">
-          <div>
-            <div className="px-[1.5rem] py-[0.5rem] rounded-[1rem] bg-[#081A23] flex items-center">
-              {["Name", "Type", "Your Earned"].map((item, index) => (
-                <Th key={index}>{item}</Th>
-              ))}
-            </div>
-
-            <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
-              <Td className="flex items-center gap-[0.5rem]">
+      <div>
+        <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
+          <Td className="flex items-center gap-[0.5rem]">
+            <img src={data.iconURL} className="w-[2.25rem] h-[2.25rem]" />
+            <div>
+              <p
+                className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
+                onClick={() => warningModal.onOpen()}
+              >
+                <span>{data.name}</span>
                 <img
-                  src="/img/icon-layerbank.svg"
-                  className="w-[2.25rem] h-[2.25rem]"
+                  src="/img/icon-open-in-new.svg"
+                  className="w-[1rem] h-[1rem]"
                 />
-                <div>
-                  <p
-                    className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
-                    onClick={() => warningModal.onOpen()}
-                  >
-                    <span>LayerBank</span>
-                    <img
-                      src="/img/icon-open-in-new.svg"
-                      className="w-[1rem] h-[1rem]"
-                    />
-                  </p>
-                  <p className="text-[0.625rem] text-[#0AC18D] font-[700]">
-                    @LayerBankFi
-                  </p>
-                </div>
-                <Tag className="px-[1rem] py-[0.12rem]">
-                  <span className="text text-[#0bc48f]">2x boost</span>
-                </Tag>
-              </Td>
-              <Td>
-                <p className="text-[1rem] font-[700]">Lending</p>
-              </Td>
-              <Td className="flex justify-between items-center">
-                <div>
-                  <GradientText data-tooltip-id="layerbank-points">
-                    {points.length} Points
-                  </GradientText>
-                  <ReactTooltip
-                    id="layerbank-points"
-                    place="bottom"
-                    style={{
-                      fontSize: "14px",
-                      background: "#666",
-                      borderRadius: "0.5rem",
-                      width: "16.5rem",
-                    }}
-                    render={() => (
-                      <div>
-                        {points.map((item, index) => (
-                          <p
-                            key={index}
-                            className="py-[0.25rem] flex justify-between items-center"
-                          >
-                            <span>{item.name}</span>
-                            <span className="font-[700]">{item.value}</span>
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  />
-                </div>
-                <Tag
-                  className="px-[1rem] py-[0.12rem] flex items-center gap-1"
-                  onClick={() => setIsCollapsed(!isCollapsed)}
-                >
-                  <span className="text text-[#fff] whitespace-nowrap cursor-pointer">
-                    How to Earn
-                  </span>
-                  {isCollapsed ? <AiFillCaretDown /> : <AiFillCaretUp />}
-                </Tag>
-              </Td>
+              </p>
+              <p className="text-[0.625rem] text-[#0AC18D] font-[700]">
+                {data.handler}
+              </p>
             </div>
-          </div>
-
-          {!isCollapsed && (
-            <div className="px-[1.5rem] py-[1rem] flex justify-between border-b-1 border-[#292A2A]">
-              <div>
-                <SubTh>Status</SubTh>
-                <p className="text-[0.875rem] ">Live</p>
-              </div>
-              <div>
-                <SubTh>Multiplier</SubTh>
-                <p className="text-[0.875rem]">2x Nova Points</p>
-              </div>
-              <div>
-                <SubTh>Description</SubTh>
-                <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
-                  The liquidity is in a pool you earn points multiplied by the
-                  liquidity you provided
-                </p>
-              </div>
-              <div className="text-right">
-                <SubTh>Action</SubTh>
-                <p
-                  className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
-                  onClick={() => warningModal.onOpen()}
-                >
-                  <span>Provide Liquidity</span>
-                  <img
-                    src="/img/icon-open-in-new.svg"
-                    className="w-[1rem] h-[1rem]"
-                  />
-                </p>
-              </div>
+            <Tag className="px-[1rem] py-[0.12rem]">
+              <span className="text text-[#0bc48f]">{data.booster} boost</span>
+            </Tag>
+          </Td>
+          <Td>
+            <p className="text-[1rem] font-[700]">{data.type}</p>
+          </Td>
+          <Td className="flex justify-between items-center">
+            <div>
+              <GradientText data-tooltip-id={data.name}>
+                {data.points.length} Points
+              </GradientText>
+              <ReactTooltip
+                id={data.name}
+                place="bottom"
+                style={{
+                  fontSize: "14px",
+                  background: "#666",
+                  borderRadius: "0.5rem",
+                  width: "16.5rem",
+                }}
+                render={() => (
+                  <div>
+                    {data.points.map((item, index) => (
+                      <p
+                        key={index}
+                        className="py-[0.25rem] flex justify-between items-center"
+                      >
+                        <span>{item.name}</span>
+                        <span className="font-[700]">{item.value}</span>
+                      </p>
+                    ))}
+                  </div>
+                )}
+              />
             </div>
-          )}
+            <Tag
+              className="px-[1rem] py-[0.12rem] flex items-center gap-1"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              <span className="text text-[#fff] whitespace-nowrap cursor-pointer">
+                How to Earn
+              </span>
+              {isCollapsed ? <AiFillCaretDown /> : <AiFillCaretUp />}
+            </Tag>
+          </Td>
         </div>
 
-        <p className="absolute top-[40%] px-[1rem] py-[5rem] w-full text-[#999] text-[1rem] text-center">
-          More zkLink Nova ecosystem dApps will be supported soon, and all Nova
-          Points earned prior to dApp support will be retained.
-        </p>
-      </CardBox>
+        {!isCollapsed && (
+          <div className="px-[1.5rem] py-[1rem] flex justify-between border-b-1 border-[#292A2A]">
+            <div>
+              <SubTh>Status</SubTh>
+              <p className="text-[0.875rem] ">{data.status}</p>
+            </div>
+            <div>
+              <SubTh>Multiplier</SubTh>
+              <p className="text-[0.875rem]">{data.multiplier}</p>
+            </div>
+            <div>
+              <SubTh>Description</SubTh>
+              <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
+                {data.description}
+              </p>
+            </div>
+            <div className="text-right">
+              <SubTh>Action</SubTh>
+              <p
+                className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
+                onClick={() => warningModal.onOpen()}
+              >
+                <span>Provide Liquidity</span>
+                <img
+                  src="/img/icon-open-in-new.svg"
+                  className="w-[1rem] h-[1rem]"
+                />
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -256,7 +237,7 @@ export default function EcoDApps({
                 className="gradient-btn w-full h-[2.1875rem] flex justify-center items-center gap-[0.38rem] text-[1rem] tracking-[0.0625rem] flex-1"
                 disabled={!recognize}
                 onClick={() => {
-                  window.open("https://zklink.layerbank.finance/", "_blank");
+                  window.open(data.link, "_blank");
                 }}
               >
                 Continue to Access
@@ -265,6 +246,30 @@ export default function EcoDApps({
           </ModalBody>
         </ModalContent>
       </Modal>
+    </>
+  );
+}
+
+export default function EcoDApps({ data }: { data: EcoDAppsProps[] }) {
+  return (
+    <>
+      <CardBox className="relative mt-[1.5rem] min-h-[30rem] overflow-auto">
+        <div className="min-w-[820px]">
+          <div className="px-[1.5rem] py-[0.5rem] rounded-[1rem] bg-[#081A23] flex items-center">
+            {["Name", "Type", "Your Earned"].map((item, index) => (
+              <Th key={index}>{item}</Th>
+            ))}
+          </div>
+          {data.map((item) => (
+            <EcoDAppsItem data={item} />
+          ))}
+        </div>
+
+        <p className="px-[1rem] py-[3rem] w-full text-[#999] text-[1rem] text-center">
+          More zkLink Nova ecosystem dApps will be supported soon, and all Nova
+          Points earned prior to dApp support will be retained.
+        </p>
+      </CardBox>
     </>
   );
 }
