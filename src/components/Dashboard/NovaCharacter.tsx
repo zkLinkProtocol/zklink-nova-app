@@ -241,6 +241,14 @@ export default function NovaCharacter() {
           // 5 means no prize
           setUpdate((update) => update + 1);
           // return;
+        } else if ([6, 7, 8, 9].includes(tokenId)) {
+          //not actual nft. Just points.
+          setTrademarkMintStatus(MintStatus.Success);
+          setMintResult({
+            name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
+            img: `/img/img-trademark-${tokenId}.png`,
+          });
+          //TODO refresh points;
         }
       }
       return; // draw first and then mint as step2.
