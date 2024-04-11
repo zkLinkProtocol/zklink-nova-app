@@ -21,6 +21,7 @@ import {
   getMagPiePoints,
   getLayerbankNovaPoints,
   getLayerbankTokenPoints,
+  getLinkswapNovaPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -349,6 +350,20 @@ export default function Dashboard() {
     }
   };
 
+  const [linkswapNovaPoints, setLinkswapNovaPoints] = useState(0);
+  const getLinkswapNovaPointsFunc = async () => {
+    if (!address) return;
+
+    const { data } = await getLinkswapNovaPoints(address);
+    if (data?.pairs && Array.isArray(data.pairs) && data.pairs.length > 0) {
+      const points = data.pairs.reduce(
+        (prev, item) => prev + Number(item.novaPoint),
+        0
+      );
+      setLinkswapNovaPoints(points);
+    }
+  };
+
   /**
    * Init: Get data from server
    */
@@ -368,6 +383,7 @@ export default function Dashboard() {
     getMagpiePointsFunc();
     getLayerbankNovaPointsFunc();
     getLayerbankTokenPointsFunc();
+    getLinkswapNovaPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -449,7 +465,7 @@ export default function Dashboard() {
     const linkswapPoints = [
       {
         name: "Nova Points",
-        value: 0, // TODO
+        value: formatNumberWithUnit(linkswapNovaPoints),
       },
     ];
     const linkswap = {
@@ -466,7 +482,12 @@ export default function Dashboard() {
       description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
     };
     return [layerbank, linkswap];
-  }, [layerbankNovaPoints, layerbankPufferPoints, layerbankEigenlayerPoints]);
+  }, [
+    layerbankNovaPoints,
+    layerbankPufferPoints,
+    layerbankEigenlayerPoints,
+    linkswapNovaPoints,
+  ]);
 
   return (
     <BgBox>

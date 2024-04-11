@@ -437,3 +437,22 @@ export const getLayerbankTokenPoints = (
   http.get(`${BASE_URL_LRT_POINTS}/nova/points/token`, {
     params: { address, tokenAddress },
   });
+
+export interface LinkswapNovaPoints {
+  code: number;
+  message: string;
+  data: {
+    address: string;
+    pairs: {
+      novaPoint: string;
+      pair: string;
+      totalPoint: string;
+    }[];
+  };
+}
+export const getLinkswapNovaPoints = (
+  address: string
+): Promise<LinkswapNovaPoints> =>
+  http.get("https://api.linkswap.finance/api/Zklink/AddressPoint", {
+    params: { address },
+  });
