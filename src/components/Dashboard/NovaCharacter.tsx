@@ -77,17 +77,23 @@ export const TxResult = styled.div`
     margin-bottom: 16px;
   }
 `;
-
+//tokenId from api => image id of frontend
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
-  1: "1 points",
-  2: "5 points",
-  3: "10 points",
-  4: "50 points",
-  5: "Binary Code Metrix Cube",
-  6: "Chess Knight",
-  7: "Magnifying Glass",
-  8: "Oak Tree Roots",
-  9: "Lynks",
+  1: "Oak Tree Roots",
+  2: "Magnifying Glass",
+  3: "Chess Knight",
+  4: "Binary Code Metrix Cube",
+  6: "+1 Nova points",
+  7: "+5 Nova points",
+  8: "+10 Nova points",
+  9: "+50 Nova points",
+  88: "Lynks",
+};
+
+const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
+  return Object.keys(TRADEMARK_TOKEN_ID_MAP).findIndex(
+    (key) => Number(key) === tokenId
+  );
 };
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
@@ -228,7 +234,7 @@ export default function NovaCharacter() {
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
-        await drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
+        await drawRef?.current?.start(getDrawIndexWithPrizeTokenId(tokenId)); //do the draw animation; use index of image for active
         // await sleep(2000);
         setDrawedNftId(Number(tokenId));
         if (tokenId === 5) {
@@ -543,9 +549,9 @@ export default function NovaCharacter() {
             sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With every three referrals, you'll have the chance to randomly mint
-            one of the four Trademarks. However, you must mint your Trademark
-            before you can enter another lucky draw.
+            With every three referrals, you'll have the chance to randomly draw
+            one of the invite rewards. Please notice that Nova points rewards
+            are’t NFT, they'll be added directly to your Nova Points.
           </p>
           <Button
             onClick={handleDrawAndMint}
