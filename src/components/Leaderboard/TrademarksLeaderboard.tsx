@@ -25,19 +25,19 @@ export default function NFTLeaderboard() {
       label: "Name",
     },
     {
-      key: "nftP1",
+      key: "chessKnight",
       label: "Chess Knight",
     },
     {
-      key: "nftP2",
+      key: "binaryCodeMatrixCube",
       label: "Binary Code Matrix Cube",
     },
     {
-      key: "nftP3",
+      key: "oakTreeRoots",
       label: "Oak Tree Roots",
     },
     {
-      key: "nftP4",
+      key: "magnifyingGlass",
       label: "Magnifying Glass",
     },
     {
@@ -50,10 +50,10 @@ export default function NFTLeaderboard() {
     {
       address: string;
       rank: number;
-      nftP1: number;
-      nftP2: number;
-      nftP3: number;
-      nftP4: number;
+      chessKnight: number;
+      binaryCodeMatrixCube: number;
+      oakTreeRoots: number;
+      magnifyingGlass: number;
       balance: number;
     }[]
   >([]);
@@ -85,10 +85,10 @@ export default function NFTLeaderboard() {
             return {
               ...item,
               rank: index + 1,
-              nftP1: Number(item?.detailBalance[0]) || 0,
-              nftP2: Number(item?.detailBalance[1]) || 0,
-              nftP3: Number(item?.detailBalance[2]) || 0,
-              nftP4: Number(item?.detailBalance[3]) || 0,
+              oakTreeRoots: Number(item?.detailBalance[0]) || 0,
+              magnifyingGlass: Number(item?.detailBalance[1]) || 0,
+              chessKnight: Number(item?.detailBalance[2]) || 0,
+              binaryCodeMatrixCube: Number(item?.detailBalance[3]) || 0,
             };
           }
         );
@@ -99,10 +99,10 @@ export default function NFTLeaderboard() {
         const selfData = {
           address: address,
           rank: result?.selfRank,
-          nftP1: Number(selfBalance[0]) || 0,
-          nftP2: Number(selfBalance[1]) || 0,
-          nftP3: Number(selfBalance[2]) || 0,
-          nftP4: Number(selfBalance[3]) || 0,
+          oakTreeRoots: Number(selfBalance[0]) || 0,
+          magnifyingGlass: Number(selfBalance[1]) || 0,
+          chessKnight: Number(selfBalance[2]) || 0,
+          binaryCodeMatrixCube: Number(selfBalance[3]) || 0,
           balance:
             Number(
               selfBalance?.reduce(
@@ -162,20 +162,20 @@ export default function NFTLeaderboard() {
                   {showAccount(item.address)}{" "}
                   <span className="ml-[0.5rem]">(Your Address)</span>
                 </TableCell>
-                <TableCell>{item.nftP1}</TableCell>
-                <TableCell>{item.nftP2}</TableCell>
-                <TableCell>{item.nftP3}</TableCell>
-                <TableCell>{item.nftP4}</TableCell>
+                <TableCell>{item.chessKnight}</TableCell>
+                <TableCell>{item.binaryCodeMatrixCube}</TableCell>
+                <TableCell>{item.oakTreeRoots}</TableCell>
+                <TableCell>{item.magnifyingGlass}</TableCell>
                 <TableCell>{item.balance}</TableCell>
               </TableRow>
             ) : (
               <TableRow key={index}>
                 <TableCell>{item.rank}</TableCell>
                 <TableCell>{item.address}</TableCell>
-                <TableCell>{item.nftP1}</TableCell>
-                <TableCell>{item.nftP2}</TableCell>
-                <TableCell>{item.nftP3}</TableCell>
-                <TableCell>{item.nftP4}</TableCell>
+                <TableCell>{item.chessKnight}</TableCell>
+                <TableCell>{item.binaryCodeMatrixCube}</TableCell>
+                <TableCell>{item.oakTreeRoots}</TableCell>
+                <TableCell>{item.magnifyingGlass}</TableCell>
                 <TableCell>{item.balance}</TableCell>
               </TableRow>
             )
