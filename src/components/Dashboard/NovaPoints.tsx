@@ -6,7 +6,8 @@ import Decimal from "decimal.js";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Checkbox } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRemainDrawCount } from "@/hooks/useRemainDrawCount";
 
 const GreenTag = styled.span`
   display: flex;
@@ -139,6 +140,7 @@ export default function NovaPoints(props: INovaPointsProps) {
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
+  const { remainDrawCount } = useRemainDrawCount();
 
   useEffect(() => {
     let otherPoints: OtherPointsItem[] = [
@@ -197,24 +199,18 @@ export default function NovaPoints(props: INovaPointsProps) {
     layerbankPufferPoints,
   ]);
 
+  const totalBooster = useMemo(() => {
+    return Decimal.mul(getBooster(groupTvl) + 1, royaltyBooster).toNumber();
+  }, [groupTvl, royaltyBooster]);
+
+  const royaltyBoosterPencentage = useMemo(() => {
+    return Number(royaltyBooster)
+      ? `${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber() * 100)}%`
+      : "0%";
+  }, [royaltyBooster]);
+
   return (
     <>
-      {/* // TODO update nova points style */}
-      {/* <CardBox className="mt-[1.5rem] p-[1.5rem] bg">
-        <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          Nova Points
-        </p>
-        <div className="py-[0.7rem] ml-[4rem] text-[2.5rem] font-[700]">
-          {formatNumberWithUnit(
-            (+accountPoint.novaPoint || 0) + (+accountPoint.referPoint || 0)
-          )}
-        </div>
-        <p className="text-[1rem] pr-4 opacity-60">
-          Don't worry, we are synchronizing Nova Points. Your Nova Points will
-          be updated after the syncing process has ended.
-        </p>
-      </CardBox> */}
-
       <CardBox className="mt-[1.5rem] p-[1.5rem]">
         <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           Nova Points
@@ -244,7 +240,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               render={() => (
                 <div>
                   <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earn By Your Deposit and Holding</span>
+                    <span>Earned By Your Deposit and Holding</span>
                     <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
@@ -255,6 +251,11 @@ export default function NovaPoints(props: INovaPointsProps) {
                     <span>Earned by interacting with dApp</span>
                     <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
                   </p>
+
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by invite box</span>
+                    <span>{remainDrawCount}</span>
+                  </p>
                 </div>
               )}
             />
@@ -263,8 +264,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               data-tooltip-id="booster-learn-more"
               className="py-[0.375rem] w-[5.625rem] text-[1rem]"
             >
-              {Decimal.mul(getBooster(groupTvl) + 1, royaltyBooster).toNumber()}
-              x
+              {formatNumber2(totalBooster)}x
             </GreenTag>
 
             <ReactTooltip
@@ -312,7 +312,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             className="px-[0.75rem] py-[0.5rem]"
             data-tooltip-id="royalty-booster"
           >
-            {`+${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber())}%`}
+            +{royaltyBoosterPencentage}
           </RoyaltyBooster>
           <ReactTooltip
             id="royalty-booster"
@@ -332,20 +332,12 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Aggregation parade:
                   <br />
                   <br />
-                  Loyalty Booster = 0.5% * days joined.
+                  Loyalty Booster = {royaltyBoosterPencentage} * days joined.
                 </p>
               </div>
             )}
           />
         </div>
-
-        {/* TODO Est. in next epoch */}
-        {/* <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          +{accountPoint.referPoint}
-        </p>
-        <p className="text-[1rem] text-[#919192] font-[400]">
-          Est. in next epoch
-        </p> */}
 
         <ReactTooltip
           id="more-points-soon"
