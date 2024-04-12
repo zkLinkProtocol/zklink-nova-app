@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import styled from "styled-components";
 import BridgeComponent from "@/components/Bridge";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const GradientButton = styled.span`
   border-radius: 0.5rem;
@@ -46,7 +47,28 @@ export default function StakingValue(props: IStakingValueProps) {
     <>
       <CardBox className="flex flex-col items-center mt-[1.5rem] p-[1.5rem]">
         <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex justify-between items-center">
-          <span>Your Staking Value</span>
+          <div className="flex items-center gap-2">
+            <span>Your Holding Value</span>
+            <img
+              src="/img/icon-info.svg"
+              className="w-[0.875rem] h-[0.875rem]"
+              data-tooltip-id="holding-value-tooltip"
+            />
+            <ReactTooltip
+              id="holding-value-tooltip"
+              place="top"
+              style={{
+                maxWidth: "25rem",
+                fontSize: "0.875rem",
+                lineHeight: "1.375rem",
+                borderRadius: "0.5rem",
+                background: "#666",
+                fontFamily: "Satoshi",
+                fontWeight: "400",
+              }}
+              content="The holding value only reflects the value of tokens supported by the Aggregation parade"
+            />
+          </div>
           <Button
             size="sm"
             className="bg-[#0BC48F] text-[#000] text-[1rem]"
