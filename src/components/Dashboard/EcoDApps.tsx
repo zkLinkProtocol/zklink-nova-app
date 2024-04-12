@@ -67,27 +67,12 @@ interface EcoDAppsProps {
   status: string;
   multiplier: string;
   description: string;
-}
-interface EcoDAppsItemProps {
-  name: string;
-  handler: string;
-  link: string;
-  iconURL: string;
-  booster: string;
-  type: string;
-  points: {
-    name: string;
-    value: string;
-  }[];
-  status: string;
-  multiplier: string;
-  description: string;
+  earned: string;
 }
 
-export function EcoDAppsItem({ data }: { data: EcoDAppsItemProps }) {
+export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
   const warningModal = useDisclosure();
   const [recognize, setRecognize] = useState(false);
-
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
@@ -121,7 +106,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsItemProps }) {
           <Td className="flex justify-between items-center">
             <div>
               <GradientText data-tooltip-id={data.name}>
-                {data.points.length} Points
+                {data.earned}
               </GradientText>
               <ReactTooltip
                 id={data.name}
