@@ -126,7 +126,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     layerbankNovaPoints,
     layerbankPufferPoints,
   } = props;
-  const eralyBirdBooster = 1.5;
+  const eralyBirdBooster = 1.2;
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
