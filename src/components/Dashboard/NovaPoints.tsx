@@ -140,6 +140,7 @@ export default function NovaPoints(props: INovaPointsProps) {
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
+  const { remainDrawCount } = useRemainDrawCount();
 
   useEffect(() => {
     let otherPoints: OtherPointsItem[] = [
@@ -361,7 +362,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Aggregation parade:
                   <br />
                   <br />
-                  Loyalty Booster = 0.5% * days joined.
+                  Loyalty Booster = {royaltyBoosterPencentage} * days joined.
                 </p>
               </div>
             )}
