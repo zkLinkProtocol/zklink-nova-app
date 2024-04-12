@@ -1,5 +1,5 @@
 import { CardBox } from "@/styles/common";
-import { formatNumberWithUnit, getBooster } from "@/utils";
+import { formatNumber2, formatNumberWithUnit, getBooster } from "@/utils";
 import styled from "styled-components";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import Decimal from "decimal.js";
@@ -32,6 +32,7 @@ interface INovaPointsProps {
   magpiePointsData: { points: number; layerPoints: number };
   layerbankNovaPoints: number;
   layerbankPufferPoints: number;
+  royaltyBooster: number;
 }
 
 export interface OtherPointsItem {
@@ -131,8 +132,9 @@ export default function NovaPoints(props: INovaPointsProps) {
     magpiePointsData,
     layerbankNovaPoints,
     layerbankPufferPoints,
+    royaltyBooster,
   } = props;
-  const royaltyBooster = 0.205;
+  // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
@@ -256,15 +258,19 @@ export default function NovaPoints(props: INovaPointsProps) {
               render={() => (
                 <div>
                   <p>
-                    {getBooster(groupTvl) !== 0 &&
-                      `Group Booster: ${getBooster(groupTvl)}x`}
+                    {`Group Booster: ${
+                      getBooster(groupTvl) !== 0 ? getBooster(groupTvl) : 1
+                    }x`}
                   </p>
                   <p className="mt-[0.5rem]">
                     Royalty Booster: {royaltyBooster}x
                   </p>
                   <p className="mt-[0.5rem]">
-                    Total Booster = {royaltyBooster} * ({1} +{" "}
-                    {getBooster(groupTvl)})
+                    {`Total Booster = ${royaltyBooster} * ${
+                      getBooster(groupTvl) !== 0
+                        ? `(1 + ${getBooster(groupTvl)})`
+                        : "1"
+                    }`}
                   </p>
                   {invite?.kolGroup && (
                     <p className="mt-[0.5rem]">Referral Booster: 5%</p>
@@ -286,7 +292,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             className="px-[0.75rem] py-[0.5rem]"
             data-tooltip-id="royalty-booster"
           >
-            {`+${(royaltyBooster * 100).toFixed(2)}%`}
+            {`+${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber())}%`}
           </RoyaltyBooster>
           <ReactTooltip
             id="royalty-booster"
