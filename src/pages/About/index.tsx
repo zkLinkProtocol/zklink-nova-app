@@ -42,6 +42,8 @@ const BgBox = styled.div`
   }
   .big {
     font-size: 32px;
+    line-height: 3rem; /* 150% */
+    letter-spacing: -0.03125rem;
   }
   .jump {
     color: #03d498;
@@ -303,7 +305,9 @@ export default function About() {
           bonus boost will be updated by Apr 14th, 2024
         </div>
 
-        <div className="paragraph title big">Aggregation Parade Phase I</div>
+        <div className="paragraph title big mt-[6rem]">
+          Aggregation Parade Phase I
+        </div>
 
         <div className="paragraph1 title big">How to earn Nova points?</div>
         <div className="paragraph">
