@@ -27,6 +27,7 @@ import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { eventBus } from "@/utils/event-bus";
+import { useRemainDrawCount } from "@/hooks/useRemainDrawCount";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -442,6 +443,12 @@ export default function NovaCharacter() {
       return nft.image;
     }
   }, [nft, lynksBalance]);
+
+  const { updateRemainDrawCount } = useRemainDrawCount();
+
+  useEffect(() => {
+    updateRemainDrawCount(remainDrawCount);
+  }, [remainDrawCount]);
 
   return (
     <>

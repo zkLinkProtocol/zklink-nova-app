@@ -6,7 +6,8 @@ import Decimal from "decimal.js";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Checkbox } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRemainDrawCount } from "@/hooks/useRemainDrawCount";
 
 const GreenTag = styled.span`
   display: flex;
@@ -138,6 +139,7 @@ export default function NovaPoints(props: INovaPointsProps) {
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
+  const { remainDrawCount } = useRemainDrawCount();
 
   useEffect(() => {
     let otherPoints: OtherPointsItem[] = [
@@ -195,6 +197,16 @@ export default function NovaPoints(props: INovaPointsProps) {
     layerbankPufferPoints,
   ]);
 
+  const totalBooster = useMemo(() => {
+    return Decimal.mul(getBooster(groupTvl) + 1, royaltyBooster).toNumber();
+  }, [groupTvl, royaltyBooster]);
+
+  const royaltyBoosterPencentage = useMemo(() => {
+    return Number(royaltyBooster)
+      ? `${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber() * 100)}%`
+      : "0%";
+  }, [royaltyBooster]);
+
   return (
     <>
       <CardBox className="mt-[1.5rem] p-[1.5rem]">
@@ -224,7 +236,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               render={() => (
                 <div>
                   <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earn By Your Deposit and Holding</span>
+                    <span>Earned By Your Deposit and Holding</span>
                     <span>{formatNumberWithUnit(novaPoints)}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
@@ -235,6 +247,11 @@ export default function NovaPoints(props: INovaPointsProps) {
                     <span>Earned by interacting with dApp</span>
                     <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
                   </p>
+
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by invite box</span>
+                    <span>{remainDrawCount}</span>
+                  </p>
                 </div>
               )}
             />
@@ -243,8 +260,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               data-tooltip-id="booster-learn-more"
               className="py-[0.375rem] w-[5.625rem] text-[1rem]"
             >
-              {Decimal.mul(getBooster(groupTvl) + 1, royaltyBooster).toNumber()}
-              x
+              {formatNumber2(totalBooster)}x
             </GreenTag>
 
             <ReactTooltip
@@ -292,7 +308,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             className="px-[0.75rem] py-[0.5rem]"
             data-tooltip-id="royalty-booster"
           >
-            {`+${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber())}%`}
+            +{royaltyBoosterPencentage}
           </RoyaltyBooster>
           <ReactTooltip
             id="royalty-booster"
@@ -312,7 +328,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Aggregation parade:
                   <br />
                   <br />
-                  Loyalty Booster = 0.5% * days joined.
+                  Loyalty Booster = {royaltyBoosterPencentage} * days joined.
                 </p>
               </div>
             )}
