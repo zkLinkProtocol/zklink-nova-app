@@ -18,10 +18,8 @@ const GreenTag = styled.span`
 
 interface INovaPointsProps {
   groupTvl: number;
-  accountPoint: {
-    novaPoint: number;
-    referPoint: number;
-  };
+  referPoints: number;
+  novaPoints: number;
   pufferEigenlayerPoints: number;
   pufferPoints: number;
   renzoPoints: number;
@@ -116,7 +114,8 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
 
 export default function NovaPoints(props: INovaPointsProps) {
   const {
-    accountPoint,
+    novaPoints,
+    referPoints,
     groupTvl,
     pufferEigenlayerPoints,
     pufferPoints,
@@ -217,9 +216,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             data-tooltip-id="nova-points"
           >
             {formatNumberWithUnit(
-              (+accountPoint.novaPoint || 0) +
-                (+accountPoint.referPoint || 0) +
-                layerbankNovaPoints
+              novaPoints + referPoints + layerbankNovaPoints
             )}
           </span>
 
@@ -231,11 +228,11 @@ export default function NovaPoints(props: INovaPointsProps) {
               <div>
                 <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                   <span>Earn By Your Deposit and Holding</span>
-                  <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
+                  <span>{formatNumberWithUnit(novaPoints)}</span>
                 </p>
                 <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                   <span>Earned By Referring Friends</span>
-                  <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
+                  <span>{formatNumberWithUnit(referPoints)}</span>
                 </p>
                 <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                   <span>Earned by interacting with dApp</span>

@@ -52,6 +52,7 @@ import { BrowserView } from "react-device-detect";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
 import { config } from "@/constants/networks";
 import toast from "react-hot-toast";
+import { eventBus } from "@/utils/event-bus";
 
 const NavNet = styled.div`
   background: #313841;
@@ -224,8 +225,14 @@ export default function Header() {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    eventBus.on("getInvite", getInviteFunc);
+    return () => {
+      eventBus.remove("getInvite", getInviteFunc);
+    };
+  }, []);
 
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };

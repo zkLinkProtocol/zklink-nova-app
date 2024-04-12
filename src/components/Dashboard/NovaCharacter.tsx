@@ -26,6 +26,7 @@ import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
+import { eventBus } from "@/utils/event-bus";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -249,6 +250,8 @@ export default function NovaCharacter() {
             img: `/img/img-trademark-${tokenId}.png`,
           });
           //TODO refresh points;
+          eventBus.emit("getInvite");
+          eventBus.emit("getAccountPoint");
         }
       }
       return; // draw first and then mint as step2.
@@ -427,6 +430,14 @@ export default function NovaCharacter() {
 
   return (
     <>
+      <Button
+        onClick={() => {
+          eventBus.emit("getInvite");
+          eventBus.emit("getAccountPoint");
+        }}
+      >
+        refresh points
+      </Button>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
         <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           Your Nova Character

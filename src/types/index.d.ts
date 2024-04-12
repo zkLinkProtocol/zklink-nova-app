@@ -54,4 +54,5 @@ export type Invite = {
   twitterHandler: string | null;
   beInvited?: boolean;
   kolGroup?: boolean;
+  points?: number;
 };
