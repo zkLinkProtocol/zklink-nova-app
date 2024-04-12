@@ -23,10 +23,8 @@ const RoyaltyBooster = styled.span`
 
 interface INovaPointsProps {
   groupTvl: number;
-  accountPoint: {
-    novaPoint: number;
-    referPoint: number;
-  };
+  referPoints: number;
+  novaPoints: number;
   pufferEigenlayerPoints: number;
   pufferPoints: number;
   renzoPoints: number;
@@ -123,7 +121,8 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
 
 export default function NovaPoints(props: INovaPointsProps) {
   const {
-    accountPoint,
+    novaPoints,
+    referPoints,
     groupTvl,
     pufferEigenlayerPoints,
     pufferPoints,
@@ -301,15 +300,48 @@ export default function NovaPoints(props: INovaPointsProps) {
               )}
             />
           </div>
-
+{/* 
           <RoyaltyBooster
             className="px-[0.75rem] py-[0.5rem]"
             data-tooltip-id="royalty-booster"
           >
-            {`+${(royaltyBooster * 100).toFixed(2)}%`}
-          </RoyaltyBooster>
+            {formatNumberWithUnit(
+              novaPoints + referPoints + layerbankNovaPoints
+            )}
+          </span> */}
+
           <ReactTooltip
-            id="royalty-booster"
+            id="nova-points"
+            place="top-start"
+            style={{ fontSize: "14px", borderRadius: "16px", zIndex: "999999" }}
+            render={() => (
+              <div>
+                <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                  <span>Earn By Your Deposit and Holding</span>
+                  <span>{formatNumberWithUnit(novaPoints)}</span>
+                </p>
+                <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                  <span>Earned By Referring Friends</span>
+                  <span>{formatNumberWithUnit(referPoints)}</span>
+                </p>
+                <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                  <span>Earned by interacting with dApp</span>
+                  <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
+                </p>
+              </div>
+            )}
+          />
+
+          <GreenTag
+            data-tooltip-id="booster-learn-more"
+            className="py-[0.375rem] w-[5.625rem] text-[1rem]"
+          >
+            {Decimal.mul(getBooster(groupTvl) + 1, eralyBirdBooster).toNumber()}
+            x
+          </GreenTag>
+
+          <ReactTooltip
+            id="booster-learn-more"
             place="top"
             style={{
               borderRadius: "0.5rem",

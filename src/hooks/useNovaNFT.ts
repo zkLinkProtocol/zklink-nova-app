@@ -31,6 +31,7 @@ import {
   GetContractReturnType,
   WriteContractParameters,
   encodeFunctionData,
+  Abi,
 } from "viem";
 import { formatBalance, sleep } from "@/utils";
 import axios from "axios";
@@ -272,20 +273,23 @@ const useNovaDrawNFT = () => {
 
   const sendTrademarkMintTx = async (params: TrademarkMintParams) => {
     if (!address) return;
+    const isLynks = params?.tokenId === 88;
     try {
       setLoading(true);
       const tx: WriteContractParameters = {
-        address: TRADEMARK_NFT_CONTRACT,
-        abi: NovaTrademarkNFT,
-        functionName: "safeMint",
-        args: [
-          address,
-          params.nonce,
-          params.tokenId,
-          1,
-          params.expiry,
-          params.signature,
-        ],
+        address: isLynks ? LYNKS_NFT_CONTRACT : TRADEMARK_NFT_CONTRACT,
+        abi: (isLynks ? NovaLynksNFT : NovaTrademarkNFT) as Abi,
+        functionName: isLynks ? "safeMintWithAuth" : "safeMint",
+        args: isLynks
+          ? [address, params.nonce, params.expiry, params.signature]
+          : [
+              address,
+              params.nonce,
+              params.tokenId,
+              1,
+              params.expiry,
+              params.signature,
+            ],
       };
       await insertEstimateFee(tx);
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;

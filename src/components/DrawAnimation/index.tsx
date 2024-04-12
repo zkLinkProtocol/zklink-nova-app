@@ -18,11 +18,15 @@ interface IProps {
   sbtNFT?: NOVA_NFT;
 }
 const TrademarkItems = [
-  { name: "Oak Tree Roots", img: "img-trademark-1.png" },
-  { name: "Magnifying Glass", img: "img-trademark-2.png" },
-  { name: "Chess Knight", img: "img-trademark-3.png" },
   { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
-  { name: "Thanks for joining", img: "img-trademark-5.png" },
+  { name: "Chess Knight", img: "img-trademark-3.png" },
+  { name: "Magnifying Glass", img: "img-trademark-2.png" },
+  { name: "Oak Tree Roots", img: "img-trademark-1.png" },
+  { name: "+1 Nova points", img: "img-trademark-6.png" },
+  { name: "+5 Nova points", img: "img-trademark-7.png" },
+  { name: "+10 Nova points", img: "img-trademark-8.png" },
+  { name: "+50 Nova points", img: "img-trademark-9.png" },
+  { name: "Lynks", img: "img-trademark-lynks.png" },
 ];
 
 const MysteryboxItems = [
@@ -44,10 +48,10 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>();
 
   const lynksNFTImg = useMemo(() => {
-    if (type === "MysteryBox" && sbtNFT) {
+    if (sbtNFT) {
       return `/img/img-mystery-box-lynks-${sbtNFT.name}.png`;
     }
-  }, [type, sbtNFT]);
+  }, [sbtNFT]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const start = async (targetImageIndex: number) => {
@@ -56,8 +60,8 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
 
       let step = 0;
       let speed = 2;
-      const Loops = type === "Trademark" ? 3 : 2;
-      const count = type === "Trademark" ? 6 : 8;
+      const Loops = type === "Trademark" ? 2 : 2;
+      const count = type === "Trademark" ? 9 : 8;
       const totalSteps = count * Loops + targetImageIndex; // run four loops and end on target
       const stopAnimation = () => {
         clearTimeout(timeout);
@@ -108,7 +112,10 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
               }`}
             >
               <div className="img-bg">
-                <img src={`/img/${item.img}`} alt="trademark nft" />
+                <img
+                  src={index === 8 ? lynksNFTImg : `/img/${item.img}`}
+                  alt="Image 1"
+                />
               </div>
               <div className="item-name">{item.name}</div>
             </div>

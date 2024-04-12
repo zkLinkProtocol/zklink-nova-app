@@ -26,6 +26,7 @@ import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
+import { eventBus } from "@/utils/event-bus";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -77,12 +78,23 @@ export const TxResult = styled.div`
     margin-bottom: 16px;
   }
 `;
-
+//tokenId from api => image id of frontend
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   1: "Oak Tree Roots",
   2: "Magnifying Glass",
   3: "Chess Knight",
   4: "Binary Code Metrix Cube",
+  6: "+1 Nova points",
+  7: "+5 Nova points",
+  8: "+10 Nova points",
+  9: "+50 Nova points",
+  88: "Lynks",
+};
+
+const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
+  return Object.keys(TRADEMARK_TOKEN_ID_MAP).findIndex(
+    (key) => Number(key) === tokenId
+  );
 };
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
@@ -191,6 +203,12 @@ export default function NovaCharacter() {
   }, [nativeTokenBalance]);
   console.log("nativeTokenBalance: ", nativeTokenBalance);
 
+  const lynksNFTImg = useMemo(() => {
+    if (nft) {
+      return `/img/img-mystery-box-lynks-${nft.name}.png`;
+    }
+  }, [nft]);
+
   const handleMintTrademark = useCallback(async () => {
     if (remainDrawCount > 0) {
       drawModal.onOpen(); // for test only
@@ -223,15 +241,32 @@ export default function NovaCharacter() {
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
-        await drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
+        await drawRef?.current?.start(getDrawIndexWithPrizeTokenId(tokenId)); //do the draw animation; use index of image for active
         // await sleep(2000);
-        setDrawedNftId(Number(tokenId));
+        setDrawedNftId(tokenId);
         if (tokenId === 5) {
           // 5 means no prize
           setUpdate((update) => update + 1);
           // return;
+        } else if ([6, 7, 8, 9].includes(tokenId)) {
+          setDrawedNftId(undefined);
+          //not actual nft. Just points.
+          setTrademarkMintStatus(MintStatus.Success);
+          setMintResult({
+            name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
+            img:
+              tokenId === 88
+                ? lynksNFTImg!
+                : `/img/img-trademark-${tokenId}.png`,
+          });
+          trademarkMintModal.onOpen();
+          drawModal.onClose();
+          //TODO refresh points;
+          eventBus.emit("getInvite");
+          eventBus.emit("getAccountPoint");
         }
       }
+      setUpdate((update) => update + 1);
       return; // draw first and then mint as step2.
     }
     let mintParams = { ...trademarkMintParams };
@@ -273,8 +308,10 @@ export default function NovaCharacter() {
     setUpdate((update) => update + 1);
   }, [
     address,
+    drawModal,
     drawedNftId,
     isInvaidChain,
+    lynksNFTImg,
     novaBalance,
     remainDrawCount,
     sendTrademarkMintTx,
@@ -423,8 +460,8 @@ export default function NovaCharacter() {
             content={
               <div className="flex flex-col py-2">
                 <p>
-                  For every three referrals, you'll get a chance to mint a
-                  trademark NFT.
+                  For every three referrals, you'll get a chance to open an
+                  invite box.
                 </p>
               </div>
             }
@@ -435,7 +472,7 @@ export default function NovaCharacter() {
                 onClick={handleMintTrademark}
                 isDisabled={remainDrawCount === 0}
               >
-                Mint trademark ({remainDrawCount})
+                Open Invite Box ({remainDrawCount})
               </Button>
             </div>
           </Tooltip>
@@ -526,20 +563,25 @@ export default function NovaCharacter() {
       >
         <ModalContent className="mt-[2rem] py-4 px-4">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
-            Draw and Mint your Trademark NFTs
+            Draw and Mint your Invite Boxs
           </ModalHeader>
           <DrawAnimation
             type="Trademark"
             ref={drawRef}
-            targetImageIndex={drawedNftId ? drawedNftId - 1 : undefined}
+            targetImageIndex={
+              drawedNftId
+                ? getDrawIndexWithPrizeTokenId(drawedNftId)
+                : undefined
+            }
             onDrawEnd={() => {
               setDrawing(false);
             }}
+            sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With every three referrals, you'll have the chance to randomly mint
-            one of the four Trademarks. However, you must mint your Trademark
-            before you can enter another lucky draw.
+            With every three referrals, you'll have the chance to randomly draw
+            one of the invite rewards. Please notice that Nova points rewards
+            are’t NFT, they'll be added directly to your Nova Points.
           </p>
           <Button
             onClick={handleDrawAndMint}
