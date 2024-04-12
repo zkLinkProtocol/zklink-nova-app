@@ -18,15 +18,14 @@ interface IProps {
   sbtNFT?: NOVA_NFT;
 }
 const TrademarkItems = [
-  { name: "+1 Nova points", img: "img-trademark-6.png" },
-  { name: "+5 Nova points", img: "img-trademark-6.png" },
-  { name: "+10 Nova points", img: "img-trademark-6.png" },
-  { name: "+50 Nova points", img: "img-trademark-6.png" },
-
   { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
   { name: "Chess Knight", img: "img-trademark-3.png" },
   { name: "Magnifying Glass", img: "img-trademark-2.png" },
   { name: "Oak Tree Roots", img: "img-trademark-1.png" },
+  { name: "+1 Nova points", img: "img-trademark-6.png" },
+  { name: "+5 Nova points", img: "img-trademark-7.png" },
+  { name: "+10 Nova points", img: "img-trademark-8.png" },
+  { name: "+50 Nova points", img: "img-trademark-9.png" },
   { name: "Lynks", img: "img-trademark-lynks.png" },
 ];
 

@@ -203,6 +203,12 @@ export default function NovaCharacter() {
   }, [nativeTokenBalance]);
   console.log("nativeTokenBalance: ", nativeTokenBalance);
 
+  const lynksNFTImg = useMemo(() => {
+    if (nft) {
+      return `/img/img-mystery-box-lynks-${nft.name}.png`;
+    }
+  }, [nft]);
+
   const handleMintTrademark = useCallback(async () => {
     if (remainDrawCount > 0) {
       drawModal.onOpen(); // for test only
@@ -237,23 +243,30 @@ export default function NovaCharacter() {
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
         await drawRef?.current?.start(getDrawIndexWithPrizeTokenId(tokenId)); //do the draw animation; use index of image for active
         // await sleep(2000);
-        setDrawedNftId(Number(tokenId));
+        setDrawedNftId(tokenId);
         if (tokenId === 5) {
           // 5 means no prize
           setUpdate((update) => update + 1);
           // return;
         } else if ([6, 7, 8, 9].includes(tokenId)) {
+          setDrawedNftId(undefined);
           //not actual nft. Just points.
           setTrademarkMintStatus(MintStatus.Success);
           setMintResult({
             name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
-            img: `/img/img-trademark-${tokenId}.png`,
+            img:
+              tokenId === 88
+                ? lynksNFTImg
+                : `/img/img-trademark-${tokenId}.png`,
           });
+          trademarkMintModal.onOpen();
+          drawModal.onClose();
           //TODO refresh points;
           eventBus.emit("getInvite");
           eventBus.emit("getAccountPoint");
         }
       }
+      setUpdate((update) => update + 1);
       return; // draw first and then mint as step2.
     }
     let mintParams = { ...trademarkMintParams };
@@ -295,6 +308,7 @@ export default function NovaCharacter() {
     setUpdate((update) => update + 1);
   }, [
     address,
+    drawModal,
     drawedNftId,
     isInvaidChain,
     novaBalance,
@@ -553,7 +567,11 @@ export default function NovaCharacter() {
           <DrawAnimation
             type="Trademark"
             ref={drawRef}
-            targetImageIndex={drawedNftId ? drawedNftId - 1 : undefined}
+            targetImageIndex={
+              drawedNftId
+                ? getDrawIndexWithPrizeTokenId(drawedNftId)
+                : undefined
+            }
             onDrawEnd={() => {
               setDrawing(false);
             }}
