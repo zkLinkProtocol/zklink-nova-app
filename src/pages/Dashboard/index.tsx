@@ -22,6 +22,7 @@ import {
   getLayerbankNovaPoints,
   getLayerbankTokenPoints,
   getLinkswapNovaPoints,
+  getRoyaltyBooster,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -364,6 +365,15 @@ export default function Dashboard() {
     }
   };
 
+  const [royaltyBooster, setRoyaltyBooster] = useState(0);
+  const getRoyaltyBoosterFunc = async () => {
+    if (!address) return;
+    const { result } = await getRoyaltyBooster(address);
+    if (result?.loyaltyBooster) {
+      setRoyaltyBooster(Number(result.loyaltyBooster) || 0);
+    }
+  };
+
   /**
    * Init: Get data from server
    */
@@ -384,6 +394,7 @@ export default function Dashboard() {
     getLayerbankNovaPointsFunc();
     getLayerbankTokenPointsFunc();
     getLinkswapNovaPointsFunc();
+    getRoyaltyBoosterFunc();
   }, [address]);
 
   useEffect(() => {
@@ -520,6 +531,7 @@ export default function Dashboard() {
             magpiePointsData={magpiePointsData}
             layerbankNovaPoints={layerbankNovaPoints}
             layerbankPufferPoints={layerbankPufferPoints}
+            royaltyBooster={royaltyBooster}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}

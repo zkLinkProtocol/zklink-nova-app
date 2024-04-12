@@ -456,3 +456,8 @@ export const getLinkswapNovaPoints = (
   http.get("https://api.linkswap.finance/api/Zklink/AddressPoint", {
     params: { address },
   });
+
+export const getRoyaltyBooster = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountLoyaltyBooster`, {
+    params: { address },
+  });
