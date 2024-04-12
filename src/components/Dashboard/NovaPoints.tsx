@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Checkbox } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
-import { useRemainDrawCount } from "@/hooks/useRemainDrawCount";
 
 const GreenTag = styled.span`
   display: flex;
@@ -139,7 +138,6 @@ export default function NovaPoints(props: INovaPointsProps) {
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
-  const { remainDrawCount } = useRemainDrawCount();
 
   useEffect(() => {
     let otherPoints: OtherPointsItem[] = [
@@ -249,8 +247,8 @@ export default function NovaPoints(props: INovaPointsProps) {
                   </p>
 
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by invite box</span>
-                    <span>{remainDrawCount}</span>
+                    <span>Earned by opening invite box</span>
+                    <span>{Number(invite?.points) || 0}</span>
                   </p>
                 </div>
               )}

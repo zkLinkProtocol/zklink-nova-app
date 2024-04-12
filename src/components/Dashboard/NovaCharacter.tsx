@@ -27,7 +27,6 @@ import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { eventBus } from "@/utils/event-bus";
-import { useRemainDrawCount } from "@/hooks/useRemainDrawCount";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -444,12 +443,6 @@ export default function NovaCharacter() {
     }
   }, [nft, lynksBalance]);
 
-  const { updateRemainDrawCount } = useRemainDrawCount();
-
-  useEffect(() => {
-    updateRemainDrawCount(remainDrawCount);
-  }, [remainDrawCount]);
-
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -588,7 +581,7 @@ export default function NovaCharacter() {
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
             With every three referrals, you'll have the chance to randomly draw
             one of the invite rewards. Please notice that Nova points rewards
-            are’t NFT, they'll be added directly to your Nova Points.
+            are't NFT, they'll be added directly to your Nova Points.
           </p>
           <Button
             onClick={handleDrawAndMint}
