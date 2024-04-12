@@ -133,7 +133,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     layerbankNovaPoints,
     layerbankPufferPoints,
   } = props;
-  const eralyBirdBooster = 1.5;
+  const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
@@ -261,10 +261,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               data-tooltip-id="booster-learn-more"
               className="py-[0.375rem] w-[5.625rem] text-[1rem]"
             >
-              {Decimal.mul(
-                getBooster(groupTvl) + 1,
-                eralyBirdBooster
-              ).toNumber()}
+              {Decimal.mul(getBooster(groupTvl) + 1, royaltyBooster).toNumber()}
               x
             </GreenTag>
 
@@ -283,10 +280,10 @@ export default function NovaPoints(props: INovaPointsProps) {
                       `Group Booster: ${getBooster(groupTvl)}x`}
                   </p>
                   <p className="mt-[0.5rem]">
-                    Early Bird Booster: {eralyBirdBooster}x
+                    Royalty Booster: {royaltyBooster}x
                   </p>
                   <p className="mt-[0.5rem]">
-                    Total Booster = {eralyBirdBooster} * ({1} +{" "}
+                    Total Booster = {royaltyBooster} * ({1} +{" "}
                     {getBooster(groupTvl)})
                   </p>
                   {invite?.kolGroup && (
@@ -309,7 +306,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             className="px-[0.75rem] py-[0.5rem]"
             data-tooltip-id="royalty-booster"
           >
-            +20.5%
+            {`+${(royaltyBooster * 100).toFixed(2)}%`}
           </RoyaltyBooster>
           <ReactTooltip
             id="royalty-booster"
@@ -320,7 +317,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               fontSize: "0.875rem",
             }}
             render={() => (
-              <div className="max-w-[25rem]">
+              <div className="max-w-[20rem]">
                 <h4 className="font-[700] text-[0.875rem] leading-[1.3755rem]">
                   Royalty Booster
                 </h4>
