@@ -430,14 +430,6 @@ export default function NovaCharacter() {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          eventBus.emit("getInvite");
-          eventBus.emit("getAccountPoint");
-        }}
-      >
-        refresh points
-      </Button>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
         <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           Your Nova Character
