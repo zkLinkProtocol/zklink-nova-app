@@ -16,6 +16,11 @@ const GreenTag = styled.span`
   background: linear-gradient(90deg, #0bc48f 0%, #00192b 107.78%);
 `;
 
+const RoyaltyBooster = styled.span`
+  border-radius: 0.25rem;
+  background: linear-gradient(90deg, #48ecae 0%, #3e52fc 100%);
+`;
+
 interface INovaPointsProps {
   groupTvl: number;
   referPoints: number;
@@ -91,8 +96,9 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
           place="top"
           style={{
             maxWidth: "20rem",
-            fontSize: "14px",
-            borderRadius: "16px",
+            borderRadius: "0.5rem",
+            background: "#666",
+            fontSize: "0.875rem",
           }}
           content={pointsTips}
         />
@@ -104,8 +110,9 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
           place="top"
           style={{
             maxWidth: "20rem",
-            fontSize: "14px",
-            borderRadius: "16px",
+            borderRadius: "0.5rem",
+            background: "#666",
+            fontSize: "0.875rem",
           }}
           content={eigenlayerTips}
         />
@@ -339,31 +346,23 @@ export default function NovaPoints(props: INovaPointsProps) {
           <ReactTooltip
             id="royalty-booster"
             place="top"
-            style={{ fontSize: "14px", borderRadius: "16px" }}
+            style={{
+              borderRadius: "0.5rem",
+              background: "#666",
+              fontSize: "0.875rem",
+            }}
             render={() => (
-              <div>
-                <p>
-                  {getBooster(groupTvl) !== 0 &&
-                    `Group Booster: ${getBooster(groupTvl)}x`}
+              <div className="max-w-[20rem]">
+                <h4 className="font-[700] text-[0.875rem] leading-[1.3755rem]">
+                  Royalty Booster
+                </h4>
+                <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
+                  An extra boost for Loyalty users, tied with days in the
+                  Aggregation parade:
+                  <br />
+                  <br />
+                  Loyalty Booster = 0.5% * days joined.
                 </p>
-                <p className="mt-[0.5rem]">
-                  Early Bird Booster: {eralyBirdBooster}x
-                </p>
-                <p className="mt-[0.5rem]">
-                  Total Booster = {eralyBirdBooster} * ({1} +{" "}
-                  {getBooster(groupTvl)})
-                </p>
-                {invite?.kolGroup && (
-                  <p className="mt-[0.5rem]">Referral Booster: 5%</p>
-                )}
-                <br />
-                <a
-                  href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
-                  target="_blank"
-                  className="text-[#0bc48f]"
-                >
-                  Learn More
-                </a>
               </div>
             )}
           />
@@ -372,7 +371,11 @@ export default function NovaPoints(props: INovaPointsProps) {
         <ReactTooltip
           id="more-points-soon"
           place="top"
-          style={{ fontSize: "14px", borderRadius: "16px" }}
+          style={{
+            borderRadius: "0.5rem",
+            background: "#666",
+            fontSize: "0.875rem",
+          }}
           content="More points will be listed here soon."
         />
 
