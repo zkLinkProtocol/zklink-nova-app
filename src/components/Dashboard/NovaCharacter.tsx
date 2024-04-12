@@ -256,7 +256,7 @@ export default function NovaCharacter() {
             name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
             img:
               tokenId === 88
-                ? lynksNFTImg
+                ? lynksNFTImg!
                 : `/img/img-trademark-${tokenId}.png`,
           });
           trademarkMintModal.onOpen();
@@ -311,6 +311,7 @@ export default function NovaCharacter() {
     drawModal,
     drawedNftId,
     isInvaidChain,
+    lynksNFTImg,
     novaBalance,
     remainDrawCount,
     sendTrademarkMintTx,
