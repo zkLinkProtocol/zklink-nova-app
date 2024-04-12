@@ -303,7 +303,7 @@ export default function NovaPoints(props: INovaPointsProps) {
           </div>
 
           <RoyaltyBooster
-            className="px-[0.75rem] py-[0.5rem]"
+            className="px-[0.75rem] py-[0.375rem] text-[1rem]"
             data-tooltip-id="royalty-booster"
           >
             +{royaltyBoosterPencentage}
@@ -343,6 +343,17 @@ export default function NovaPoints(props: INovaPointsProps) {
           }}
           content="More points will be listed here soon."
         />
+
+        {Number(invite?.points) !== 0 && (
+          <div className="text-[1rem] text-[#919192] leading-[1] flex items-end gap-2">
+            <span className="text-[1.5rem] text-[#0ABB8A] font-[700]">
+              +{invite?.points}
+            </span>
+
+            <span>from</span>
+            <span className="font-[700]">Invite Box</span>
+          </div>
+        )}
 
         <div className="mt-[3rem] w-full flex justify-between items-center">
           <div className="text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">

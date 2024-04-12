@@ -563,7 +563,7 @@ export default function NovaCharacter() {
       >
         <ModalContent className="mt-[2rem] py-4 px-4">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
-            Draw and Mint your Invite Boxs
+            Draw and Earn your invite rewards
           </ModalHeader>
           <DrawAnimation
             type="Trademark"
@@ -580,8 +580,11 @@ export default function NovaCharacter() {
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
             With every three referrals, you'll have the chance to randomly draw
-            one of the invite rewards. Please notice that Nova points rewards
-            are't NFT, they'll be added directly to your Nova Points.
+            one of the invite rewards.{" "}
+            <span className="text-[#fff] font-[700]">
+              Please notice that Nova points rewards are not NFT
+            </span>
+            , they'll be added directly to your Nova Points.
           </p>
           <Button
             onClick={handleDrawAndMint}
@@ -595,7 +598,7 @@ export default function NovaCharacter() {
               {isInvaidChain && "Switch to Nova network to mint"}
               {!isInvaidChain &&
                 (!drawedNftId || drawedNftId === 5 || drawing) &&
-                `Draw & Mint ( ${remainDrawCount} )`}
+                `Draw ( ${remainDrawCount} )`}
               {!isInvaidChain &&
                 !!drawedNftId &&
                 drawedNftId !== 5 &&
