@@ -361,7 +361,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Aggregation parade:
                   <br />
                   <br />
-                  Loyalty Booster = 0.5 * days joined.
+                  Loyalty Booster = 0.5% * days joined.
                 </p>
               </div>
             )}
