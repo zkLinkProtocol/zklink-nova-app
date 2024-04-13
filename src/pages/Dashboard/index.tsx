@@ -162,18 +162,18 @@ export default function Dashboard() {
     setOkxPoints(okxPoints);
   };
 
-  const novaPoints = useMemo(() => {
-    let points = accountPoint.novaPoint + okxPoints;
-    if (invite?.kolGroup) {
-      points += Decimal.mul(points, 0.05).toNumber();
-    }
+  // const novaPoints = useMemo(() => {
+  //   let points = accountPoint.novaPoint + okxPoints;
+  //   if (invite?.kolGroup) {
+  //     points += Decimal.mul(points, 0.05).toNumber();
+  //   }
 
-    if (invite?.points) {
-      points += Number(invite.points) || 0;
-    }
+  //   if (invite?.points) {
+  //     points += Number(invite.points) || 0;
+  //   }
 
-    return points;
-  }, [accountPoint, okxPoints, invite]);
+  //   return points;
+  // }, [accountPoint, okxPoints, invite]);
 
   const getAccountRefferalsTVLFunc = async () => {
     if (!address) return;
@@ -540,7 +540,7 @@ export default function Dashboard() {
           <NovaPoints
             groupTvl={groupTvl}
             referPoints={accountPoint.referPoint}
-            novaPoints={novaPoints}
+            novaPoints={accountPoint.novaPoint}
             pufferEigenlayerPoints={pufferEigenlayerPoints}
             pufferPoints={pufferPoints}
             renzoPoints={renzoPoints}
@@ -549,6 +549,7 @@ export default function Dashboard() {
             layerbankNovaPoints={layerbankNovaPoints}
             layerbankPufferPoints={layerbankPufferPoints}
             royaltyBooster={royaltyBooster}
+            okxPoints={okxPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}

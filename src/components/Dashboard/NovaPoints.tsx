@@ -33,6 +33,7 @@ interface INovaPointsProps {
   layerbankNovaPoints: number;
   layerbankPufferPoints: number;
   royaltyBooster: number;
+  okxPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -133,6 +134,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     layerbankNovaPoints,
     layerbankPufferPoints,
     royaltyBooster,
+    okxPoints,
   } = props;
   // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -205,6 +207,25 @@ export default function NovaPoints(props: INovaPointsProps) {
       : "0%";
   }, [royaltyBooster]);
 
+  const kolPoints = useMemo(() => {
+    return invite?.kolGroup ? Decimal.mul(novaPoints, 0.05).toNumber() : 0;
+  }, [novaPoints, invite?.kolGroup]);
+
+  const trademarkPoints = useMemo(() => {
+    return Number(invite?.points) || 0;
+  }, [invite?.points]);
+
+  const totalNovaPoints = useMemo(() => {
+    return (
+      novaPoints +
+      referPoints +
+      layerbankNovaPoints +
+      trademarkPoints +
+      okxPoints +
+      kolPoints
+    );
+  }, [novaPoints, referPoints, layerbankNovaPoints, invite?.points]);
+
   return (
     <>
       <CardBox className="mt-[1.5rem] p-[1.5rem]">
@@ -218,9 +239,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               className="text-[2.5rem] font-[700]"
               data-tooltip-id="nova-points"
             >
-              {formatNumberWithUnit(
-                novaPoints + referPoints + layerbankNovaPoints
-              )}
+              {formatNumberWithUnit(totalNovaPoints)}
             </span>
 
             <ReactTooltip
@@ -234,21 +253,28 @@ export default function NovaPoints(props: INovaPointsProps) {
               render={() => (
                 <div>
                   <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned By Your Deposit and Holding</span>
+                    <span>Earned by Your Deposit and Holding</span>
                     <span>{formatNumberWithUnit(novaPoints)}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned By Referring Friends</span>
+                    <span>Earned by Referring Friends</span>
                     <span>{formatNumberWithUnit(referPoints)}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by interacting with dApp</span>
                     <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
                   </p>
-
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by opening invite box</span>
-                    <span>{Number(invite?.points) || 0}</span>
+                    <span>{trademarkPoints}</span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by OKX points</span>
+                    <span>{okxPoints}</span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by KOL points</span>
+                    <span>{formatNumberWithUnit(kolPoints)}</span>
                   </p>
                 </div>
               )}

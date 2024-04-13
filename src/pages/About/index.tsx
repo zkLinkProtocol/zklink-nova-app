@@ -40,9 +40,14 @@ const BgBox = styled.div`
     content: "•";
     margin-right: 5px;
   }
-  .big {
+  .title-1 {
     font-size: 32px;
     line-height: 3rem; /* 150% */
+    letter-spacing: -0.03125rem;
+  }
+  .title-2 {
+    font-size: 28px;
+    line-height: 1.5; /* 150% */
     letter-spacing: -0.03125rem;
   }
   .jump {
@@ -90,7 +95,7 @@ const BgBox = styled.div`
   }
 
   @media (max-width: 768px) {
-    .big {
+    .title-1 {
       font-size: 28px;
     }
   }
@@ -150,7 +155,7 @@ export default function About() {
 
   return (
     <BgBox className="relative pb-[3rem]">
-      <div className="md:pt-[8.5rem] pt-[5rem] md:px-[252px] px-[20px] box-content ">
+      <div className="md:pt-[8.5rem] pt-[5rem] 2xl:px-[300px] md:px-[252px] px-[20px] box-content ">
         <div className="flex relative ">
           <img
             src="/img/about-banner.png"
@@ -180,10 +185,10 @@ export default function About() {
           Nova points which impacts your final reward.
         </div>
 
-        <div className="paragraph title big">
+        <div className="paragraph title title-1">
           Aggregation Parade Phase II begins 10AM April 14, 2024 UTC
         </div>
-        <div className="paragraph title big">📢 Important Updates:</div>
+        <div className="paragraph title title-2">📢 Important Updates:</div>
         <div className="paragraph">
           <p>
             1. INITIAL ONE-TIME BOOST in Phase I will conclude and Nova points
@@ -215,7 +220,7 @@ export default function About() {
           <p className="ml-4">a. Token Merge begins 10AM Apr 9, 2024 UTC</p>
           <p className="ml-4">b. Ecosystem Bootstrap</p>
         </div>
-        <div className="paragraph title big">
+        <div className="paragraph title title-2">
           📈 Invite more friends to the Aggregation Parade!:
         </div>
         <div className="paragraph">
@@ -228,7 +233,7 @@ export default function About() {
             onLoad={scrollToAnchor}
           />
         </div>
-        <div className="paragraph title big">
+        <div className="paragraph title title-2">
           🎁 Mystery Box Season 2 (Starting April 9):
         </div>
         <div className="paragraph">
@@ -246,7 +251,7 @@ export default function About() {
           />
         </div>
 
-        <div className="paragraph title big">
+        <div className="paragraph title title-2">
           🙆 Rewarding zkLink’s Oldest Friends:
         </div>
 
@@ -267,7 +272,7 @@ export default function About() {
           </ul>
         </div>
 
-        <div className="paragraph title big">
+        <div className="paragraph title title-2">
           ❤️ Rewarding Loyal Users of Aggregation Parade:
         </div>
         <div className="paragraph">
@@ -286,7 +291,7 @@ export default function About() {
           </ul>
         </div>
 
-        <div className="paragraph title big">
+        <div className="paragraph title title-2">
           🚀 Token Merge Bonus (begins 10AM Apr 9, 2024 UTC), unlock another
           chance to boost your Nova points!
         </div>
@@ -296,7 +301,7 @@ export default function About() {
           <p>💎merged stablecoins: 2.5x</p>
         </div>
 
-        <div className="paragraph title big">
+        <div className="paragraph title title-2">
           💡 Ecosystem Bootstrap Bonuses:
         </div>
         <div className="paragraph">
@@ -305,11 +310,11 @@ export default function About() {
           bonus boost will be updated by Apr 14th, 2024
         </div>
 
-        <div className="paragraph title big mt-[6rem]">
+        <div className="paragraph title title-1 mt-[6rem]">
           Aggregation Parade Phase I
         </div>
 
-        <div className="paragraph1 title big">How to earn Nova points?</div>
+        <div className="paragraph1 title title-2">How to earn Nova points?</div>
         <div className="paragraph">
           You can see the detail and formula of how we calculate Nova points{" "}
           <a
@@ -434,7 +439,7 @@ export default function About() {
             onLoad={scrollToAnchor}
           />
         </div>
-        <div className="paragraph title big">How to earn Nova NFTs?</div>
+        <div className="paragraph title title-2">How to earn Nova NFTs?</div>
         <div className="paragraph">
           <div>You will get ONE of the FOUR Nova SBT once you bridge</div>
           <div className="before">0.1ETH (In the first 7 days) OR</div>
@@ -482,7 +487,7 @@ export default function About() {
           <div className="before">Future NFT whitelist</div>
           <div className="before">zkLink on-site event access</div>
         </div>
-        <div className="paragraph title big">Timeline</div>
+        <div className="paragraph title title-2">Timeline</div>
         <div className="paragraph">
           <div className="title">Phase 1: Aggregation Phase</div>
           <div className="before">
@@ -517,7 +522,7 @@ export default function About() {
         </div>
 
         <div id="disclaimer">
-          <div className="paragraph title big">
+          <div className="paragraph title title-2">
             Disclaimer: Aggregation Parade Online Campaign
           </div>
           <div className="paragraph">
@@ -582,7 +587,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="paragraph title big">About zkLink Nova Network</div>
+        <div className="paragraph title title-2">About zkLink Nova Network</div>
         <div className="paragraph3">
           zkLink Nova is the pioneering Aggregated Layer 3 Rollup zkEVM network
           that brings unprecedented liquidity and asset aggregation to Ethereum
