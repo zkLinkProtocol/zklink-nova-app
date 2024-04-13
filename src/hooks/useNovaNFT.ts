@@ -200,7 +200,8 @@ const useNovaDrawNFT = () => {
         return Object.values(map);
       } catch (e) {
         console.log(e);
-        return [];
+        // return [];
+        throw new Error("GET_LYNKS_ERROR");
       }
     },
     [lynksNFT]
@@ -338,7 +339,7 @@ const useNovaDrawNFT = () => {
     }
   };
 
-  const sendMysteryBurnTx = async (tokenId:number) => {
+  const sendMysteryBurnTx = async (tokenId: number) => {
     if (!address) return;
     try {
       setLoading(true);
@@ -362,9 +363,9 @@ const useNovaDrawNFT = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  const sendMysteryBurnTxV2 = async (tokenId:number) => {
+  const sendMysteryBurnTxV2 = async (tokenId: number) => {
     if (!address) return;
     try {
       setLoading(true);
@@ -388,7 +389,7 @@ const useNovaDrawNFT = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const sendMysteryMintTx = async (params: MysteryboxMintParams) => {
     if (!address) return;
@@ -611,7 +612,7 @@ const useNovaDrawNFT = () => {
     sendTrademarkApproveTx,
     isApproving,
     sendMysteryBurnTx,
-    sendMysteryBurnTxV2
+    sendMysteryBurnTxV2,
   };
 };
 

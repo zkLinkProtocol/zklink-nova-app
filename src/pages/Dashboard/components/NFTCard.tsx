@@ -306,13 +306,21 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
           nfts.push({ ...ALL_NFTS[i], balance: Number(trademarkBalances[i]) });
         }
 
-        const lynksBalances = await getLynksNFT(address);
-        console.log("lynksBalances: ", lynksBalances);
-        for (let i = 0; i < 4; i++) {
-          const nft = lynksBalances?.find((item) =>
-            item.name.includes(ALL_NFTS[i + 4].type!)
-          );
-          nfts.push({ ...ALL_NFTS[i + 4], balance: nft?.balance ?? 0 });
+        try {
+          const lynksBalances = await getLynksNFT(address);
+          console.log("lynksBalances: ", lynksBalances);
+
+          for (let i = 0; i < 4; i++) {
+            const nft = lynksBalances?.find((item) =>
+              item.name.includes(ALL_NFTS[i + 4].type!)
+            );
+            nfts.push({ ...ALL_NFTS[i + 4], balance: nft?.balance ?? 0 });
+          }
+        } catch (e: unknown) {
+          // mostly access nft metadata failed
+          if (e.message === "GET_LYNKS_ERROR") {
+            return;
+          }
         }
 
         // TODO: new nova points booster NFTs
