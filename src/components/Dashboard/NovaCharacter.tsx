@@ -245,12 +245,12 @@ export default function NovaCharacter() {
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
         await drawRef?.current?.start(getDrawIndexWithPrizeTokenId(tokenId)); //do the draw animation; use index of image for active
         // await sleep(2000);
-        setDrawedNftId(tokenId);
         if (tokenId === 5) {
           // 5 means no prize
           setUpdate((update) => update + 1);
           // return;
         } else if ([6, 7, 8, 9].includes(tokenId)) {
+          await sleep(2000);
           setDrawedNftId(undefined);
           //not actual nft. Just points.
           setTrademarkMintStatus(MintStatus.Success);
@@ -267,6 +267,7 @@ export default function NovaCharacter() {
           eventBus.emit("getInvite");
           eventBus.emit("getAccountPoint");
         }
+        setDrawedNftId(tokenId);
       }
       setUpdate((update) => update + 1);
       return; // draw first and then mint as step2.
@@ -597,7 +598,7 @@ export default function NovaCharacter() {
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
-              {isInvaidChain && "Switch to Nova network to mint"}
+              {isInvaidChain && "Switch to Nova network to draw"}
               {!isInvaidChain &&
                 (!drawedNftId || drawedNftId === 5 || drawing) &&
                 `Draw ( ${remainDrawCount} )`}
@@ -682,7 +683,11 @@ export default function NovaCharacter() {
               )}
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
-                  <p className="text-[#C0C0C0]">You have successfully minted</p>
+                  <p className="text-[#C0C0C0]">
+                    {mintResult?.name.includes("Nova points")
+                      ? "You have received"
+                      : "You have successfully minted"}
+                  </p>
                   <img
                     src={mintResult?.img}
                     alt=""
@@ -694,23 +699,32 @@ export default function NovaCharacter() {
                   </p>
                 </div>
               )}
-              <div className="mt-6">
-                {trademarkMintStatus === MintStatus.Success && (
-                  <Button
-                    className="w-full gradient-btn"
-                    onClick={() =>
-                      window.open(
-                        mintResult?.name.includes("Lynks")
-                          ? LYNKS_NFT_MARKET_URL
-                          : TRADEMARK_NFT_MARKET_URL,
-                        "_blank"
-                      )
-                    }
-                  >
-                    Trade in Alienswap
-                  </Button>
-                )}
-              </div>
+              {trademarkMintStatus === MintStatus.Success && (
+                <div className="mt-6">
+                  {mintResult?.name.includes("Nova points") ? (
+                    <Button
+                      className="w-full gradient-btn"
+                      onClick={() => trademarkMintModal.onClose()}
+                    >
+                      Confirm
+                    </Button>
+                  ) : (
+                    <Button
+                      className="w-full gradient-btn"
+                      onClick={() =>
+                        window.open(
+                          mintResult?.name.includes("Lynks")
+                            ? LYNKS_NFT_MARKET_URL
+                            : TRADEMARK_NFT_MARKET_URL,
+                          "_blank"
+                        )
+                      }
+                    >
+                      Trade in Alienswap
+                    </Button>
+                  )}
+                </div>
+              )}
             </TxResult>
           </ModalBody>
         </ModalContent>
