@@ -493,15 +493,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
     } finally {
       setOpening(false);
     }
-  }, [
-    address,
-    boxTokenIds,
-    getMysteryboxNFTV2,
-    isInvaidChain,
-    mysteryBoxNFTV2,
-    switchChain,
-    update,
-  ]);
+  }, [address, boxTokenIds, getMysteryboxNFTV2, isInvaidChain, mysteryBoxNFTV2, sendMysteryBurnTxV2, switchChain, update]);
 
   /**
    * Open process:

@@ -27,6 +27,7 @@ import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { eventBus } from "@/utils/event-bus";
+import { Abi } from "viem";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -112,9 +113,10 @@ export default function NovaCharacter() {
     sendTrademarkApproveTx,
     sendUpgradeSBTTx,
     isApproving,
+    publicClient,
   } = useNovaDrawNFT();
 
-  const { updateRefreshBalanceId } = useMintStatus();
+  const { refreshBalanceId, updateRefreshBalanceId } = useMintStatus();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
 
@@ -137,7 +139,8 @@ export default function NovaCharacter() {
   const [upgradable, setUpgradable] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
   const [lynksBalance, setLynksBalance] = useState(0);
-
+  const [checkingTrademarkUpgradable, setCheckingTrademarkUpgradable] =
+    useState(false);
   useEffect(() => {
     console.log("nft: ", nft);
     console.log("upgradable: ", upgradable);
@@ -161,11 +164,24 @@ export default function NovaCharacter() {
           address,
         ])) as bigint;
         setLynksBalance(Number(lynksBalance));
-        const trademarkBalances = (await Promise.all(
-          [1, 2, 3, 4].map((item) =>
-            trademarkNFT.read.balanceOf([address, item])
-          )
-        )) as bigint[];
+        // const trademarkBalances = (await Promise.all(
+        //   [1, 2, 3, 4].map((item) =>
+        //     trademarkNFT.read.balanceOf([address, item])
+        //   )
+        // )) as bigint[];
+        setCheckingTrademarkUpgradable(true);
+        const trademarkBalancesCall = await publicClient?.multicall({
+          contracts: [1, 2, 3, 4].map((item) => ({
+            address: trademarkNFT.address,
+            abi: trademarkNFT.abi as Abi,
+            functionName: "balanceOf",
+            args: [address, item],
+          })),
+        });
+        const trademarkBalances =
+          trademarkBalancesCall?.map(
+            (item) => Number(item.result?.toString()) ?? 0
+          ) ?? [];
         console.log("trademarkBalances: ", trademarkBalances);
         if (
           // Number(lynksBalance) === 0 &&
@@ -178,9 +194,10 @@ export default function NovaCharacter() {
         } else {
           setUpgradable(false);
         }
+        setCheckingTrademarkUpgradable(false);
       }
     })();
-  }, [address, trademarkNFT, lynksNFT, update]);
+  }, [address, trademarkNFT, lynksNFT, update, publicClient, refreshBalanceId]);
 
   const [showTooltip1, setShowTooltip1] = useState(false);
 
@@ -493,7 +510,9 @@ export default function NovaCharacter() {
             <div className="grow">
               <Button
                 onClick={handleMintNow}
-                isLoading={fetchLoading || mintLoading}
+                isLoading={
+                  fetchLoading || mintLoading || checkingTrademarkUpgradable
+                }
                 isDisabled={!!nft && !upgradable}
                 className={classNames(
                   "w-full gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
