@@ -224,7 +224,14 @@ export default function NovaPoints(props: INovaPointsProps) {
       okxPoints +
       kolPoints
     );
-  }, [novaPoints, referPoints, layerbankNovaPoints, invite?.points]);
+  }, [
+    novaPoints,
+    referPoints,
+    layerbankNovaPoints,
+    trademarkPoints,
+    okxPoints,
+    kolPoints,
+  ]);
 
   return (
     <>
