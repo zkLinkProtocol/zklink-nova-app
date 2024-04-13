@@ -23,6 +23,11 @@ export const BgBox = styled.div`
   );
 
   overflow: auto;
+
+  .before:before {
+    content: "•";
+    margin-right: 5px;
+  }
 `;
 const ActiveTypes = [
   { label: "NOVA Points", value: "points" },
@@ -41,62 +46,133 @@ const Link = styled.span`
 export default function Bridge() {
   const [activeType, setActiveType] = useState(ActiveTypes[0].value);
   const NovaPoints = () => (
-    <div className="text-base mt-8">
-      <p className="font-normal">
-        You can see the detail and formula of how we calculate Nova points{" "}
-        <a
-          href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
-          target="_blank"
-          style={{ color: "#03d498" }}
-        >
-          here
-        </a>
-      </p>
-      <p className="mt-6 font-bold">Minimal Entry: </p>
-      <ul className="list mb-8">
-        <li>1. First 7 days 0.1 ETH</li>
-        <li>2. After the 7th day 0.25 ETH</li>
-      </ul>
-      <p className="mt-6">
-        <span className="font-bold">Deposit / Bridge Assets to Nova: </span>
-        Bridging any supported assets to Nova can instantly earn Nova points.
-      </p>
-      <p className="mt-6">
-        <span className="font-bold"> Holding assets on Nova: </span>
-        Holding any supported assets on Nova allows you to accrue Nova points
-        every 8 hours until the final Nova Point computation date.
-      </p>
-      <p className="mt-6">
-        <span className="font-bold"> Referral Rewards: </span>
-        By inviting friends, you can earn 10% of the Nova points they earn
-        throughout the duration of the Aggregation Parade.
-      </p>
+    <>
+      <div className="text-base mt-8">
+        <h2 className="text-[1.5rem] text-[#fff] font-[700]">
+          Aggregation Parade Phase II - Updates
+        </h2>
+        <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          The minimal entry requirement is dropped from 0,25ETH/ equivalent to{" "}
+          <b className="text-[#fff] font-[700]">0.1ETH/ equivalent</b>.
+        </p>
+        <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          Anti-Sybil measures will be taken once withdrawal is available, such
+          as{" "}
+          <b className="text-[#fff] font-[700]">canceling the deposit boost</b>.
+        </p>
 
-      <p className="mt-6">
-        <span className="font-bold">Multiplier: </span>
-        <br />
-        <span className="font-bold">Early Bird Multiplier: </span>
-        During Phase 1 of the Nova Aggregation Parade, withdrawals are
-        temporarily restricted for a Maximum of 30 days.
-      </p>
-      <p className="mt-6">
-        <span className="font-bold">Token Multiplier: </span>
-        Tokens are categorized into three tiers, with higher liquidity tokens
-        receiving more Nova Points.
-      </p>
-      <p className="mt-6">
-        <span className="font-bold"> Deposit Multiplier: </span>
-        After making a valid deposit, you will instantly receive a x10 Nova
-        Points boost.
-      </p>
-      <p className="mt-6">
-        <span className="font-bold"> Group Multiplier: </span>
-        You, along with the users you've referred and their subsequent
-        referrals, will be placed into the same group. This group has the
-        potential to unlock Group Booster by achieving the following
-        Milestones. 
-      </p>
-    </div>
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          ❤️ Rewarding Loyal Users of Aggregation Parade:
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>
+            RAll users’ points will be boosted by a Loyalty Booster, which in
+            proportion to the days they joined the Agg parade:
+          </p>
+          <ul>
+            <li className="before">
+              Loyalty Booster= 0.5% * num of days they joined
+            </li>
+            <li className="before">
+              Nova point_after the boost= (1+loyalty booster) * Nova
+              point_before the boost
+            </li>
+          </ul>
+        </div>
+
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          🚀 Token Merge Bonus (begins 10AM Apr 9, 2024 UTC), unlock another
+          chance to boost your Nova points!
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>💎merged wBTC: 3x;</p>
+          <p>💎merged stablecoins: 2.5x</p>
+        </div>
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          💡 Ecosystem Bootstrap Bonuses:
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>
+            Engage with Nova dApps for additional Nova point incentives (1.5 -
+            2x boost for asset interactions). Read more details{" "}
+            <a
+              href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+              target="_blank"
+              style={{ color: "#03d498" }}
+            >
+              here
+            </a>
+            .
+            <br />
+            <br />
+            More ECO DApps bonus boost will be updated by Apr 14th, 2024
+          </p>
+        </div>
+      </div>
+      <div className="text-base mt-8">
+        <h2 className="text-[1.5rem] text-[#fff] font-[700]">
+          Aggregation Parade Phase I
+        </h2>
+        <p className="mt-[0.75rem] font-normal">
+          You can see the detail and formula of how we calculate Nova points{" "}
+          <a
+            href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+            target="_blank"
+            style={{ color: "#03d498" }}
+          >
+            here
+          </a>
+          .
+          <br />
+          <br />
+          More ECO DApps bonus boost will be updated by Apr 14th, 2024
+        </p>
+        <p className="mt-6 font-bold">Minimal Entry: </p>
+        <ul className="list mb-8">
+          <li>1. First 7 days 0.1 ETH</li>
+          <li>2. After the 7th day 0.25 ETH</li>
+        </ul>
+        <p className="mt-6">
+          <span className="font-bold">Deposit / Bridge Assets to Nova: </span>
+          Bridging any supported assets to Nova can instantly earn Nova points.
+        </p>
+        <p className="mt-6">
+          <span className="font-bold"> Holding assets on Nova: </span>
+          Holding any supported assets on Nova allows you to accrue Nova points
+          every 8 hours until the final Nova Point computation date.
+        </p>
+        <p className="mt-6">
+          <span className="font-bold"> Referral Rewards: </span>
+          By inviting friends, you can earn 10% of the Nova points they earn
+          throughout the duration of the Aggregation Parade.
+        </p>
+
+        <p className="mt-6">
+          <span className="font-bold">Multiplier: </span>
+          <br />
+          <span className="font-bold">Early Bird Multiplier: </span>
+          During Phase 1 of the Nova Aggregation Parade, withdrawals are
+          temporarily restricted for a Maximum of 30 days.
+        </p>
+        <p className="mt-6">
+          <span className="font-bold">Token Multiplier: </span>
+          Tokens are categorized into three tiers, with higher liquidity tokens
+          receiving more Nova Points.
+        </p>
+        <p className="mt-6">
+          <span className="font-bold"> Deposit Multiplier: </span>
+          After making a valid deposit, you will instantly receive a x10 Nova
+          Points boost.
+        </p>
+        <p className="mt-6">
+          <span className="font-bold"> Group Multiplier: </span>
+          You, along with the users you've referred and their subsequent
+          referrals, will be placed into the same group. This group has the
+          potential to unlock Group Booster by achieving the following
+          Milestones.
+        </p>
+      </div>
+    </>
   );
 
   const NovaNFT = () => (
