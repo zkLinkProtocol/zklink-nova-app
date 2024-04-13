@@ -50,6 +50,8 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   const lynksNFTImg = useMemo(() => {
     if (sbtNFT) {
       return `/img/img-mystery-box-lynks-${sbtNFT.name}.png`;
+    } else {
+      return `/img/img-mystery-box-lynks-ENTP.png`;
     }
   }, [sbtNFT]);
 
