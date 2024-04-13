@@ -199,6 +199,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
     novaETHBalance,
     getMysteryboxNFT,
     publicClient,
+    sendMysteryBurnTx,
   } = useNovaNFT();
   const { address, chainId } = useAccount();
   const [allNFTs, setAllNFTs] =
@@ -447,7 +448,8 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
     if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
     try {
       setOpening(true);
-      await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
+      // await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
+      await sendMysteryBurnTx(boxTokenIds[0]);
       const res = await openMysteryboxNFT(address); // draw prize
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
