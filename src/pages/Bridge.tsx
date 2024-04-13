@@ -102,7 +102,60 @@ export default function Bridge() {
   const NovaNFT = () => (
     <>
       <div className="text-base mt-8">
-        <p className="font-normal">
+        <h2 className="text-[1.5rem] text-[#fff] font-[700]">
+          Aggregation Parade Phase II - Updates
+        </h2>
+        <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500] ">
+          <b className="text-[#fff] font-[700]">INITIAL ONE-TIME BOOST</b> in
+          Phase I will conclude and Nova points will be calculated and settled
+          for campaign participants
+        </p>
+
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          🙆 Rewarding zkLink’s Oldest Friends:
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>
+            Rewards including point boosters, NFT trademarks, and Lynks, will be
+            dropped randomly to past campaign participants. (See examples of
+            past campaigns below)
+          </p>
+          <ul>
+            <li className="before">
+              zkLink Nexus Playground Alpha Mainnet Celebration Campaign
+            </li>
+            <li className="before">zkLink Summer Tour</li>
+            <li className="before">Dunkirk Asset Recovery Test</li>
+            <li className="before">zkLink loyalty NFT</li>
+          </ul>
+        </div>
+
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          🎁 Mystery Box Season 2 (Starting April 9):
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>Increased drops from 100 to 1000.</p>
+          <p>
+            100 drops exclusive to the top 100 leaderboard, 900 randomly dropped
+            to active campaign referrers. (See Rarity below)
+          </p>
+        </div>
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          🎁 Invite Box
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>
+            Per 3 referrals will not get an “Invite Box” instead of a chance to
+            unlock a trademark.
+          </p>
+        </div>
+      </div>
+      <div className="text-base mt-8">
+        <h2 className="text-[1.5rem] text-[#fff] font-[700]">
+          Aggregation Parade Phase I
+        </h2>
+
+        <p className="mt-[0.75rem] font-normal">
           You will be able to mint one of the four Nova SBT once you bridge a
           minimal worth of 0.1 ETH.
         </p>
