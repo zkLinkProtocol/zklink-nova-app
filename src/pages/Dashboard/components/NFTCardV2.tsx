@@ -320,16 +320,21 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         for (let i = 0; i < 4; i++) {
           nfts.push({ ...ALL_NFTS[i], balance: Number(trademarkBalances[i]) });
         }
-
-        const lynksBalances = await getLynksNFT(address);
-        console.log("lynksBalances: ", lynksBalances);
-        for (let i = 0; i < 4; i++) {
-          const nft = lynksBalances?.find((item) =>
-            item.name.includes(ALL_NFTS[i + 4].type!)
-          );
-          nfts.push({ ...ALL_NFTS[i + 4], balance: nft?.balance ?? 0 });
+        try {
+          const lynksBalances = await getLynksNFT(address);
+          console.log("lynksBalances: ", lynksBalances);
+          for (let i = 0; i < 4; i++) {
+            const nft = lynksBalances?.find((item) =>
+              item.name.includes(ALL_NFTS[i + 4].type!)
+            );
+            nfts.push({ ...ALL_NFTS[i + 4], balance: nft?.balance ?? 0 });
+          }
+        } catch (e: unknown) {
+          // mostly access nft metadata failed
+          if (e.message === "GET_LYNKS_ERROR") {
+            return;
+          }
         }
-
         const boosterBalancesV2Call = await publicClient?.multicall({
           contracts: Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) => ({
             address: boosterNFTV2.address,
@@ -493,7 +498,16 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
     } finally {
       setOpening(false);
     }
-  }, [address, boxTokenIds, getMysteryboxNFTV2, isInvaidChain, mysteryBoxNFTV2, sendMysteryBurnTxV2, switchChain, update]);
+  }, [
+    address,
+    boxTokenIds,
+    getMysteryboxNFTV2,
+    isInvaidChain,
+    mysteryBoxNFTV2,
+    sendMysteryBurnTxV2,
+    switchChain,
+    update,
+  ]);
 
   /**
    * Open process:
@@ -551,6 +565,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
       await sendMysteryOpenMintTxV2(params);
       setMintStatus(MintStatus.Success);
       setUpdate((update) => update + 1);
+      updateRefreshBalanceId();
       setDrawPrizeId(-1);
       let resultName = "",
         resultImg = "";
