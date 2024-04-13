@@ -96,7 +96,7 @@ export default function Bridge() {
             Engage with Nova dApps for additional Nova point incentives (1.5 -
             2x boost for asset interactions). Read more details{" "}
             <a
-              href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+              href="https://blog.zk.link/aggregation-parade-phase-ii-defis-turn-to-blossom-on-zklink-nova-7b30e2ab1d82"
               target="_blank"
               style={{ color: "#03d498" }}
             >
