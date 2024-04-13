@@ -185,135 +185,6 @@ export default function About() {
           Nova points which impacts your final reward.
         </div>
 
-        <div className="paragraph title title-1">
-          Aggregation Parade Phase II begins 10AM April 14, 2024 UTC
-        </div>
-        <div className="paragraph title title-2">📢 Important Updates:</div>
-        <div className="paragraph">
-          <p>
-            1. INITIAL ONE-TIME BOOST in Phase I will conclude and Nova points
-            will be calculated and settled for campaign participants
-          </p>
-          <p>
-            2. The minimal entry requirement is dropped from 0,25ETH/ equivalent
-            to 0.1ETH/ equivalent.
-          </p>
-          <p>
-            3. All users will earn “loyalty”boosters in proportion to the days
-            they joined the Agg parade.
-          </p>
-          <p>4. Referral CAP for each referral increases from 30 to 100</p>
-          <p className="ml-4">
-            a. Per 3 referrals will not get an “Invite Box” instead of a chance
-            to unlock a trademark (Invite Box rarity will be updated soon)
-          </p>
-          <p>5. Mystery Box Season 2 to kick start on 10AM Apr 9, 2024 UTC</p>
-          <p>
-            6.Phase II will reward loyal zkLinkers to express appreciation for
-            your long term dedication and support
-          </p>
-          <p>
-            7.Anti-Sybil measures will be taken once withdrawal is available,
-            such as canceling the deposit boost.
-          </p>
-          <p>8. 2 key highlights of Phase II entail:</p>
-          <p className="ml-4">a. Token Merge begins 10AM Apr 9, 2024 UTC</p>
-          <p className="ml-4">b. Ecosystem Bootstrap</p>
-        </div>
-        <div className="paragraph title title-2">
-          📈 Invite more friends to the Aggregation Parade!:
-        </div>
-        <div className="paragraph">
-          Referral code limit increases from 30 to 100.
-        </div>
-        <div className="paragraph">
-          <img
-            src="/img/about-referral-rules-v2.png"
-            className="w-full"
-            onLoad={scrollToAnchor}
-          />
-        </div>
-        <div className="paragraph title title-2">
-          🎁 Mystery Box Season 2 (Starting April 9):
-        </div>
-        <div className="paragraph">
-          <p>Increased drops from 100 to 1000.</p>
-          <p>
-            100 drops exclusive to the top 100 leaderboard, 900 randomly dropped
-            to active campaign referrers. (See Rarity below)
-          </p>
-        </div>
-        <div className="paragraph">
-          <img
-            src="/img/about-aggregation-parade-v2.png"
-            className="w-full"
-            onLoad={scrollToAnchor}
-          />
-        </div>
-
-        <div className="paragraph title title-2">
-          🙆 Rewarding zkLink’s Oldest Friends:
-        </div>
-
-        <div className="paragraph">
-          <p>
-            Rewards including point boosters, NFT trademarks, and Lynks, will be
-            dropped randomly to past campaign participants. (See examples of
-            past campaigns below)
-          </p>
-
-          <ul>
-            <li className="before">
-              zkLink Nexus Playground Alpha Mainnet Celebration Campaign
-            </li>
-            <li className="before">zkLink Summer Tour</li>
-            <li className="before">Dunkirk Asset Recovery Test</li>
-            <li className="before">zkLink loyalty NFT</li>
-          </ul>
-        </div>
-
-        <div className="paragraph title title-2">
-          ❤️ Rewarding Loyal Users of Aggregation Parade:
-        </div>
-        <div className="paragraph">
-          <p>
-            All users' points will be boosted by a Loyalty Booster, which in
-            proportion to the days they joined the Agg parade:
-          </p>
-          <ul>
-            <li className="before">
-              Loyalty Booster= 0.5% * num of days they joined
-            </li>
-            <li className="before">
-              Nova point_after the boost= (1+loyalty booster) * Nova
-              point_before the boost
-            </li>
-          </ul>
-        </div>
-
-        <div className="paragraph title title-2">
-          🚀 Token Merge Bonus (begins 10AM Apr 9, 2024 UTC), unlock another
-          chance to boost your Nova points!
-        </div>
-
-        <div className="paragraph">
-          <p>💎merged wBTC: 3x;</p>
-          <p>💎merged stablecoins: 2.5x</p>
-        </div>
-
-        <div className="paragraph title title-2">
-          💡 Ecosystem Bootstrap Bonuses:
-        </div>
-        <div className="paragraph">
-          Engage with Nova dApps for additional Nova point incentives (1.5 - 2x
-          boost for asset interactions). Read more details here. More ECO DApps
-          bonus boost will be updated by Apr 14th, 2024
-        </div>
-
-        <div className="paragraph title title-1 mt-[6rem]">
-          Aggregation Parade Phase I
-        </div>
-
         <div className="paragraph1 title title-2">How to earn Nova points?</div>
         <div className="paragraph">
           You can see the detail and formula of how we calculate Nova points{" "}
@@ -487,6 +358,154 @@ export default function About() {
           <div className="before">Future NFT whitelist</div>
           <div className="before">zkLink on-site event access</div>
         </div>
+
+        <div>
+          <div className="paragraph title title-1">
+            Aggregation Parade Phase II begins 10AM April 14, 2024 UTC
+          </div>
+          <div className="paragraph title title-2">📢 Important Updates</div>
+          <div className="paragraph">
+            <p>
+              1. <b className="text-[#fff]">INITIAL ONE-TIME BOOST</b> in Phase
+              I will conclude and Nova points will be calculated and settled for
+              campaign participants.
+            </p>
+            <p>
+              2. The minimal entry requirement is dropped from 0.25ETH/
+              equivalent to 0.1ETH/ equivalent.
+            </p>
+            <p>
+              3. All users will earn “loyalty” boosters in proportion to the
+              days they joined the Agg parade.
+            </p>
+            <p>4. Referral CAP for each referral increases from 30 to 100.</p>
+            <p className="ml-4">
+              a. Per 3 referrals will get an “Invite Box” instead of a chance to unlock a trademark.
+            </p>
+            <p>
+              5. Mystery Box Season 2 to kick start on{" "}
+              <b className="text-[#fff] font-[700]">10AM Apr 9, 2024 UTC</b>.
+            </p>
+            <p>
+              6.Phase II will reward loyal zkLinkers to express appreciation for
+              your long term dedication and support.
+            </p>
+            <p>
+              7.Anti-Sybil measures will be taken once withdrawal is available,
+              such as canceling the deposit boost.
+            </p>
+            <p>8. 2 key highlights of Phase II entail:</p>
+            <p className="ml-4">
+              a. Token Merge begins{" "}
+              <b className="text-[#fff] font-[700]">10AM Apr 9, 2024 UTC</b>.
+            </p>
+            <p className="ml-4">
+              b. Ecosystem Bootstrap (More details to be revealed on 10AM April
+              14, 2024 UTC).
+            </p>
+          </div>
+          <div className="paragraph title title-2">
+            📈 Invite more friends to the Aggregation Parade!
+          </div>
+          <div className="paragraph">
+            Referral code limit increases from 30 to 100.
+          </div>
+          <div className="paragraph">
+            <img
+              src="/img/about-referral-rules-v2.png"
+              className="w-full"
+              onLoad={scrollToAnchor}
+            />
+          </div>
+
+          <div className="paragraph title">Invite Box rarity</div>
+          <div className="paragraph">
+            <img src="/img/about-invite-box-rarity.png" className="w-full" />
+          </div>
+
+          <div className="paragraph title title-2">
+            🎁 Mystery Box Season 2{" "}
+            <b className="text-[#fff] font-[700]">(Starting April 9)</b>
+          </div>
+          <div className="paragraph">
+            <p>Increased drops from 100 to 1000.</p>
+            <p>
+              100 drops exclusive to the top 100 leaderboard, 900 randomly
+              dropped to active campaign referrers. (See Rarity below)
+            </p>
+          </div>
+          <div className="paragraph">
+            <img
+              src="/img/about-aggregation-parade-v2.png"
+              className="w-full"
+              onLoad={scrollToAnchor}
+            />
+          </div>
+
+          <div className="paragraph title title-2">
+            🙆 Rewarding zkLink’s Oldest Friends
+          </div>
+
+          <div className="paragraph">
+            <p>
+              Rewards including point boosters, NFT trademarks, and Lynks, will
+              be dropped randomly to past campaign participants. (See examples
+              of past campaigns below)
+            </p>
+
+            <ul>
+              <li className="before">
+                zkLink Nexus Playground Alpha Mainnet Celebration Campaign
+              </li>
+              <li className="before">zkLink Summer Tour</li>
+              <li className="before">Dunkirk Asset Recovery Test</li>
+              <li className="before">zkLink loyalty NFT</li>
+            </ul>
+          </div>
+
+          <div className="paragraph title title-2">
+            ❤️ Rewarding Loyal Users of Aggregation Parade
+          </div>
+          <div className="paragraph">
+            <p>
+              All users' points will be boosted by a Loyalty Booster, which in
+              proportion to the days they joined the Aggregation:
+            </p>
+            <ul>
+              <li className="before">
+                Loyalty Booster= 0.5% * num of days they joined
+              </li>
+              <li className="before">
+                Nova point_after the boost= (1+loyalty booster) * Nova
+                point_before the boost
+              </li>
+            </ul>
+          </div>
+
+          <div className="paragraph title title-2">
+            🚀 Token Merge Bonus{" "}
+            <b className="text-[#fff] font-[700]">
+              (begins 10AM Apr 9, 2024 UTC)
+            </b>
+            , unlock another chance to boost your Nova points!
+          </div>
+
+          <div className="paragraph">
+            <p>💎merged wBTC: 3x;</p>
+            <p>💎merged stablecoins: 2.5x</p>
+          </div>
+
+          <div className="paragraph title title-2">
+            💡 Ecosystem Bootstrap Bonuses
+          </div>
+          <div className="paragraph">
+            Engage with Nova dApps for additional Nova point incentives (1.5 -
+            2x boost for asset interactions). More ECO
+            DApps bonus boost will be updated by{" "}
+            <b className="text-[#fff] font-[700]">Apr 14th, 2024</b>
+          </div>
+        </div>
+
         <div className="paragraph title title-2">Timeline</div>
         <div className="paragraph">
           <div className="title">Phase 1: Aggregation Phase</div>

@@ -213,7 +213,7 @@ export default function Bridge() {
           <p>Increased drops from 100 to 1000.</p>
           <p>
             100 drops exclusive to the top 100 leaderboard, 900 randomly dropped
-            to active campaign referrers. (See Rarity below)
+            to active campaign referrers.
           </p>
         </div>
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
@@ -221,7 +221,7 @@ export default function Bridge() {
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
           <p>
-            Per 3 referrals will not get an “Invite Box” instead of a chance to
+            Per 3 referrals will get an “Invite Box” instead of a chance to
             unlock a trademark.
           </p>
         </div>
