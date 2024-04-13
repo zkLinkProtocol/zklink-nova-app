@@ -266,8 +266,9 @@ export default function NovaCharacter() {
           //TODO refresh points;
           eventBus.emit("getInvite");
           eventBus.emit("getAccountPoint");
+        } else {
+          setDrawedNftId(tokenId);
         }
-        setDrawedNftId(tokenId);
       }
       setUpdate((update) => update + 1);
       return; // draw first and then mint as step2.

@@ -338,6 +338,58 @@ const useNovaDrawNFT = () => {
     }
   };
 
+  const sendMysteryBurnTx = async (tokenId:number) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: MYSTERY_BOX_CONTRACT as Hash,
+        abi: NovaMysteryBoxNFT as Abi,
+        functionName: "burn",
+        args: [tokenId],
+      };
+
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const sendMysteryBurnTxV2 = async (tokenId:number) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: MYSTERY_BOX_CONTRACT_V2 as Hash,
+        abi: NovaMysteryBoxNFT as Abi,
+        functionName: "burn",
+        args: [tokenId],
+      };
+
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const sendMysteryMintTx = async (params: MysteryboxMintParams) => {
     if (!address) return;
     try {
@@ -558,6 +610,8 @@ const useNovaDrawNFT = () => {
     isTrademarkApproved,
     sendTrademarkApproveTx,
     isApproving,
+    sendMysteryBurnTx,
+    sendMysteryBurnTxV2
   };
 };
 
