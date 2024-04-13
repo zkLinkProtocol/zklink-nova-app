@@ -206,6 +206,8 @@ export default function NovaCharacter() {
   const lynksNFTImg = useMemo(() => {
     if (nft) {
       return `/img/img-mystery-box-lynks-${nft.name}.png`;
+    } else {
+      return `/img/img-mystery-box-lynks-ENTP.png`;
     }
   }, [nft]);
 
