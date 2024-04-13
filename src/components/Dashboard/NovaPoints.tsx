@@ -261,7 +261,9 @@ export default function NovaPoints(props: INovaPointsProps) {
                 <div>
                   <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by Your Deposit and Holding</span>
-                    <span>{formatNumberWithUnit(novaPoints)}</span>
+                    <span>
+                      {formatNumberWithUnit(novaPoints + okxPoints + kolPoints)}
+                    </span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by Referring Friends</span>
@@ -275,14 +277,14 @@ export default function NovaPoints(props: INovaPointsProps) {
                     <span>Earned by opening invite box</span>
                     <span>{trademarkPoints}</span>
                   </p>
-                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                  {/* <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by OKX points</span>
                     <span>{okxPoints}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by KOL points</span>
                     <span>{formatNumberWithUnit(kolPoints)}</span>
-                  </p>
+                  </p> */}
                 </div>
               )}
             />
