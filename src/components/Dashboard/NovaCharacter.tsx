@@ -584,7 +584,7 @@ export default function NovaCharacter() {
         isOpen={drawModal.isOpen}
         onOpenChange={drawModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem] py-4 px-4">
+        <ModalContent className="mt-[2rem] py-4 md:px-4 h-[100vh] overflow-auto md:h-auto">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Draw and Earn your invite rewards
           </ModalHeader>
@@ -630,7 +630,7 @@ export default function NovaCharacter() {
             </span>
           </Button>
           <Button
-            className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
+            className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]"
             onClick={() => drawModal.onClose()}
           >
             Close
