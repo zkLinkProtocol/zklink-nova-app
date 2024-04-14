@@ -57,9 +57,9 @@ export default function Bridge() {
           <b className="text-[#fff] font-[700]">0.1ETH/ equivalent</b>.
         </p>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          Anti-Sybil measures will be taken once withdrawal is available, such
-          as{" "}
-          <b className="text-[#fff] font-[700]">canceling the deposit boost</b>.
+          Anti-Sybil measures will be taken once withdrawal is available. For
+          instance, users won't have access to the 10x Nova Points deposit boost
+          when they deposit assets.
         </p>
 
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">

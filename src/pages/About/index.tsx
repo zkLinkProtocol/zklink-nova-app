@@ -394,8 +394,9 @@ export default function About() {
               your long term dedication and support.
             </p>
             <p>
-              7.Anti-Sybil measures will be taken once withdrawal is available,
-              such as canceling the deposit boost.
+              7.Anti-Sybil measures will be taken once withdrawal is available.
+              For instance, users won't have access to the 10x Nova Points
+              deposit boost when they deposit assets.
             </p>
             <p>8. 2 key highlights of Phase II entail:</p>
             <p className="ml-4">

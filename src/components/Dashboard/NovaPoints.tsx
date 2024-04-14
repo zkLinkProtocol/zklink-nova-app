@@ -324,14 +324,13 @@ export default function NovaPoints(props: INovaPointsProps) {
                   {invite?.kolGroup && (
                     <p className="mt-[0.5rem]">Referral Booster: 5%</p>
                   )}
-                  <br />
-                  <a
+                  {/* <a
                     href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
                     target="_blank"
                     className="text-[#0bc48f]"
                   >
                     Learn More
-                  </a>
+                  </a> */}
                 </div>
               )}
             />
