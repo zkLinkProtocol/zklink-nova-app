@@ -52,7 +52,8 @@ export default function Bridge() {
           Aggregation Parade Phase II - Updates
         </h2>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          The minimal entry requirement is dropped from 0,25ETH/ equivalent to{" "}
+          The minimal entry requirement has been lowered from 0.25ETH/
+          equivalent to{" "}
           <b className="text-[#fff] font-[700]">0.1ETH/ equivalent</b>.
         </p>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
@@ -66,8 +67,8 @@ export default function Bridge() {
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
           <p>
-            RAll users’ points will be boosted by a Loyalty Booster, which in
-            proportion to the days they joined the Agg parade:
+            All users' points will be boosted by a Loyalty Booster, which is
+            calculated in proportion to the days they joined the Agg parade:
           </p>
           <ul>
             <li className="before">

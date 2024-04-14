@@ -371,16 +371,19 @@ export default function About() {
               campaign participants.
             </p>
             <p>
-              2. The minimal entry requirement is dropped from 0.25ETH/
+              2. The minimal entry requirement has been lowered from 0.25ETH/
               equivalent to 0.1ETH/ equivalent.
             </p>
             <p>
               3. All users will earn “loyalty” boosters in proportion to the
               days they joined the Agg parade.
             </p>
-            <p>4. Referral CAP for each referral increases from 30 to 100.</p>
+            <p>
+              4. Referral CAP for each referral is increased from 30 to 100.
+            </p>
             <p className="ml-4">
-              a. Per 3 referrals will get an “Invite Box” instead of a chance to unlock a trademark.
+              a. Per 3 referrals will get an “Invite Box” instead of a chance to
+              unlock a trademark.
             </p>
             <p>
               5. Mystery Box Season 2 to kick start on{" "}
@@ -428,7 +431,7 @@ export default function About() {
             <b className="text-[#fff] font-[700]">(Starting April 9)</b>
           </div>
           <div className="paragraph">
-            <p>Increased drops from 100 to 1000.</p>
+            <p>Drops increased from 100 to 1000.</p>
             <p>
               100 drops exclusive to the top 100 leaderboard, 900 randomly
               dropped to active campaign referrers. (See Rarity below)
@@ -443,7 +446,7 @@ export default function About() {
           </div>
 
           <div className="paragraph title title-2">
-            🙆 Rewarding zkLink’s Oldest Friends
+            🙆 Rewarding zkLink's Oldest Friends
           </div>
 
           <div className="paragraph">
@@ -468,8 +471,8 @@ export default function About() {
           </div>
           <div className="paragraph">
             <p>
-              All users' points will be boosted by a Loyalty Booster, which in
-              proportion to the days they joined the Aggregation:
+              All users' points will be boosted by a Loyalty Booster, which is
+              calculated in proportion to the days they joined the Aggregation:
             </p>
             <ul>
               <li className="before">
@@ -500,9 +503,8 @@ export default function About() {
           </div>
           <div className="paragraph">
             Engage with Nova dApps for additional Nova point incentives (1.5 -
-            2x boost for asset interactions). More ECO
-            DApps bonus boost will be updated by{" "}
-            <b className="text-[#fff] font-[700]">Apr 14th, 2024</b>
+            2x boost for asset interactions). More ECO DApps bonus boost will be
+            updated by <b className="text-[#fff] font-[700]">Apr 14th, 2024</b>
           </div>
         </div>
 
