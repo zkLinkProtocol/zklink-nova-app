@@ -34,6 +34,7 @@ import { useMintStatus } from "@/hooks/useMintStatus";
 import classNames from "classnames";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { Abi } from "viem";
 
 const NftBox = styled.div`
   .nft-left {
@@ -197,6 +198,8 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
     loading: mintLoading,
     novaETHBalance,
     getMysteryboxNFT,
+    publicClient,
+    sendMysteryBurnTx,
   } = useNovaNFT();
   const { address, chainId } = useAccount();
   const [allNFTs, setAllNFTs] =
@@ -282,31 +285,61 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
       try {
         setRefreshing(true);
         const nfts = [];
-        const trademarkBalances = await Promise.all(
-          [1, 2, 3, 4].map((item) =>
-            trademarkNFT.read.balanceOf([address, item])
-          )
-        );
+        const trademarkBalancesCall = await publicClient?.multicall({
+          contracts: [1, 2, 3, 4].map((item) => ({
+            address: trademarkNFT.address,
+            abi: trademarkNFT.abi as Abi,
+            functionName: "balanceOf",
+            args: [address, item],
+          })),
+        });
+        const trademarkBalances =
+          trademarkBalancesCall?.map((item) => item.result?.toString() ?? 0) ??
+          [];
+        // const trademarkBalances = await Promise.all(
+        //   [1, 2, 3, 4].map((item) =>
+        //     trademarkNFT.read.balanceOf([address, item])
+        //   )
+        // );
         console.log("trademarkBalances: ", trademarkBalances);
         for (let i = 0; i < 4; i++) {
           nfts.push({ ...ALL_NFTS[i], balance: Number(trademarkBalances[i]) });
         }
 
-        const lynksBalances = await getLynksNFT(address);
-        console.log("lynksBalances: ", lynksBalances);
-        for (let i = 0; i < 4; i++) {
-          const nft = lynksBalances?.find((item) =>
-            item.name.includes(ALL_NFTS[i + 4].type!)
-          );
-          nfts.push({ ...ALL_NFTS[i + 4], balance: nft?.balance ?? 0 });
+        try {
+          const lynksBalances = await getLynksNFT(address);
+          console.log("lynksBalances: ", lynksBalances);
+
+          for (let i = 0; i < 4; i++) {
+            const nft = lynksBalances?.find((item) =>
+              item.name.includes(ALL_NFTS[i + 4].type!)
+            );
+            nfts.push({ ...ALL_NFTS[i + 4], balance: nft?.balance ?? 0 });
+          }
+        } catch (e: unknown) {
+          // mostly access nft metadata failed
+          if (e.message === "GET_LYNKS_ERROR") {
+            return;
+          }
         }
 
         // TODO: new nova points booster NFTs
-        const boosterBalancesV2 = await Promise.all(
-          Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
-            boosterNFTV2.read.balanceOf([address, item])
-          )
-        );
+        const boosterBalancesV2Call = await publicClient?.multicall({
+          contracts: Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) => ({
+            address: boosterNFTV2.address,
+            abi: boosterNFTV2.abi as Abi,
+            functionName: "balanceOf",
+            args: [address, item],
+          })),
+        });
+        const boosterBalancesV2 =
+          boosterBalancesV2Call?.map((item) => item.result?.toString() ?? 0) ??
+          [];
+        // const boosterBalancesV2 = await Promise.all(
+        //   Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) =>
+        //     boosterNFTV2.read.balanceOf([address, item])
+        //   )
+        // );
         for (let i = 0; i < 5; i++) {
           nfts.push({
             ...ALL_NFTS[i + 8],
@@ -314,11 +347,23 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
           });
         }
 
-        const boosterBalances = await Promise.all(
-          Object.keys(PRIZE_ID_NFT_MAP).map((item) =>
-            boosterNFT.read.balanceOf([address, item])
-          )
-        );
+        const boosterBalancesCall = await publicClient?.multicall({
+          contracts: Object.keys(PRIZE_ID_NFT_MAP).map((item) => ({
+            address: boosterNFT.address,
+            abi: boosterNFT.abi as Abi,
+            functionName: "balanceOf",
+            args: [address, item],
+          })),
+        });
+        const boosterBalances =
+          boosterBalancesCall?.map((item) => item.result?.toString() ?? 0) ??
+          [];
+
+        // const boosterBalances = await Promise.all(
+        //   Object.keys(PRIZE_ID_NFT_MAP).map((item) =>
+        //     boosterNFT.read.balanceOf([address, item])
+        //   )
+        // );
         console.log("boosterBalances: ", boosterBalances);
         for (let i = 0; i < 7; i++) {
           nfts.push({
@@ -343,6 +388,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
     getLynksNFT,
     update,
     refreshBalanceId,
+    publicClient,
   ]);
 
   const onMintSubmit = async () => {
@@ -410,7 +456,8 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
     if (!mysteryBoxNFT || !address || boxTokenIds.length === 0) return;
     try {
       setOpening(true);
-      await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
+      // await mysteryBoxNFT.write.burn([boxTokenIds[0]]); // burn first
+      await sendMysteryBurnTx(boxTokenIds[0]);
       const res = await openMysteryboxNFT(address); // draw prize
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;

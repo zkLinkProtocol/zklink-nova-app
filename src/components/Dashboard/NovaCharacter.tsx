@@ -26,6 +26,8 @@ import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
+import { eventBus } from "@/utils/event-bus";
+import { Abi } from "viem";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -77,12 +79,23 @@ export const TxResult = styled.div`
     margin-bottom: 16px;
   }
 `;
-
+//tokenId from api => image id of frontend
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   1: "Oak Tree Roots",
   2: "Magnifying Glass",
   3: "Chess Knight",
   4: "Binary Code Metrix Cube",
+  6: "+1 Nova points",
+  7: "+5 Nova points",
+  8: "+10 Nova points",
+  9: "+50 Nova points",
+  88: "Lynks",
+};
+
+const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
+  return Object.keys(TRADEMARK_TOKEN_ID_MAP).findIndex(
+    (key) => Number(key) === tokenId
+  );
 };
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
@@ -100,9 +113,10 @@ export default function NovaCharacter() {
     sendTrademarkApproveTx,
     sendUpgradeSBTTx,
     isApproving,
+    publicClient,
   } = useNovaDrawNFT();
 
-  const { updateRefreshBalanceId } = useMintStatus();
+  const { refreshBalanceId, updateRefreshBalanceId } = useMintStatus();
 
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
 
@@ -125,7 +139,8 @@ export default function NovaCharacter() {
   const [upgradable, setUpgradable] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
   const [lynksBalance, setLynksBalance] = useState(0);
-
+  const [checkingTrademarkUpgradable, setCheckingTrademarkUpgradable] =
+    useState(false);
   useEffect(() => {
     console.log("nft: ", nft);
     console.log("upgradable: ", upgradable);
@@ -149,11 +164,24 @@ export default function NovaCharacter() {
           address,
         ])) as bigint;
         setLynksBalance(Number(lynksBalance));
-        const trademarkBalances = (await Promise.all(
-          [1, 2, 3, 4].map((item) =>
-            trademarkNFT.read.balanceOf([address, item])
-          )
-        )) as bigint[];
+        // const trademarkBalances = (await Promise.all(
+        //   [1, 2, 3, 4].map((item) =>
+        //     trademarkNFT.read.balanceOf([address, item])
+        //   )
+        // )) as bigint[];
+        setCheckingTrademarkUpgradable(true);
+        const trademarkBalancesCall = await publicClient?.multicall({
+          contracts: [1, 2, 3, 4].map((item) => ({
+            address: trademarkNFT.address,
+            abi: trademarkNFT.abi as Abi,
+            functionName: "balanceOf",
+            args: [address, item],
+          })),
+        });
+        const trademarkBalances =
+          trademarkBalancesCall?.map(
+            (item) => Number(item.result?.toString()) ?? 0
+          ) ?? [];
         console.log("trademarkBalances: ", trademarkBalances);
         if (
           // Number(lynksBalance) === 0 &&
@@ -166,9 +194,10 @@ export default function NovaCharacter() {
         } else {
           setUpgradable(false);
         }
+        setCheckingTrademarkUpgradable(false);
       }
     })();
-  }, [address, trademarkNFT, lynksNFT, update]);
+  }, [address, trademarkNFT, lynksNFT, update, publicClient, refreshBalanceId]);
 
   const [showTooltip1, setShowTooltip1] = useState(false);
 
@@ -190,6 +219,14 @@ export default function NovaCharacter() {
     return 0;
   }, [nativeTokenBalance]);
   console.log("nativeTokenBalance: ", nativeTokenBalance);
+
+  const lynksNFTImg = useMemo(() => {
+    if (nft) {
+      return `/img/img-mystery-box-lynks-${nft.name}.png`;
+    } else {
+      return `/img/img-mystery-box-lynks-ENTP.png`;
+    }
+  }, [nft]);
 
   const handleMintTrademark = useCallback(async () => {
     if (remainDrawCount > 0) {
@@ -223,15 +260,34 @@ export default function NovaCharacter() {
       if (res && res.result) {
         const { tokenId, nonce, signature, expiry } = res.result;
         setTrademarkMintParams({ tokenId, nonce, signature, expiry });
-        await drawRef?.current?.start(tokenId - 1); //do the draw animation; use index of image for active
+        await drawRef?.current?.start(getDrawIndexWithPrizeTokenId(tokenId)); //do the draw animation; use index of image for active
         // await sleep(2000);
-        setDrawedNftId(Number(tokenId));
         if (tokenId === 5) {
           // 5 means no prize
           setUpdate((update) => update + 1);
           // return;
+        } else if ([6, 7, 8, 9].includes(tokenId)) {
+          await sleep(2000);
+          setDrawedNftId(undefined);
+          //not actual nft. Just points.
+          setTrademarkMintStatus(MintStatus.Success);
+          setMintResult({
+            name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
+            img:
+              tokenId === 88
+                ? lynksNFTImg!
+                : `/img/img-trademark-${tokenId}.png`,
+          });
+          trademarkMintModal.onOpen();
+          drawModal.onClose();
+          //TODO refresh points;
+          eventBus.emit("getInvite");
+          eventBus.emit("getAccountPoint");
+        } else {
+          setDrawedNftId(tokenId);
         }
       }
+      setUpdate((update) => update + 1);
       return; // draw first and then mint as step2.
     }
     let mintParams = { ...trademarkMintParams };
@@ -273,8 +329,10 @@ export default function NovaCharacter() {
     setUpdate((update) => update + 1);
   }, [
     address,
+    drawModal,
     drawedNftId,
     isInvaidChain,
+    lynksNFTImg,
     novaBalance,
     remainDrawCount,
     sendTrademarkMintTx,
@@ -423,8 +481,8 @@ export default function NovaCharacter() {
             content={
               <div className="flex flex-col py-2">
                 <p>
-                  For every three referrals, you'll get a chance to mint a
-                  trademark NFT.
+                  For every three referrals, you'll get a chance to open an
+                  invite box.
                 </p>
               </div>
             }
@@ -435,7 +493,7 @@ export default function NovaCharacter() {
                 onClick={handleMintTrademark}
                 isDisabled={remainDrawCount === 0}
               >
-                Mint trademark ({remainDrawCount})
+                Open Invite Box ({remainDrawCount})
               </Button>
             </div>
           </Tooltip>
@@ -452,7 +510,9 @@ export default function NovaCharacter() {
             <div className="grow">
               <Button
                 onClick={handleMintNow}
-                isLoading={fetchLoading || mintLoading}
+                isLoading={
+                  fetchLoading || mintLoading || checkingTrademarkUpgradable
+                }
                 isDisabled={!!nft && !upgradable}
                 className={classNames(
                   "w-full gradient-btn flex-1  py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] "
@@ -526,20 +586,28 @@ export default function NovaCharacter() {
       >
         <ModalContent className="mt-[2rem] py-4 px-4">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
-            Draw and Mint your Trademark NFTs
+            Draw and Earn your invite rewards
           </ModalHeader>
           <DrawAnimation
             type="Trademark"
             ref={drawRef}
-            targetImageIndex={drawedNftId ? drawedNftId - 1 : undefined}
+            targetImageIndex={
+              drawedNftId
+                ? getDrawIndexWithPrizeTokenId(drawedNftId)
+                : undefined
+            }
             onDrawEnd={() => {
               setDrawing(false);
             }}
+            sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With every three referrals, you'll have the chance to randomly mint
-            one of the four Trademarks. However, you must mint your Trademark
-            before you can enter another lucky draw.
+            With every three referrals, you'll have the chance to randomly draw
+            one of the invite rewards.{" "}
+            <span className="text-[#fff] font-[700]">
+              Please notice that Nova points rewards are not NFT
+            </span>
+            , they'll be added directly to your Nova Points.
           </p>
           <Button
             onClick={handleDrawAndMint}
@@ -550,10 +618,10 @@ export default function NovaCharacter() {
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
-              {isInvaidChain && "Switch to Nova network to mint"}
+              {isInvaidChain && "Switch to Nova network to draw"}
               {!isInvaidChain &&
                 (!drawedNftId || drawedNftId === 5 || drawing) &&
-                `Draw & Mint ( ${remainDrawCount} )`}
+                `Draw ( ${remainDrawCount} )`}
               {!isInvaidChain &&
                 !!drawedNftId &&
                 drawedNftId !== 5 &&
@@ -635,7 +703,11 @@ export default function NovaCharacter() {
               )}
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
-                  <p className="text-[#C0C0C0]">You have successfully minted</p>
+                  <p className="text-[#C0C0C0]">
+                    {mintResult?.name.includes("Nova points")
+                      ? "You have received"
+                      : "You have successfully minted"}
+                  </p>
                   <img
                     src={mintResult?.img}
                     alt=""
@@ -647,23 +719,32 @@ export default function NovaCharacter() {
                   </p>
                 </div>
               )}
-              <div className="mt-6">
-                {trademarkMintStatus === MintStatus.Success && (
-                  <Button
-                    className="w-full gradient-btn"
-                    onClick={() =>
-                      window.open(
-                        mintResult?.name.includes("Lynks")
-                          ? LYNKS_NFT_MARKET_URL
-                          : TRADEMARK_NFT_MARKET_URL,
-                        "_blank"
-                      )
-                    }
-                  >
-                    Trade in Alienswap
-                  </Button>
-                )}
-              </div>
+              {trademarkMintStatus === MintStatus.Success && (
+                <div className="mt-6">
+                  {mintResult?.name.includes("Nova points") ? (
+                    <Button
+                      className="w-full gradient-btn"
+                      onClick={() => trademarkMintModal.onClose()}
+                    >
+                      Confirm
+                    </Button>
+                  ) : (
+                    <Button
+                      className="w-full gradient-btn"
+                      onClick={() =>
+                        window.open(
+                          mintResult?.name.includes("Lynks")
+                            ? LYNKS_NFT_MARKET_URL
+                            : TRADEMARK_NFT_MARKET_URL,
+                          "_blank"
+                        )
+                      }
+                    >
+                      Trade in Alienswap
+                    </Button>
+                  )}
+                </div>
+              )}
             </TxResult>
           </ModalBody>
         </ModalContent>

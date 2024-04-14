@@ -31,6 +31,7 @@ import {
   GetContractReturnType,
   WriteContractParameters,
   encodeFunctionData,
+  Abi,
 } from "viem";
 import { formatBalance, sleep } from "@/utils";
 import axios from "axios";
@@ -63,7 +64,7 @@ const useNovaDrawNFT = () => {
   const [isTrademarkApproved, setIsTrademarkApproved] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
 
-  const publicClient = usePublicClient({ config, chainId });
+  const publicClient = usePublicClient({ config, chainId: NOVA_CHAIN_ID });
   const { data: walletClient } = useWalletClient();
 
   const { data: nativeTokenBalance } = useBalance({
@@ -199,7 +200,8 @@ const useNovaDrawNFT = () => {
         return Object.values(map);
       } catch (e) {
         console.log(e);
-        return [];
+        // return [];
+        throw new Error("GET_LYNKS_ERROR");
       }
     },
     [lynksNFT]
@@ -272,20 +274,23 @@ const useNovaDrawNFT = () => {
 
   const sendTrademarkMintTx = async (params: TrademarkMintParams) => {
     if (!address) return;
+    const isLynks = params?.tokenId === 88;
     try {
       setLoading(true);
       const tx: WriteContractParameters = {
-        address: TRADEMARK_NFT_CONTRACT,
-        abi: NovaTrademarkNFT,
-        functionName: "safeMint",
-        args: [
-          address,
-          params.nonce,
-          params.tokenId,
-          1,
-          params.expiry,
-          params.signature,
-        ],
+        address: isLynks ? LYNKS_NFT_CONTRACT : TRADEMARK_NFT_CONTRACT,
+        abi: (isLynks ? NovaLynksNFT : NovaTrademarkNFT) as Abi,
+        functionName: isLynks ? "safeMintWithAuth" : "safeMint",
+        args: isLynks
+          ? [address, params.nonce, params.expiry, params.signature]
+          : [
+              address,
+              params.nonce,
+              params.tokenId,
+              1,
+              params.expiry,
+              params.signature,
+            ],
       };
       await insertEstimateFee(tx);
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
@@ -319,6 +324,58 @@ const useNovaDrawNFT = () => {
           params.signature,
         ],
       };
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendMysteryBurnTx = async (tokenId: number) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: MYSTERY_BOX_CONTRACT as Hash,
+        abi: NovaMysteryBoxNFT as Abi,
+        functionName: "burn",
+        args: [tokenId],
+      };
+
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendMysteryBurnTxV2 = async (tokenId: number) => {
+    if (!address) return;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: MYSTERY_BOX_CONTRACT_V2 as Hash,
+        abi: NovaMysteryBoxNFT as Abi,
+        functionName: "burn",
+        args: [tokenId],
+      };
+
       await insertEstimateFee(tx);
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       await sleep(1000); //wait to avoid waitForTransactionReceipt failed
@@ -554,6 +611,8 @@ const useNovaDrawNFT = () => {
     isTrademarkApproved,
     sendTrademarkApproveTx,
     isApproving,
+    sendMysteryBurnTx,
+    sendMysteryBurnTxV2,
   };
 };
 

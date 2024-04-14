@@ -1,12 +1,12 @@
 import { CardBox } from "@/styles/common";
-import { formatNumberWithUnit, getBooster } from "@/utils";
+import { formatNumber2, formatNumberWithUnit, getBooster } from "@/utils";
 import styled from "styled-components";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import Decimal from "decimal.js";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Checkbox } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const GreenTag = styled.span`
   display: flex;
@@ -16,12 +16,15 @@ const GreenTag = styled.span`
   background: linear-gradient(90deg, #0bc48f 0%, #00192b 107.78%);
 `;
 
+const RoyaltyBooster = styled.span`
+  border-radius: 0.25rem;
+  background: linear-gradient(90deg, #48ecae 0%, #3e52fc 100%);
+`;
+
 interface INovaPointsProps {
   groupTvl: number;
-  accountPoint: {
-    novaPoint: number;
-    referPoint: number;
-  };
+  referPoints: number;
+  novaPoints: number;
   pufferEigenlayerPoints: number;
   pufferPoints: number;
   renzoPoints: number;
@@ -29,6 +32,8 @@ interface INovaPointsProps {
   magpiePointsData: { points: number; layerPoints: number };
   layerbankNovaPoints: number;
   layerbankPufferPoints: number;
+  royaltyBooster: number;
+  okxPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -91,8 +96,9 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
           place="top"
           style={{
             maxWidth: "20rem",
-            fontSize: "14px",
-            borderRadius: "16px",
+            borderRadius: "0.5rem",
+            background: "#666",
+            fontSize: "0.875rem",
           }}
           content={pointsTips}
         />
@@ -104,8 +110,9 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
           place="top"
           style={{
             maxWidth: "20rem",
-            fontSize: "14px",
-            borderRadius: "16px",
+            borderRadius: "0.5rem",
+            background: "#666",
+            fontSize: "0.875rem",
           }}
           content={eigenlayerTips}
         />
@@ -116,7 +123,8 @@ export const OtherPointsItem: React.FC<OtherPointsItem> = ({
 
 export default function NovaPoints(props: INovaPointsProps) {
   const {
-    accountPoint,
+    novaPoints,
+    referPoints,
     groupTvl,
     pufferEigenlayerPoints,
     pufferPoints,
@@ -125,8 +133,10 @@ export default function NovaPoints(props: INovaPointsProps) {
     magpiePointsData,
     layerbankNovaPoints,
     layerbankPufferPoints,
+    royaltyBooster,
+    okxPoints,
   } = props;
-  const eralyBirdBooster = 1.2;
+  // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [isHidePoints, setIsHidePoints] = useState(false);
   const [otherPointsList, setOtherPointsList] = useState<OtherPointsItem[]>([]);
@@ -153,7 +163,6 @@ export default function NovaPoints(props: INovaPointsProps) {
         pointsTips:
           "Your ezPoints will be visible one hour after you deposit your ezETH.",
       },
-      // TODO: get EigenPie (points & eigenlayer points) num
       {
         icon: "/img/icon-eigenpie.png",
         pointsName: "EigenPie Points",
@@ -188,117 +197,198 @@ export default function NovaPoints(props: INovaPointsProps) {
     layerbankPufferPoints,
   ]);
 
+  const totalBooster = useMemo(() => {
+    return Decimal.mul(getBooster(groupTvl) + 1, royaltyBooster).toNumber();
+  }, [groupTvl, royaltyBooster]);
+
+  const royaltyBoosterPencentage = useMemo(() => {
+    return Number(royaltyBooster)
+      ? `${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber() * 100)}%`
+      : "0%";
+  }, [royaltyBooster]);
+
+  const kolPoints = useMemo(() => {
+    return invite?.kolGroup ? Decimal.mul(novaPoints, 0.05).toNumber() : 0;
+  }, [novaPoints, invite?.kolGroup]);
+
+  const trademarkPoints = useMemo(() => {
+    return Number(invite?.points) || 0;
+  }, [invite?.points]);
+
+  const totalNovaPoints = useMemo(() => {
+    return (
+      novaPoints +
+      referPoints +
+      layerbankNovaPoints +
+      trademarkPoints +
+      okxPoints +
+      kolPoints
+    );
+  }, [
+    novaPoints,
+    referPoints,
+    layerbankNovaPoints,
+    trademarkPoints,
+    okxPoints,
+    kolPoints,
+  ]);
+
   return (
     <>
-      {/* // TODO update nova points style */}
-      {/* <CardBox className="mt-[1.5rem] p-[1.5rem] bg">
-        <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          Nova Points
-        </p>
-        <div className="py-[0.7rem] ml-[4rem] text-[2.5rem] font-[700]">
-          {formatNumberWithUnit(
-            (+accountPoint.novaPoint || 0) + (+accountPoint.referPoint || 0)
-          )}
-        </div>
-        <p className="text-[1rem] pr-4 opacity-60">
-          Don't worry, we are synchronizing Nova Points. Your Nova Points will
-          be updated after the syncing process has ended.
-        </p>
-      </CardBox> */}
-
       <CardBox className="mt-[1.5rem] p-[1.5rem]">
         <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
           Nova Points
         </p>
 
-        <div className="flex items-center gap-[1rem]">
-          <span
-            className="text-[2.5rem] font-[700]"
-            data-tooltip-id="nova-points"
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-[1rem]">
+            <span
+              className="text-[2.5rem] font-[700]"
+              data-tooltip-id="nova-points"
+            >
+              {formatNumberWithUnit(totalNovaPoints)}
+            </span>
+
+            <ReactTooltip
+              id="nova-points"
+              place="top-start"
+              style={{
+                borderRadius: "0.5rem",
+                background: "#666",
+                fontSize: "0.875rem",
+              }}
+              render={() => (
+                <div>
+                  <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by Your Deposit and Holding</span>
+                    <span>
+                      {formatNumberWithUnit(novaPoints + okxPoints + kolPoints)}
+                    </span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by Referring Friends</span>
+                    <span>{formatNumberWithUnit(referPoints)}</span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by interacting with dApp</span>
+                    <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by opening invite box</span>
+                    <span>{trademarkPoints}</span>
+                  </p>
+                  {/* <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by OKX points</span>
+                    <span>{okxPoints}</span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned by KOL points</span>
+                    <span>{formatNumberWithUnit(kolPoints)}</span>
+                  </p> */}
+                </div>
+              )}
+            />
+
+            <GreenTag
+              data-tooltip-id="booster-learn-more"
+              className="py-[0.375rem] w-[5.625rem] text-[1rem]"
+            >
+              {formatNumber2(totalBooster)}x
+            </GreenTag>
+
+            <ReactTooltip
+              id="booster-learn-more"
+              place="top"
+              style={{
+                borderRadius: "0.5rem",
+                background: "#666",
+                fontSize: "0.875rem",
+              }}
+              render={() => (
+                <div>
+                  <p>
+                    {`Group Booster: ${
+                      getBooster(groupTvl) !== 0 ? getBooster(groupTvl) : 1
+                    }x`}
+                  </p>
+                  <p className="mt-[0.5rem]">
+                    Royalty Booster: {royaltyBooster}x
+                  </p>
+                  <p className="mt-[0.5rem]">
+                    {`Total Booster = ${royaltyBooster} * ${
+                      getBooster(groupTvl) !== 0
+                        ? `(1 + ${getBooster(groupTvl)})`
+                        : "1"
+                    }`}
+                  </p>
+                  {invite?.kolGroup && (
+                    <p className="mt-[0.5rem]">Referral Booster: 5%</p>
+                  )}
+                  <br />
+                  <a
+                    href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+                    target="_blank"
+                    className="text-[#0bc48f]"
+                  >
+                    Learn More
+                  </a>
+                </div>
+              )}
+            />
+          </div>
+
+          <RoyaltyBooster
+            className="px-[0.75rem] py-[0.375rem] text-[1rem]"
+            data-tooltip-id="royalty-booster"
           >
-            {formatNumberWithUnit(
-              (+accountPoint.novaPoint || 0) +
-                (+accountPoint.referPoint || 0) +
-                layerbankNovaPoints
-            )}
-          </span>
-
+            +{royaltyBoosterPencentage}
+          </RoyaltyBooster>
           <ReactTooltip
-            id="nova-points"
-            place="top-start"
-            style={{ fontSize: "14px", borderRadius: "16px", zIndex: "999999" }}
-            render={() => (
-              <div>
-                <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                  <span>Earn By Your Deposit and Holding</span>
-                  <span>{formatNumberWithUnit(accountPoint.novaPoint)}</span>
-                </p>
-                <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                  <span>Earned By Referring Friends</span>
-                  <span>{formatNumberWithUnit(accountPoint.referPoint)}</span>
-                </p>
-                <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                  <span>Earned by interacting with dApp</span>
-                  <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
-                </p>
-              </div>
-            )}
-          />
-
-          <GreenTag
-            data-tooltip-id="booster-learn-more"
-            className="py-[0.375rem] w-[5.625rem] text-[1rem]"
-          >
-            {Decimal.mul(getBooster(groupTvl) + 1, eralyBirdBooster).toNumber()}
-            x
-          </GreenTag>
-
-          <ReactTooltip
-            id="booster-learn-more"
+            id="royalty-booster"
             place="top"
-            style={{ fontSize: "14px", borderRadius: "16px" }}
+            style={{
+              borderRadius: "0.5rem",
+              background: "#666",
+              fontSize: "0.875rem",
+            }}
             render={() => (
-              <div>
-                <p>
-                  {getBooster(groupTvl) !== 0 &&
-                    `Group Booster: ${getBooster(groupTvl)}x`}
+              <div className="max-w-[20rem]">
+                <h4 className="font-[700] text-[0.875rem] leading-[1.3755rem]">
+                  Royalty Booster
+                </h4>
+                <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
+                  An extra boost for Loyalty users, tied with days in the
+                  Aggregation parade:
+                  <br />
+                  <br />
+                  Loyalty Booster = 0.5% * days joined.
                 </p>
-                <p className="mt-[0.5rem]">
-                  Early Bird Booster: {eralyBirdBooster}x
-                </p>
-                <p className="mt-[0.5rem]">
-                  Total Booster = {eralyBirdBooster} * ({1} +{" "}
-                  {getBooster(groupTvl)})
-                </p>
-                {invite?.kolGroup && (
-                  <p className="mt-[0.5rem]">Referral Booster: 5%</p>
-                )}
-                <br />
-                <a
-                  href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
-                  target="_blank"
-                  className="text-[#0bc48f]"
-                >
-                  Learn More
-                </a>
               </div>
             )}
           />
         </div>
-        {/* TODO Est. in next epoch */}
-        {/* <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem]">
-          +{accountPoint.referPoint}
-        </p>
-        <p className="text-[1rem] text-[#919192] font-[400]">
-          Est. in next epoch
-        </p> */}
 
         <ReactTooltip
           id="more-points-soon"
           place="top"
-          style={{ fontSize: "14px", borderRadius: "16px" }}
+          style={{
+            borderRadius: "0.5rem",
+            background: "#666",
+            fontSize: "0.875rem",
+          }}
           content="More points will be listed here soon."
         />
+
+        {Number(invite?.points) !== 0 && (
+          <div className="text-[1rem] text-[#919192] leading-[1] flex items-end gap-2">
+            <span className="text-[1.5rem] text-[#0ABB8A] font-[700]">
+              +{invite?.points}
+            </span>
+
+            <span>from</span>
+            <span className="font-[700]">Invite Box</span>
+          </div>
+        )}
 
         <div className="mt-[3rem] w-full flex justify-between items-center">
           <div className="text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">

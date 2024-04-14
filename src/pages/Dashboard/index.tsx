@@ -22,6 +22,7 @@ import {
   getLayerbankNovaPoints,
   getLayerbankTokenPoints,
   getLinkswapNovaPoints,
+  getRoyaltyBooster,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,6 +50,7 @@ import {
 import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Dashboard/Banner";
+import { eventBus } from "@/utils/event-bus";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -135,6 +137,7 @@ export default function Dashboard() {
     novaPoint: 0,
     referPoint: 0,
   });
+  const [okxPoints, setOkxPoints] = useState(0);
   const [referrersTvlList, setReferrersTvl] = useState([]);
   const [accountTvlData, setAccountTvlData] = useState<AccountTvlItem[]>([]);
   const [groupTvl, setGroupTvl] = useState(0);
@@ -150,19 +153,27 @@ export default function Dashboard() {
   const getAccountPointFunc = async () => {
     if (!address) return;
     const { result } = await getAccountPoint(address);
-    const okxPoints = await getCheckOkxPoints(address);
+    setAccountPoint({
+      novaPoint: Number(result?.novaPoint) || 0,
+      referPoint: Number(result?.referPoint) || 0,
+    });
 
-    if (result) {
-      let novaPoint = (+result?.novaPoint || 0) + okxPoints;
-      if (invite?.kolGroup) {
-        novaPoint += Decimal.mul(novaPoint, 0.05).toNumber();
-      }
-      setAccountPoint({
-        novaPoint: novaPoint,
-        referPoint: +result?.referPoint || 0,
-      });
-    }
+    const okxPoints = await getCheckOkxPoints(address);
+    setOkxPoints(okxPoints);
   };
+
+  // const novaPoints = useMemo(() => {
+  //   let points = accountPoint.novaPoint + okxPoints;
+  //   if (invite?.kolGroup) {
+  //     points += Decimal.mul(points, 0.05).toNumber();
+  //   }
+
+  //   if (invite?.points) {
+  //     points += Number(invite.points) || 0;
+  //   }
+
+  //   return points;
+  // }, [accountPoint, okxPoints, invite]);
 
   const getAccountRefferalsTVLFunc = async () => {
     if (!address) return;
@@ -364,6 +375,15 @@ export default function Dashboard() {
     }
   };
 
+  const [royaltyBooster, setRoyaltyBooster] = useState(0);
+  const getRoyaltyBoosterFunc = async () => {
+    if (!address) return;
+    const { result } = await getRoyaltyBooster(address);
+    if (result?.loyaltyBooster) {
+      setRoyaltyBooster(Number(result.loyaltyBooster) || 0);
+    }
+  };
+
   /**
    * Init: Get data from server
    */
@@ -384,6 +404,7 @@ export default function Dashboard() {
     getLayerbankNovaPointsFunc();
     getLayerbankTokenPointsFunc();
     getLinkswapNovaPointsFunc();
+    getRoyaltyBoosterFunc();
   }, [address]);
 
   useEffect(() => {
@@ -488,6 +509,12 @@ export default function Dashboard() {
     layerbankEigenlayerPoints,
     linkswapNovaPoints,
   ]);
+  useEffect(() => {
+    eventBus.on("getAccountPoint", getAccountPointFunc);
+    return () => {
+      eventBus.remove("getAccountPoint", getAccountPointFunc);
+    };
+  }, []);
 
   return (
     <BgBox>
@@ -508,11 +535,12 @@ export default function Dashboard() {
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
-        <div className="md:w-[27.125rem]">
+        <div className="md:w-[27.125rem] z-10">
           <NovaCharacter />
           <NovaPoints
             groupTvl={groupTvl}
-            accountPoint={accountPoint}
+            referPoints={accountPoint.referPoint}
+            novaPoints={accountPoint.novaPoint}
             pufferEigenlayerPoints={pufferEigenlayerPoints}
             pufferPoints={pufferPoints}
             renzoPoints={renzoPoints}
@@ -520,6 +548,8 @@ export default function Dashboard() {
             magpiePointsData={magpiePointsData}
             layerbankNovaPoints={layerbankNovaPoints}
             layerbankPufferPoints={layerbankPufferPoints}
+            royaltyBooster={royaltyBooster}
+            okxPoints={okxPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}

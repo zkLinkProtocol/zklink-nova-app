@@ -539,9 +539,8 @@ export default function Bridge(props: IBridgeComponentProps) {
         } else {
           setShowNoPointsTip(false);
         }
-        // NOVA Points = 10 * Token multiplier* Deposit Amount * Token Price/ETH price
+        // NOVA Points =  Token multiplier* Deposit Amount * Token Price/ETH price
         const points = new BigNumber(priceInfo.usdPrice)
-          .multipliedBy(10)
           .multipliedBy(tokenFiltered[tokenActive].multiplier)
           .multipliedBy(amount)
           .div(ethPriceInfo.usdPrice)
@@ -923,16 +922,13 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content="By depositing into zkLink Nova, you will instantly receive Nova Points equivalent to 10 distributions.- Nova Points are distributed every 8 hours. "
+                content="By depositing into zkLink Nova, you will instantly receive some Nova Points."
               >
                 <img
                   src={"/img/icon-tooltip.png"}
                   className="w-[14px] cursor-pointer ml-1 mr-4"
                 />
               </Tooltip>
-              <div className="flex items-center justify-center bg-[#1B4C4A] h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
-                10x Boost
-              </div>
               {loyalPoints > 0 && (
                 <Tooltip
                   showArrow={true}
@@ -1190,9 +1186,6 @@ export default function Bridge(props: IBridgeComponentProps) {
                   className="w-[14px] cursor-pointer ml-1 mr-4"
                 />
               </Tooltip>
-              <div className="flex items-center justify-center h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F] bg-[#1B4C4A]">
-                10x Boost
-              </div>
               {loyalPoints > 0 && (
                 <Tooltip
                   showArrow={true}
