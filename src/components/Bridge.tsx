@@ -866,6 +866,17 @@ export default function Bridge(props: IBridgeComponentProps) {
     <>
       <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
         {/* <ContainerCover /> */}
+        <div className="flex items-center font-bold text-lg mb-4">
+          <span className="cursor-pointer mr-4">Deposit</span>
+          <span
+            className="cursor-pointer text-[#a0a5ad] hover:text-[#fff]"
+            onClick={() =>
+              window.open("https://portal.zklink.io/withdraw", "_blank")
+            }
+          >
+            Withdraw
+          </span>
+        </div>
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4">
             <span className="font-bold">From</span>
@@ -1113,7 +1124,17 @@ export default function Bridge(props: IBridgeComponentProps) {
       </Container>
       <Container className="block md:hidden px-4 py-6 md:px-8 md:py-8 layer">
         {/* <ContainerCover /> */}
-
+        <div className="flex items-center font-bold text-lg mb-4">
+          <span className="cursor-pointer mr-4">Deposit</span>
+          <span
+            className="cursor-pointer text-[#a0a5ad] hover:text-[#fff]"
+            onClick={() =>
+              window.open("https://portal.zklink.io/withdraw", "_blank")
+            }
+          >
+            Withdraw
+          </span>
+        </div>
         <SelectBox className="px-6 py-6 md:px-6">
           <div className="flex items-center gap-4 mb-4">
             <span className="font-bold">From</span>
