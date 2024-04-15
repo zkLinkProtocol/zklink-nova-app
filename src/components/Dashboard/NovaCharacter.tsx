@@ -845,20 +845,7 @@ export default function NovaCharacter() {
     getEcoRemainCount();
   }, [address]);
 
-  const handleOldsetFriendsRewardsDrawAndMint = () => {
-    if (!address) return;
-    if (isInvaidChain) {
-      switchChain(
-        { chainId: NOVA_CHAIN_ID },
-        {
-          onError: (e) => {
-            console.log(e);
-          },
-        }
-      );
-      return;
-    }
-  };
+  
 
   return (
     <>
@@ -929,9 +916,13 @@ export default function NovaCharacter() {
         {/* <div className="w-full">
           <Button
             className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
+<<<<<<< HEAD
             onClick={handleOpenEcoBox}
             disabled={!ecoBoxCount || !nft}
             data-tooltip-id="eco-box-tooltip"
+=======
+            onClick={handleOpenOldestFriendsRewards}
+>>>>>>> dfc28b0 (update oldset friends)
           >
             Open Your Eco Box ({ecoBoxCount}){" "}
             <img
