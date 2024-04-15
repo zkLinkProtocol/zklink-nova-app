@@ -845,6 +845,21 @@ export default function NovaCharacter() {
     getEcoRemainCount();
   }, [address]);
 
+  const handleOldsetFriendsRewardsDrawAndMint = () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+          },
+        }
+      );
+      return;
+    }
+  };
+
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
