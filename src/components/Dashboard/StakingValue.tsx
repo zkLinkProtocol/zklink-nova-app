@@ -46,7 +46,7 @@ export default function StakingValue(props: IStakingValueProps) {
   return (
     <>
       <CardBox className="flex flex-col items-center mt-[1.5rem] p-[1.5rem]">
-        <p className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex justify-between items-center">
+        <div className="w-full text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex justify-between items-center">
           <div className="flex items-center gap-2">
             <span>Your Holding Value</span>
             <img
@@ -76,7 +76,7 @@ export default function StakingValue(props: IStakingValueProps) {
           >
             Switch To {isStakingUsd ? "ETH" : "USD"}
           </Button>
-        </p>
+        </div>
         <p className="w-full text-[2.5rem] font-[700]">
           {isStakingUsd
             ? `${formatNumberWithUnit(stakingUsdValue, "$")}`
