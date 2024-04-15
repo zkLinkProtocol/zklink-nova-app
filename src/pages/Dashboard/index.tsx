@@ -6,7 +6,6 @@ import ReferralList from "@/components/ReferralList";
 import { RootState } from "@/store";
 import {
   SupportToken,
-  getAccountPoint,
   getAccountRefferalsTVL,
   getAccountTvl,
   getEigenlayerPoints,
@@ -19,9 +18,7 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getMagPiePoints,
-  getLayerbankNovaPoints,
   getLayerbankPufferPoints,
-  getLinkswapNovaPoints,
   getRoyaltyBooster,
 } from "@/api";
 import { useAccount } from "wagmi";
@@ -33,10 +30,9 @@ import NovaPoints from "@/components/Dashboard/NovaPoints";
 import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
-import { formatNumberWithUnit, getCheckOkxPoints } from "@/utils";
+import { formatNumberWithUnit } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
-import Decimal from "decimal.js";
 import EcoDApps from "@/components/Dashboard/EcoDApps";
 import {
   Button,
@@ -50,7 +46,7 @@ import {
 import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Dashboard/Banner";
-import { eventBus } from "@/utils/event-bus";
+import useNovaPoints from "@/hooks/useNovaPoints";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -127,17 +123,11 @@ export function DisclaimerFooter() {
 
 export default function Dashboard() {
   const { isConnected, address } = useAccount();
-
   const { invite, isAdHide } = useSelector((store: RootState) => store.airdrop);
   const [tabsActive, setTabsActive] = useState(0);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [stakingUsdValue, setStakingUsdValue] = useState(0);
   const [stakingEthValue, setStakingEthValue] = useState(0);
-  const [accountPoint, setAccountPoint] = useState({
-    novaPoint: 0,
-    referPoint: 0,
-  });
-  const [okxPoints, setOkxPoints] = useState(0);
   const [referrersTvlList, setReferrersTvl] = useState([]);
   const [accountTvlData, setAccountTvlData] = useState<AccountTvlItem[]>([]);
   const [groupTvl, setGroupTvl] = useState(0);
@@ -148,32 +138,18 @@ export default function Dashboard() {
   const [nftPhase, setNftPhase] = useState(2); // default: phase 2
   const adModal = useDisclosure();
 
+  const {
+    novaPoints,
+    referPoints,
+    layerbankNovaPoints,
+    linkswapNovaPoints,
+    trademarkPoints,
+    okxPoints,
+    kolPoints,
+    totalNovaPoints,
+  } = useNovaPoints();
+
   const navigatorTo = useNavigate();
-
-  const getAccountPointFunc = async () => {
-    if (!address) return;
-    const { result } = await getAccountPoint(address);
-    setAccountPoint({
-      novaPoint: Number(result?.novaPoint) || 0,
-      referPoint: Number(result?.referPoint) || 0,
-    });
-
-    const okxPoints = await getCheckOkxPoints(address);
-    setOkxPoints(okxPoints);
-  };
-
-  // const novaPoints = useMemo(() => {
-  //   let points = accountPoint.novaPoint + okxPoints;
-  //   if (invite?.kolGroup) {
-  //     points += Decimal.mul(points, 0.05).toNumber();
-  //   }
-
-  //   if (invite?.points) {
-  //     points += Number(invite.points) || 0;
-  //   }
-
-  //   return points;
-  // }, [accountPoint, okxPoints, invite]);
 
   const getAccountRefferalsTVLFunc = async () => {
     if (!address) return;
@@ -334,21 +310,10 @@ export default function Dashboard() {
     }
   };
 
-  const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
   const [layerbankPufferPoints, setLayerbankPufferPoints] = useState(0);
   const [layerbankEigenlayerPoints, setLayerbankEigenlayerPoints] = useState(0);
 
-  const getLayerbankNovaPointsFunc = async () => {
-    if (!address) return;
-    const { data } = await getLayerbankNovaPoints(address);
-    if (data && Array.isArray(data) && data.length > 0) {
-      const points = data.reduce((prev, item) => prev + item.realPoints, 0);
-      console.log("layerbankNovaPoints", points);
-      setLayerbankNovaPoints(points);
-    }
-  };
-
-  const getLayerbankTokenPointsFunc = async () => {
+  const getLayerbankPufferPointsFunc = async () => {
     if (!address) return;
     const { data } = await getLayerbankPufferPoints(
       address,
@@ -358,20 +323,6 @@ export default function Dashboard() {
       const points = data.reduce((prev, item) => prev + Number(item.points), 0);
       console.log("setLayerbankPufferPoints", points);
       setLayerbankPufferPoints(points);
-    }
-  };
-
-  const [linkswapNovaPoints, setLinkswapNovaPoints] = useState(0);
-  const getLinkswapNovaPointsFunc = async () => {
-    if (!address) return;
-
-    const { data } = await getLinkswapNovaPoints(address);
-    if (data?.pairs && Array.isArray(data.pairs) && data.pairs.length > 0) {
-      const points = data.pairs.reduce(
-        (prev, item) => prev + Number(item.novaPoint),
-        0
-      );
-      setLinkswapNovaPoints(points);
     }
   };
 
@@ -391,7 +342,6 @@ export default function Dashboard() {
     getEthUsdPrice();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
-    getAccountPointFunc();
     getAccountRefferalsTVLFunc();
     getGroupTvlFunc();
     getReferralTvlFunc();
@@ -401,9 +351,7 @@ export default function Dashboard() {
     getRenzoPointsFunc();
     getAccountTvlFunc();
     getMagpiePointsFunc();
-    getLayerbankNovaPointsFunc();
-    getLayerbankTokenPointsFunc();
-    getLinkswapNovaPointsFunc();
+    getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
   }, [address]);
 
@@ -509,12 +457,6 @@ export default function Dashboard() {
     layerbankEigenlayerPoints,
     linkswapNovaPoints,
   ]);
-  useEffect(() => {
-    eventBus.on("getAccountPoint", getAccountPointFunc);
-    return () => {
-      eventBus.remove("getAccountPoint", getAccountPointFunc);
-    };
-  }, []);
 
   return (
     <BgBox>
@@ -539,8 +481,8 @@ export default function Dashboard() {
           <NovaCharacter />
           <NovaPoints
             groupTvl={groupTvl}
-            referPoints={accountPoint.referPoint}
-            novaPoints={accountPoint.novaPoint}
+            referPoints={referPoints}
+            novaPoints={novaPoints}
             pufferEigenlayerPoints={pufferEigenlayerPoints}
             pufferPoints={pufferPoints}
             renzoPoints={renzoPoints}
@@ -550,6 +492,9 @@ export default function Dashboard() {
             layerbankPufferPoints={layerbankPufferPoints}
             royaltyBooster={royaltyBooster}
             okxPoints={okxPoints}
+            kolPoints={kolPoints}
+            trademarkPoints={trademarkPoints}
+            totalNovaPoints={totalNovaPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}

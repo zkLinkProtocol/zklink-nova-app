@@ -34,6 +34,9 @@ interface INovaPointsProps {
   layerbankPufferPoints: number;
   royaltyBooster: number;
   okxPoints: number;
+  kolPoints: number;
+  trademarkPoints: number;
+  totalNovaPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -135,6 +138,9 @@ export default function NovaPoints(props: INovaPointsProps) {
     layerbankPufferPoints,
     royaltyBooster,
     okxPoints,
+    kolPoints,
+    trademarkPoints,
+    totalNovaPoints,
   } = props;
   // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -206,32 +212,6 @@ export default function NovaPoints(props: INovaPointsProps) {
       ? `${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber() * 100)}%`
       : "0%";
   }, [royaltyBooster]);
-
-  const kolPoints = useMemo(() => {
-    return invite?.kolGroup ? Decimal.mul(novaPoints, 0.05).toNumber() : 0;
-  }, [novaPoints, invite?.kolGroup]);
-
-  const trademarkPoints = useMemo(() => {
-    return Number(invite?.points) || 0;
-  }, [invite?.points]);
-
-  const totalNovaPoints = useMemo(() => {
-    return (
-      novaPoints +
-      referPoints +
-      layerbankNovaPoints +
-      trademarkPoints +
-      okxPoints +
-      kolPoints
-    );
-  }, [
-    novaPoints,
-    referPoints,
-    layerbankNovaPoints,
-    trademarkPoints,
-    okxPoints,
-    kolPoints,
-  ]);
 
   return (
     <>

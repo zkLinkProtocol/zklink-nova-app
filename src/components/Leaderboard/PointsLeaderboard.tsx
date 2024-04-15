@@ -1,6 +1,7 @@
 import { getAccountRank, getAccountsRank } from "@/api";
+import useNovaPoints from "@/hooks/useNovaPoints";
 import { TableColumnItem } from "@/types";
-import { formatNumberWithUnit, getCheckOkxPoints } from "@/utils";
+import { formatNumberWithUnit } from "@/utils";
 import {
   Button,
   Spinner,
@@ -83,16 +84,10 @@ export default function PointsLeaderboard() {
 
       if (address && nextPage === 1) {
         const { result } = await getAccountRank(address);
-        let novaPoints = +result?.novaPoint || 0;
-        const okxPoints = await getCheckOkxPoints(address);
-        if (novaPoints !== 0) {
-          novaPoints += okxPoints;
-        }
 
         if (result) {
           arr.unshift({
             ...result,
-            novaPoint: novaPoints,
           });
         }
       }
@@ -119,6 +114,11 @@ export default function PointsLeaderboard() {
     setPage(1);
     getAccountsRankFunc();
   }, [address]);
+
+  const { totalNovaPoints } = useNovaPoints();
+  useEffect(() => {
+    console.log("totalNovaPoints", totalNovaPoints);
+  }, [totalNovaPoints]);
 
   return (
     <Table
@@ -162,11 +162,7 @@ export default function PointsLeaderboard() {
                 <span className="ml-[0.5rem]">(Your Address)</span>
               </TableCell>
               <TableCell>{showAccount(item.inviteBy)}</TableCell>
-              <TableCell>
-                {formatNumberWithUnit(
-                  (+item?.novaPoint || 0) + (+item?.referPoint || 0)
-                )}
-              </TableCell>
+              <TableCell>{formatNumberWithUnit(totalNovaPoints)}</TableCell>
             </TableRow>
           ) : (
             <TableRow key={index}>
