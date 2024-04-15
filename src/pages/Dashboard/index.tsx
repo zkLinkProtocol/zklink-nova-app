@@ -313,7 +313,7 @@ export default function Dashboard() {
   const [layerbankPufferPoints, setLayerbankPufferPoints] = useState(0);
   const [layerbankEigenlayerPoints, setLayerbankEigenlayerPoints] = useState(0);
 
-  const getLayerbankTokenPointsFunc = async () => {
+  const getLayerbankPufferPointsFunc = async () => {
     if (!address) return;
     const { data } = await getLayerbankPufferPoints(
       address,
@@ -351,7 +351,7 @@ export default function Dashboard() {
     getRenzoPointsFunc();
     getAccountTvlFunc();
     getMagpiePointsFunc();
-    getLayerbankTokenPointsFunc();
+    getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
   }, [address]);
 
