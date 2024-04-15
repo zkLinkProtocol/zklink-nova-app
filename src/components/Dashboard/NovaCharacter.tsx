@@ -281,9 +281,7 @@ export default function NovaCharacter() {
           });
           trademarkMintModal.onOpen();
           drawModal.onClose();
-          //TODO refresh points;
           eventBus.emit("getInvite");
-          eventBus.emit("getAccountPoint");
         } else {
           setDrawedNftId(tokenId);
         }
