@@ -12,7 +12,7 @@ import useSBTNFT, { NOVA_NFT } from "@/hooks/useNFT";
 let timeout: string | number | NodeJS.Timeout | undefined;
 type Ref = ReactNode | { start: (target: number) => void };
 interface IProps {
-  type: "Trademark" | "MysteryBox";
+  type: "Trademark" | "MysteryBox" | "OldsetFriends";
   targetImageIndex?: number;
   onDrawEnd: () => void;
   sbtNFT?: NOVA_NFT;
@@ -39,6 +39,17 @@ const MysteryboxItems = [
   { name: "Nova +2000 Booster", img: "/img/img-point-booster-7.png" },
   { name: "Lynks", img: "" },
 ];
+
+const OldsetFriendsItems = [
+  { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
+  { name: "Chess Knight", img: "img-trademark-3.png" },
+  { name: "Magnifying Glass", img: "img-trademark-2.png" },
+  { name: "Oak Tree Roots", img: "img-trademark-1.png" },
+  { name: "+50 Nova points", img: "img-trademark-9.png" },
+  { name: "+100 Nova points", img: "img-trademark-10.png" },
+  { name: "Lynks", img: "img-trademark-lynks.png" },
+];
+
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   const { targetImageIndex, onDrawEnd, type, sbtNFT } = props;
   const curRef = useRef<HTMLDivElement>(null);
@@ -135,6 +146,27 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
             >
               <div className="img-bg">
                 <img src={index === 7 ? lynksNFTImg : item.img} alt="Image 1" />
+              </div>
+              <div className="item-name">{item.name}</div>
+            </div>
+          ))}
+        </>
+      )}
+
+      {type === "OldsetFriends" && (
+        <>
+          {OldsetFriendsItems.map((item, index) => (
+            <div
+              key={item.name}
+              className={`lottery-item ${
+                currentImageIndex === index ? "active" : ""
+              }`}
+            >
+              <div className="img-bg">
+                <img
+                  src={index === 6 ? lynksNFTImg : `/img/${item.img}`}
+                  alt="Image 1"
+                />
               </div>
               <div className="item-name">{item.name}</div>
             </div>
