@@ -82,6 +82,25 @@ export default function Bridge() {
         </div>
 
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          🙆 Rewarding zkLink's Oldest Friends:
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>
+            zkLink's oldest friends (previous campaign participants) taking part
+            in the zkLink Aggregation Parade will have the opportunity to win
+            one of the following rewards: point boosters, NFT trademarks, and
+            Lynks. See examples of past campaigns below.
+          </p>
+          <br />
+          <ul>
+            <li className="before">zkLink Nexus Playground Alpha Mainnet Celebration Campaign</li>
+            <li className="before">zkLink Summer Tour</li>
+            <li className="before">Dunkirk Asset Recovery Test</li>
+            <li className="before">zkLink loyalty NFT</li>
+          </ul>
+        </div>
+
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
           🚀 Token Merge Bonus (begins 10AM Apr 9, 2024 UTC), unlock another
           chance to boost your Nova points!
         </h3>
