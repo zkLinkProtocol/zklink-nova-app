@@ -12,7 +12,7 @@ import useSBTNFT, { NOVA_NFT } from "@/hooks/useNFT";
 let timeout: string | number | NodeJS.Timeout | undefined;
 type Ref = ReactNode | { start: (target: number) => void };
 interface IProps {
-  type: "Trademark" | "MysteryBox" | "OldsetFriends";
+  type: "Trademark" | "MysteryBox" | "OldestFriends";
   targetImageIndex?: number;
   onDrawEnd: () => void;
   sbtNFT?: NOVA_NFT;
@@ -40,7 +40,7 @@ const MysteryboxItems = [
   { name: "Lynks", img: "" },
 ];
 
-const OldsetFriendsItems = [
+const OldestFriendsItems = [
   { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
   { name: "Chess Knight", img: "img-trademark-3.png" },
   { name: "Magnifying Glass", img: "img-trademark-2.png" },
@@ -153,9 +153,9 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
         </>
       )}
 
-      {type === "OldsetFriends" && (
+      {type === "OldestFriends" && (
         <>
-          {OldsetFriendsItems.map((item, index) => (
+          {OldestFriendsItems.map((item, index) => (
             <div
               key={item.name}
               className={`lottery-item ${

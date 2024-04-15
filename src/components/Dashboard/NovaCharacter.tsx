@@ -92,17 +92,34 @@ const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   88: "Lynks",
 };
 
+const OLDEST_FRIENDS_TOKEN_ID_MAP: Record<number, string> = {
+  1: "Oak Tree Roots",
+  2: "Magnifying Glass",
+  3: "Chess Knight",
+  4: "Binary Code Metrix Cube",
+  9: "+50 Nova points",
+  10: "+100 Nova points",
+  88: "Lynks",
+};
+
 const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
   return Object.keys(TRADEMARK_TOKEN_ID_MAP).findIndex(
     (key) => Number(key) === tokenId
   );
 };
+
+const getOldestFriendsDrawIndexWithPrizeTokenId = (tokenId: number) => {
+  return Object.keys(OLDEST_FRIENDS_TOKEN_ID_MAP).findIndex(
+    (key) => Number(key) === tokenId
+  );
+};
+
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
   const drawModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
   const upgradeModal = useDisclosure();
-  const oldsetFriendsRewardsModal = useDisclosure();
+  const oldestFriendsRewardsModal = useDisclosure();
   const { address, chainId } = useAccount();
   // const chainId = useChainId({ config });
   const { switchChain } = useSwitchChain();
@@ -463,11 +480,11 @@ export default function NovaCharacter() {
     }
   }, [nft, lynksBalance]);
 
-  const handleOpenOldsetFriendsRewards = useCallback(() => {
-    oldsetFriendsRewardsModal.onOpen();
-  }, [oldsetFriendsRewardsModal]);
+  const handleOpenOldestFriendsRewards = useCallback(() => {
+    oldestFriendsRewardsModal.onOpen();
+  }, [oldestFriendsRewardsModal]);
 
-  const handleOldsetFriendsRewardsDrawAndMint = () => {
+  const handleOldestFriendsRewardsDrawAndMint = () => {
     if (!address) return;
     if (isInvaidChain) {
       switchChain(
@@ -552,7 +569,7 @@ export default function NovaCharacter() {
         <div className="w-full">
           <Button
             className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
-            onClick={handleOpenOldsetFriendsRewards}
+            onClick={handleOpenOldestFriendsRewards}
           >
             Open zkLink's Oldest Friends Rewards
           </Button>
@@ -668,19 +685,19 @@ export default function NovaCharacter() {
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
         size="xl"
-        isOpen={oldsetFriendsRewardsModal.isOpen}
-        onOpenChange={oldsetFriendsRewardsModal.onOpenChange}
+        isOpen={oldestFriendsRewardsModal.isOpen}
+        onOpenChange={oldestFriendsRewardsModal.onOpenChange}
       >
         <ModalContent className="mt-[2rem] py-4 md:px-4 h-[100vh] overflow-auto md:h-auto">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Receive your zkLink's Oldest Friends Rewards
           </ModalHeader>
           <DrawAnimation
-            type="OldsetFriends"
+            type="OldestFriends"
             ref={drawRef}
             targetImageIndex={
               drawedNftId
-                ? getDrawIndexWithPrizeTokenId(drawedNftId)
+                ? getOldestFriendsDrawIndexWithPrizeTokenId(drawedNftId)
                 : undefined
             }
             onDrawEnd={() => {
@@ -697,7 +714,7 @@ export default function NovaCharacter() {
             , they'll be added directly to your Nova Points.
           </p>
           <Button
-            onClick={handleOldsetFriendsRewardsDrawAndMint}
+            onClick={handleOldestFriendsRewardsDrawAndMint}
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
