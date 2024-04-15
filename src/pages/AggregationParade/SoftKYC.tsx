@@ -752,7 +752,7 @@ export default function SoftKYC() {
                 <div>
                   <p className="step-title">Bridge and Earn</p>
                   <p className="step-sub-title mt-[0.25rem]">
-                    {"Minimum deposit amount ≥ 0.25 ETH or equivalent"}
+                    {"Minimum deposit amount ≥ 0.1 ETH or equivalent"}
                   </p>
                 </div>
               </StepItem>
