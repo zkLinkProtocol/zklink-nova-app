@@ -58,8 +58,8 @@ export default function Bridge() {
         </p>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
           Anti-Sybil measures will be taken once withdrawal is available. For
-          instance, users won't have access to the 10x Nova Points deposit boost
-          when they deposit assets.
+          instance, users won't have instant deposit rewards when they deposit
+          assets.
         </p>
 
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
