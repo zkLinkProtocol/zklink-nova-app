@@ -461,3 +461,9 @@ export const getRoyaltyBooster = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountLoyaltyBooster`, {
     params: { address },
   });
+
+export const getNFTLashin = (address: string): Promise<Response> =>
+  http.get(`${apiBaseURL}/nft/lashin`, { params: { address } });
+
+export const postNFTLashin = (address: string): Promise<Response> =>
+  http.post(`${apiBaseURL}/nft/lashin`, { address });
