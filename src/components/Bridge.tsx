@@ -983,11 +983,31 @@ export default function Bridge(props: IBridgeComponentProps) {
           {networkKey && NexusEstimateArrivalTimes[networkKey] && (
             <div className="flex items-center justify-between mb-2 points-box">
               <span>Estimated Time of Arrival</span>
+
               <span className="text-white">
                 ~ {NexusEstimateArrivalTimes[networkKey]} minutes
               </span>
             </div>
           )}
+
+          <div className="flex items-center justify-between mb-2 points-box">
+            <div className="flex items-center">
+              <span>zkLink's Oldest Friends</span>
+              <Tooltip
+                showArrow={true}
+                classNames={{
+                  content: "max-w-[32rem] p-4",
+                }}
+                content="zkLink's oldest friends (previous campaign participants) taking part in the zkLink Aggregation Parade will have the opportunity to win one of the following rewards: point boosters, NFT trademarks, and Lynks."
+              >
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                />
+              </Tooltip>
+            </div>
+            <span>receive 1 lucky draw</span>
+          </div>
           {/* <div className="flex items-center justify-between mb-2 points-box">
             <span>Est.fee</span>
             <span>0.002 ETH</span>
