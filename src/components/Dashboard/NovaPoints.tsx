@@ -31,7 +31,6 @@ interface INovaPointsProps {
   renzoEigenLayerPoints: number;
   magpiePointsData: { points: number; layerPoints: number };
   layerbankNovaPoints: number;
-  layerbankPufferPoints: number;
   royaltyBooster: number;
   okxPoints: number;
   kolPoints: number;
@@ -135,7 +134,6 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoEigenLayerPoints,
     magpiePointsData,
     layerbankNovaPoints,
-    layerbankPufferPoints,
     royaltyBooster,
     okxPoints,
     kolPoints,
@@ -153,7 +151,7 @@ export default function NovaPoints(props: INovaPointsProps) {
         icon: "/img/icon-puffer-points.png",
         pointsName: "Puffer Points",
         eigenlayerName: "Puffer",
-        pointsValue: pufferPoints + layerbankPufferPoints,
+        pointsValue: pufferPoints,
         eigenlayerValue: pufferEigenlayerPoints,
         pointsTips:
           "Your Puffer Points will be visible one hour after you deposit your pufETH.",
@@ -200,7 +198,6 @@ export default function NovaPoints(props: INovaPointsProps) {
     isHidePoints,
     magpiePointsData,
     layerbankNovaPoints,
-    layerbankPufferPoints,
   ]);
 
   const totalBooster = useMemo(() => {

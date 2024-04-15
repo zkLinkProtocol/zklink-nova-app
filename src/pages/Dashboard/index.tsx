@@ -489,7 +489,6 @@ export default function Dashboard() {
             renzoEigenLayerPoints={renzoEigenLayerPoints}
             magpiePointsData={magpiePointsData}
             layerbankNovaPoints={layerbankNovaPoints}
-            layerbankPufferPoints={layerbankPufferPoints}
             royaltyBooster={royaltyBooster}
             okxPoints={okxPoints}
             kolPoints={kolPoints}
