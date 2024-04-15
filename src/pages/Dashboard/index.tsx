@@ -20,7 +20,7 @@ import {
   getTotalTvlByToken,
   getMagPiePoints,
   getLayerbankNovaPoints,
-  getLayerbankTokenPoints,
+  getLayerbankPufferPoints,
   getLinkswapNovaPoints,
   getRoyaltyBooster,
 } from "@/api";
@@ -350,7 +350,7 @@ export default function Dashboard() {
 
   const getLayerbankTokenPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getLayerbankTokenPoints(
+    const { data } = await getLayerbankPufferPoints(
       address,
       PUFFER_TOKEN_ADDRESS
     );
