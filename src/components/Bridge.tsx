@@ -933,7 +933,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content="By depositing into zkLink Nova, you will instantly receive some Nova Points."
+                content="By depositing into zkLink Nova, you'll earn Nova Points every 8 hours."
               >
                 <img
                   src={"/img/icon-tooltip.png"}

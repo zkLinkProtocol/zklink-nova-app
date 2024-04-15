@@ -260,7 +260,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               render={() => (
                 <div>
                   <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by Your Deposit and Holding</span>
+                    <span>Earned by Your Holding</span>
                     <span>
                       {formatNumberWithUnit(novaPoints + okxPoints + kolPoints)}
                     </span>
