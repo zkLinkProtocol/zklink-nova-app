@@ -933,7 +933,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content="By depositing into zkLink Nova, you'll earn Nova Points every 8 hours."
+                content="By depositing into zkLink Nova, the Nova Points you'll earn every 8 hours."
               >
                 <img
                   src={"/img/icon-tooltip.png"}
@@ -1200,7 +1200,7 @@ export default function Bridge(props: IBridgeComponentProps) {
                 classNames={{
                   content: "max-w-[300px] p-4",
                 }}
-                content="By depositing into zkLink Nova, you will instantly receive Nova Points equivalent to 10 distributions.- Nova Points are distributed every 8 hours. "
+                content="By depositing into zkLink Nova, the Nova Points you'll earn every 8 hours."
               >
                 <img
                   src={"/img/icon-tooltip.png"}
