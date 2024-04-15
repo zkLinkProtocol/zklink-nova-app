@@ -335,7 +335,7 @@ export default function NovaCharacter() {
                 : `/img/img-trademark-${tokenId}.png`,
           });
           trademarkMintModal.onOpen();
-          oldestFriendsRewardsModal.onClose();
+          drawModal.onClose();
           eventBus.emit("getInvite");
         } else {
           setDrawedNftId(tokenId);
