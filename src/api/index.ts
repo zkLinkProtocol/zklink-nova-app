@@ -430,11 +430,11 @@ export const getLayerbankNovaPoints = (
 ): Promise<LrtNovaPoints> =>
   http.get(`${BASE_URL_LRT_POINTS}/nova/points`, { params: { address } });
 
-export const getLayerbankTokenPoints = (
+export const getLayerbankPufferPoints = (
   address: string,
   tokenAddress: string
 ): Promise<LrtNovaPoints> =>
-  http.get(`${BASE_URL_LRT_POINTS}/nova/points/token`, {
+  http.get(`${BASE_URL_LRT_POINTS}/nova/points/puffer`, {
     params: { address, tokenAddress },
   });
 

@@ -245,8 +245,8 @@ export default function EcoDApps({ data }: { data: EcoDAppsProps[] }) {
               <Th key={index}>{item}</Th>
             ))}
           </div>
-          {data.map((item) => (
-            <EcoDAppsItem data={item} />
+          {data.map((item, index) => (
+            <EcoDAppsItem data={item} key={index} />
           ))}
         </div>
 
