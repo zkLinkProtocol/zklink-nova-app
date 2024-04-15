@@ -102,6 +102,7 @@ export default function NovaCharacter() {
   const drawModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
   const upgradeModal = useDisclosure();
+  const oldsetFriendsRewardsModal = useDisclosure();
   const { address, chainId } = useAccount();
   // const chainId = useChainId({ config });
   const { switchChain } = useSwitchChain();
@@ -309,7 +310,7 @@ export default function NovaCharacter() {
         img: `/img/img-trademark-${mintParams!.tokenId}.png`,
       });
       updateRefreshBalanceId();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       setTrademarkMintStatus(MintStatus.Failed);
       if (e.message) {
@@ -462,6 +463,10 @@ export default function NovaCharacter() {
     }
   }, [nft, lynksBalance]);
 
+  const handleOpenOldsetFriendsRewards = useCallback(() => {
+    oldsetFriendsRewardsModal.onOpen();
+  }, [oldsetFriendsRewardsModal]);
+
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -529,6 +534,14 @@ export default function NovaCharacter() {
             </div>
           </Tooltip>
         </div>
+        <div className="w-full">
+          <Button
+            className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
+            onClick={handleOpenOldsetFriendsRewards}
+          >
+            Open zkLink's Oldest Friends Rewards
+          </Button>
+        </div>
       </CardBox>
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -588,6 +601,67 @@ export default function NovaCharacter() {
           </ModalHeader>
           <DrawAnimation
             type="Trademark"
+            ref={drawRef}
+            targetImageIndex={
+              drawedNftId
+                ? getDrawIndexWithPrizeTokenId(drawedNftId)
+                : undefined
+            }
+            onDrawEnd={() => {
+              setDrawing(false);
+            }}
+            sbtNFT={nft}
+          />
+          <p className="text-left text-[#C0C0C0] mt-5 mb-4">
+            With every three referrals, you'll have the chance to randomly draw
+            one of the invite rewards.{" "}
+            <span className="text-[#fff] font-[700]">
+              Please notice that Nova points rewards are not NFT
+            </span>
+            , they'll be added directly to your Nova Points.
+          </p>
+          <Button
+            onClick={handleDrawAndMint}
+            isDisabled={
+              !isInvaidChain && (novaBalance === 0 || remainDrawCount === 0)
+            }
+            isLoading={mintLoading || drawing}
+            className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+          >
+            <span>
+              {isInvaidChain && "Switch to Nova network to draw"}
+              {!isInvaidChain &&
+                (!drawedNftId || drawedNftId === 5 || drawing) &&
+                `Draw ( ${remainDrawCount} )`}
+              {!isInvaidChain &&
+                !!drawedNftId &&
+                drawedNftId !== 5 &&
+                !drawing &&
+                "Mint"}
+            </span>
+          </Button>
+          <Button
+            className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]"
+            onClick={() => drawModal.onClose()}
+          >
+            Close
+          </Button>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isDismissable={false}
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        size="xl"
+        isOpen={oldsetFriendsRewardsModal.isOpen}
+        onOpenChange={oldsetFriendsRewardsModal.onOpenChange}
+      >
+        <ModalContent className="mt-[2rem] py-4 md:px-4 h-[100vh] overflow-auto md:h-auto">
+          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
+            Receive your zkLink's Oldest Friends Rewards
+          </ModalHeader>
+          <DrawAnimation
+            type="OldsetFriends"
             ref={drawRef}
             targetImageIndex={
               drawedNftId
