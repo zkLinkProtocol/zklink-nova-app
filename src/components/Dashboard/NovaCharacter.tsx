@@ -467,6 +467,21 @@ export default function NovaCharacter() {
     oldsetFriendsRewardsModal.onOpen();
   }, [oldsetFriendsRewardsModal]);
 
+  const handleOldsetFriendsRewardsDrawAndMint = () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+          },
+        }
+      );
+      return;
+    }
+  };
+
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -682,23 +697,12 @@ export default function NovaCharacter() {
             , they'll be added directly to your Nova Points.
           </p>
           <Button
-            onClick={handleDrawAndMint}
-            isDisabled={
-              !isInvaidChain && (novaBalance === 0 || remainDrawCount === 0)
-            }
-            isLoading={mintLoading || drawing}
+            onClick={handleOldsetFriendsRewardsDrawAndMint}
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
               {isInvaidChain && "Switch to Nova network to draw"}
-              {!isInvaidChain &&
-                (!drawedNftId || drawedNftId === 5 || drawing) &&
-                `Draw ( ${remainDrawCount} )`}
-              {!isInvaidChain &&
-                !!drawedNftId &&
-                drawedNftId !== 5 &&
-                !drawing &&
-                "Mint"}
+              {!isInvaidChain && "Draw"}
             </span>
           </Button>
           <Button
