@@ -312,7 +312,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                     }x`}
                   </p>
                   <p className="mt-[0.5rem]">
-                    Royalty Booster: {royaltyBooster}x
+                    Loyalty Booster: {royaltyBooster}x
                   </p>
                   <p className="mt-[0.5rem]">
                     {`Total Booster = ${royaltyBooster} * ${
@@ -353,7 +353,7 @@ export default function NovaPoints(props: INovaPointsProps) {
             render={() => (
               <div className="max-w-[20rem]">
                 <h4 className="font-[700] text-[0.875rem] leading-[1.3755rem]">
-                  Royalty Booster
+                  Loyalty Booster
                 </h4>
                 <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
                   An extra boost for Loyalty users, tied with days in the
