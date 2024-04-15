@@ -351,7 +351,7 @@ export default function Dashboard() {
   const getLayerbankTokenPointsFunc = async () => {
     if (!address) return;
     const { data } = await getLayerbankPufferPoints(
-      '0x39840cd52aaf7703efd96d36ec71092af3e3c189',
+      address,
       PUFFER_TOKEN_ADDRESS
     );
     if (data && Array.isArray(data) && data.length > 0) {
