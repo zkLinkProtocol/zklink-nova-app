@@ -725,7 +725,7 @@ export default function Bridge(props: IBridgeComponentProps) {
   }, [fromActive]);
 
   const handleAction = useCallback(async () => {
-    if (!address || !nativeTokenBalance) return;
+    if (!address) return;
     if (invalidChain) {
       try {
         setSwitchLoading(true);
