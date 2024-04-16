@@ -36,6 +36,7 @@ import { useMintStatus } from "@/hooks/useMintStatus";
 import { eventBus } from "@/utils/event-bus";
 import { Abi } from "viem";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
+import { m } from "framer-motion";
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -505,7 +506,7 @@ export default function NovaCharacter() {
     oldestFriendsRewardsModal.onOpen();
   }, [oldestFriendsRewardsModal]);
 
-  const { mintable } = useOldestFriendsStatus();
+  const { mintable, minted } = useOldestFriendsStatus();
 
   const handleOldestFriendsRewardsDrawAndMint = useCallback(async () => {
     if (!address) return;
@@ -689,14 +690,16 @@ export default function NovaCharacter() {
             </div>
           </Tooltip>
         </div>
-        <div className="w-full">
-          <Button
-            className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
-            onClick={handleOpenOldestFriendsRewards}
-          >
-            Open zkLink's Oldest Friends Rewards
-          </Button>
-        </div>
+        {mintable && (
+          <div className="w-full">
+            <Button
+              className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
+              onClick={handleOpenOldestFriendsRewards}
+            >
+              Open zkLink's Oldest Friends Rewards
+            </Button>
+          </div>
+        )}
       </CardBox>
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -839,6 +842,8 @@ export default function NovaCharacter() {
           <Button
             onClick={handleOldestFriendsRewardsDrawAndMint}
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+            isLoading={mintLoading}
+            isDisabled={!isInvaidChain && minted}
           >
             <span>
               {isInvaidChain && "Switch to Nova network to draw"}
@@ -847,7 +852,7 @@ export default function NovaCharacter() {
           </Button>
           <Button
             className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
-            onClick={() => drawModal.onClose()}
+            onClick={() => oldestFriendsRewardsModal.onClose()}
           >
             Close
           </Button>

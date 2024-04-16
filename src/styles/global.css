@@ -33,7 +33,7 @@
 .gradient-btn {
   background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
   color: #fff;
-  /* border-radius: 6px; */
+  border-radius: 6px;
   font-family: Satoshi;
   font-size: 16px;
   font-weight: 700;
