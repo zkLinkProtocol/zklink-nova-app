@@ -362,7 +362,10 @@ export default function NovaCharacter() {
       setTrademarkMintStatus(MintStatus.Success);
       setMintResult({
         name: TRADEMARK_TOKEN_ID_MAP[mintParams.tokenId!],
-        img: `/img/img-trademark-${mintParams!.tokenId}.png`,
+        img:
+          mintParams.tokenId === 88
+            ? lynksNFTImg!
+            : `/img/img-trademark-${mintParams.tokenId}.png`,
       });
       updateRefreshBalanceId();
     } catch (e: any) {
