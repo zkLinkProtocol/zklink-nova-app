@@ -466,4 +466,4 @@ export const getNFTLashin = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/nft/lashin`, { params: { address } });
 
 export const postNFTLashin = (address: string): Promise<Response> =>
-  http.post(`${BASE_URL_API}/nft/lashin`, { address });
+  http.post(`${BASE_URL_API}/nft/lashin?address=${address}`);
