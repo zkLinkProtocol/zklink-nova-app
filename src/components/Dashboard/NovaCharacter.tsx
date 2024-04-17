@@ -541,7 +541,7 @@ export default function NovaCharacter() {
     }
 
     // 5 - 1 = 4, 5 means no prize. Draw again
-    if (!oldestFriendsDrawedNftId || oldestFriendsDrawedNftId === 5) {
+    if (!oldestFriendsDrawedNftId) {
       setOldestFriendsDrawing(true);
 
       const res = await postNFTLashin(address);
@@ -590,7 +590,7 @@ export default function NovaCharacter() {
       trademarkMintModal.onOpen();
       setTrademarkMintStatus(MintStatus.Minting);
       if (!oldestFriendsTrademarkMintParams) {
-        const res = await drawTrademarkNFT(address);
+        const res = await postNFTLashin(address);
         if (res && res.result) {
           const { tokenId, nonce, signature, expiry, mintType } = res.result;
           setOldestFriendsTrademarkMintParams({
