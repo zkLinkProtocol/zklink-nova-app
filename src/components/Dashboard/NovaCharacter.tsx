@@ -275,6 +275,8 @@ export default function NovaCharacter() {
   console.log("nativeTokenBalance: ", nativeTokenBalance);
 
   const lynksNFTImg = useMemo(() => {
+    console.log("nft", nft);
+
     if (nft) {
       return `/img/img-mystery-box-lynks-${nft.name}.png`;
     } else {
@@ -607,7 +609,10 @@ export default function NovaCharacter() {
       setTrademarkMintStatus(MintStatus.Success);
       setMintResult({
         name: OLDEST_FRIENDS_TOKEN_ID_MAP[mintParams.tokenId!],
-        img: `/img/img-trademark-${mintParams!.tokenId}.png`,
+        img:
+          mintParams.tokenId === 88
+            ? lynksNFTImg!
+            : `/img/img-trademark-${mintParams!.tokenId}.png`,
       });
       updateRefreshBalanceId();
       setOldestFriendsDrawedNftId(undefined);
