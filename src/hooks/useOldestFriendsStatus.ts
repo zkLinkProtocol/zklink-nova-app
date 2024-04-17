@@ -7,7 +7,7 @@ export default () => {
   const [mintable, setMintable] = useState(false);
   const [minted, setMinted] = useState(false);
 
-  const getNFTLashinFunc = async () => {
+  const getOldestFriendsStatus = async () => {
     if (!address) return;
     const { result } = await getNFTLashin(address);
     setMintable(result?.mintable);
@@ -15,11 +15,12 @@ export default () => {
   };
 
   useEffect(() => {
-    getNFTLashinFunc();
+    getOldestFriendsStatus();
   }, [address]);
 
   return {
     mintable,
     minted,
+    getOldestFriendsStatus,
   };
 };

@@ -509,7 +509,7 @@ export default function NovaCharacter() {
     oldestFriendsRewardsModal.onOpen();
   }, [oldestFriendsRewardsModal]);
 
-  const { mintable, minted } = useOldestFriendsStatus();
+  const { mintable, minted, getOldestFriendsStatus } = useOldestFriendsStatus();
 
   const handleOldestFriendsRewardsDrawAndMint = useCallback(async () => {
     if (!address) return;
@@ -548,11 +548,7 @@ export default function NovaCharacter() {
           getOldestFriendsDrawIndexWithPrizeTokenId(tokenId)
         ); //do the draw animation; use index of image for active
         // await sleep(2000);
-        if (tokenId === 5) {
-          // 5 means no prize
-          setUpdate((update) => update + 1);
-          // return;
-        } else if ([9, 10].includes(tokenId)) {
+        if ([9, 10].includes(tokenId)) {
           await sleep(2000);
           setOldestFriendsDrawedNftId(undefined);
           //not actual nft. Just points.
@@ -616,6 +612,7 @@ export default function NovaCharacter() {
     } finally {
       setOldestFriendsDrawing(false);
       setOldestFriendsDrawedNftId(undefined);
+      getOldestFriendsStatus();
     }
 
     setUpdate((update) => update + 1);
