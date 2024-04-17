@@ -200,6 +200,17 @@ export default function NovaCharacter() {
     }
   }, [address, update]);
 
+  const {
+    mintable,
+    minted,
+    getOldestFriendsStatus,
+    nftId: oldFriendNftId,
+  } = useOldestFriendsStatus();
+
+  useEffect(() => {
+    oldFriendNftId && setOldestFriendsDrawedNftId(oldFriendNftId);
+  }, [address, oldFriendNftId]);
+
   useEffect(() => {
     (async () => {
       if (address && trademarkNFT && lynksNFT) {
@@ -510,8 +521,6 @@ export default function NovaCharacter() {
     oldestFriendsRewardsModal.onOpen();
   }, [oldestFriendsRewardsModal]);
 
-  const { mintable, minted, getOldestFriendsStatus } = useOldestFriendsStatus();
-
   const handleOldestFriendsRewardsDrawAndMint = useCallback(async () => {
     if (!address) return;
     if (isInvaidChain) {
@@ -601,6 +610,7 @@ export default function NovaCharacter() {
         img: `/img/img-trademark-${mintParams!.tokenId}.png`,
       });
       updateRefreshBalanceId();
+      setOldestFriendsDrawedNftId(undefined);
     } catch (e: any) {
       console.error(e);
       setTrademarkMintStatus(MintStatus.Failed);
@@ -614,7 +624,6 @@ export default function NovaCharacter() {
     } finally {
       getOldestFriendsStatus();
       setOldestFriendsDrawing(false);
-      setOldestFriendsDrawedNftId(undefined);
     }
 
     setUpdate((update) => update + 1);
@@ -849,8 +858,10 @@ export default function NovaCharacter() {
             type="OldestFriends"
             ref={oldestFriendsDrawRef}
             targetImageIndex={
-              drawedNftId
-                ? getOldestFriendsDrawIndexWithPrizeTokenId(drawedNftId)
+              oldestFriendsDrawedNftId
+                ? getOldestFriendsDrawIndexWithPrizeTokenId(
+                    oldestFriendsDrawedNftId
+                  )
                 : undefined
             }
             onDrawEnd={() => {
@@ -869,7 +880,7 @@ export default function NovaCharacter() {
           <Button
             onClick={handleOldestFriendsRewardsDrawAndMint}
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
-            isLoading={mintLoading}
+            isLoading={mintLoading || oldestFriendsDrawing}
             isDisabled={!isInvaidChain && minted}
           >
             <span>
