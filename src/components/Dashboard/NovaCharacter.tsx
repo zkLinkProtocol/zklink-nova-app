@@ -876,13 +876,10 @@ export default function NovaCharacter() {
             <span>
               {isInvaidChain && "Switch to Nova network to draw"}
               {!isInvaidChain &&
-                (oldestFriendsDrawedNftId !== 5 ||
-                  oldestFriendsDrawing ||
-                  !minted) &&
+                (!oldestFriendsDrawedNftId || oldestFriendsDrawing) &&
                 "Draw"}
               {!isInvaidChain &&
                 !!oldestFriendsDrawedNftId &&
-                oldestFriendsDrawedNftId !== 5 &&
                 !oldestFriendsDrawing &&
                 "Mint"}
             </span>
