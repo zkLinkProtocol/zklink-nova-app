@@ -347,6 +347,9 @@ export const visitReward = (address: string): Promise<Response> =>
     params: { address },
   });
 
+export const okxVisitTask = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/task/okx/visit/task`, { params: { address } });
+
 export const getEigenlayerPoints = (address: string) =>
   http.get(`${BASE_URL_LRT_POINTS}/points/forward/puffer/zklink_point`, {
     params: { address },
