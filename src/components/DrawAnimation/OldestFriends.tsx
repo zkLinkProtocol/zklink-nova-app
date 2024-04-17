@@ -19,10 +19,10 @@ interface IProps {
 }
 
 const OldestFriendsItems = [
-  { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
-  { name: "Chess Knight", img: "img-trademark-3.png" },
-  { name: "Magnifying Glass", img: "img-trademark-2.png" },
   { name: "Oak Tree Roots", img: "img-trademark-1.png" },
+  { name: "Magnifying Glass", img: "img-trademark-2.png" },
+  { name: "Chess Knight", img: "img-trademark-3.png" },
+  { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
   { name: "+50 Nova points", img: "img-trademark-9.png" },
   { name: "+100 Nova points", img: "img-trademark-10.png" },
   { name: "Lynks", img: "img-trademark-lynks.png" },
