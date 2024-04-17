@@ -322,7 +322,7 @@ export default function NovaCharacter() {
                 : `/img/img-trademark-${tokenId}.png`,
           });
           trademarkMintModal.onOpen();
-          drawModal.onClose();
+          oldestFriendsRewardsModal.onClose();
           eventBus.emit("getInvite");
         } else {
           setDrawedNftId(tokenId);
@@ -365,6 +365,7 @@ export default function NovaCharacter() {
     } finally {
       setDrawing(false);
       setDrawedNftId(undefined);
+      oldestFriendsRewardsModal.onClose();
     }
 
     setUpdate((update) => update + 1);
@@ -562,6 +563,7 @@ export default function NovaCharacter() {
           });
           trademarkMintModal.onOpen();
           oldestFriendsRewardsModal.onClose();
+          getOldestFriendsStatus();
           eventBus.emit("getInvite");
         } else {
           setOldestFriendsDrawedNftId(tokenId);
@@ -610,9 +612,9 @@ export default function NovaCharacter() {
         }
       }
     } finally {
+      getOldestFriendsStatus();
       setOldestFriendsDrawing(false);
       setOldestFriendsDrawedNftId(undefined);
-      getOldestFriendsStatus();
     }
 
     setUpdate((update) => update + 1);
