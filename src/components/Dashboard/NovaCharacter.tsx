@@ -36,7 +36,8 @@ import { useMintStatus } from "@/hooks/useMintStatus";
 import { eventBus } from "@/utils/event-bus";
 import { Abi } from "viem";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
-import { m } from "framer-motion";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -135,6 +136,7 @@ export default function NovaCharacter() {
   const {
     trademarkNFT,
     sendTrademarkMintTx,
+    sendOldestFriendsTrademarkMintTx,
     lynksNFT,
     isTrademarkApproved,
     sendTrademarkApproveTx,
@@ -170,9 +172,10 @@ export default function NovaCharacter() {
     nonce: number;
     signature: string;
     expiry: number;
+    mintType?: number;
   }>();
   const [drawing, setDrawing] = useState(false);
-  const [oldestFriendsdrawing, setOldestFriendsDrawing] = useState(false);
+  const [oldestFriendsDrawing, setOldestFriendsDrawing] = useState(false);
   const drawRef = useRef<{ start: (target: number) => void }>();
   const oldestFriendsDrawRef = useRef<{ start: (target: number) => void }>();
   const [failMessage, setFailMessage] = useState("");
@@ -533,12 +536,13 @@ export default function NovaCharacter() {
 
       const res = await postNFTLashin(address);
       if (res && res.result) {
-        const { tokenId, nonce, signature, expiry } = res.result;
+        const { tokenId, nonce, signature, expiry, mintType } = res.result;
         setOldestFriendsTrademarkMintParams({
           tokenId,
           nonce,
           signature,
           expiry,
+          mintType,
         });
         await oldestFriendsDrawRef?.current?.start(
           getOldestFriendsDrawIndexWithPrizeTokenId(tokenId)
@@ -554,7 +558,7 @@ export default function NovaCharacter() {
           //not actual nft. Just points.
           setTrademarkMintStatus(MintStatus.Success);
           setMintResult({
-            name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
+            name: OLDEST_FRIENDS_TOKEN_ID_MAP[tokenId!],
             img:
               tokenId === 88
                 ? lynksNFTImg!
@@ -572,24 +576,30 @@ export default function NovaCharacter() {
       }
     }
 
-    let mintParams = { ...trademarkMintParams };
+    let mintParams = { ...oldestFriendsTrademarkMintParams };
 
     try {
       //TODO call contract
       trademarkMintModal.onOpen();
       setTrademarkMintStatus(MintStatus.Minting);
-      if (!trademarkMintParams) {
+      if (!oldestFriendsTrademarkMintParams) {
         const res = await drawTrademarkNFT(address);
         if (res && res.result) {
-          const { tokenId, nonce, signature, expiry } = res.result;
-          setTrademarkMintParams({ tokenId, nonce, signature, expiry });
-          mintParams = { tokenId, nonce, signature, expiry };
+          const { tokenId, nonce, signature, expiry, mintType } = res.result;
+          setOldestFriendsTrademarkMintParams({
+            tokenId,
+            nonce,
+            signature,
+            expiry,
+            mintType,
+          });
+          mintParams = { tokenId, nonce, signature, expiry, mintType };
         }
       }
-      await sendTrademarkMintTx(mintParams as TrademarkMintParams);
+      await sendOldestFriendsTrademarkMintTx(mintParams as TrademarkMintParams);
       setTrademarkMintStatus(MintStatus.Success);
       setMintResult({
-        name: TRADEMARK_TOKEN_ID_MAP[mintParams.tokenId!],
+        name: OLDEST_FRIENDS_TOKEN_ID_MAP[mintParams.tokenId!],
         img: `/img/img-trademark-${mintParams!.tokenId}.png`,
       });
       updateRefreshBalanceId();
@@ -604,8 +614,8 @@ export default function NovaCharacter() {
         }
       }
     } finally {
-      setDrawing(false);
-      setDrawedNftId(undefined);
+      setOldestFriendsDrawing(false);
+      setOldestFriendsDrawedNftId(undefined);
     }
 
     setUpdate((update) => update + 1);
@@ -616,7 +626,7 @@ export default function NovaCharacter() {
     isInvaidChain,
     lynksNFTImg,
     novaBalance,
-    sendTrademarkMintTx,
+    sendOldestFriendsTrademarkMintTx,
     switchChain,
     trademarkMintModal,
     trademarkMintParams,
@@ -695,9 +705,27 @@ export default function NovaCharacter() {
             <Button
               className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
               onClick={handleOpenOldestFriendsRewards}
+              disabled={minted || !nft}
+              data-tooltip-id={!nft ? "oldest-firends-tooltip" : undefined}
             >
               Open zkLink's Oldest Friends Rewards
             </Button>
+
+            <ReactTooltip
+              id="oldest-firends-tooltip"
+              place="top"
+              style={{
+                maxWidth: "25rem",
+                fontSize: "0.875rem",
+                lineHeight: "1.375rem",
+                borderRadius: "0.5rem",
+                background: "#666",
+                fontFamily: "Satoshi",
+                fontWeight: "400",
+              }}
+              content="Kindly mint your SBT tokens before accessing your Oldest Friends
+              Rewards."
+            />
           </div>
         )}
       </CardBox>
@@ -847,7 +875,16 @@ export default function NovaCharacter() {
           >
             <span>
               {isInvaidChain && "Switch to Nova network to draw"}
-              {!isInvaidChain && "Draw"}
+              {!isInvaidChain &&
+                (oldestFriendsDrawedNftId !== 5 ||
+                  oldestFriendsDrawing ||
+                  !minted) &&
+                "Draw"}
+              {!isInvaidChain &&
+                !!oldestFriendsDrawedNftId &&
+                oldestFriendsDrawedNftId !== 5 &&
+                !oldestFriendsDrawing &&
+                "Mint"}
             </span>
           </Button>
           <Button

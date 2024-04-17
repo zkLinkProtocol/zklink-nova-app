@@ -339,6 +339,44 @@ const useNovaDrawNFT = () => {
     }
   };
 
+  const sendOldestFriendsTrademarkMintTx = async (
+    params: TrademarkMintParams & { mintType?: number }
+  ) => {
+    if (!address) return;
+    const isLynks = params?.tokenId === 88;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: isLynks ? LYNKS_NFT_CONTRACT : TRADEMARK_NFT_CONTRACT,
+        abi: (isLynks ? NovaLynksNFT : NovaTrademarkNFT) as Abi,
+        functionName: isLynks ? "safeMintWithAuth" : "safeMintCommon",
+        args: isLynks
+          ? [address, params.nonce, params.expiry, params.signature]
+          : [
+              address,
+              params.nonce,
+              params.tokenId,
+              1,
+              params.expiry,
+              params.signature,
+              params.mintType,
+            ],
+      };
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const sendMysteryBurnTx = async (tokenId: number) => {
     if (!address) return;
     try {
@@ -613,6 +651,7 @@ const useNovaDrawNFT = () => {
     isApproving,
     sendMysteryBurnTx,
     sendMysteryBurnTxV2,
+    sendOldestFriendsTrademarkMintTx,
   };
 };
 
