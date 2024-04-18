@@ -37,6 +37,8 @@ interface INovaPointsProps {
   kolPoints: number;
   trademarkPoints: number;
   totalNovaPoints: number;
+  kelpMiles: number;
+  kelpEigenlayerPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -140,6 +142,8 @@ export default function NovaPoints(props: INovaPointsProps) {
     kolPoints,
     trademarkPoints,
     totalNovaPoints,
+    kelpMiles,
+    kelpEigenlayerPoints,
   } = props;
   // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -177,13 +181,12 @@ export default function NovaPoints(props: INovaPointsProps) {
         pointsTips:
           "Your EngenPie Points will be visible one hour after you deposit your mxETH",
       },
-      // TODO: get Kelp (points & eigenlayer points) num
       {
         icon: "/img/icon-kelp.png",
         pointsName: "Kelp Miles",
         eigenlayerName: "KelpDao",
-        pointsValue: 0, // TODO
-        eigenlayerValue: 0, // TODO
+        pointsValue: kelpMiles,
+        eigenlayerValue: kelpEigenlayerPoints,
       },
     ];
     if (isHidePoints) {
@@ -199,6 +202,8 @@ export default function NovaPoints(props: INovaPointsProps) {
     isHidePoints,
     magpiePointsData,
     layerbankNovaPoints,
+    kelpMiles,
+    kelpEigenlayerPoints,
   ]);
 
   const totalBooster = useMemo(() => {

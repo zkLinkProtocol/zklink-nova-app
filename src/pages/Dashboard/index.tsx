@@ -20,6 +20,7 @@ import {
   getMagPiePoints,
   getLayerbankPufferPoints,
   getRoyaltyBooster,
+  getRsethPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -335,6 +336,25 @@ export default function Dashboard() {
     }
   };
 
+  const [kelpMiles, setKelpMiles] = useState(0);
+  const [kelpEigenlayerPoints, setKelpEigenlayerPoints] = useState(0);
+
+  const getRsethPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getRsethPoints(address);
+
+    const kelpMiles = data.reduce(
+      (prev, item) => prev + Number(item.points.kelpMiles || 0),
+      0
+    );
+    const elPoints = data.reduce(
+      (prev, item) => prev + Number(item.points.elPoints || 0),
+      0
+    );
+    setKelpMiles(kelpMiles);
+    setKelpEigenlayerPoints(elPoints);
+  };
+
   /**
    * Init: Get data from server
    */
@@ -353,6 +373,7 @@ export default function Dashboard() {
     getMagpiePointsFunc();
     getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
+    getRsethPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -494,6 +515,8 @@ export default function Dashboard() {
             kolPoints={kolPoints}
             trademarkPoints={trademarkPoints}
             totalNovaPoints={totalNovaPoints}
+            kelpMiles={kelpMiles}
+            kelpEigenlayerPoints={kelpEigenlayerPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}
