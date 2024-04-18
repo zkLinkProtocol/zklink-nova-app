@@ -466,7 +466,7 @@ export const getRoyaltyBooster = (address: string): Promise<Response> =>
   });
 
 export const getNFTLashin = (address: string): Promise<Response> =>
-  http.get(`${BASE_URL_API}/nft/lashin`, { params: { address } });
+  http.get(`${BASE_URL_API}/nft/user/recruitment`, { params: { address } });
 
 export const postNFTLashin = (address: string): Promise<Response> =>
-  http.post(`${BASE_URL_API}/nft/lashin?address=${address}`);
+  http.post(`${BASE_URL_API}/nft/user/recruitment?address=${address}`);
