@@ -97,6 +97,7 @@ export default function Bridge() {
             <li className="before">zkLink Summer Tour</li>
             <li className="before">Dunkirk Asset Recovery Test</li>
             <li className="before">zkLink loyalty NFT</li>
+            <li className="before">And more</li>
           </ul>
         </div>
 
