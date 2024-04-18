@@ -508,4 +508,5 @@ export const wagmiDefaultConfig = createConfig({
   client: ({ chain }) => {
     return createClient({ chain, transport: http() });
   },
+  
 });

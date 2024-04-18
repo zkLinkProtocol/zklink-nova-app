@@ -335,7 +335,7 @@ export default function NovaCharacter() {
                 : `/img/img-trademark-${tokenId}.png`,
           });
           trademarkMintModal.onOpen();
-          oldestFriendsRewardsModal.onClose();
+          drawModal.onClose();
           eventBus.emit("getInvite");
         } else {
           setDrawedNftId(tokenId);
@@ -878,12 +878,11 @@ export default function NovaCharacter() {
             sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With every three referrals, you'll have the chance to randomly draw
-            one of the invite rewards.{" "}
-            <span className="text-[#fff] font-[700]">
-              Please notice that Nova points rewards are not NFT
-            </span>
-            , they'll be added directly to your Nova Points.
+            zkLink's oldest friends (previous campaign participants) taking part
+            in the zkLink Aggregation Parade can randomly receive one of the Old
+            Friends Rewards. Please notice that Nova points rewards are{" "}
+            <b className="text-[#fff] font-[700]">not NFT</b>, they'll be added
+            directly to your Nova Points.
           </p>
           <Button
             onClick={handleOldestFriendsRewardsDrawAndMint}

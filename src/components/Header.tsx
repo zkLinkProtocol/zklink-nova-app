@@ -37,10 +37,11 @@ import {
   setDepositTx,
   setSignatureAddress,
   setIsOkxFlag,
+  setIsOkxUser,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { getInvite, visitReward } from "@/api";
+import { getInvite, okxVisitTask, visitReward } from "@/api";
 import { FaBars, FaTimes } from "react-icons/fa";
 import {
   useConnectModal,
@@ -53,6 +54,7 @@ const nodeType = import.meta.env.VITE_NODE_TYPE;
 import { config } from "@/constants/networks";
 import toast from "react-hot-toast";
 import { eventBus } from "@/utils/event-bus";
+import { set } from "lodash";
 
 const NavNet = styled.div`
   background: #313841;
@@ -132,6 +134,7 @@ export default function Header() {
     signatureAddress,
     inviteCode,
     isOkxFlag,
+    isOkxUser,
   } = useSelector((store: { airdrop: airdropState }) => store.airdrop);
 
   const { getDepositL2TxHash } = useBridgeTx();
@@ -148,9 +151,19 @@ export default function Header() {
     await visitReward(address);
   };
 
+  const okxVisitTaskFunc = async () => {
+    if (!address) return;
+    await okxVisitTask(address);
+  };
+
   useEffect(() => {
     const queryInviteCode = searchParams.get("inviteCode");
     const flag = searchParams.get("flag");
+    const u = searchParams.get("u");
+
+    if (u && u.toLowerCase() === "okx") {
+      dispatch(setIsOkxUser(true));
+    }
 
     if (queryInviteCode && queryInviteCode.length === 6) {
       dispatch(setInviteCode(queryInviteCode));
@@ -161,6 +174,8 @@ export default function Header() {
         flag.toLowerCase() === "okx" || flag.toLowerCase() === "bonus";
       dispatch(setIsOkxFlag(isOkx));
     }
+
+    console.log("okxVisitTaskFunc", u);
   }, [dispatch, searchParams]);
 
   useEffect(() => {
@@ -169,6 +184,13 @@ export default function Header() {
       visitRewardFunc();
     }
   }, [address, isOkxFlag]);
+
+  useEffect(() => {
+    if (address && isOkxUser) {
+      console.log("okxVisitTaskFunc", address, isOkxUser);
+      okxVisitTaskFunc();
+    }
+  }, [address, isOkxUser]);
 
   useEffect(() => {
     if (location.pathname.includes("invite")) {
