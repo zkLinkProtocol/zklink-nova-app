@@ -863,7 +863,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     );
   };
 
-  const { mintable } = useOldestFriendsStatus();
+  const { mintable, minted } = useOldestFriendsStatus();
 
   return (
     <>
@@ -993,7 +993,7 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
           )}
 
-          {mintable && (
+          {mintable && !minted && (
             <div className="flex items-center justify-between mb-2 points-box">
               <div className="flex items-center">
                 <span>zkLink's Oldest Friends</span>
@@ -1010,7 +1010,14 @@ export default function Bridge(props: IBridgeComponentProps) {
                   />
                 </Tooltip>
               </div>
-              <span>receive 1 lucky draw</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px]">1 Lucky Draw</span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
             </div>
           )}
 
