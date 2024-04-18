@@ -470,3 +470,27 @@ export const getNFTLashin = (address: string): Promise<Response> =>
 
 export const postNFTLashin = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/user/recruitment?address=${address}`);
+
+export interface RsethPointsResponse {
+  errno: number;
+  errmsg: string;
+  points: {
+    elPoints: string;
+    kelpMiles: string;
+  };
+  data: {
+    address: string;
+    tokenAddress: string;
+    balance: string;
+    points: {
+      elPoints: string;
+      kelpMiles: string;
+    };
+    updated_at: number;
+  }[];
+}
+
+export const getRsethPoints = (address: string): Promise<RsethPointsResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/rseth/points`, {
+    params: { address },
+  });
