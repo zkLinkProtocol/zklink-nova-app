@@ -61,6 +61,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useConnections } from "wagmi";
 import { Switch, cn } from "@nextui-org/react";
 import { SourceTokenInfo, useMergeToken } from "@/hooks/useMergeToken";
+import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -862,6 +863,8 @@ export default function Bridge(props: IBridgeComponentProps) {
     );
   };
 
+  const { mintable, minted } = useOldestFriendsStatus();
+
   return (
     <>
       <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
@@ -983,11 +986,41 @@ export default function Bridge(props: IBridgeComponentProps) {
           {networkKey && NexusEstimateArrivalTimes[networkKey] && (
             <div className="flex items-center justify-between mb-2 points-box">
               <span>Estimated Time of Arrival</span>
+
               <span className="text-white">
                 ~ {NexusEstimateArrivalTimes[networkKey]} minutes
               </span>
             </div>
           )}
+
+          {mintable && !minted && (
+            <div className="flex items-center justify-between mb-2 points-box">
+              <div className="flex items-center">
+                <span>zkLink's Oldest Friends</span>
+                <Tooltip
+                  showArrow={true}
+                  classNames={{
+                    content: "max-w-[32rem] p-4",
+                  }}
+                  content="zkLink's oldest friends (previous campaign participants) taking part in the zkLink Aggregation Parade will have the opportunity to win one of the following rewards: point boosters, NFT trademarks, and Lynks."
+                >
+                  <img
+                    src={"/img/icon-tooltip.png"}
+                    className="w-[14px] cursor-pointer ml-1 mr-4"
+                  />
+                </Tooltip>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px]">1 Lucky Draw</span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </div>
+          )}
+
           {/* <div className="flex items-center justify-between mb-2 points-box">
             <span>Est.fee</span>
             <span>0.002 ETH</span>

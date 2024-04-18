@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Checkbox } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
+import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 
 const GreenTag = styled.span`
   display: flex;
@@ -210,6 +211,8 @@ export default function NovaPoints(props: INovaPointsProps) {
       : "0%";
   }, [royaltyBooster]);
 
+  const { mintable } = useOldestFriendsStatus();
+
   return (
     <>
       <CardBox className="mt-[1.5rem] p-[1.5rem]">
@@ -356,13 +359,16 @@ export default function NovaPoints(props: INovaPointsProps) {
         />
 
         {Number(invite?.points) !== 0 && (
-          <div className="text-[1rem] text-[#919192] leading-[1] flex items-end gap-2">
+          <div className="text-[14px] text-[#919192] leading-[1] flex items-end gap-2">
             <span className="text-[1.5rem] text-[#0ABB8A] font-[700]">
               +{invite?.points}
             </span>
 
             <span>from</span>
             <span className="font-[700]">Invite Box</span>
+            {mintable && (
+              <span className="font-[700]">, Old Friend Rewards</span>
+            )}
           </div>
         )}
 

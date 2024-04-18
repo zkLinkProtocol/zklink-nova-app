@@ -19,15 +19,25 @@ import {
 import classNames from "classnames";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import toast from "react-hot-toast";
-import { useAccount, useBalance, useChainId, useSwitchChain } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useCall,
+  useChainId,
+  useSwitchChain,
+} from "wagmi";
 import { config } from "@/constants/networks";
-import { getRemainDrawCount, drawTrademarkNFT } from "@/api";
+import { getRemainDrawCount, drawTrademarkNFT, postNFTLashin } from "@/api";
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
+import OldestFriendsDrawAnimation from "../DrawAnimation/OldestFriends";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { eventBus } from "@/utils/event-bus";
 import { Abi } from "viem";
+import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -92,22 +102,41 @@ const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   88: "Lynks",
 };
 
+const OLDEST_FRIENDS_TOKEN_ID_MAP: Record<number, string> = {
+  1: "Oak Tree Roots",
+  2: "Magnifying Glass",
+  3: "Chess Knight",
+  4: "Binary Code Metrix Cube",
+  9: "+50 Nova points",
+  10: "+100 Nova points",
+  88: "Lynks",
+};
+
 const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
   return Object.keys(TRADEMARK_TOKEN_ID_MAP).findIndex(
     (key) => Number(key) === tokenId
   );
 };
+
+const getOldestFriendsDrawIndexWithPrizeTokenId = (tokenId: number) => {
+  return Object.keys(OLDEST_FRIENDS_TOKEN_ID_MAP).findIndex(
+    (key) => Number(key) === tokenId
+  );
+};
+
 export default function NovaCharacter() {
   const mintModal = useDisclosure();
   const drawModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
   const upgradeModal = useDisclosure();
+  const oldestFriendsRewardsModal = useDisclosure();
   const { address, chainId } = useAccount();
   // const chainId = useChainId({ config });
   const { switchChain } = useSwitchChain();
   const {
     trademarkNFT,
     sendTrademarkMintTx,
+    sendOldestFriendsTrademarkMintTx,
     lynksNFT,
     isTrademarkApproved,
     sendTrademarkApproveTx,
@@ -127,14 +156,28 @@ export default function NovaCharacter() {
     MintStatus | undefined
   >();
   const [drawedNftId, setDrawedNftId] = useState<number>();
+  const [oldestFriendsDrawedNftId, setOldestFriendsDrawedNftId] =
+    useState<number>();
   const [trademarkMintParams, setTrademarkMintParams] = useState<{
     tokenId: number;
     nonce: number;
     signature: string;
     expiry: number;
   }>();
+  const [
+    oldestFriendsTrademarkMintParams,
+    setOldestFriendsTrademarkMintParams,
+  ] = useState<{
+    tokenId: number;
+    nonce: number;
+    signature: string;
+    expiry: number;
+    mintType?: number;
+  }>();
   const [drawing, setDrawing] = useState(false);
+  const [oldestFriendsDrawing, setOldestFriendsDrawing] = useState(false);
   const drawRef = useRef<{ start: (target: number) => void }>();
+  const oldestFriendsDrawRef = useRef<{ start: (target: number) => void }>();
   const [failMessage, setFailMessage] = useState("");
   const [upgradable, setUpgradable] = useState(false);
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
@@ -156,6 +199,17 @@ export default function NovaCharacter() {
       });
     }
   }, [address, update]);
+
+  const {
+    mintable,
+    minted,
+    getOldestFriendsStatus,
+    nftId: oldFriendNftId,
+  } = useOldestFriendsStatus();
+
+  useEffect(() => {
+    oldFriendNftId && setOldestFriendsDrawedNftId(oldFriendNftId);
+  }, [address, oldFriendNftId]);
 
   useEffect(() => {
     (async () => {
@@ -221,6 +275,8 @@ export default function NovaCharacter() {
   console.log("nativeTokenBalance: ", nativeTokenBalance);
 
   const lynksNFTImg = useMemo(() => {
+    console.log("nft", nft);
+
     if (nft) {
       return `/img/img-mystery-box-lynks-${nft.name}.png`;
     } else {
@@ -306,10 +362,13 @@ export default function NovaCharacter() {
       setTrademarkMintStatus(MintStatus.Success);
       setMintResult({
         name: TRADEMARK_TOKEN_ID_MAP[mintParams.tokenId!],
-        img: `/img/img-trademark-${mintParams!.tokenId}.png`,
+        img:
+          mintParams.tokenId === 88
+            ? lynksNFTImg!
+            : `/img/img-trademark-${mintParams.tokenId}.png`,
       });
       updateRefreshBalanceId();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       setTrademarkMintStatus(MintStatus.Failed);
       if (e.message) {
@@ -322,6 +381,7 @@ export default function NovaCharacter() {
     } finally {
       setDrawing(false);
       setDrawedNftId(undefined);
+      oldestFriendsRewardsModal.onClose();
     }
 
     setUpdate((update) => update + 1);
@@ -462,6 +522,133 @@ export default function NovaCharacter() {
     }
   }, [nft, lynksBalance]);
 
+  const handleOpenOldestFriendsRewards = useCallback(() => {
+    oldestFriendsRewardsModal.onOpen();
+  }, [oldestFriendsRewardsModal]);
+
+  const handleOldestFriendsRewardsDrawAndMint = useCallback(async () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+          },
+        }
+      );
+      return;
+    }
+
+    if (novaBalance === 0) {
+      toast.error("Insuffcient gas for mint transaction.");
+      return;
+    }
+
+    // 5 - 1 = 4, 5 means no prize. Draw again
+    if (!oldestFriendsDrawedNftId) {
+      setOldestFriendsDrawing(true);
+
+      const res = await postNFTLashin(address);
+      if (res && res.result) {
+        const { tokenId, nonce, signature, expiry, mintType } = res.result;
+        setOldestFriendsTrademarkMintParams({
+          tokenId,
+          nonce,
+          signature,
+          expiry,
+          mintType,
+        });
+        await oldestFriendsDrawRef?.current?.start(
+          getOldestFriendsDrawIndexWithPrizeTokenId(tokenId)
+        ); //do the draw animation; use index of image for active
+        // await sleep(2000);
+        if ([9, 10].includes(tokenId)) {
+          await sleep(2000);
+          setOldestFriendsDrawedNftId(undefined);
+          //not actual nft. Just points.
+          setTrademarkMintStatus(MintStatus.Success);
+          setMintResult({
+            name: OLDEST_FRIENDS_TOKEN_ID_MAP[tokenId!],
+            img:
+              tokenId === 88
+                ? lynksNFTImg!
+                : `/img/img-trademark-${tokenId}.png`,
+          });
+          trademarkMintModal.onOpen();
+          oldestFriendsRewardsModal.onClose();
+          getOldestFriendsStatus();
+          eventBus.emit("getInvite");
+        } else {
+          setOldestFriendsDrawedNftId(tokenId);
+        }
+
+        setUpdate((update) => update + 1);
+        return; // draw first and then mint as step2.
+      }
+    }
+
+    let mintParams = { ...oldestFriendsTrademarkMintParams };
+
+    try {
+      //TODO call contract
+      trademarkMintModal.onOpen();
+      setTrademarkMintStatus(MintStatus.Minting);
+      if (!oldestFriendsTrademarkMintParams) {
+        const res = await postNFTLashin(address);
+        if (res && res.result) {
+          const { tokenId, nonce, signature, expiry, mintType } = res.result;
+          setOldestFriendsTrademarkMintParams({
+            tokenId,
+            nonce,
+            signature,
+            expiry,
+            mintType,
+          });
+          mintParams = { tokenId, nonce, signature, expiry, mintType };
+        }
+      }
+      await sendOldestFriendsTrademarkMintTx(mintParams as TrademarkMintParams);
+      setTrademarkMintStatus(MintStatus.Success);
+      setMintResult({
+        name: OLDEST_FRIENDS_TOKEN_ID_MAP[mintParams.tokenId!],
+        img:
+          mintParams.tokenId === 88
+            ? lynksNFTImg!
+            : `/img/img-trademark-${mintParams!.tokenId}.png`,
+      });
+      updateRefreshBalanceId();
+      setOldestFriendsDrawedNftId(undefined);
+    } catch (e: any) {
+      console.error(e);
+      setTrademarkMintStatus(MintStatus.Failed);
+      if (e.message) {
+        if (e.message.includes("rejected the request")) {
+          setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
+        }
+      }
+    } finally {
+      getOldestFriendsStatus();
+      setOldestFriendsDrawing(false);
+    }
+
+    setUpdate((update) => update + 1);
+  }, [
+    address,
+    oldestFriendsRewardsModal,
+    oldestFriendsDrawedNftId,
+    isInvaidChain,
+    lynksNFTImg,
+    novaBalance,
+    sendOldestFriendsTrademarkMintTx,
+    switchChain,
+    trademarkMintModal,
+    trademarkMintParams,
+    updateRefreshBalanceId,
+  ]);
+
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -529,6 +716,34 @@ export default function NovaCharacter() {
             </div>
           </Tooltip>
         </div>
+        {mintable && (
+          <div className="w-full">
+            <Button
+              className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
+              onClick={handleOpenOldestFriendsRewards}
+              disabled={minted || !nft}
+              data-tooltip-id={!nft ? "oldest-firends-tooltip" : undefined}
+            >
+              Open zkLink's Oldest Friends Rewards
+            </Button>
+
+            <ReactTooltip
+              id="oldest-firends-tooltip"
+              place="top"
+              style={{
+                maxWidth: "25rem",
+                fontSize: "0.875rem",
+                lineHeight: "1.375rem",
+                borderRadius: "0.5rem",
+                background: "#666",
+                fontFamily: "Satoshi",
+                fontWeight: "400",
+              }}
+              content="Kindly mint your SBT tokens before accessing your Oldest Friends
+              Rewards."
+            />
+          </div>
+        )}
       </CardBox>
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -630,6 +845,65 @@ export default function NovaCharacter() {
           <Button
             className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]"
             onClick={() => drawModal.onClose()}
+          >
+            Close
+          </Button>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isDismissable={false}
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        size="xl"
+        isOpen={oldestFriendsRewardsModal.isOpen}
+        onOpenChange={oldestFriendsRewardsModal.onOpenChange}
+      >
+        <ModalContent className="mt-[2rem] py-4 md:px-4 h-[100vh] overflow-auto md:h-auto">
+          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
+            Receive your zkLink's Oldest Friends Rewards
+          </ModalHeader>
+          <OldestFriendsDrawAnimation
+            type="OldestFriends"
+            ref={oldestFriendsDrawRef}
+            targetImageIndex={
+              oldestFriendsDrawedNftId
+                ? getOldestFriendsDrawIndexWithPrizeTokenId(
+                    oldestFriendsDrawedNftId
+                  )
+                : undefined
+            }
+            onDrawEnd={() => {
+              setOldestFriendsDrawing(false);
+            }}
+            sbtNFT={nft}
+          />
+          <p className="text-left text-[#C0C0C0] mt-5 mb-4">
+            zkLink's oldest friends (previous campaign participants) taking part
+            in the zkLink Aggregation Parade can randomly receive one of the Old
+            Friends Rewards. Please notice that Nova points rewards are{" "}
+            <b className="text-[#fff] font-[700]">not NFT</b>, they'll be added
+            directly to your Nova Points.
+          </p>
+          <Button
+            onClick={handleOldestFriendsRewardsDrawAndMint}
+            className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+            isLoading={mintLoading || oldestFriendsDrawing}
+            isDisabled={!isInvaidChain && minted}
+          >
+            <span>
+              {isInvaidChain && "Switch to Nova network to draw"}
+              {!isInvaidChain &&
+                (!oldestFriendsDrawedNftId || oldestFriendsDrawing) &&
+                "Draw"}
+              {!isInvaidChain &&
+                !!oldestFriendsDrawedNftId &&
+                !oldestFriendsDrawing &&
+                "Mint"}
+            </span>
+          </Button>
+          <Button
+            className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
+            onClick={() => oldestFriendsRewardsModal.onClose()}
           >
             Close
           </Button>
