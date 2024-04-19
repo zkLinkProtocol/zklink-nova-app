@@ -106,8 +106,8 @@ export default function Bridge() {
           chance to boost your Nova points!
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>💎merged wBTC: 3x;</p>
-          <p>💎merged stablecoins: 2.5x</p>
+          <p>💎merged wBTC: 2.5x;</p>
+          <p>💎merged stablecoins: 3x</p>
         </div>
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
           💡 Ecosystem Bootstrap Bonuses:
