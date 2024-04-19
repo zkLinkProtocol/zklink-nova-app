@@ -518,11 +518,25 @@ export default function Dashboard() {
       type: "Dex",
       points: linkswapPoints,
       earned: `${linkswapPoints.length} Points + Yield`,
-      status: "Syncing Data",
+      status: "Live",
       multiplier: "1.5x Nova Points",
       description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
     };
-    return [layerbank, linkswap];
+    
+    const aqua = {
+      name: "Aqua",
+      handler: "@native_fi",
+      link: "https://aqua.native.org/dashboard/user/?chainId=810180",
+      iconURL: "/img/icon-aqua.svg",
+      booster: "2x",
+      type: "Lending",
+      points: [],
+      earned: `1 Points + Yield`,
+      status: "Live",
+      multiplier: "2x Nova Points",
+      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+    };
+    return [layerbank, linkswap, aqua];
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,
