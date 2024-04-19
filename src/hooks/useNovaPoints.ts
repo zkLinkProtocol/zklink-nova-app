@@ -6,7 +6,7 @@ import {
 } from "@/api";
 import { RootState } from "@/store";
 import Decimal from "decimal.js";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 
@@ -22,7 +22,7 @@ export default () => {
   const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
   const [linkswapNovaPoints, setLinkswapNovaPoints] = useState(0);
 
-  const getAccountPointFunc = async () => {
+  const getAccountPointFunc = useCallback(async () => {
     if (!address) {
       setNovaPoints(0);
       setReferPoints(0);
@@ -30,13 +30,17 @@ export default () => {
     }
     const { result } = await getAccountPoint(address);
     setNovaPoints(Number(result?.novaPoint) || 0);
-    setReferPoints(Number(result?.referPoint) || 0);
+
+    const apiReferPoints = Number(result?.referPoint) || 0;
+    setReferPoints(
+      !!invite?.triplePoints ? apiReferPoints * 3 : apiReferPoints
+    );
 
     if (result?.novaPoint !== 0) {
       const okx = await checkOkx(address);
       setOkxPoints(okx ? OKX_POINTS : 0);
     }
-  };
+  }, [address, invite?.triplePoints]);
 
   const getLayerbankNovaPointsFunc = async () => {
     if (!address) {
