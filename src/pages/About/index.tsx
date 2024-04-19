@@ -495,8 +495,8 @@ export default function About() {
           </div>
 
           <div className="paragraph">
-            <p>💎merged wBTC: 3x;</p>
-            <p>💎merged stablecoins: 2.5x</p>
+            <p>💎merged wBTC: 2.5x;</p>
+            <p>💎merged stablecoins: 3x</p>
           </div>
 
           <div className="paragraph title title-2">
