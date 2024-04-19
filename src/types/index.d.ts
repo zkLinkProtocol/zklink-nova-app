@@ -55,4 +55,5 @@ export type Invite = {
   beInvited?: boolean;
   kolGroup?: boolean;
   points?: number;
+  triplePoints?: boolean;
 };
