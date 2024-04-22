@@ -48,6 +48,7 @@ import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Dashboard/Banner";
 import useNovaPoints from "@/hooks/useNovaPoints";
+import VerifyTwitter from "@/components/Dashboard/VerifyTwitter";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -526,11 +527,15 @@ export default function Dashboard() {
 
         {/* Right: tvl ... data */}
         <div className="md:w-full maxWid">
-          <TvlSummary
-            totalTvl={totalTvl}
-            groupTvl={groupTvl}
-            referralTvl={referralTvl}
-          />
+          <VerifyTwitter />
+
+          <div className="mt-[1.5rem]">
+            <TvlSummary
+              totalTvl={totalTvl}
+              groupTvl={groupTvl}
+              referralTvl={referralTvl}
+            />
+          </div>
 
           {/* Group Milestone */}
           <div className="mt-[2rem]">

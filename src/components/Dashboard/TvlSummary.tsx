@@ -1,7 +1,7 @@
 import { RootState } from "@/store";
 import { CardBox } from "@/styles/common";
 import { formatNumberWithUnit, getTweetShareText } from "@/utils";
-import { Tooltip } from "@nextui-org/react";
+import { Skeleton, Tooltip } from "@nextui-org/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -27,9 +27,30 @@ export default function TvlSummary(props: ITvlSummaryProps) {
     <div className="md:flex md:gap-[1.5rem]">
       <CardBox className="md:flex md:justify-around  md:py-[3rem] md:px-0 md:w-1/2 md:my-0 my-[1rem] p-3">
         <div className="mb-3  md:mb-0">
-          <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
-            {formatNumberWithUnit(totalTvl, "$")}
-          </p>
+          {!!invite?.twitterHandler ? (
+            <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
+              {formatNumberWithUnit(totalTvl, "$")}
+            </p>
+          ) : (
+            <div className="flex items-center">
+              <span className="text-[1.5rem] leading-[2rem] md:text-center text-left">
+                $
+              </span>
+              <Skeleton className="ml-[0.15rem] mr-[0.69rem] h-[1.5rem] w-[4rem] rounded-full" />
+              <Tooltip
+                content="To unlock this data, please follow @zkLinkNova & @zkLink_Official on X."
+                className="p-[1rem] w-[21.25rem] text-[1rem]"
+                placement="left"
+                showArrow
+              >
+                <img
+                  src="/img/icon-info.svg"
+                  className="w-[0.875rem] opacity-40"
+                />
+              </Tooltip>
+            </div>
+          )}
+
           <p className="mt-[1rem] text-[1rem] leading-[rem] md:text-center text-left text-[#7E7E7E]">
             Nova Network TVL
           </p>
@@ -45,9 +66,29 @@ export default function TvlSummary(props: ITvlSummaryProps) {
       </CardBox>
       <CardBox className="md:flex md:justify-around md:py-[3rem] md:px-0 md:w-1/2 md:my-0 my-[1rem] p-3">
         <div className="mb-3  md:mb-0">
-          <p className="text-[1.5rem] leading-[2rem]  md:text-center text-left">
-            {formatNumberWithUnit(referralTvl, "ETH")}
-          </p>
+          {!!invite?.twitterHandler ? (
+            <p className="text-[1.5rem] leading-[2rem]  md:text-center text-left">
+              {formatNumberWithUnit(referralTvl, "ETH")}
+            </p>
+          ) : (
+            <div className="flex items-center">
+              <Skeleton className="h-[1.5rem] w-[4rem] rounded-full" />
+              <span className="ml-[0.15rem] mr-[0.69rem] text-[1.5rem] leading-[2rem] md:text-center text-left">
+                ETH
+              </span>
+              <Tooltip
+                content="To unlock this data, please follow @zkLinkNova & @zkLink_Official on X."
+                className="p-[1rem] w-[21.25rem] text-[1rem]"
+                placement="left"
+                showArrow
+              >
+                <img
+                  src="/img/icon-info.svg"
+                  className="w-[0.875rem] opacity-40"
+                />
+              </Tooltip>
+            </div>
+          )}
           <p className="mt-[1rem] text-[1rem] leading-[rem]  md:text-center text-left text-[#7E7E7E]">
             Referral TVL
           </p>
