@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import "./index.css";
 import useSBTNFT, { NOVA_NFT } from "@/hooks/useNFT";
+import PointsRewardsTooltips from "../Dashboard/PointsRewardsTooltips";
 
 let timeout: string | number | NodeJS.Timeout | undefined;
 type Ref = ReactNode | { start: (target: number) => void };
@@ -23,8 +24,8 @@ const OldestFriendsItems = [
   { name: "Magnifying Glass", img: "img-trademark-2.png" },
   { name: "Chess Knight", img: "img-trademark-3.png" },
   { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
-  { name: "+50 Nova points", img: "img-trademark-9.png" },
-  { name: "+100 Nova points", img: "img-trademark-10.png" },
+  { name: "+50 Nova points", img: "img-trademark-9.png", tooltipId: 50 },
+  { name: "+100 Nova points", img: "img-trademark-10.png", tooltipId: 100 },
   { name: "Lynks", img: "img-trademark-lynks.png" },
 ];
 
@@ -99,6 +100,9 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
           className={`lottery-item ${
             currentImageIndex === index ? "active" : ""
           }`}
+          data-tooltip-id={
+            item?.tooltipId ? `points-rewards-tips-${item.tooltipId}` : ""
+          }
         >
           <div className="img-bg">
             <img
@@ -109,6 +113,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
           <div className="item-name">{item.name}</div>
         </div>
       ))}
+      <PointsRewardsTooltips />
     </div>
   );
 });
