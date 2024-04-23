@@ -1225,6 +1225,10 @@ export default function Dashboard() {
         <Banner />
       </div> */}
 
+      {/* <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
+        <Banner />
+      </div> */}
+
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem] z-10">
