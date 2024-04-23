@@ -93,7 +93,9 @@ export default function Bridge() {
           </p>
           <br />
           <ul>
-            <li className="before">zkLink Nexus Playground Alpha Mainnet Celebration Campaign</li>
+            <li className="before">
+              zkLink Nexus Playground Alpha Mainnet Celebration Campaign
+            </li>
             <li className="before">zkLink Summer Tour</li>
             <li className="before">Dunkirk Asset Recovery Test</li>
             <li className="before">zkLink loyalty NFT</li>
@@ -106,8 +108,8 @@ export default function Bridge() {
           chance to boost your Nova points!
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>💎merged wBTC: 3x;</p>
-          <p>💎merged stablecoins: 2.5x</p>
+          <p>💎merged wBTC: 2.5x;</p>
+          <p>💎merged stablecoins: 3x</p>
         </div>
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
           💡 Ecosystem Bootstrap Bonuses:
@@ -241,10 +243,7 @@ export default function Bridge() {
           🎁 Invite Box
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>
-            Per 3 referrals will get an “Invite Box” instead of a chance to
-            unlock a trademark.
-          </p>
+          <p>With each referral, you'll receive an 'Invite Box'.</p>
         </div>
       </div>
       <div className="text-base mt-8">
@@ -313,6 +312,16 @@ export default function Bridge() {
 
   return (
     <BgBox>
+      <div className="relative mb-4 z-[10]">
+        <img
+          src="/img/zklink-nova-banner@2x.png"
+          className="w-full hidden md:block"
+        />
+        <img
+          src="/img/zklink-nova-banner-mobile.png"
+          className="w-full block md:hidden"
+        />
+      </div>
       <div className="block lg:flex md:py-24 pb-24 pt-6">
         <div className="md:hidden mx-6 mb-16">
           <BridgeComponent />

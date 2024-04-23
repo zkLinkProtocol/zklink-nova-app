@@ -20,6 +20,9 @@ import {
   getMagPiePoints,
   getLayerbankPufferPoints,
   getRoyaltyBooster,
+  getRsethPoints,
+  getRemainMysteryboxDrawCount,
+  getRemainMysteryboxDrawCountV2,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,6 +53,7 @@ import useNovaPoints from "@/hooks/useNovaPoints";
 
 const TabsBox = styled.div`
   .tab-item {
+    position: relative;
     color: #a9a9a9;
     font-family: Satoshi;
     font-size: 1.5rem;
@@ -62,6 +66,18 @@ const TabsBox = styled.div`
     &.active,
     &:hover {
       color: #fff;
+    }
+    &.notify {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -0.5rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: #ff0000;
+        border-radius: 50%;
+      }
     }
   }
 `;
@@ -335,6 +351,25 @@ export default function Dashboard() {
     }
   };
 
+  const [kelpMiles, setKelpMiles] = useState(0);
+  const [kelpEigenlayerPoints, setKelpEigenlayerPoints] = useState(0);
+
+  const getRsethPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getRsethPoints(address);
+
+    const kelpMiles = data.reduce(
+      (prev, item) => prev + Number(item.points.kelpMiles || 0),
+      0
+    );
+    const elPoints = data.reduce(
+      (prev, item) => prev + Number(item.points.elPoints || 0),
+      0
+    );
+    setKelpMiles(kelpMiles);
+    setKelpEigenlayerPoints(elPoints);
+  };
+
   /**
    * Init: Get data from server
    */
@@ -353,6 +388,7 @@ export default function Dashboard() {
     getMagpiePointsFunc();
     getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
+    getRsethPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -457,23 +493,49 @@ export default function Dashboard() {
     layerbankEigenlayerPoints,
     linkswapNovaPoints,
   ]);
+  const [remainMintCount, setRemainMintCount] = useState(0);
+  const [remainMintCountV2, setRemainMintCountV2] = useState(0);
+  useEffect(() => {
+    if (address) {
+      getRemainMysteryboxDrawCount(address).then((res) => {
+        const remainNumber = res.result;
+        setRemainMintCount(Number(remainNumber) || 0);
+      });
+
+      getRemainMysteryboxDrawCountV2(address).then((res) => {
+        const remainNumberV2 = res.result;
+        setRemainMintCountV2(Number(remainNumberV2) || 0);
+      });
+    }
+  }, [address]);
 
   return (
     <BgBox>
       <BgCoverImg />
       {isLoading && <Loading />}
 
-      <div className="md:w-full md:text-center md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3">
+      {/* <div className="md:w-full md:text-center md:py-[0.5rem] py-[1rem] text-[1rem] bg-[#226959] z-10 md:px-[6.125rem] md:mx-0 px-[1rem] mx-3">
         <span className="text-[#03d498]">
           All other projects points are undergoing synchronization at the
           moment. Your point balances may not be visible until this process is
           complete.
         </span>
+      </div> */}
+
+      <div className="relative mb-4 z-[10]">
+        <img
+          src="/img/zklink-nova-banner@2x.png"
+          className="w-full hidden md:block"
+        />
+        <img
+          src="/img/zklink-nova-banner-mobile.png"
+          className="w-full block md:hidden"
+        />
       </div>
 
-      <div className="mt-4 md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
+      {/* <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
         <Banner />
-      </div>
+      </div> */}
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
@@ -494,6 +556,8 @@ export default function Dashboard() {
             kolPoints={kolPoints}
             trademarkPoints={trademarkPoints}
             totalNovaPoints={totalNovaPoints}
+            kelpMiles={kelpMiles}
+            kelpEigenlayerPoints={kelpEigenlayerPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}
@@ -523,6 +587,11 @@ export default function Dashboard() {
                     key={index}
                     className={`tab-item whitespace-nowrap ${
                       tabsActive === index ? "active" : ""
+                    } ${
+                      (remainMintCount > 0 || remainMintCountV2 > 0) &&
+                      index === 2
+                        ? "notify"
+                        : ""
                     }`}
                     onClick={() => setTabsActive(index)}
                   >

@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import "./index.css";
 import useSBTNFT, { NOVA_NFT } from "@/hooks/useNFT";
+import PointsRewardsTooltips from "../Dashboard/PointsRewardsTooltips";
 
 let timeout: string | number | NodeJS.Timeout | undefined;
 type Ref = ReactNode | { start: (target: number) => void };
@@ -22,11 +23,10 @@ const TrademarkItems = [
   { name: "Magnifying Glass", img: "img-trademark-2.png" },
   { name: "Chess Knight", img: "img-trademark-3.png" },
   { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
-  { name: "+1 Nova points", img: "img-trademark-6.png" },
-  { name: "+5 Nova points", img: "img-trademark-7.png" },
-  { name: "+10 Nova points", img: "img-trademark-8.png" },
-  { name: "+50 Nova points", img: "img-trademark-9.png" },
-  { name: "Lynks", img: "img-trademark-lynks.png" },
+  { name: "+1 Nova points", img: "img-trademark-6.png", tooltipId: 1 },
+  { name: "+5 Nova points", img: "img-trademark-7.png", tooltipId: 5 },
+  { name: "+10 Nova points", img: "img-trademark-8.png", tooltipId: 10 },
+  { name: "+50 Nova points", img: "img-trademark-9.png", tooltipId: 50 },
 ];
 
 const MysteryboxItems = [
@@ -38,16 +38,6 @@ const MysteryboxItems = [
   { name: "Nova +1000 Booster", img: "/img/img-point-booster-6.png" },
   { name: "Nova +2000 Booster", img: "/img/img-point-booster-7.png" },
   { name: "Lynks", img: "" },
-];
-
-const OldestFriendsItems = [
-  { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
-  { name: "Chess Knight", img: "img-trademark-3.png" },
-  { name: "Magnifying Glass", img: "img-trademark-2.png" },
-  { name: "Oak Tree Roots", img: "img-trademark-1.png" },
-  { name: "+50 Nova points", img: "img-trademark-9.png" },
-  { name: "+100 Nova points", img: "img-trademark-10.png" },
-  { name: "Lynks", img: "img-trademark-lynks.png" },
 ];
 
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
@@ -74,7 +64,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
       let step = 0;
       let speed = 2;
       const Loops = type === "Trademark" ? 2 : 2;
-      const count = type === "Trademark" ? 9 : 8;
+      const count = type === "Trademark" ? 8 : 8;
       const totalSteps = count * Loops + targetImageIndex; // run four loops and end on target
       const stopAnimation = () => {
         clearTimeout(timeout);
@@ -123,6 +113,9 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
               className={`lottery-item ${
                 currentImageIndex === index ? "active" : ""
               }`}
+              data-tooltip-id={
+                item?.tooltipId ? `points-rewards-tips-${item.tooltipId}` : ""
+              }
             >
               <div className="img-bg">
                 <img
@@ -130,7 +123,14 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
                   alt="Image 1"
                 />
               </div>
-              <div className="item-name">{item.name}</div>
+              <div
+                className={`item-name ${
+                  item?.tooltipId ? "flex items-center gap-1" : ""
+                }`}
+              >
+                <span>{item.name}</span>
+                {item?.tooltipId && <img src="/img/icon-info.svg" className="info" />}
+              </div>
             </div>
           ))}
         </>
@@ -153,26 +153,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
         </>
       )}
 
-      {type === "OldestFriends" && (
-        <>
-          {OldestFriendsItems.map((item, index) => (
-            <div
-              key={item.name}
-              className={`lottery-item ${
-                currentImageIndex === index ? "active" : ""
-              }`}
-            >
-              <div className="img-bg">
-                <img
-                  src={index === 6 ? lynksNFTImg : `/img/${item.img}`}
-                  alt="Image 1"
-                />
-              </div>
-              <div className="item-name">{item.name}</div>
-            </div>
-          ))}
-        </>
-      )}
+      <PointsRewardsTooltips />
     </div>
   );
 });
