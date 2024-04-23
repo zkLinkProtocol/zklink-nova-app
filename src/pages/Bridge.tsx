@@ -93,7 +93,9 @@ export default function Bridge() {
           </p>
           <br />
           <ul>
-            <li className="before">zkLink Nexus Playground Alpha Mainnet Celebration Campaign</li>
+            <li className="before">
+              zkLink Nexus Playground Alpha Mainnet Celebration Campaign
+            </li>
             <li className="before">zkLink Summer Tour</li>
             <li className="before">Dunkirk Asset Recovery Test</li>
             <li className="before">zkLink loyalty NFT</li>
@@ -241,9 +243,7 @@ export default function Bridge() {
           🎁 Invite Box
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>
-          For each valid referral, you'll receive an 'Invite Box'.
-          </p>
+          <p>With each referral, you'll receive an 'Invite Box'.</p>
         </div>
       </div>
       <div className="text-base mt-8">
