@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import "./index.css";
 import useSBTNFT, { NOVA_NFT } from "@/hooks/useNFT";
+import PointsRewardsTooltips from "../Dashboard/PointsRewardsTooltips";
 
 let timeout: string | number | NodeJS.Timeout | undefined;
 type Ref = ReactNode | { start: (target: number) => void };
@@ -26,11 +27,31 @@ const TrademarkItems = [
 ];
 
 const MysteryboxItems = [
-  { name: "Nova +50 Booster", img: "/img/img-point-booster-v2-1.png" },
-  { name: "Nova +100 Booster", img: "/img/img-point-booster-v2-2.png" },
-  { name: "Nova +200 Booster", img: "/img/img-point-booster-v2-3.png" },
-  { name: "Nova +500 Booster", img: "/img/img-point-booster-v2-4.png" },
-  { name: "Nova +1000 Booster", img: "/img/img-point-booster-v2-5.png" },
+  {
+    name: "Nova +50 Booster",
+    img: "/img/img-point-booster-v2-1.png",
+    tooltipId: 50,
+  },
+  {
+    name: "Nova +100 Booster",
+    img: "/img/img-point-booster-v2-2.png",
+    tooltipId: 100,
+  },
+  {
+    name: "Nova +200 Booster",
+    img: "/img/img-point-booster-v2-3.png",
+    tooltipId: 200,
+  },
+  {
+    name: "Nova +500 Booster",
+    img: "/img/img-point-booster-v2-4.png",
+    tooltipId: 500,
+  },
+  {
+    name: "Nova +1000 Booster",
+    img: "/img/img-point-booster-v2-5.png",
+    tooltipId: 1000,
+  },
   { name: "Oak Tree Roots", img: "/img/img-trademark-1.png" },
   { name: "Magnifying Glass", img: "/img/img-trademark-2.png" },
   { name: "Chess Knight", img: "/img/img-trademark-3.png" },
@@ -133,15 +154,28 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
               className={`lottery-item ${
                 currentImageIndex === index ? "active" : ""
               }`}
+              data-tooltip-id={
+                item?.tooltipId ? `points-rewards-tips-${item.tooltipId}` : ""
+              }
             >
               <div className="img-bg">
                 <img src={index === 9 ? lynksNFTImg : item.img} alt="Image 1" />
               </div>
-              <div className="item-name">{item.name}</div>
+              <div
+                className={`item-name ${
+                  item?.tooltipId ? "flex items-center gap-1" : ""
+                }`}
+              >
+                <span>{item.name}</span>
+                {item?.tooltipId && (
+                  <img src="/img/icon-info.svg" className="info" />
+                )}
+              </div>
             </div>
           ))}
         </>
       )}
+      <PointsRewardsTooltips />
     </div>
   );
 });
