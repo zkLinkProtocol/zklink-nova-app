@@ -242,8 +242,7 @@ export default function Bridge() {
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
           <p>
-            Per 3 referrals will get an “Invite Box” instead of a chance to
-            unlock a trademark.
+          For each valid referral, you'll receive an 'Invite Box'.
           </p>
         </div>
       </div>

@@ -666,7 +666,7 @@ export default function NovaCharacter() {
             content={
               <div className="flex flex-col py-2">
                 <p>
-                  For every three referrals, you'll get a chance to open an
+                  For every one referral, you'll get a chance to open an
                   invite box.
                 </p>
               </div>
@@ -815,7 +815,7 @@ export default function NovaCharacter() {
             sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With every three referrals, you'll have the chance to randomly draw
+            With every one referral, you'll have the chance to randomly draw
             one of the invite rewards.{" "}
             <span className="text-[#fff] font-[700]">
               Please notice that Nova points rewards are not NFT

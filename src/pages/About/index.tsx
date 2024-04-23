@@ -382,8 +382,7 @@ export default function About() {
               4. Referral CAP for each referral is increased from 30 to 100.
             </p>
             <p className="ml-4">
-              a. Per 3 referrals will get an “Invite Box” instead of a chance to
-              unlock a trademark.
+              a. For each valid referral, you'll receive an 'Invite Box'.
             </p>
             <p>
               5. Mystery Box Season 2 to kick start on{" "}
