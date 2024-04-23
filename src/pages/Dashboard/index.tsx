@@ -536,9 +536,20 @@ export default function Dashboard() {
         </span>
       </div> */}
 
-      <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
-        <Banner />
+      <div className="relative mb-4 z-[10]">
+        <img
+          src="/img/zklink-nova-banner@2x.png"
+          className="w-full hidden md:block"
+        />
+        <img
+          src="/img/zklink-nova-banner-mobile.png"
+          className="w-full block md:hidden"
+        />
       </div>
+
+      {/* <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
+        <Banner />
+      </div> */}
 
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}

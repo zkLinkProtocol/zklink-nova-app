@@ -312,6 +312,16 @@ export default function Bridge() {
 
   return (
     <BgBox>
+      <div className="relative mb-4 z-[10]">
+        <img
+          src="/img/zklink-nova-banner@2x.png"
+          className="w-full hidden md:block"
+        />
+        <img
+          src="/img/zklink-nova-banner-mobile.png"
+          className="w-full block md:hidden"
+        />
+      </div>
       <div className="block lg:flex md:py-24 pb-24 pt-6">
         <div className="md:hidden mx-6 mb-16">
           <BridgeComponent />
