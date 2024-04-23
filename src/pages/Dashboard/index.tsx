@@ -52,6 +52,7 @@ import VerifyTwitter from "@/components/Dashboard/VerifyTwitter";
 
 const TabsBox = styled.div`
   .tab-item {
+    position: relative;
     color: #a9a9a9;
     font-family: Satoshi;
     font-size: 1.5rem;
@@ -64,6 +65,18 @@ const TabsBox = styled.div`
     &.active,
     &:hover {
       color: #fff;
+    }
+    &.notify {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -0.5rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: #ff0000;
+        border-radius: 50%;
+      }
     }
   }
 `;
