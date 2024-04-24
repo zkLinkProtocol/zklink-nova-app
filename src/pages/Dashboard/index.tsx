@@ -464,7 +464,7 @@ export default function Dashboard() {
       earned: `${lauyerbankPoints.length} Points`,
       status: "Live",
       multiplier: "2x Nova Points",
-      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
 
     const linkswapPoints = [
@@ -484,9 +484,16 @@ export default function Dashboard() {
       earned: `${linkswapPoints.length} Points + Yield`,
       status: "Live",
       multiplier: "1.5x Nova Points",
-      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
-    
+
+    const aquaPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), // TODO: get data from server
+      },
+    ];
+
     const aqua = {
       name: "Aqua",
       handler: "@native_fi",
@@ -494,13 +501,34 @@ export default function Dashboard() {
       iconURL: "/img/icon-aqua.svg",
       booster: "2x",
       type: "Lending",
-      points: [],
+      points: aquaPoints,
       earned: `1 Points + Yield`,
       status: "Live",
       multiplier: "2x Nova Points",
-      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
-    return [layerbank, linkswap, aqua];
+
+    const izumiPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), // TODO: get data from server
+      },
+    ];
+
+    const izumi = {
+      name: "iZUMI",
+      handler: "@izumi_Finance",
+      link: "https://izumi.finance/trade/pools",
+      iconURL: "/img/icon-izumi.svg",
+      booster: "2x",
+      type: "DEX",
+      points: izumiPoints,
+      earned: `1 Points + Yield`,
+      status: "Live",
+      multiplier: "2x Nova Points",
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+    };
+    return [layerbank, linkswap, aqua, izumi];
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,

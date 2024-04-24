@@ -12,6 +12,7 @@ import {
 import { useMemo, useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { formatNumberWithUnit } from "@/utils";
+import { set } from "lodash";
 
 const Tag = styled.span`
   border-radius: 0.375rem;
@@ -223,6 +224,8 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 disabled={!recognize}
                 onClick={() => {
                   window.open(data.link, "_blank");
+                  warningModal.onClose();
+                  setRecognize(false);
                 }}
               >
                 Continue to Access
