@@ -446,9 +446,37 @@ export default function About() {
               dropped to active campaign referrers. (See Rarity below)
             </p>
           </div>
+          <div className="paragraph title">
+            Mystery Box Rarity (14th Apr. 2024)
+          </div>
           <div className="paragraph">
             <img
               src="/img/about-aggregation-parade-v2.png"
+              className="w-full"
+              onLoad={scrollToAnchor}
+            />
+          </div>
+
+          <div className="paragraph title">
+            Mystery Box Rarity (24th Apr. 2024)
+          </div>
+          <div className="paragraph">
+            <p>
+              Addtional 900 boxes will be distributed among 900 lucky{" "}
+              <a
+                href="https://app.galxe.com/quest/zkLink/GCy79thyeZ"
+                target="_blank"
+                className="text-green inline-flex items-center gap-1"
+              >
+                <span>Galxe Quest</span>
+                <img src="/img/icon-open-in-new-green.svg" width={14} />
+              </a>{" "}
+              participants.
+            </p>
+          </div>
+          <div className="paragraph">
+            <img
+              src="/img/about-aggregation-parade-v2-2.jpg"
               className="w-full"
               onLoad={scrollToAnchor}
             />

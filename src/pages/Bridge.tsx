@@ -230,13 +230,20 @@ export default function Bridge() {
         </div>
 
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
-          🎁 Mystery Box Season 2 (Starting April 9):
+          🎁 Mystery Box Season 2 (Starting April 24):
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>Increased drops from 100 to 1000.</p>
           <p>
-            100 drops exclusive to the top 100 leaderboard, 900 randomly dropped
-            to active campaign referrers.
+            Each day, top 100 referrers of previous day and 900 randomly{" "}
+            <a
+              href="https://app.galxe.com/quest/zkLink/GCy79thyeZ"
+              target="_blank"
+              className="text-green inline-flex items-center gap-1"
+            >
+              <span>Galxe Quest</span>
+              <img src="/img/icon-open-in-new-green.svg" width={14} />
+            </a>{" "}
+            participants can mint a mystery box.
           </p>
         </div>
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
