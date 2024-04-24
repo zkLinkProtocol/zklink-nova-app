@@ -123,7 +123,7 @@ export default function NFTLuckWinner() {
         const arr = random100.map(
           (item: TopInviteAndRandomRes, index: number) => ({
             ...item,
-            rewardType: "Lucky Lynks",
+            rewardType: index > 899 ? "Community Wiinner" : "Lucky Lynks",
             rank: index + 1,
           })
         );
