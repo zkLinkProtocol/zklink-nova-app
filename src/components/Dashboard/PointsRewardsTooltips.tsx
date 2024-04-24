@@ -24,7 +24,7 @@ export default () => {
             fontSize: "14px",
             background: "#666",
             borderRadius: "0.5rem",
-            width: "15.8125rem",
+            width: "18rem",
           }}
           content={`Equivalent to depositing 1 ETH into the Nova Network for ${
             pointsMap[Number(key)]
