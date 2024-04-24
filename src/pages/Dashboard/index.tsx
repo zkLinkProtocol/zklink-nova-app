@@ -420,9 +420,9 @@ export default function Dashboard() {
   }, [address]);
 
   useEffect(() => {
-    eventBus.on("updateUserTvl", getUserTvlFunc);
+    eventBus.on("getUserTvl", getUserTvlFunc);
     return () => {
-      eventBus.remove("updateUserTvl", getUserTvlFunc);
+      eventBus.remove("getUserTvl", getUserTvlFunc);
     };
   }, []);
 

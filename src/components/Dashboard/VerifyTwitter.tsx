@@ -98,20 +98,20 @@ export default () => {
           .then(async (result: any) => {
             let { data } = await result.json();
             console.log("twitter data", data);
-
-            const res = await bindTwitter(address, access_token);
-            console.log("bindTwitter", res);
-            if (Number(res?.status) !== 0) {
-              toastTwitterError(res.message);
-              return;
-            }
-
-            eventBus.emit("updateInvite");
-            eventBus.emit("updateUserTvl");
           })
           .catch(() => {
             toastTwitterError();
           });
+
+        const res = await bindTwitter(address, access_token);
+        console.log("bindTwitter", res);
+        if (Number(res?.status) !== 0) {
+          toastTwitterError(res.message);
+          return;
+        }
+
+        eventBus.emit("getInvite");
+        eventBus.emit("getUserTvl");
       } else {
         toastTwitterError();
       }
@@ -169,8 +169,8 @@ export default () => {
         <Button
           className="gradient-btn"
           onClick={() => {
-            eventBus.emit("updateInvite");
-            eventBus.emit("updateUserTvl");
+            eventBus.emit("getInvite");
+            eventBus.emit("getUserTvl");
           }}
         >
           Verify
