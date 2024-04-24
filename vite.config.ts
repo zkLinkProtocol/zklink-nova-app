@@ -52,6 +52,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/app-api/, ""),
       },
+      "/twitter": {
+        target: "https://api.twitter.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/twitter/, ""),
+      },
     },
   },
   build: {

@@ -23,6 +23,7 @@ import {
   getRsethPoints,
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
+  getUserTvl,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,6 +54,7 @@ import TwitterVerify from "@/components/Dashboard/TwitterVerify";
 import axios from "axios";
 import NovaDropLink from "@/components/Dashboard/NovaDropLink";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
+import { eventBus } from "@/utils/event-bus";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -110,6 +112,12 @@ export enum TabType {
   Referral = 3,
 }
 
+export interface UserTvlData {
+  binded: boolean;
+  groupTvl: number;
+  referrerTvl: number;
+}
+
 export function DisclaimerFooter() {
   return (
     <div className="flex justify-between items-center">
@@ -159,6 +167,11 @@ export default function Dashboard() {
   const [groupTvl, setGroupTvl] = useState(0);
   const [totalTvl, setTotalTvl] = useState(0);
   const [referralTvl, setReferralTvl] = useState(0);
+  const [userTvl, setUserTvl] = useState<UserTvlData>({
+    binded: false,
+    groupTvl: 0,
+    referrerTvl: 0,
+  });
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
   const [nftPhase, setNftPhase] = useState(2); // default: phase 2
@@ -260,6 +273,19 @@ export default function Dashboard() {
     if (!address) return;
     const res = await getReferralTvl(address);
     setReferralTvl(res?.result || 0);
+  };
+
+  const getUserTvlFunc = async () => {
+    if (!address) return;
+    const res = await getUserTvl(address);
+    console.log("getUserTvlFunc", res);
+    if (res.result) {
+      setUserTvl({
+        binded: res.result.binded,
+        groupTvl: Number(res.result.groupTvl) || 0,
+        referrerTvl: Number(res.result.referrerTvl) || 0,
+      });
+    }
   };
 
   const getSupportTokensFunc = async () => {
@@ -435,6 +461,7 @@ export default function Dashboard() {
     getAccountRefferalsTVLFunc();
     getGroupTvlFunc();
     getReferralTvlFunc();
+    getUserTvlFunc();
     getTotalTvlFunc();
     getEigenlayerPointsFunc();
     getPufferPointsFunc();
@@ -447,6 +474,13 @@ export default function Dashboard() {
     getAllsparkTradePointsFunc();
     getBedrockPointsFunc();
   }, [address]);
+
+  useEffect(() => {
+    eventBus.on("getUserTvl", getUserTvlFunc);
+    return () => {
+      eventBus.remove("getUserTvl", getUserTvlFunc);
+    };
+  }, []);
 
   useEffect(() => {
     /**
