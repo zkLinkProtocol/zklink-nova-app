@@ -1,6 +1,6 @@
 import { Tooltip } from "react-tooltip";
 
-export default () => {
+export function getPointsRewardsTooltips(points: number) {
   const pointsMap: {
     [key: number]: string;
   } = {
@@ -13,10 +13,15 @@ export default () => {
     500: "~83 days",
     1000: "~167 days",
   };
+  return `Equivalent to depositing 1 ETH into the Nova Network for ${
+    pointsMap[Number(points)]
+  } without any additional multiplier.`;
+}
 
+export default () => {
   return (
     <>
-      {Object.keys(pointsMap).map((key) => (
+      {[1, 5, 10, 50, 100, 200, 500, 1000].map((key) => (
         <Tooltip
           key={key}
           id={`points-rewards-tips-${key}`}
@@ -26,9 +31,7 @@ export default () => {
             borderRadius: "0.5rem",
             width: "18rem",
           }}
-          content={`Equivalent to depositing 1 ETH into the Nova Network for ${
-            pointsMap[Number(key)]
-          } without any additional multiplier.`}
+          content={getPointsRewardsTooltips(Number(key))}
         />
       ))}
     </>
