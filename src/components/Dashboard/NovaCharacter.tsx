@@ -654,14 +654,12 @@ export default function NovaCharacter() {
     const isNovaPoints =
       mintResult?.name && mintResult.name.includes("Nova points");
 
-    let tips = "";
     if (isNovaPoints) {
       let match = mintResult.name.match(/\d+/);
       let key = match ? parseInt(match[0]) : 0;
-      tips = getPointsRewardsTooltips(key);
-    }
 
-    return tips;
+      return getPointsRewardsTooltips(key);
+    }
   }, [mintResult]);
 
   return (
@@ -1005,7 +1003,7 @@ export default function NovaCharacter() {
                   </p>
 
                   {mintResult?.name.includes("Nova points") &&
-                    mintPointsTips !== "" && (
+                    !!mintPointsTips && (
                       <p className="my-2 text-[14px] text-center text-[#C0C0C0]">
                         {mintPointsTips}
                       </p>

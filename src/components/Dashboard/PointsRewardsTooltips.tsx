@@ -13,9 +13,15 @@ export function getPointsRewardsTooltips(points: number) {
     500: "~83 days",
     1000: "~167 days",
   };
-  return `Equivalent to depositing 1 ETH into the Nova Network for ${
-    pointsMap[Number(points)]
-  } without any additional multiplier.`;
+  return (
+    <p>
+      Equivalent to depositing{" "}
+      <b className="font-[700] text-[#fff]">
+        1 ETH into the Nova Network for {pointsMap[Number(points)]}
+      </b>{" "}
+      without any additional multiplier.
+    </p>
+  );
 }
 
 export default () => {
@@ -31,7 +37,7 @@ export default () => {
             borderRadius: "0.5rem",
             width: "18rem",
           }}
-          content={getPointsRewardsTooltips(Number(key))}
+          render={() => getPointsRewardsTooltips(key)}
         />
       ))}
     </>
