@@ -122,7 +122,7 @@ export default function NFTLuckWinner() {
         const arr = random100.map(
           (item: TopInviteAndRandomRes, index: number) => ({
             ...item,
-            rewardType: "Lucky Lynks",
+            rewardType: index > 899 ? "Community Wiinner" : "Lucky Lynks",
             rank: index + 1,
           })
         );
@@ -168,15 +168,19 @@ export default function NFTLuckWinner() {
   return (
     <div className="relative z-1">
       <p className="py-2 text-[20px] font-satoshi text-[#B9C7D0] font-[700]">
-        <span className="text-green">
-          Each day, top 100 referrers of previous day and 900 randomly chosen
-          parade participants can mint a mystery box.
-        </span>{" "}
-        Additionally, every 1 ETH deposit can earn you an extra referral spot.
-        In cases where multiple users have the same referral ranking, we
-        randomly select some users to ensure that the daily distribution of top
-        referrers remains at 100. It's important to note that we collect data
-        from the previous day at 10:00 UTC and publish it an hour later.
+        Each day, top 100 referrers of previous day and 900 daily{" "}
+        <a
+          href="https://app.galxe.com/quest/zkLink/GCy79thyeZ"
+          target="_blank"
+          className="text-green inline-flex items-center gap-1"
+        >
+          <span>Galxe Quest</span>
+          <img src="/img/icon-open-in-new-green.svg" width={14} />
+        </a>{" "}
+        participants can mint a mystery box. Additionally, every 1 ETH deposit
+        can earn you an extra referral spot. In cases where multiple users have
+        the same referral ranking, we randomly select some users to ensure that
+        the daily distribution of top referrers remains at 100.
       </p>
       <div className="flex items-center py-4 px-2">
         <div className="flex items-center gap-2 text-[16px]">

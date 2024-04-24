@@ -37,6 +37,7 @@ import { eventBus } from "@/utils/event-bus";
 import { Abi } from "viem";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { getPointsRewardsTooltips } from "./PointsRewardsTooltips";
 
 export const TxResult = styled.div`
   .statusImg {
@@ -649,6 +650,20 @@ export default function NovaCharacter() {
     updateRefreshBalanceId,
   ]);
 
+  const mintPointsTips = useMemo(() => {
+    const isNovaPoints =
+      mintResult?.name && mintResult.name.includes("Nova points");
+
+    let tips = "";
+    if (isNovaPoints) {
+      let match = mintResult.name.match(/\d+/);
+      let key = match ? parseInt(match[0]) : 0;
+      tips = getPointsRewardsTooltips(key);
+    }
+
+    return tips;
+  }, [mintResult]);
+
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -666,8 +681,7 @@ export default function NovaCharacter() {
             content={
               <div className="flex flex-col py-2">
                 <p>
-                  With each referral, you'll get a chance to open an
-                  invite box.
+                  With each referral, you'll get a chance to open an invite box.
                 </p>
               </div>
             }
@@ -815,8 +829,8 @@ export default function NovaCharacter() {
             sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With each referral, you'll have the chance to randomly draw
-            one of the invite rewards.{" "}
+            With each referral, you'll have the chance to randomly draw one of
+            the invite rewards.{" "}
             <span className="text-[#fff] font-[700]">
               Please notice that Nova points rewards are not NFT
             </span>
@@ -989,6 +1003,13 @@ export default function NovaCharacter() {
                   <p className="text-[24px] font-inter font-normal">
                     {mintResult?.name}
                   </p>
+
+                  {mintResult?.name.includes("Nova points") &&
+                    mintPointsTips !== "" && (
+                      <p className="my-2 text-[14px] text-center text-[#C0C0C0]">
+                        {mintPointsTips}
+                      </p>
+                    )}
                 </div>
               )}
               {trademarkMintStatus === MintStatus.Success && (
