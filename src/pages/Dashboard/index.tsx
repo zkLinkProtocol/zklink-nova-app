@@ -50,6 +50,7 @@ import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Dashboard/Banner";
 import useNovaPoints from "@/hooks/useNovaPoints";
+import { Tooltip } from "react-tooltip";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -593,6 +594,12 @@ export default function Dashboard() {
                         ? "notify"
                         : ""
                     }`}
+                    data-tooltip-id={
+                      (remainMintCount > 0 || remainMintCountV2 > 0) &&
+                      index === 2
+                        ? "remain-notify"
+                        : undefined
+                    }
                     onClick={() => setTabsActive(index)}
                   >
                     {item}
@@ -600,6 +607,17 @@ export default function Dashboard() {
                 )
               )}
             </TabsBox>
+
+            <Tooltip
+              id="remain-notify"
+              style={{
+                fontSize: "14px",
+                background: "#666",
+                borderRadius: "0.5rem",
+                width: "18rem",
+              }}
+              content="You've received Phase II Mystery Boxes! Open it now!"
+            />
 
             {/* Tabs view: Assets */}
             {tabsActive === TabType.Eco && <EcoDApps data={ecoDappsData} />}
