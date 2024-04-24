@@ -87,20 +87,34 @@ export default () => {
       const { access_token } = await getTwitterAccessToken(params);
       console.log(access_token);
 
-      if (!access_token) {
+      if (access_token && access_token !== "") {
+        fetch("/twitter/2/users/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        })
+          .then(async (result: any) => {
+            let { data } = await result.json();
+            console.log("twitter data", data);
+
+            const res = await bindTwitter(address, access_token);
+            console.log("bindTwitter", res);
+            if (Number(res?.status) !== 0) {
+              toastTwitterError(res.message);
+              return;
+            }
+
+            eventBus.emit("updateInvite");
+            eventBus.emit("updateUserTvl");
+          })
+          .catch(() => {
+            toastTwitterError();
+          });
+      } else {
         toastTwitterError();
-        return;
       }
-
-      const res = await bindTwitter(address, access_token);
-      console.log("bindTwitter", res);
-      if (Number(res?.status) !== 0) {
-        toastTwitterError(res.message);
-        return;
-      }
-
-      eventBus.emit("updateInvite");
-      eventBus.emit("getUserTvlFunc");
     } catch (error: any) {
       console.error(error);
       toastTwitterError();
@@ -126,7 +140,7 @@ export default () => {
     }
   }, [searchParams]);
 
-  return !!invite?.twitterHandler ? (
+  return false ? (
     <CardBox className="px-[1.5rem] py-[1.5rem] flex justify-between items-center successed">
       <div className="flex items-center gap-2">
         <img src="/img/icon-twitter.svg" width={20} />
@@ -156,7 +170,7 @@ export default () => {
           className="gradient-btn"
           onClick={() => {
             eventBus.emit("updateInvite");
-            eventBus.emit("getUserTvl");
+            eventBus.emit("updateUserTvl");
           }}
         >
           Verify
