@@ -1,13 +1,15 @@
-import { getTwitterAccessToken } from "@/api";
+import { bindTwitter, getTwitterAccessToken } from "@/api";
 import { RootState } from "@/store";
 import { CardBox } from "@/styles/common";
 import { getRandomNumber } from "@/utils";
+import { eventBus } from "@/utils/event-bus";
 import { Button } from "@nextui-org/react";
 import qs from "qs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { useAccount } from "wagmi";
 
 const env = import.meta.env.VITE_ENV;
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
@@ -64,10 +66,48 @@ export default () => {
     setTwitterLoading(false);
   };
 
-  const bindTwitter = async (code: string) => {
+  const { address } = useAccount();
+
+  const bindTwitterFunc = async (code: string) => {
+    if (!address) return;
+    console.log("twitter auth code", code);
     setTwitterLoading(true);
 
-    //TODO: Send twitter auth code to backend
+    const clientId = getTwitterClientId();
+    const params = {
+      code,
+      grant_type: "authorization_code",
+      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
+      // redirect_uri: "http://localhost:3000/aggregation-parade",
+      client_id: clientId,
+      redirect_uri: twitterCallbackURL,
+      code_verifier: "challenge",
+    };
+    try {
+      const { access_token } = await getTwitterAccessToken(params);
+      console.log(access_token);
+
+      if (!access_token) {
+        toastTwitterError();
+        return;
+      }
+
+      const res = await bindTwitter(address, access_token);
+      console.log("bindTwitter", res);
+      if (Number(res?.status) !== 0) {
+        toastTwitterError(res.message);
+        return;
+      }
+
+      eventBus.emit("updateInvite");
+      eventBus.emit("getUserTvlFunc");
+    } catch (error: any) {
+      console.error(error);
+      toastTwitterError();
+    } finally {
+      setSearchParams("");
+      setTwitterLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -81,8 +121,8 @@ export default () => {
     }
 
     if (code) {
-      bindTwitter(code);
-      setSearchParams("");
+      bindTwitterFunc(code);
+      // setSearchParams("");
     }
   }, [searchParams]);
 
@@ -94,7 +134,7 @@ export default () => {
           Congratulations! your account has been activated now!
         </span>
       </div>
-      <img src="/img/icon-right.svg" width={20} />
+      <img src="/img/icon-right.svg" width={20} className="ml-1" />
     </CardBox>
   ) : (
     <CardBox className="px-[1.5rem] py-[1.5rem] flex justify-between items-center">
@@ -112,7 +152,15 @@ export default () => {
         >
           Follow
         </Button>
-        <Button className="gradient-btn">Verify</Button>
+        <Button
+          className="gradient-btn"
+          onClick={() => {
+            eventBus.emit("updateInvite");
+            eventBus.emit("getUserTvl");
+          }}
+        >
+          Verify
+        </Button>
       </div>
     </CardBox>
   );

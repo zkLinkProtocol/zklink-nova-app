@@ -8,6 +8,7 @@ type Response = {
   result?: any;
   error?: any;
   data?: any;
+  statusCode?: number;
 };
 
 const isProd = import.meta.env.PROD;
@@ -494,3 +495,18 @@ export const getRsethPoints = (address: string): Promise<RsethPointsResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/rseth/points`, {
     params: { address },
   });
+
+export const getUserTvl = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/user/tvl`, {
+    params: { address },
+  });
+
+export const bindTwitter = (
+  address: string,
+  accessToken: string
+): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/bind/twitter`, {
+    address,
+    accessToken,
+  });
+};
