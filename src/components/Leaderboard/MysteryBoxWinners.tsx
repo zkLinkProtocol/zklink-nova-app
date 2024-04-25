@@ -97,7 +97,7 @@ export default function NFTLuckWinner() {
   const getTopInviteAndRandomFunc = async (date?: string) => {
     setIsLoading(true);
     try {
-      const { result } = await getTopInviteAndRandom('2024-04-25');
+      const { result } = await getTopInviteAndRandom(date);
       console.log("getTopInviteAndRandom", result);
 
       let top100Arr: TopInviteAndRandom[] = [];
