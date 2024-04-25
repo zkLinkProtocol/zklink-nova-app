@@ -10,6 +10,7 @@ import {
   lineaSepolia,
   linea,
   mantleTestnet,
+  mantleSepoliaTestnet,
   mantaTestnet,
   arbitrum,
   mantle,
@@ -107,6 +108,10 @@ export const l1Networks = {
   },
   mantaGoerliTestnet: {
     ...mantaTestnet,
+    name: "Manta Goerli Testnet",
+  },
+  mantaSepoliaTestnet: {
+    ...mantleSepoliaTestnet,
     name: "Manta Sepolia Testnet",
   },
   manta: {
@@ -303,9 +308,9 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     name: "zkLink Nova Testnet",
     rpcUrl: "https://sepolia.rpc.zklink.io",
     logoUrl: "/img/ethereum.svg",
-    blockExplorerUrl: "https://goerli.explorer.zklink.io",
-    blockExplorerApi: "https://goerli.explorer-api.zklink.io",
-    withdrawalFinalizerApi: "https://goerli.withdrawal-api.zklink.io",
+    blockExplorerUrl: "https://sepolia.explorer.zklink.io",
+    blockExplorerApi: "https://sepolia.explorer-api.zklink.io",
+    withdrawalFinalizerApi: "https://sepolia.withdrawal-api.zklink.io",
     mainContract: "0x80e41d1801E5b7F9a9f4e55Fd37bF2F3e797aC64",
     erc20BridgeL1: "0xa403d1A5B552BC17132aAD864F90472794678712",
     erc20BridgeL2: "0x369181F0724D485c2F50E918b1beCEc078C7077C",
@@ -345,7 +350,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     l1Gateway: "0x7bf83D15C8f5a491B36506652A26d4bA0b6cC289",
     isEthGasToken: false,
     //TODO
-    l1Network: l1Networks.mantleGoerliTestnet,
+    l1Network: l1Networks.mantleSepoliaTestnet,
   },
 ];
 
@@ -387,7 +392,7 @@ export const chains: readonly [Chain, ...Chain[]] =
     ? [
         sepolia,
         lineaSepolia,
-        mantleTestnet,
+        mantleSepoliaTestnet,
         createEraChain(nexusGoerliNode[0]) as Chain,
       ]
     : [
