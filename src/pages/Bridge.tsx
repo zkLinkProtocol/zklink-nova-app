@@ -9,6 +9,7 @@ import TotalTvlCard from "@/components/TotalTvlCard";
 import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Banner from "@/components/Banner";
 
 export const BgBox = styled.div`
   position: relative;
@@ -49,7 +50,7 @@ export default function Bridge() {
     <>
       <div className="text-base mt-8">
         <h2 className="text-[1.5rem] text-[#fff] font-[700]">
-          Aggregation Parade Phase II - Updates
+          Aggregation Parade Phase II
         </h2>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
           The minimal entry requirement has been lowered from 0.25ETH/
@@ -132,11 +133,12 @@ export default function Bridge() {
           </p>
         </div>
       </div>
-      <div className="text-base mt-8">
-        <h2 className="text-[1.5rem] text-[#fff] font-[700]">
-          Aggregation Parade Phase I
-        </h2>
-        <p className="mt-[0.75rem] font-normal">
+
+      <div className="text-base mt-8 text-[#A0A5AD]">
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          💻 How we calculate Nova Points
+        </h3>
+        <p className="mt-[0.75rem]">
           You can see the detail and formula of how we calculate Nova points{" "}
           <a
             href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
@@ -146,49 +148,28 @@ export default function Bridge() {
             here
           </a>
           .
-          <br />
-          <br />
-          More ECO DApps bonus boost will be updated by Apr 14th, 2024
-        </p>
-        <p className="mt-6 font-bold">Minimal Entry: </p>
-        <ul className="list mb-8">
-          <li>1. First 7 days 0.1 ETH</li>
-          <li>2. After the 7th day 0.25 ETH</li>
-        </ul>
-        <p className="mt-6">
-          <span className="font-bold">Deposit / Bridge Assets to Nova: </span>
-          Bridging any supported assets to Nova can instantly earn Nova points.
         </p>
         <p className="mt-6">
-          <span className="font-bold"> Holding assets on Nova: </span>
+          <span className="font-bold text-[#fff]">
+            Holding assets on Nova:{" "}
+          </span>
           Holding any supported assets on Nova allows you to accrue Nova points
           every 8 hours until the final Nova Point computation date.
         </p>
         <p className="mt-6">
-          <span className="font-bold"> Referral Rewards: </span>
+          <span className="font-bold text-[#fff]">Referral Rewards: </span>
           By inviting friends, you can earn 10% of the Nova points they earn
           throughout the duration of the Aggregation Parade.
         </p>
 
         <p className="mt-6">
-          <span className="font-bold">Multiplier: </span>
-          <br />
-          <span className="font-bold">Early Bird Multiplier: </span>
-          During Phase 1 of the Nova Aggregation Parade, withdrawals are
-          temporarily restricted for a Maximum of 30 days.
-        </p>
-        <p className="mt-6">
-          <span className="font-bold">Token Multiplier: </span>
+          <span className="font-bold text-[#fff]">Token Multiplier: </span>
           Tokens are categorized into three tiers, with higher liquidity tokens
           receiving more Nova Points.
         </p>
+
         <p className="mt-6">
-          <span className="font-bold"> Deposit Multiplier: </span>
-          After making a valid deposit, you will instantly receive a x10 Nova
-          Points boost.
-        </p>
-        <p className="mt-6">
-          <span className="font-bold"> Group Multiplier: </span>
+          <span className="font-bold text-[#fff]">Group Multiplier: </span>
           You, along with the users you've referred and their subsequent
           referrals, will be placed into the same group. This group has the
           potential to unlock Group Booster by achieving the following
@@ -202,7 +183,7 @@ export default function Bridge() {
     <>
       <div className="text-base mt-8">
         <h2 className="text-[1.5rem] text-[#fff] font-[700]">
-          Aggregation Parade Phase II - Updates
+          Aggregation Parade Phase II
         </h2>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500] ">
           <b className="text-[#fff] font-[700]">INITIAL ONE-TIME BOOST</b> in
@@ -250,18 +231,23 @@ export default function Bridge() {
           🎁 Invite Box
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>With each referral, you'll receive an 'Invite Box'.</p>
+          <p>
+            With each referral, you'll receive an 'Invite Box', and have the
+            opportunity to win one of the following rewards: point boosters, NFT
+            trademarks, and Lynks.
+          </p>
+        </div>
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          😀 Nova NFT Introduction
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>
+            You will be able to mint one of the four Nova SBT once you bridge a
+            minimal worth of 0.1 ETH.
+          </p>
         </div>
       </div>
       <div className="text-base mt-8">
-        <h2 className="text-[1.5rem] text-[#fff] font-[700]">
-          Aggregation Parade Phase I
-        </h2>
-
-        <p className="mt-[0.75rem] font-normal">
-          You will be able to mint one of the four Nova SBT once you bridge a
-          minimal worth of 0.1 ETH.
-        </p>
         <div className="flex items-center mt-8 mb-8">
           <img
             className="w-16 h-16 md:w-20 md:h-20 mr-6"
@@ -284,17 +270,12 @@ export default function Bridge() {
             alt=""
           />
         </div>
-        <p className="font-medium text-[16px] text-[#A0A5AD]">
-          Upon collecting your SBT, you can upgrade it into an ERC-721 NFT
-          through collecting different types of 4 trademark NFTs with our
-          referral program.
-        </p>
-        <p className="font-medium text-[16px] text-[#A0A5AD]">
-          You will get a trademark NFT airdrop for each 3 referrals <br />
-          Top 100 on the referral leader-board and 50 Randon users are eligible
-          to mint a Mystery Box every day.
-        </p>
-        <p className="font-medium text-[16px] mt-10">
+
+        <p className="mt-10 text-[1rem] text-[#A0A5AD] font-[500]">
+          Upon collecting your SBT, you can upgrade it into Nova Lynks through
+          collecting different types of 4 trademark NFTs.
+          <br />
+          <br />
           Once you upgrade your SBT to Nova Lynks, here are the utilities.
         </p>
       </div>
@@ -319,16 +300,14 @@ export default function Bridge() {
 
   return (
     <BgBox>
-      <div className="relative mb-4 z-[10]">
+      {/* <div className="relative mb-4 z-[10]">
+        <img src="/img/banner-zkl-1.gif" className="w-full md:block hidden" />
         <img
-          src="/img/zklink-nova-banner@2x.png"
-          className="w-full hidden md:block"
-        />
-        <img
-          src="/img/zklink-nova-banner-mobile.png"
+          src="/img/banner-zkl-mobile.gif"
           className="w-full block md:hidden"
         />
-      </div>
+      </div> */}
+      <Banner />
       <div className="block lg:flex md:py-24 pb-24 pt-6">
         <div className="md:hidden mx-6 mb-16">
           <BridgeComponent />
