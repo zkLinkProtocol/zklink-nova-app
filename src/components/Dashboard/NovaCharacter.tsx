@@ -654,14 +654,12 @@ export default function NovaCharacter() {
     const isNovaPoints =
       mintResult?.name && mintResult.name.includes("Nova points");
 
-    let tips = "";
     if (isNovaPoints) {
       let match = mintResult.name.match(/\d+/);
       let key = match ? parseInt(match[0]) : 0;
-      tips = getPointsRewardsTooltips(key);
-    }
 
-    return tips;
+      return getPointsRewardsTooltips(key);
+    }
   }, [mintResult]);
 
   return (
@@ -1000,15 +998,16 @@ export default function NovaCharacter() {
                     className="w-[10rem] h-[10rem] rounded-xl my-4 bg-[#3C4550]"
                   />
 
-                  {mintResult?.name.includes("Nova points") &&
-                    mintPointsTips !== "" && (
-                      <p className="my-2 text-[16px] text-center">
-                        {getPointsRewardsTooltips(Number())}
-                      </p>
-                    )}
                   <p className="text-[24px] font-inter font-normal">
                     {mintResult?.name}
                   </p>
+
+                  {mintResult?.name.includes("Nova points") &&
+                    !!mintPointsTips && (
+                      <p className="my-2 text-[14px] text-center text-[#C0C0C0]">
+                        {mintPointsTips}
+                      </p>
+                    )}
                 </div>
               )}
               {trademarkMintStatus === MintStatus.Success && (
