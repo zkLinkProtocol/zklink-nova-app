@@ -21,7 +21,7 @@ export const GradientButton = styled.span`
 
 export const BgBox = styled.div`
   position: relative;
-  padding-top: 5.5rem;
+  padding-top: 4.5rem;
   padding-bottom: 2rem;
   width: 100%;
   min-height: 100vh;
