@@ -300,10 +300,10 @@ export const nexusNode: ZkSyncNetwork[] = [
 
 export const nexusGoerliNode: ZkSyncNetwork[] = [
   {
-    id: 810182,
+    id: 810181,
     key: "goerli",
     name: "zkLink Nova Testnet",
-    rpcUrl: "https://goerli.rpc.zklink.io",
+    rpcUrl: "https://sepolia.rpc.zklink.io",
     logoUrl: "/img/ethereum.svg",
     blockExplorerUrl: "https://goerli.explorer.zklink.io",
     blockExplorerApi: "https://goerli.explorer-api.zklink.io",
@@ -317,10 +317,10 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     l1Network: l1Networks.goerli,
   },
   {
-    id: 810182,
+    id: 810181,
     key: PRIMARY_CHAIN_KEY, //"primary"
     name: "zkLink Nova Testnet",
-    rpcUrl: "https://goerli.rpc.zklink.io",
+    rpcUrl: "https://sepolia.rpc.zklink.io",
     logoUrl: "/img/linea.svg",
     blockExplorerUrl: "https://goerli.explorer.zklink.io",
     blockExplorerApi: "https://goerli.explorer-api.zklink.io",
@@ -333,10 +333,10 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     l1Network: l1Networks.lineaGoerliTestnet,
   },
   {
-    id: 810182,
+    id: 810181,
     key: "mantle",
     name: "zkLink Nova Testnet",
-    rpcUrl: "https://goerli.rpc.zklink.io",
+    rpcUrl: "https://sepolia.rpc.zklink.io",
     logoUrl: "/img/ethereum.svg",
     blockExplorerUrl: "https://goerli.explorer.zklink.io",
     blockExplorerApi: "https://goerli.explorer-api.zklink.io",

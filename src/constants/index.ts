@@ -14,7 +14,7 @@ export const WRAPPED_MNT =
     ? "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A"
     : "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
 
-export const NOVA_CHAIN_ID = nodeType === "nexus-goerli" ? 810182 : 810180;
+export const NOVA_CHAIN_ID = nodeType === "nexus-goerli" ? 810181 : 810180;
 
 export const NOVA_NFT_CONTRACT =
   nodeType === "nexus-goerli"

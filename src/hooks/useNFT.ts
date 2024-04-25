@@ -130,7 +130,7 @@ const useNovaNFT = () => {
       });
       const fee = await zkSyncProvider.attachEstimateFee(
         nodeType === "nexus-goerli"
-          ? "https://goerli.rpc.zklink.io"
+          ? "https://sepolia.rpc.zklink.io"
           : "https://rpc.zklink.io"
       )({
         from: address as `0x${string}`,
