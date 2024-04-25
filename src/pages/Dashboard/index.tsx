@@ -23,6 +23,7 @@ import {
   getRsethPoints,
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
+  getNovaProjectPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -371,6 +372,26 @@ export default function Dashboard() {
     setKelpEigenlayerPoints(elPoints);
   };
 
+  const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
+  const getAquaNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "aqua");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setAquaNovaPoints(points);
+  };
+
+  const [izumiNovaPoints, setIzumiNovaPoints] = useState(0);
+  const getIzumiNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "izumi");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setIzumiNovaPoints(points);
+  };
+
   /**
    * Init: Get data from server
    */
@@ -390,6 +411,8 @@ export default function Dashboard() {
     getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
     getRsethPointsFunc();
+    getAquaNovaPointsFunc();
+    getIzumiNovaPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -465,7 +488,7 @@ export default function Dashboard() {
       earned: `${lauyerbankPoints.length} Points`,
       status: "Live",
       multiplier: "2x Nova Points",
-      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
 
     const linkswapPoints = [
@@ -483,16 +506,60 @@ export default function Dashboard() {
       type: "Dex",
       points: linkswapPoints,
       earned: `${linkswapPoints.length} Points + Yield`,
-      status: "Syncing Data",
+      status: "Live",
       multiplier: "1.5x Nova Points",
-      description: `You gain points multiplied by the amount of liquidity you've provided for each block that it's in a pool.`,
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
-    return [layerbank, linkswap];
+
+    const aquaPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(aquaNovaPoints),
+      },
+    ];
+
+    const aqua = {
+      name: "Aqua",
+      handler: "@native_fi",
+      link: "https://aqua.native.org/dashboard/user/?chainId=810180",
+      iconURL: "/img/icon-aqua.svg",
+      booster: "2x",
+      type: "Lending",
+      points: aquaPoints,
+      earned: `1 Points + Yield`,
+      status: "Live",
+      multiplier: "2x Nova Points",
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+    };
+
+    const izumiPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(izumiNovaPoints),
+      },
+    ];
+
+    const izumi = {
+      name: "iZUMI",
+      handler: "@izumi_Finance",
+      link: "https://izumi.finance/trade/pools",
+      iconURL: "/img/icon-izumi.svg",
+      booster: "2x",
+      type: "DEX",
+      points: izumiPoints,
+      earned: `1 Points + Yield`,
+      status: "Live",
+      multiplier: "2x Nova Points",
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+    };
+    return [layerbank, linkswap, aqua, izumi];
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,
     layerbankEigenlayerPoints,
     linkswapNovaPoints,
+    aquaNovaPoints,
+    izumiNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);
