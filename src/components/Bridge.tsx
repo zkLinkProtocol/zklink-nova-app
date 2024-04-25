@@ -26,7 +26,7 @@ import {
   AiOutlineCopy,
 } from "react-icons/ai";
 import toast from "react-hot-toast";
-import { debounce, has } from "lodash";
+import { debounce, divide, has } from "lodash";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import BigNumber from "bignumber.js";
 import { useBridgeNetworkStore } from "@/hooks/useNetwork";
@@ -62,6 +62,8 @@ import { useConnections } from "wagmi";
 import { Switch, cn } from "@nextui-org/react";
 import { SourceTokenInfo, useMergeToken } from "@/hooks/useMergeToken";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -997,21 +999,65 @@ export default function Bridge(props: IBridgeComponentProps) {
             <div className="flex items-center justify-between mb-2 points-box">
               <div className="flex items-center">
                 <span>zkLink's Oldest Friends</span>
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "max-w-[32rem] p-4",
-                  }}
+
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                  data-tooltip-id="old-fren"
+                />
+
+                <ReactTooltip
+                  id="old-fren"
                   content="zkLink's oldest friends (previous campaign participants) taking part in the zkLink Aggregation Parade will have the opportunity to win one of the following rewards: point boosters, NFT trademarks, and Lynks."
-                >
-                  <img
-                    src={"/img/icon-tooltip.png"}
-                    className="w-[14px] cursor-pointer ml-1 mr-4"
-                  />
-                </Tooltip>
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "32rem",
+                  }}
+                />
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[#0BC48F] text-[14px]">1 Lucky Draw</span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TODO: show for Coinlist Participants */}
+          {true && (
+            <div className="flex items-center justify-between mb-2 points-box">
+              <div className="flex items-center">
+                <span>zkLink Participants</span>
+
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                  data-tooltip-id="coinlist-participants"
+                />
+
+                <ReactTooltip
+                  id="coinlist-participants"
+                  content="Previous zkLink Coinlist participants taking part in the
+                  zkLink Aggregation Parade will receive 1 mystery box which
+                  could win one of the following rewards: Nova Points
+                  boosters, NFT trademarks, and Lynks."
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "32rem",
+                  }}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px]">
+                  1 Mystery Box
+                </span>
                 <img
                   src="/img/icon-old-fren-right.svg"
                   width={16}
