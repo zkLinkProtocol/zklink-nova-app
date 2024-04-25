@@ -510,3 +510,19 @@ export const bindTwitter = (
     accessToken,
   });
 };
+export interface NovaProjectPoints {
+  errno: number;
+  errmsg: string;
+  data: {
+    address: string;
+    poolAddress: string;
+    points: string;
+  }[];
+}
+export const getNovaProjectPoints = (
+  address: string,
+  project: string
+): Promise<NovaProjectPoints> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/points/project`, {
+    params: { address, project },
+  });
