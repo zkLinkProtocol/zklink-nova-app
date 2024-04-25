@@ -236,7 +236,7 @@ export default function Bridge() {
           <p>
             Each day, top 100 referrers of previous day and 900 randomly{" "}
             <a
-              href="https://app.galxe.com/quest/zkLink/GCy79thyeZ"
+              href="https://app.galxe.com/quest/zkLink/GCqPcthi45"
               target="_blank"
               className="text-green inline-flex items-center gap-1"
             >

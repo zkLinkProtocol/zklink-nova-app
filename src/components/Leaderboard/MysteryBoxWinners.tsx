@@ -171,7 +171,7 @@ export default function NFTLuckWinner() {
       <p className="py-2 text-[20px] font-satoshi text-[#B9C7D0] font-[700]">
         Each day, top 100 referrers of previous day and 900 daily{" "}
         <a
-          href="https://app.galxe.com/quest/zkLink/GCy79thyeZ"
+          href="https://app.galxe.com/quest/zkLink/GCqPcthi45"
           target="_blank"
           className="text-green inline-flex items-center gap-1"
         >
