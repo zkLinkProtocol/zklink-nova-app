@@ -102,6 +102,7 @@ export default function NFTLuckWinner() {
 
       let top100Arr: TopInviteAndRandom[] = [];
       let random100Arr: TopInviteAndRandom[] = [];
+      let communityArr: TopInviteAndRandom[] = [];
 
       if (result && result?.top100 && Array.isArray(result.top100)) {
         const { top100 } = result;
@@ -122,7 +123,6 @@ export default function NFTLuckWinner() {
         const arr = random100.map(
           (item: TopInviteAndRandomRes, index: number) => ({
             ...item,
-            // rewardType: index > 899 ? "Community Wiinner" : "Lucky Lynks",
             rewardType: "Lucky Lynks",
             rank: index + 1,
           })
@@ -130,8 +130,21 @@ export default function NFTLuckWinner() {
         random100Arr = arr;
       }
 
+      if (result && result?.community && Array.isArray(result.community)) {
+        const { community } = result;
+
+        const arr = community.map(
+          (item: TopInviteAndRandomRes, index: number) => ({
+            ...item,
+            rewardType: "Community Wiinner",
+            rank: index + 1,
+          })
+        );
+        communityArr = arr;
+      }
+
       const all = top100Arr
-        .concat(random100Arr)
+        .concat(random100Arr, communityArr)
         .map((item, index) => ({ ...item, rank: index + 1 }));
 
       const self = all.find(
