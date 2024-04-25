@@ -494,3 +494,20 @@ export const getRsethPoints = (address: string): Promise<RsethPointsResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/rseth/points`, {
     params: { address },
   });
+
+export interface NovaProjectPoints {
+  errno: number;
+  errmsg: string;
+  data: {
+    address: string;
+    poolAddress: string;
+    points: string;
+  }[];
+}
+export const getNovaProjectPoints = (
+  address: string,
+  project: string
+): Promise<NovaProjectPoints> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/points/project`, {
+    params: { address, project },
+  });
