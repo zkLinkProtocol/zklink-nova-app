@@ -47,9 +47,14 @@ export default defineConfig({
     port: 3001,
     proxy: {
       "/app-api": {
-        target: "https://app-api.zklink.io",
+        target: "https://goerli.app.zklink.io",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/app-api/, ""),
+      },
+      "/twitter": {
+        target: "https://api.twitter.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/twitter/, ""),
       },
     },
   },

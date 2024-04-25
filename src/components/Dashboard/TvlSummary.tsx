@@ -1,19 +1,19 @@
+import { UserTvlData } from "@/pages/Dashboard";
 import { RootState } from "@/store";
 import { CardBox } from "@/styles/common";
 import { formatNumberWithUnit, getTweetShareText } from "@/utils";
-import { Tooltip } from "@nextui-org/react";
+import { Skeleton, Tooltip } from "@nextui-org/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 interface ITvlSummaryProps {
   totalTvl: number;
-  groupTvl: number;
-  referralTvl: number;
+  userTvl: UserTvlData;
 }
 
 export default function TvlSummary(props: ITvlSummaryProps) {
-  const { totalTvl, groupTvl, referralTvl } = props;
+  const { totalTvl, userTvl } = props;
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [showTooltip4, setShowTooltip4] = useState(false);
 
@@ -30,14 +30,40 @@ export default function TvlSummary(props: ITvlSummaryProps) {
           <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
             {formatNumberWithUnit(totalTvl, "$")}
           </p>
+
           <p className="mt-[1rem] text-[1rem] leading-[rem] md:text-center text-left text-[#7E7E7E]">
             Nova Network TVL
           </p>
         </div>
+
         <div>
-          <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
-            {formatNumberWithUnit(groupTvl, "ETH")}
-          </p>
+          {userTvl.binded ? (
+            <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
+              {formatNumberWithUnit(userTvl.groupTvl, "ETH")}
+            </p>
+          ) : (
+            <div className="flex items-center">
+              <span className="text-[1.5rem] leading-[2rem]">
+                {userTvl.groupTvl}
+              </span>
+              <Skeleton className="mx-1 h-[1.5rem] w-[4rem] rounded-full" />
+              <span className="ml-[0.15rem] mr-[0.3rem] text-[1.5rem] leading-[2rem] md:text-center text-left">
+                ETH
+              </span>
+              <Tooltip
+                content="To unlock this data, please follow @zkLinkNova & @zkLink_Official on X."
+                className="p-[1rem] w-[21.25rem] text-[1rem]"
+                placement="top"
+                showArrow
+              >
+                <img
+                  src="/img/icon-info.svg"
+                  className="w-[0.875rem] opacity-40"
+                />
+              </Tooltip>
+            </div>
+          )}
+
           <p className="mt-[1rem] text-[1rem] leading-[rem] md:text-center text-left text-[#7E7E7E]">
             Group TVL
           </p>
@@ -45,9 +71,32 @@ export default function TvlSummary(props: ITvlSummaryProps) {
       </CardBox>
       <CardBox className="md:flex md:justify-around md:py-[3rem] md:px-0 md:w-1/2 md:my-0 my-[1rem] p-3">
         <div className="mb-3  md:mb-0">
-          <p className="text-[1.5rem] leading-[2rem]  md:text-center text-left">
-            {formatNumberWithUnit(referralTvl, "ETH")}
-          </p>
+          {userTvl.binded ? (
+            <p className="text-[1.5rem] leading-[2rem]  md:text-center text-left">
+              {formatNumberWithUnit(userTvl.referrerTvl, "ETH")}
+            </p>
+          ) : (
+            <div className="flex items-center">
+              <span className="text-[1.5rem] leading-[2rem]">
+                {userTvl.referrerTvl}
+              </span>
+              <Skeleton className="mx-1 h-[1.5rem] w-[4rem] rounded-full" />
+              <span className="ml-[0.15rem] mr-[0.3rem] text-[1.5rem] leading-[2rem] md:text-center text-left">
+                ETH
+              </span>
+              <Tooltip
+                content="To unlock this data, please follow @zkLinkNova & @zkLink_Official on X."
+                className="p-[1rem] w-[21.25rem] text-[1rem]"
+                placement="top"
+                showArrow
+              >
+                <img
+                  src="/img/icon-info.svg"
+                  className="w-[0.875rem] opacity-40"
+                />
+              </Tooltip>
+            </div>
+          )}
           <p className="mt-[1rem] text-[1rem] leading-[rem]  md:text-center text-left text-[#7E7E7E]">
             Referral TVL
           </p>
