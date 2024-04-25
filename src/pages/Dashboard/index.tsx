@@ -375,7 +375,7 @@ export default function Dashboard() {
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
   const getAquaNovaPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getNovaProjectPoints('0xdb714c6c6bd7d1bab01c8e8787f41a8e6b9f2d0c', "aqua");
+    const { data } = await getNovaProjectPoints(address, "aqua");
     console.log("getNovaPointsFunc", data);
 
     const points = data.reduce((prev, item) => prev + Number(item.points), 0);
