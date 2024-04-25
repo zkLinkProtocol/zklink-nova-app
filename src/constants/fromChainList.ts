@@ -13,9 +13,12 @@ import blastIcon from "../assets/img/blast.svg";
 import optimismIcon from "../assets/img/optimism.svg";
 import baseIcon from "../assets/img/base.svg";
 import {
+  sepolia,
   goerli,
+  lineaSepolia,
   lineaTestnet,
   mantleTestnet,
+  mantleSepoliaTestnet,
   mainnet,
   linea,
   zkSync,
@@ -145,34 +148,34 @@ const FromListMainnet = [
 
 const FromListGoerli = [
   {
-    label: "Ethereum Goerli Testnet",
+    label: "Ethereum Sepolia Testnet",
     icon: ethereumIcon,
-    chainId: goerli.id,
-    networkKey: "goerli",
+    chainId: sepolia.id,
+    networkKey: "sepolia",
     isEthGasToken: true,
-    chainName: "Goerli",
-    explorerUrl: goerli.blockExplorers.default.url,
-    rpcUrl: goerli.rpcUrls.default.http[0],
+    chainName: "Sepolia",
+    explorerUrl: sepolia.blockExplorers.default.url,
+    rpcUrl: sepolia.rpcUrls.default.http[0],
   },
   {
-    label: "Linea Goerli Testnet",
+    label: "Linea Sepolia Testnet",
     icon: lineaIcon,
-    chainId: lineaTestnet.id,
+    chainId: lineaSepolia.id,
     networkKey: PRIMARY_CHAIN_KEY,
     isEthGasToken: true,
-    chainName: "Linea Goerli",
-    explorerUrl: lineaTestnet.blockExplorers.default.url,
-    rpcUrl: lineaTestnet.rpcUrls.default.http[0],
+    chainName: "Linea Sepolia",
+    explorerUrl: lineaSepolia.blockExplorers.default.url,
+    rpcUrl: lineaSepolia.rpcUrls.default.http[0],
   },
   {
-    label: "Mantle Goerli Testnet",
+    label: "Mantle Sepolia Testnet",
     icon: mantleIcon,
-    chainId: mantleTestnet.id,
+    chainId: mantleSepoliaTestnet.id,
     networkKey: "mantle",
     isEthGasToken: false,
-    chainName: "Mantle Goerli",
-    explorerUrl: mantleTestnet.blockExplorers.default.url,
-    rpcUrl: mantleTestnet.rpcUrls.default.http[0],
+    chainName: "Mantle Sepolia",
+    explorerUrl: mantleSepoliaTestnet.blockExplorers.default.url,
+    rpcUrl: mantleSepoliaTestnet.rpcUrls.default.http[0],
   },
 ];
 
