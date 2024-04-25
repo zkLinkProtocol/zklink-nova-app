@@ -24,6 +24,7 @@ import {
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
   getUserTvl,
+  getNovaProjectPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -1298,11 +1299,7 @@ export default function Dashboard() {
         <div className="md:w-full maxWid">
           {!invite?.twitterHandler && <TwitterVerify />}
 
-          <TvlSummary
-            totalTvl={totalTvl}
-            groupTvl={groupTvl}
-            referralTvl={referralTvl}
-          />
+          <TvlSummary totalTvl={totalTvl} userTvl={userTvl} />
 
           {/* Group Milestone */}
           {/* <div className="mt-[2rem]">
