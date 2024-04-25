@@ -9,6 +9,7 @@ import TotalTvlCard from "@/components/TotalTvlCard";
 import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Banner from "@/components/Banner";
 
 export const BgBox = styled.div`
   position: relative;
@@ -49,7 +50,7 @@ export default function Bridge() {
     <>
       <div className="text-base mt-8">
         <h2 className="text-[1.5rem] text-[#fff] font-[700]">
-          Aggregation Parade Phase II - Updates
+          Aggregation Parade Phase II
         </h2>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
           The minimal entry requirement has been lowered from 0.25ETH/
@@ -138,8 +139,15 @@ export default function Bridge() {
           💻 How we calculate Nova Points
         </h3>
         <p className="mt-[0.75rem]">
-          You can see the detail and formula of how we calculate Nova points
-          here.
+          You can see the detail and formula of how we calculate Nova points{" "}
+          <a
+            href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+            target="_blank"
+            style={{ color: "#03d498" }}
+          >
+            here
+          </a>
+          .
         </p>
         <p className="mt-6">
           <span className="font-bold text-[#fff]">
@@ -175,7 +183,7 @@ export default function Bridge() {
     <>
       <div className="text-base mt-8">
         <h2 className="text-[1.5rem] text-[#fff] font-[700]">
-          Aggregation Parade Phase II - Updates
+          Aggregation Parade Phase II
         </h2>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500] ">
           <b className="text-[#fff] font-[700]">INITIAL ONE-TIME BOOST</b> in
@@ -292,16 +300,14 @@ export default function Bridge() {
 
   return (
     <BgBox>
-      <div className="relative mb-4 z-[10]">
+      {/* <div className="relative mb-4 z-[10]">
+        <img src="/img/banner-zkl-1.gif" className="w-full md:block hidden" />
         <img
-          src="/img/zklink-nova-banner@2x.png"
-          className="w-full hidden md:block"
-        />
-        <img
-          src="/img/zklink-nova-banner-mobile.png"
+          src="/img/banner-zkl-mobile.gif"
           className="w-full block md:hidden"
         />
-      </div>
+      </div> */}
+      <Banner />
       <div className="block lg:flex md:py-24 pb-24 pt-6">
         <div className="md:hidden mx-6 mb-16">
           <BridgeComponent />
