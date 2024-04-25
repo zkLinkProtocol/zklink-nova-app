@@ -31,7 +31,6 @@ interface INovaPointsProps {
   renzoPoints: number;
   renzoEigenLayerPoints: number;
   magpiePointsData: { points: number; layerPoints: number };
-  layerbankNovaPoints: number;
   royaltyBooster: number;
   okxPoints: number;
   kolPoints: number;
@@ -39,6 +38,7 @@ interface INovaPointsProps {
   totalNovaPoints: number;
   kelpMiles: number;
   kelpEigenlayerPoints: number;
+  dAppNovaPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -136,7 +136,6 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoPoints,
     renzoEigenLayerPoints,
     magpiePointsData,
-    layerbankNovaPoints,
     royaltyBooster,
     okxPoints,
     kolPoints,
@@ -144,6 +143,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     totalNovaPoints,
     kelpMiles,
     kelpEigenlayerPoints,
+    dAppNovaPoints,
   } = props;
   // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -201,7 +201,6 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoEigenLayerPoints,
     isHidePoints,
     magpiePointsData,
-    layerbankNovaPoints,
     kelpMiles,
     kelpEigenlayerPoints,
   ]);
@@ -256,7 +255,7 @@ export default function NovaPoints(props: INovaPointsProps) {
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by interacting with dApp</span>
-                    <span>{formatNumberWithUnit(layerbankNovaPoints)}</span>
+                    <span>{formatNumberWithUnit(dAppNovaPoints)}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by opening invite box</span>

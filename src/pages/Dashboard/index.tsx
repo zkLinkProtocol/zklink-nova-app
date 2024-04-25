@@ -23,7 +23,6 @@ import {
   getRsethPoints,
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
-  getNovaProjectPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -161,6 +160,9 @@ export default function Dashboard() {
     referPoints,
     layerbankNovaPoints,
     linkswapNovaPoints,
+    aquaNovaPoints,
+    izumiNovaPoints,
+    dAppNovaPoints,
     trademarkPoints,
     okxPoints,
     kolPoints,
@@ -372,26 +374,6 @@ export default function Dashboard() {
     setKelpEigenlayerPoints(elPoints);
   };
 
-  const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
-  const getAquaNovaPointsFunc = async () => {
-    if (!address) return;
-    const { data } = await getNovaProjectPoints(address, "aqua");
-    console.log("getNovaPointsFunc", data);
-
-    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
-    setAquaNovaPoints(points);
-  };
-
-  const [izumiNovaPoints, setIzumiNovaPoints] = useState(0);
-  const getIzumiNovaPointsFunc = async () => {
-    if (!address) return;
-    const { data } = await getNovaProjectPoints(address, "izumi");
-    console.log("getNovaPointsFunc", data);
-
-    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
-    setIzumiNovaPoints(points);
-  };
-
   /**
    * Init: Get data from server
    */
@@ -411,8 +393,6 @@ export default function Dashboard() {
     getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
     getRsethPointsFunc();
-    getAquaNovaPointsFunc();
-    getIzumiNovaPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -542,7 +522,7 @@ export default function Dashboard() {
     const izumi = {
       name: "iZUMI",
       handler: "@izumi_Finance",
-      link: "https://izumi.finance/trade/pools",
+      link: "https://izumi.finance/trade/swap?chainId=810180",
       iconURL: "/img/icon-izumi.svg",
       booster: "2x",
       type: "DEX",
@@ -609,7 +589,7 @@ export default function Dashboard() {
             renzoPoints={renzoPoints}
             renzoEigenLayerPoints={renzoEigenLayerPoints}
             magpiePointsData={magpiePointsData}
-            layerbankNovaPoints={layerbankNovaPoints}
+            dAppNovaPoints={dAppNovaPoints}
             royaltyBooster={royaltyBooster}
             okxPoints={okxPoints}
             kolPoints={kolPoints}

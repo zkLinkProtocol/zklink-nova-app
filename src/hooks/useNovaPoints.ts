@@ -3,6 +3,7 @@ import {
   getAccountPoint,
   getLayerbankNovaPoints,
   getLinkswapNovaPoints,
+  getNovaProjectPoints,
 } from "@/api";
 import { RootState } from "@/store";
 import Decimal from "decimal.js";
@@ -87,7 +88,43 @@ export default () => {
     getAccountPointFunc();
     getLayerbankNovaPointsFunc();
     getLinkswapNovaPointsFunc();
+    getAquaNovaPointsFunc();
+    getIzumiNovaPointsFunc();
   };
+
+  const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
+  const getAquaNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "aqua");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setAquaNovaPoints(points);
+  };
+
+  const [izumiNovaPoints, setIzumiNovaPoints] = useState(0);
+  const getIzumiNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "izumi");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setIzumiNovaPoints(points);
+  };
+
+  const dAppNovaPoints = useMemo(() => {
+    return (
+      layerbankNovaPoints +
+      linkswapNovaPoints +
+      aquaNovaPoints +
+      izumiNovaPoints
+    );
+  }, [
+    layerbankNovaPoints,
+    linkswapNovaPoints,
+    aquaNovaPoints,
+    izumiNovaPoints,
+  ]);
 
   useEffect(() => {
     getAllNovaPoints();
@@ -99,6 +136,8 @@ export default () => {
       referPoints +
       layerbankNovaPoints +
       linkswapNovaPoints +
+      izumiNovaPoints +
+      aquaNovaPoints +
       trademarkPoints +
       okxPoints +
       kolPoints;
@@ -111,6 +150,8 @@ export default () => {
     trademarkPoints,
     okxPoints,
     kolPoints,
+    izumiNovaPoints,
+    aquaNovaPoints,
   ]);
 
   return {
@@ -122,6 +163,9 @@ export default () => {
     okxPoints,
     kolPoints,
     totalNovaPoints,
+    izumiNovaPoints,
+    aquaNovaPoints,
+    dAppNovaPoints,
     getAllNovaPoints,
   };
 };
