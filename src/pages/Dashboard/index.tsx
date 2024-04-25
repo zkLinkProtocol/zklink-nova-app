@@ -48,7 +48,7 @@ import {
 } from "@nextui-org/react";
 import { setIsAdHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
-import Banner from "@/components/Dashboard/Banner";
+import Banner from "@/components/Banner";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { Tooltip } from "react-tooltip";
 
@@ -523,16 +523,7 @@ export default function Dashboard() {
         </span>
       </div> */}
 
-      <div className="relative mb-4 z-[10]">
-        <img
-          src="/img/zklink-nova-banner@2x.png"
-          className="w-full hidden md:block"
-        />
-        <img
-          src="/img/zklink-nova-banner-mobile.png"
-          className="w-full block md:hidden"
-        />
-      </div>
+      <Banner />
 
       {/* <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
         <Banner />
