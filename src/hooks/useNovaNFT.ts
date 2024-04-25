@@ -258,7 +258,7 @@ const useNovaDrawNFT = () => {
       args: tx.args,
     });
     const fee = await zkSyncProvider.attachEstimateFee(
-      IS_MAINNET ? "https://rpc.zklink.io" : "https://goerli.rpc.zklink.io"
+      IS_MAINNET ? "https://rpc.zklink.io" : "https://sepolia.rpc.zklink.io"
     )({
       from: address as `0x${string}`,
       to: tx.address as `0x${string}`,
