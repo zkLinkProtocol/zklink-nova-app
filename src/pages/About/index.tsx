@@ -464,7 +464,7 @@ export default function About() {
             <p>
               Addtional 900 boxes will be distributed among 900 lucky{" "}
               <a
-                href="https://app.galxe.com/quest/zkLink/GCy79thyeZ"
+                href="https://app.galxe.com/quest/zkLink/GCqPcthi45"
                 target="_blank"
                 className="text-green inline-flex items-center gap-1"
               >
