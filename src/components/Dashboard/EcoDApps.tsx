@@ -59,16 +59,17 @@ interface EcoDAppsProps {
   handler: string;
   link: string;
   iconURL: string;
-  booster: string;
   type: string;
   points: {
     name: string;
     value: string;
   }[];
   status: string;
-  multiplier: string;
   description: string;
   earned: string;
+  booster?: string;
+  multiplier?: string;
+  reward?: string;
 }
 
 export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
@@ -97,9 +98,13 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 {data.handler}
               </p>
             </div>
-            <Tag className="px-[1rem] py-[0.12rem]">
-              <span className="text text-[#0bc48f]">{data.booster} boost</span>
-            </Tag>
+            {data.booster && (
+              <Tag className="px-[1rem] py-[0.12rem]">
+                <span className="text text-[#0bc48f]">
+                  {data.booster}
+                </span>
+              </Tag>
+            )}
           </Td>
           <Td>
             <p className="text-[1rem] font-[700]">{data.type}</p>
@@ -151,10 +156,18 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
               <SubTh>Status</SubTh>
               <p className="text-[0.875rem] ">{data.status}</p>
             </div>
-            <div>
-              <SubTh>Multiplier</SubTh>
-              <p className="text-[0.875rem]">{data.multiplier}</p>
-            </div>
+            {data.reward ? (
+              <div>
+                <SubTh>Reward</SubTh>
+                <p className="text-[0.875rem]">{data.reward}</p>
+              </div>
+            ) : (
+              <div>
+                <SubTh>Multiplier</SubTh>
+                <p className="text-[0.875rem]">{data.multiplier}</p>
+              </div>
+            )}
+
             <div>
               <SubTh>Description</SubTh>
               <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
