@@ -729,7 +729,13 @@ export default function SoftKYC() {
                   }`}
                   onClick={() => setVerifyDepositTabsActive(index)}
                 >
-                  <p className="text-[#fff] text-[16px] font-[700] whitespace-nowrap">
+                  <p
+                    className={`text-[16px] font-[700] whitespace-nowrap ${
+                      verifyDepositTabsActive === index
+                        ? "text-[#fff]"
+                        : "text-[#ccc]"
+                    }`}
+                  >
                     {tab.title}
                   </p>
                   <p className="text-[#999] text-[12px] font-[400] whitespace-nowrap">
