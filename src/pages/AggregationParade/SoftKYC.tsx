@@ -243,6 +243,21 @@ export default function SoftKYC() {
   const [isHandleSign, setIsHandleSign] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
   const [accessRpcLoading, setAccessRpcLoading] = useState(false);
+  const [verifyDepositThirdLoading, setVerifyDepositThirdLoading] =
+    useState(false);
+
+  const [depositThirdStatus, setDepositThirdStatus] = useState("");
+  const [verifyDepositTabsActive, setVerifyDepositTabsActive] = useState(0);
+  const verifyDepositTabs = [
+    {
+      title: "Deposit via the Official Bridge",
+      desc: "Including Portal and Parade page ",
+    },
+    {
+      title: "Deposit via Third Party Bridge",
+      desc: "Deposit through Nova Parterner",
+    },
+  ];
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -475,6 +490,12 @@ export default function SoftKYC() {
     }
   };
 
+  // TODO: Verify deposit via third party
+  const verifyDepositViaThirdParty = async () => {
+    setDepositThirdStatus("");
+    setVerifyDepositThirdLoading(true);
+  };
+
   const getInviteFunc = async () => {
     if (!address) return;
     try {
@@ -615,7 +636,7 @@ export default function SoftKYC() {
         {/* Title */}
         <div className="px-6 flex flex-col-reverse md:flex-col mt-[1rem]">
           <SubTitleText className="text-left md:text-center">
-            YOU’RE ALMOST THERE
+            YOU'RE ALMOST THERE
           </SubTitleText>
           <TitleText className="text-left md:text-center">
             To join the zkLink Aggregation Parade
@@ -857,92 +878,158 @@ export default function SoftKYC() {
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "18rem" }}
-        size="xl"
+        size="2xl"
         isOpen={verifyDepositModal.isOpen}
         onOpenChange={verifyDepositModal.onOpenChange}
       >
         <ModalContent className="p-2 mb-20 md:mb-0">
           <ModalHeader>Verify your deposit</ModalHeader>
           <ModalBody>
-            <p className="text-[1rem] text-[#A0A5AD]">
-              Enter your deposit tx hash, and we'll automatically select the
-              network for you.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-6">
-              <Select
-                className="max-w-[9.5rem]"
-                items={verifyFromList.map((item) => ({
-                  label: item.label,
-                  icon: item.icon,
-                  chainId: item.chainId,
-                }))}
-                value={selectedChainId}
-                selectedKeys={[selectedChainId]}
-                size="sm"
-                renderValue={(items) => {
-                  return items.map((item) => (
-                    <div key={item.key} className="flex items-center gap-2">
-                      <Avatar
-                        className="flex-shrink-0"
-                        size="sm"
-                        src={item.data?.icon}
-                      />
-                      <span>{item.data?.label}</span>
-                    </div>
-                  ));
-                }}
-                onChange={(e) => setSelectedChainId(e.target.value)}
-              >
-                {(chain) => (
-                  <SelectItem key={chain.chainId} value={chain.chainId}>
-                    <div className="flex gap-2 items-center">
-                      <Avatar
-                        className="flex-shrink-0"
-                        size="sm"
-                        src={chain.icon}
-                      />
-                      <span className="text-small">{chain.label}</span>
-                    </div>
-                  </SelectItem>
-                )}
-              </Select>
-
-              <Input
-                className="max-w-[100%]"
-                variant="underlined"
-                placeholder="Please enter your tx hash"
-                value={depositTxHash}
-                onChange={(e) => setDepositTxHash(e.target.value)}
-              />
+            <div className="p-[6px] flex justify-between items-center bg-[#313841] rounded-[64px] overflow-auto">
+              {verifyDepositTabs.map((tab, index) => (
+                <div
+                  key={index}
+                  className={`px-[24px] py-[6px] cursor-pointer ${
+                    verifyDepositTabsActive === index
+                      ? "bg-[#3D424D] rounded-[64px]"
+                      : ""
+                  }`}
+                  onClick={() => setVerifyDepositTabsActive(index)}
+                >
+                  <p className="text-[#fff] text-[16px] font-[700] whitespace-nowrap">
+                    {tab.title}
+                  </p>
+                  <p className="text-[#999] text-[12px] font-[400] whitespace-nowrap">
+                    {tab.desc}
+                  </p>
+                </div>
+              ))}
             </div>
+
+            {verifyDepositTabsActive === 0 && (
+              <div className="mt-[1rem]">
+                <p className="text-[1rem] text-[#A0A5AD]">
+                  Enter your deposit tx hash, and we'll automatically select the
+                  network for you.
+                </p>
+
+                <div className="mt-[1rem] flex flex-wrap items-center gap-6">
+                  <Select
+                    className="max-w-[16rem]"
+                    items={verifyFromList.map((item) => ({
+                      label: item.label,
+                      icon: item.icon,
+                      chainId: item.chainId,
+                    }))}
+                    value={selectedChainId}
+                    selectedKeys={[selectedChainId]}
+                    // size="xl"
+                    renderValue={(items) => {
+                      return items.map((item) => (
+                        <div key={item.key} className="flex items-center gap-2">
+                          <Avatar
+                            className="flex-shrink-0"
+                            size="sm"
+                            src={item.data?.icon}
+                          />
+                          <span>{item.data?.label}</span>
+                        </div>
+                      ));
+                    }}
+                    onChange={(e) => setSelectedChainId(e.target.value)}
+                  >
+                    {(chain) => (
+                      <SelectItem key={chain.chainId} value={chain.chainId}>
+                        <div className="flex gap-2 items-center">
+                          <Avatar
+                            className="flex-shrink-0"
+                            size="sm"
+                            src={chain.icon}
+                          />
+                          <span className="text-small">{chain.label}</span>
+                        </div>
+                      </SelectItem>
+                    )}
+                  </Select>
+
+                  <Input
+                    className="max-w-[100%]"
+                    variant="underlined"
+                    placeholder="Please enter your tx hash"
+                    value={depositTxHash}
+                    onChange={(e) => setDepositTxHash(e.target.value)}
+                  />
+                </div>
+
+                <div className="mt-[1rem] w-full">
+                  <Button
+                    className="gradient-btn w-full rounded-full mt-5"
+                    onClick={verifyDepositHash}
+                    disabled={
+                      isReVerifyDeposit || accessRpcLoading || !depositTxHash
+                    }
+                    isLoading={isReVerifyDeposit || accessRpcLoading}
+                  >
+                    {isReVerifyDeposit ? "Re-verify(in 60s)" : "Verify"}
+                  </Button>
+
+                  {depositStatus === VerifyResult.SUCCESS && (
+                    <p className="text-[#03D498] py-4 text-[1rem]">
+                      Your deposit is still being processed. The estimated
+                      remaining wait time is approximately x minutes.
+                    </p>
+                  )}
+                  {depositStatus === VerifyResult.FAILED && (
+                    <p className="text-[#C57D10] py-4 text-[1rem]">
+                      {verifyDepositError
+                        ? verifyDepositError
+                        : "This Tx Hash does not meet the requirements. Please check the deposit amount, network, wallet address, and the Tx Hash itself."}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {verifyDepositTabsActive === 1 && (
+              <div className="mt-[1rem]">
+                <p className="text-[#A0A5AD] text-[1rem] font-[500] leading-[32px]">
+                  Currently, the Aggregation Parade is open to users who deposit
+                  more than 0.1 ETH or an equivalent amount of assets in single
+                  tx through Owlto, Symbiosis, or Meson.{" "}
+                  <a href="" target="_blank" className="text-[#03D498]">
+                    Read More
+                  </a>
+                </p>
+                <p className="mt-[1rem] text-[#fff] text-[1rem] font-[500]">
+                  {address}
+                </p>
+
+                <div className="mt-[1rem] w-full">
+                  <Button
+                    className="gradient-btn w-full rounded-full mt-5"
+                    onClick={verifyDepositViaThirdParty}
+                    isLoading={verifyDepositThirdLoading}
+                  >
+                    Verify
+                  </Button>
+
+                  {depositThirdStatus === VerifyResult.SUCCESS && (
+                    <p className="text-[#03D498] py-4 text-[1rem]">
+                      Your deposit is still being processed. The estimated
+                      remaining wait time is approximately x minutes.
+                    </p>
+                  )}
+                  {depositThirdStatus === VerifyResult.FAILED && (
+                    <p className="text-[#C57D10] py-4 text-[1rem]">
+                      {verifyDepositError
+                        ? verifyDepositError
+                        : "This Tx Hash does not meet the requirements. Please check the deposit amount, network, wallet address, and the Tx Hash itself."}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </ModalBody>
-          <ModalFooter>
-            <div className="w-full">
-              <Button
-                className="gradient-btn w-full rounded-full mt-5"
-                onClick={verifyDepositHash}
-                disabled={isReVerifyDeposit || accessRpcLoading}
-                isLoading={isReVerifyDeposit || accessRpcLoading}
-              >
-                {isReVerifyDeposit ? "Re-verify(in 60s)" : "Verify"}
-              </Button>
-
-              {depositStatus === VerifyResult.SUCCESS && (
-                <p className="text-[#03D498] py-4 text-[1rem]">
-                  Your deposit is still being processed. The estimated remaining
-                  wait time is approximately x minutes.
-                </p>
-              )}
-              {depositStatus === VerifyResult.FAILED && (
-                <p className="text-[#C57D10] py-4 text-[1rem]">
-                  {verifyDepositError
-                    ? verifyDepositError
-                    : "This Tx Hash does not meet the requirements. Please check the deposit amount, network, wallet address, and the Tx Hash itself."}
-                </p>
-              )}
-            </div>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </BgBox>
