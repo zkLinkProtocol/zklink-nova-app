@@ -462,7 +462,7 @@ export default function Dashboard() {
       handler: "@LayerBankFi",
       link: "https://zklink.layerbank.finance/",
       iconURL: "/img/icon-layerbank.svg",
-      booster: "2x",
+      booster: "2x boost",
       type: "Lending",
       points: lauyerbankPoints,
       earned: `${lauyerbankPoints.length} Points`,
@@ -482,7 +482,7 @@ export default function Dashboard() {
       handler: "@LinkswapFinance",
       link: "https://linkswap.finance/earn",
       iconURL: "/img/icon-linkswap.svg",
-      booster: "1.5x",
+      booster: "1.5x boost",
       type: "Dex",
       points: linkswapPoints,
       earned: `${linkswapPoints.length} Points + Yield`,
@@ -503,10 +503,10 @@ export default function Dashboard() {
       handler: "@native_fi",
       link: "https://aqua.native.org/dashboard/user/?chainId=810180",
       iconURL: "/img/icon-aqua.svg",
-      booster: "2x",
+      booster: "2x boost",
       type: "Lending",
       points: aquaPoints,
-      earned: `1 Points + Yield`,
+      earned: `${aquaPoints.length} Points + Yield`,
       status: "Live",
       multiplier: "2x Nova Points",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -524,15 +524,73 @@ export default function Dashboard() {
       handler: "@izumi_Finance",
       link: "https://izumi.finance/trade/swap?chainId=810180",
       iconURL: "/img/icon-izumi.svg",
-      booster: "2x",
+      booster: "2x boost",
       type: "DEX",
       points: izumiPoints,
-      earned: `1 Points + Yield`,
+      earned: `${izumiPoints.length} Points + Yield`,
       status: "Live",
       multiplier: "2x Nova Points",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
-    return [layerbank, linkswap, aqua, izumi];
+
+    const symbiosisPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), // TODO: get data
+      },
+    ];
+    const symbiosis = {
+      name: "Symbiosis",
+      handler: "@symbiosis_fi",
+      link: "https://app.symbiosis.finance/swap?chainIn=ZkLink&tokenIn=ETH",
+      iconURL: "/img/icon-symbiosis.svg",
+      type: "Cross-Chain",
+      points: symbiosisPoints,
+      earned: `${symbiosisPoints.length} Points`,
+      status: "Live",
+      reward: "Nova Points",
+      description: ``,
+    };
+
+    const mesonPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), // TODO: get data
+      },
+    ];
+    const meson = {
+      name: "Meson",
+      handler: "@mesonfi",
+      link: "https://meson.fi/",
+      iconURL: "/img/icon-meson.svg",
+      type: "Cross-Chain",
+      points: mesonPoints,
+      earned: `1 Points`,
+      status: "Live",
+      reward: "Nova Points",
+      description: ``,
+    };
+
+    const owltoPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), // TODO: get data
+      },
+    ];
+    const owlto = {
+      name: "Owlto",
+      handler: "@Owlto_Finance",
+      link: "https://owlto.finance/",
+      iconURL: "/img/icon-owlto.svg",
+      type: "Cross-Chain",
+      points: owltoPoints,
+      earned: `${owltoPoints.length} Points`,
+      status: "Live",
+      reward: "Nova Points",
+      description: ``,
+    };
+
+    return [layerbank, linkswap, aqua, izumi, symbiosis, meson, owlto];
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,
