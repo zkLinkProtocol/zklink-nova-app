@@ -545,8 +545,13 @@ export default function About() {
           </div>
         </div>
 
-        <div className="paragraph title title-2">
-          <a href="https://preview.portal.zklink.io/">Timeline</a>
+        <div
+          className="paragraph title title-2"
+          onClick={() =>
+            window.open("https://preview.portal.zklink.io/", "_blank")
+          }
+        >
+          Timeline
         </div>
         <div className="paragraph">
           <div className="title">Phase 1: Aggregation Phase</div>
