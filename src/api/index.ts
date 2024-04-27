@@ -511,3 +511,15 @@ export const getNovaProjectPoints = (
   http.get(`${BASE_URL_LRT_POINTS}/nova/points/project`, {
     params: { address, project },
   });
+
+// cache/bridge/latest/points?name=meson
+
+export interface BridgePoints {
+  errno: number;
+  errmsg: string;
+  data: number;
+}
+export const getBridgePoints = (name: string): Promise<BridgePoints> =>
+  http.get(`${BASE_URL_LRT_POINTS}/cache/bridge/latest/points`, {
+    params: { name },
+  });
