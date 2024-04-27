@@ -155,7 +155,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
             </div>
             {data.reward ? (
               <div>
-                <SubTh>Reward</SubTh>
+                <SubTh>Current Reward Level</SubTh>
                 <p className="text-[0.875rem]">{data.reward}</p>
               </div>
             ) : (

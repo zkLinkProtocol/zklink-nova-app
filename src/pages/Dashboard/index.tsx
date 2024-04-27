@@ -162,11 +162,17 @@ export default function Dashboard() {
     linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
+    symbiosisNovaPoints,
+    mesonNovaPoints,
+    owltoNovaPoints,
     dAppNovaPoints,
     trademarkPoints,
     okxPoints,
     kolPoints,
     totalNovaPoints,
+    symbiosisBridgeNovaPoints,
+    mesonBridgeNovaPoints,
+    owltoBridgeNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -544,7 +550,7 @@ export default function Dashboard() {
     const symbiosisPoints = [
       {
         name: "Nova Points",
-        value: formatNumberWithUnit(0), // TODO: get data
+        value: formatNumberWithUnit(symbiosisNovaPoints), // TODO: get data
       },
     ];
     const symbiosis = {
@@ -558,7 +564,9 @@ export default function Dashboard() {
         symbiosisPoints.length > 1 ? "Types" : "Type"
       } of Point`,
       status: "Live",
-      reward: "Fully Distributed",
+      reward: `${symbiosisBridgeNovaPoints} ${
+        symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`, // TODO
       description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
       descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
     };
@@ -566,7 +574,7 @@ export default function Dashboard() {
     const mesonPoints = [
       {
         name: "Nova Points",
-        value: formatNumberWithUnit(0), // TODO: get data
+        value: formatNumberWithUnit(mesonNovaPoints), // TODO: get data
       },
     ];
     const meson = {
@@ -578,7 +586,9 @@ export default function Dashboard() {
       points: mesonPoints,
       earned: `1 ${mesonPoints.length > 1 ? "Types" : "Type"} of Point`,
       status: "Live",
-      reward: "5 Nova Points", // TODO
+      reward: `${mesonBridgeNovaPoints} ${
+        mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`, // TODO
       description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
       descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
     };
@@ -586,7 +596,7 @@ export default function Dashboard() {
     const owltoPoints = [
       {
         name: "Nova Points",
-        value: formatNumberWithUnit(0), // TODO: get data
+        value: formatNumberWithUnit(owltoNovaPoints), // TODO: get data
       },
     ];
     const owlto = {
@@ -600,7 +610,9 @@ export default function Dashboard() {
         owltoPoints.length > 1 ? "Types" : "Type"
       } of Point`,
       status: "Live",
-      reward: "4 Nova Points", // TODO
+      reward: `${owltoBridgeNovaPoints} ${
+        owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`, // TODO
       description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
       descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
     };
@@ -613,6 +625,12 @@ export default function Dashboard() {
     linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
+    symbiosisNovaPoints,
+    mesonNovaPoints,
+    owltoNovaPoints,
+    symbiosisBridgeNovaPoints,
+    mesonBridgeNovaPoints,
+    owltoBridgeNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);

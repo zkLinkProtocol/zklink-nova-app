@@ -1,6 +1,7 @@
 import {
   checkOkx,
   getAccountPoint,
+  getBridgePoints,
   getLayerbankNovaPoints,
   getLinkswapNovaPoints,
   getNovaProjectPoints,
@@ -90,6 +91,12 @@ export default () => {
     getLinkswapNovaPointsFunc();
     getAquaNovaPointsFunc();
     getIzumiNovaPointsFunc();
+    getSymbiosisNovaPointsFunc();
+    getMesonNovaPointsFunc();
+    getOwltoNovaPointsFunc();
+    getSymbiosisBridgePointsFunc();
+    getMesonisBridgePointsFunc();
+    getOwltoBridgePointsFunc();
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -112,18 +119,54 @@ export default () => {
     setIzumiNovaPoints(points);
   };
 
+  const [symbiosisNovaPoints, setSymbiosisNovaPoints] = useState(0);
+  const getSymbiosisNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "symbiosis");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setSymbiosisNovaPoints(points);
+  };
+
+  const [mesonNovaPoints, setMesonNovaPoints] = useState(0);
+  const getMesonNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "meson");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setMesonNovaPoints(points);
+  };
+
+  const [owltoNovaPoints, setOwltoNovaPoints] = useState(0);
+  const getOwltoNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "meson");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setOwltoNovaPoints(points);
+  };
+
   const dAppNovaPoints = useMemo(() => {
     return (
       layerbankNovaPoints +
       linkswapNovaPoints +
       aquaNovaPoints +
-      izumiNovaPoints
+      izumiNovaPoints +
+      symbiosisNovaPoints +
+      mesonNovaPoints +
+      owltoNovaPoints
     );
   }, [
     layerbankNovaPoints,
     linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
+    symbiosisNovaPoints,
+    mesonNovaPoints,
+    owltoNovaPoints,
   ]);
 
   useEffect(() => {
@@ -154,6 +197,30 @@ export default () => {
     aquaNovaPoints,
   ]);
 
+  const [symbiosisBridgeNovaPoints, setSymbiosisBridgeNovaPoints] = useState(0);
+  const getSymbiosisBridgePointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getBridgePoints("symbiosisy");
+    console.log("getNovaPointsFunc", data);
+    setSymbiosisBridgeNovaPoints(Number(data) || 0);
+  };
+
+  const [mesonBridgeNovaPoints, setMesonBridgeNovaPoints] = useState(0);
+  const getMesonisBridgePointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getBridgePoints("meson");
+    console.log("getNovaPointsFunc", data);
+    setMesonBridgeNovaPoints(Number(data) || 0);
+  };
+
+  const [owltoBridgeNovaPoints, setOwltoBridgeNovaPoints] = useState(0);
+  const getOwltoBridgePointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getBridgePoints("symbiosisy");
+    console.log("getNovaPointsFunc", data);
+    setOwltoBridgeNovaPoints(Number(data) || 0);
+  };
+
   return {
     novaPoints,
     referPoints,
@@ -165,7 +232,13 @@ export default () => {
     totalNovaPoints,
     izumiNovaPoints,
     aquaNovaPoints,
+    symbiosisNovaPoints,
+    mesonNovaPoints,
+    owltoNovaPoints,
     dAppNovaPoints,
+    symbiosisBridgeNovaPoints,
+    mesonBridgeNovaPoints,
+    owltoBridgeNovaPoints,
     getAllNovaPoints,
   };
 };
