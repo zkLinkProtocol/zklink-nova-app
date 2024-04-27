@@ -197,7 +197,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
                 onClick={() => warningModal.onOpen()}
               >
-                <span>Provide Liquidity</span>
+                <span>Bridge</span>
                 <img
                   src="/img/icon-open-in-new.svg"
                   className="w-[1rem] h-[1rem]"
