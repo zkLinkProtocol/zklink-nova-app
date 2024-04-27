@@ -16,6 +16,7 @@ export const OKX_POINTS = 5;
 
 export default () => {
   const { address } = useAccount();
+  // const address = '0xa603106beBDD261868a7d9ECD7269ec4a714d11B'
   const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const [novaPoints, setNovaPoints] = useState(0);
@@ -142,7 +143,7 @@ export default () => {
   const [owltoNovaPoints, setOwltoNovaPoints] = useState(0);
   const getOwltoNovaPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getNovaProjectPoints(address, "meson");
+    const { data } = await getNovaProjectPoints(address, "owlet");
     console.log("getNovaPointsFunc", data);
 
     const points = data.reduce((prev, item) => prev + Number(item.points), 0);
@@ -216,7 +217,7 @@ export default () => {
   const [owltoBridgeNovaPoints, setOwltoBridgeNovaPoints] = useState(0);
   const getOwltoBridgePointsFunc = async () => {
     if (!address) return;
-    const { data } = await getBridgePoints("symbiosisy");
+    const { data } = await getBridgePoints("owlto");
     console.log("getNovaPointsFunc", data);
     setOwltoBridgeNovaPoints(Number(data) || 0);
   };
