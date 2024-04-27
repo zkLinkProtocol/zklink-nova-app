@@ -1,4 +1,5 @@
 import {
+  checkBridge,
   checkInviteCode,
   getInvite,
   getTwitterAccessToken,
@@ -492,8 +493,22 @@ export default function SoftKYC() {
 
   // TODO: Verify deposit via third party
   const verifyDepositViaThirdParty = async () => {
+    if (!address) return;
     setDepositThirdStatus("");
     setVerifyDepositThirdLoading(true);
+
+    try {
+      const res = await checkBridge(address);
+      if (res.result) {
+        setDepositThirdStatus(VerifyResult.SUCCESS);
+      } else {
+        setDepositThirdStatus(VerifyResult.FAILED);
+      }
+    } catch (error) {
+      setDepositThirdStatus(VerifyResult.FAILED);
+    } finally {
+      setVerifyDepositThirdLoading(false);
+    }
   };
 
   const getInviteFunc = async () => {

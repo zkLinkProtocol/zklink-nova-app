@@ -516,3 +516,5 @@ export const checkWinnerAddress = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/checkWinnerAddress`, {
     params: { address },
   });
+export const checkBridge = async (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/check/bridge`, { params: { address } });
