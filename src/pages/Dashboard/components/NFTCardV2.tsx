@@ -204,7 +204,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
     publicClient,
     sendMysteryBurnTxV2,
   } = useNovaNFT();
-  const { address, chainId } = useAccount();
+  const { chainId, address } = useAccount();
   const [allNFTs, setAllNFTs] =
     useState<{ img: string; name: string; balance: number }[]>(ALL_NFTS);
   const [mintableCount, setMintableCount] = useState(0);
