@@ -375,7 +375,7 @@ const createEraChain = (network: ZkSyncNetwork) => {
       multicall3: {
         address:
           nodeType === "nexus-goerli"
-            ? "0x6F02406FC2495171dC03c7b6D80c2f327320C3f6"
+            ? "0x09d4800d1a84A13eadaf951CB0021D27211e0184"
             : "0x825267E0fA5CAe92F98540828a54198dcB3Eaeb5",
       },
     },

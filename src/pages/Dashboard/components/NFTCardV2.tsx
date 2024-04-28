@@ -35,7 +35,8 @@ import classNames from "classnames";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Abi } from "viem";
-
+import NovaTrademarkNFT from "@/constants/abi/NovaTrademarkNFT.json";
+import NovaBoosterNFT from "@/constants/abi/NovaBoosterNFT.json";
 const NftBox = styled.div`
   .nft-left {
     /* flex: 6;
@@ -303,7 +304,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         const trademarkBalancesCall = await publicClient?.multicall({
           contracts: [1, 2, 3, 4].map((item) => ({
             address: trademarkNFT.address,
-            abi: trademarkNFT.abi as Abi,
+            abi: NovaTrademarkNFT as Abi,
             functionName: "balanceOf",
             args: [address, item],
           })),
@@ -338,7 +339,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         const boosterBalancesV2Call = await publicClient?.multicall({
           contracts: Object.keys(PRIZE_ID_NFT_MAP_V2).map((item) => ({
             address: boosterNFTV2.address,
-            abi: boosterNFTV2.abi as Abi,
+            abi: NovaBoosterNFT as Abi,
             functionName: "balanceOf",
             args: [address, item],
           })),
@@ -364,7 +365,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
         const boosterBalancesCall = await publicClient?.multicall({
           contracts: Object.keys(PRIZE_ID_NFT_MAP).map((item) => ({
             address: boosterNFT.address,
-            abi: boosterNFT.abi as Abi,
+            abi: NovaBoosterNFT as Abi,
             functionName: "balanceOf",
             args: [address, item],
           })),
