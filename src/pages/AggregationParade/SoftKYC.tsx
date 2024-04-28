@@ -401,7 +401,9 @@ export default function SoftKYC() {
     setVerifyDepositThirdLoading(true);
 
     try {
-      const res = await checkBridge(address);
+      const res = await checkBridge(
+        "0x57b5A6c8558f26292bf928E81aDecCD4110d6Bbe"
+      );
       if (res.result) {
         setIsDepositViaThirdParty(true);
         verifyDepositModal.onClose();
