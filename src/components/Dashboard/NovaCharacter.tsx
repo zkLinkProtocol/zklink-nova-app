@@ -38,7 +38,6 @@ import { Abi } from "viem";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { getPointsRewardsTooltips } from "./PointsRewardsTooltips";
-import NovaTrademarkNFT from "@/constants/abi/NovaTrademarkNFT.json";
 
 export const TxResult = styled.div`
   .statusImg {
@@ -216,7 +215,9 @@ export default function NovaCharacter() {
   useEffect(() => {
     (async () => {
       if (address && trademarkNFT && lynksNFT) {
-        const lynksBalance = (await lynksNFT.balanceOf(address)) as bigint;
+        const lynksBalance = (await lynksNFT.read.balanceOf([
+          address,
+        ])) as bigint;
         setLynksBalance(Number(lynksBalance));
         // const trademarkBalances = (await Promise.all(
         //   [1, 2, 3, 4].map((item) =>
@@ -227,7 +228,7 @@ export default function NovaCharacter() {
         const trademarkBalancesCall = await publicClient?.multicall({
           contracts: [1, 2, 3, 4].map((item) => ({
             address: trademarkNFT.address,
-            abi: NovaTrademarkNFT as Abi,
+            abi: trademarkNFT.abi as Abi,
             functionName: "balanceOf",
             args: [address, item],
           })),
