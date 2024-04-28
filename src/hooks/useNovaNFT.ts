@@ -22,7 +22,7 @@ import NovaBoosterNFT from "@/constants/abi/NovaBoosterNFT.json";
 import NovaLynksNFT from "@/constants/abi/NovaLynksNFT.json";
 import NovaMysteryBoxNFT from "@/constants/abi/NovaMysteryBoxNFT.json";
 import IERC721 from "@/constants/abi/IERC721.json";
-import { config} from "@/constants/networks";
+import { config } from "@/constants/networks";
 import { BigNumber, ethers } from "ethers";
 import { zkSyncProvider } from "./zksyncProviders";
 import {
@@ -85,103 +85,81 @@ const useNovaDrawNFT = () => {
 
   const trademarkNFT = useMemo(() => {
     if (!publicClient) return null;
-    // return getContract({
-    //   address: TRADEMARK_NFT_CONTRACT as Hash,
-    //   abi: NovaTrademarkNFT,
-    //   client: {
-    //     public: publicClient,
-    //     wallet: walletClient,
-    //   },
-    // });
-    return new ethers.Contract(
-      TRADEMARK_NFT_CONTRACT,
-      NovaTrademarkNFT,
-      _provider
-    );
+    return getContract({
+      address: TRADEMARK_NFT_CONTRACT as Hash,
+      abi: NovaTrademarkNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
   }, [publicClient, walletClient]);
 
   const boosterNFT = useMemo(() => {
     if (!publicClient) return null;
-    // return getContract({
-    //   address: BOOSTER_NFT_CONTRACT as Hash,
-    //   abi: NovaBoosterNFT,
-    //   client: {
-    //     public: publicClient,
-    //     wallet: walletClient,
-    //   },
-    // });
-    return new ethers.Contract(BOOSTER_NFT_CONTRACT, NovaBoosterNFT, _provider);
+    return getContract({
+      address: BOOSTER_NFT_CONTRACT as Hash,
+      abi: NovaBoosterNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
   }, [publicClient, walletClient]);
 
   const boosterNFTV2 = useMemo(() => {
     if (!publicClient) return null;
-    // return getContract({
-    //   address: BOOSTER_NFT_CONTRACT_V2 as Hash,
-    //   abi: NovaBoosterNFT,
-    //   client: {
-    //     public: publicClient,
-    //     wallet: walletClient,
-    //   },
-    // });
-    return new ethers.Contract(
-      BOOSTER_NFT_CONTRACT_V2,
-      NovaBoosterNFT,
-      _provider
-    );
+    return getContract({
+      address: BOOSTER_NFT_CONTRACT_V2 as Hash,
+      abi: NovaBoosterNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
   }, [publicClient, walletClient]);
 
   const lynksNFT = useMemo(() => {
     if (!publicClient) return null;
-    // return getContract({
-    //   address: LYNKS_NFT_CONTRACT as Hash,
-    //   abi: NovaLynksNFT,
-    //   client: {
-    //     public: publicClient,
-    //     wallet: walletClient,
-    //   },
-    // });
-    return new ethers.Contract(LYNKS_NFT_CONTRACT, NovaLynksNFT, _provider);
+    return getContract({
+      address: LYNKS_NFT_CONTRACT as Hash,
+      abi: NovaLynksNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
   }, [publicClient, walletClient]);
 
   const mysteryBoxNFT = useMemo(() => {
     if (!publicClient) return null;
-    // return getContract({
-    //   address: MYSTERY_BOX_CONTRACT as Hash,
-    //   abi: NovaMysteryBoxNFT,
-    //   client: {
-    //     public: publicClient,
-    //     wallet: walletClient,
-    //   },
-    // });
-    return new ethers.Contract(
-      MYSTERY_BOX_CONTRACT,
-      NovaMysteryBoxNFT,
-      _provider
-    );
+    return getContract({
+      address: MYSTERY_BOX_CONTRACT as Hash,
+      abi: NovaMysteryBoxNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
   }, [publicClient, walletClient]);
 
   const mysteryBoxNFTV2 = useMemo(() => {
     if (!publicClient) return null;
-    // return getContract({
-    //   address: MYSTERY_BOX_CONTRACT_V2 as Hash,
-    //   abi: NovaMysteryBoxNFT,
-    //   client: {
-    //     public: publicClient,
-    //     wallet: walletClient,
-    //   },
-    // });
-    return new ethers.Contract(
-      MYSTERY_BOX_CONTRACT_V2,
-      NovaMysteryBoxNFT,
-      _provider
-    );
+    return getContract({
+      address: MYSTERY_BOX_CONTRACT_V2 as Hash,
+      abi: NovaMysteryBoxNFT,
+      client: {
+        public: publicClient,
+        wallet: walletClient,
+      },
+    });
   }, [publicClient, walletClient]);
 
   const getLynksNFT = useCallback(
     async (address: string) => {
       if (!lynksNFT) return [];
       try {
-        const balance = await lynksNFT.balanceOf(address);
+        const balance = await lynksNFT.read.balanceOf([address]);
         if (BigNumber.from(balance).eq(0)) {
           return;
         }
@@ -189,13 +167,15 @@ const useNovaDrawNFT = () => {
         const tokenIds = await Promise.all(
           new Array(Number(balance))
             .fill(undefined)
-            .map((_, index) => lynksNFT.tokenOfOwnerByIndex(address, index))
+            .map((_, index) =>
+              lynksNFT.read.tokenOfOwnerByIndex([address, index])
+            )
         );
         console.log("tokenIds: ", tokenIds);
         const uris = (await Promise.all(
           new Array(tokenIds.length)
             .fill(undefined)
-            .map((_, index) => lynksNFT.tokenURI(tokenIds[index]))
+            .map((_, index) => lynksNFT.read.tokenURI([tokenIds[index]]))
         )) as string[];
         console.log("token uris: ", uris);
 
@@ -232,7 +212,7 @@ const useNovaDrawNFT = () => {
   const getMysteryboxNFT = useCallback(
     async (address: string) => {
       if (!mysteryBoxNFT) return;
-      const balance = await mysteryBoxNFT.balanceOf(address);
+      const balance = await mysteryBoxNFT.read.balanceOf([address]);
       if (BigNumber.from(balance).eq(0)) {
         return;
       }
@@ -240,7 +220,7 @@ const useNovaDrawNFT = () => {
       const tokenIds = await Promise.all(
         new Array(Number(balance))
           .fill(undefined)
-          .map((_, index) => mysteryBoxNFT.tokenOfOwnerByIndex(address, index))
+          .map((_, index) => mysteryBoxNFT.read.tokenOfOwnerByIndex([address, index]))
       );
       console.log("tokenIds: ", tokenIds);
 
@@ -252,7 +232,7 @@ const useNovaDrawNFT = () => {
   const getMysteryboxNFTV2 = useCallback(
     async (address: string) => {
       if (!mysteryBoxNFTV2) return;
-      const balance = await mysteryBoxNFTV2.balanceOf(address);
+      const balance = await mysteryBoxNFTV2.read.balanceOf([address]);
       if (BigNumber.from(balance).eq(0)) {
         return;
       }
@@ -261,7 +241,7 @@ const useNovaDrawNFT = () => {
         new Array(Number(balance))
           .fill(undefined)
           .map((_, index) =>
-            mysteryBoxNFTV2.tokenOfOwnerByIndex(address, index)
+            mysteryBoxNFTV2.read.tokenOfOwnerByIndex([address, index])
           )
       );
       console.log("tokenIds: ", tokenIds);
@@ -637,10 +617,10 @@ const useNovaDrawNFT = () => {
   useEffect(() => {
     (async () => {
       if (address && trademarkNFT) {
-        const isApproved = (await trademarkNFT.isApprovedForAll(
+        const isApproved = (await trademarkNFT.read.isApprovedForAll([
           address,
-          LYNKS_NFT_CONTRACT
-        )) as boolean;
+          LYNKS_NFT_CONTRACT,
+        ])) as boolean;
         setIsTrademarkApproved(isApproved);
       }
     })();
