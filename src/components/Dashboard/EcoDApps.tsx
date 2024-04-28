@@ -9,10 +9,8 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { formatNumberWithUnit } from "@/utils";
-import { set } from "lodash";
 
 const Tag = styled.span`
   border-radius: 0.375rem;
@@ -59,16 +57,18 @@ interface EcoDAppsProps {
   handler: string;
   link: string;
   iconURL: string;
-  booster: string;
   type: string;
   points: {
     name: string;
     value: string;
   }[];
   status: string;
-  multiplier: string;
   description: string;
   earned: string;
+  booster?: string;
+  multiplier?: string;
+  reward?: string;
+  descriptionTips?: string;
 }
 
 export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
@@ -97,9 +97,11 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 {data.handler}
               </p>
             </div>
-            <Tag className="px-[1rem] py-[0.12rem]">
-              <span className="text text-[#0bc48f]">{data.booster} boost</span>
-            </Tag>
+            {data.booster && (
+              <Tag className="px-[1rem] py-[0.12rem]">
+                <span className="text text-[#0bc48f]">{data.booster}</span>
+              </Tag>
+            )}
           </Td>
           <Td>
             <p className="text-[1rem] font-[700]">{data.type}</p>
@@ -151,14 +153,42 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
               <SubTh>Status</SubTh>
               <p className="text-[0.875rem] ">{data.status}</p>
             </div>
-            <div>
-              <SubTh>Multiplier</SubTh>
-              <p className="text-[0.875rem]">{data.multiplier}</p>
-            </div>
+            {data.reward ? (
+              <div>
+                <SubTh>Current Reward Level</SubTh>
+                <p className="text-[0.875rem]">{data.reward}</p>
+              </div>
+            ) : (
+              <div>
+                <SubTh>Multiplier</SubTh>
+                <p className="text-[0.875rem]">{data.multiplier}</p>
+              </div>
+            )}
+
             <div>
               <SubTh>Description</SubTh>
               <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
-                {data.description}
+                <span>{data.description}</span>
+                {data.descriptionTips && (
+                  <>
+                    <img
+                      src="/img/icon-info.svg"
+                      width={12}
+                      className="ml-2 inline-block"
+                      data-tooltip-id={`eco-dapp-${data.handler}`}
+                    />
+                    <ReactTooltip
+                      id={`eco-dapp-${data.handler}`}
+                      content={data.descriptionTips}
+                      style={{
+                        fontSize: "14px",
+                        background: "#666",
+                        borderRadius: "0.5rem",
+                        width: "42.5rem",
+                      }}
+                    />
+                  </>
+                )}
               </p>
             </div>
             <div className="text-right">
@@ -167,7 +197,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
                 onClick={() => warningModal.onOpen()}
               >
-                <span>Provide Liquidity</span>
+                <span>Bridge</span>
                 <img
                   src="/img/icon-open-in-new.svg"
                   className="w-[1rem] h-[1rem]"

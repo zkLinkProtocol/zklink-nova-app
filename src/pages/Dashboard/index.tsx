@@ -162,11 +162,17 @@ export default function Dashboard() {
     linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
+    symbiosisNovaPoints,
+    mesonNovaPoints,
+    owltoNovaPoints,
     dAppNovaPoints,
     trademarkPoints,
     okxPoints,
     kolPoints,
     totalNovaPoints,
+    symbiosisBridgeNovaPoints,
+    mesonBridgeNovaPoints,
+    owltoBridgeNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -462,10 +468,12 @@ export default function Dashboard() {
       handler: "@LayerBankFi",
       link: "https://zklink.layerbank.finance/",
       iconURL: "/img/icon-layerbank.svg",
-      booster: "2x",
+      booster: "2x boost",
       type: "Lending",
       points: lauyerbankPoints,
-      earned: `${lauyerbankPoints.length} Points`,
+      earned: `${lauyerbankPoints.length} ${
+        lauyerbankPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
       status: "Live",
       multiplier: "2x Nova Points",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -482,10 +490,12 @@ export default function Dashboard() {
       handler: "@LinkswapFinance",
       link: "https://linkswap.finance/earn",
       iconURL: "/img/icon-linkswap.svg",
-      booster: "1.5x",
-      type: "Dex",
+      booster: "1.5x boost",
+      type: "DEX",
       points: linkswapPoints,
-      earned: `${linkswapPoints.length} Points + Yield`,
+      earned: `${linkswapPoints.length} ${
+        linkswapPoints.length > 1 ? "Types" : "Type"
+      } of Point + Yield`,
       status: "Live",
       multiplier: "1.5x Nova Points",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -503,10 +513,12 @@ export default function Dashboard() {
       handler: "@native_fi",
       link: "https://aqua.native.org/dashboard/user/?chainId=810180",
       iconURL: "/img/icon-aqua.svg",
-      booster: "2x",
+      booster: "2x boost",
       type: "Lending",
       points: aquaPoints,
-      earned: `1 Points + Yield`,
+      earned: `${aquaPoints.length} ${
+        aquaPoints.length > 1 ? "Types" : "Type"
+      } of Point + Yield`,
       status: "Live",
       multiplier: "2x Nova Points",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -524,15 +536,88 @@ export default function Dashboard() {
       handler: "@izumi_Finance",
       link: "https://izumi.finance/trade/swap?chainId=810180",
       iconURL: "/img/icon-izumi.svg",
-      booster: "2x",
+      booster: "2x boost",
       type: "DEX",
       points: izumiPoints,
-      earned: `1 Points + Yield`,
+      earned: `${izumiPoints.length} ${
+        izumiPoints.length > 1 ? "Types" : "Type"
+      } of Point + Yield`,
       status: "Live",
       multiplier: "2x Nova Points",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
-    return [layerbank, linkswap, aqua, izumi];
+
+    const symbiosisPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(symbiosisNovaPoints),
+      },
+    ];
+    const symbiosis = {
+      name: "Symbiosis",
+      handler: "@symbiosis_fi",
+      link: " https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
+      iconURL: "/img/icon-symbiosis.svg",
+      type: "Cross-Chain",
+      points: symbiosisPoints,
+      earned: `${symbiosisPoints.length} ${
+        symbiosisPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      reward: `${symbiosisBridgeNovaPoints} ${
+        symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`,
+      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+      descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+    };
+
+    const mesonPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(mesonNovaPoints),
+      },
+    ];
+    const meson = {
+      name: "Meson",
+      handler: "@mesonfi",
+      link: "https://meson.fi/zklink",
+      iconURL: "/img/icon-meson.svg",
+      type: "Cross-Chain",
+      points: mesonPoints,
+      earned: `1 ${mesonPoints.length > 1 ? "Types" : "Type"} of Point`,
+      status: "Live",
+      reward: `${mesonBridgeNovaPoints} ${
+        mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`,
+      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+      descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+    };
+
+    const owltoPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(owltoNovaPoints),
+      },
+    ];
+    const owlto = {
+      name: "Owlto",
+      handler: "@Owlto_Finance",
+      link: "https://owlto.finance/?to=zkLinkNova",
+      iconURL: "/img/icon-owlto.svg",
+      type: "Cross-Chain",
+      points: owltoPoints,
+      earned: `${owltoPoints.length} ${
+        owltoPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      reward: `${owltoBridgeNovaPoints} ${
+        owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`,
+      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+      descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+    };
+
+    return [layerbank, linkswap, aqua, izumi, owlto, symbiosis, meson];
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,
@@ -540,6 +625,12 @@ export default function Dashboard() {
     linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
+    symbiosisNovaPoints,
+    mesonNovaPoints,
+    owltoNovaPoints,
+    symbiosisBridgeNovaPoints,
+    mesonBridgeNovaPoints,
+    owltoBridgeNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);
