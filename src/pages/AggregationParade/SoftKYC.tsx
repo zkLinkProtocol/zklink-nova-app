@@ -505,9 +505,7 @@ export default function SoftKYC() {
     setVerifyDepositThirdLoading(true);
 
     try {
-      const res = await checkBridge(
-        "0x57b5A6c8558f26292bf928E81aDecCD4110d6Bbe"
-      );
+      const res = await checkBridge(address);
       if (res.result) {
         setIsDepositViaThirdParty(true);
         verifyDepositModal.onClose();
@@ -571,7 +569,6 @@ export default function SoftKYC() {
     try {
       let res;
       if (isDepositViaThirdParty) {
-        // TODO
         res = await registerAccountByBridge({
           address: address,
           code: inviteCodeValue,
@@ -644,7 +641,6 @@ export default function SoftKYC() {
   useEffect(() => {
     if (
       validInviteCode(inviteCodeValue) &&
-      isCheckedTwitter &&
       isCheckedDeposit &&
       isConnected &&
       signature
@@ -653,13 +649,7 @@ export default function SoftKYC() {
     } else {
       setSubmitStatus(false);
     }
-  }, [
-    inviteCodeValue,
-    isCheckedTwitter,
-    isCheckedDeposit,
-    isConnected,
-    signature,
-  ]);
+  }, [inviteCodeValue, isCheckedDeposit, isConnected, signature]);
 
   useEffect(() => {
     if (!inviteCodeValue || inviteCodeValue?.length !== 6) {
