@@ -121,63 +121,72 @@ export default function PointsLeaderboard() {
   }, [totalNovaPoints]);
 
   return (
-    <Table
-      removeWrapper
-      className="table min-h-[30rem]"
-      classNames={{ thead: "table-header", tbody: "table-tbody" }}
-      bottomContent={
-        hasMore && !isLoading ? (
-          <div className="flex w-full justify-center">
-            <Button
-              isDisabled={isLoadMoreLoading}
-              variant="flat"
-              onPress={() => getAccountsRankFunc(true)}
-            >
-              {isLoadMoreLoading && <Spinner color="white" size="sm" />}
-              Load More
-            </Button>
-          </div>
-        ) : null
-      }
-    >
-      <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-      </TableHeader>
-
-      <TableBody
-        items={data}
-        isLoading={isLoading}
-        loadingContent={<Spinner label="Loading..." />}
+    <>
+      <p className="py-2 mb-[1rem] text-[14px] text-[#C6D3DD] font-[400]">
+        Please notice that some of your Nova Points may not be reflected on the
+        leaderboard at the moment, don't worry, you won't lose them. They'll all
+        be showed on the leaderboard soon.
+      </p>
+      <Table
+        removeWrapper
+        className="table min-h-[30rem]"
+        classNames={{ thead: "table-header", tbody: "table-tbody" }}
+        bottomContent={
+          hasMore && !isLoading ? (
+            <div className="flex w-full justify-center">
+              <Button
+                isDisabled={isLoadMoreLoading}
+                variant="flat"
+                onPress={() => getAccountsRankFunc(true)}
+              >
+                {isLoadMoreLoading && <Spinner color="white" size="sm" />}
+                Load More
+              </Button>
+            </div>
+          ) : null
+        }
       >
-        {data.map((item: any, index: number) =>
-          index === 0 &&
-          item?.address?.toLowerCase() === address?.toLowerCase() ? (
-            <TableRow
-              key={index}
-              className="self-data border-b-1 border-slate-600"
-            >
-              <TableCell>{item.rank}</TableCell>
-              <TableCell>
-                {showAccount(item.address)}{" "}
-                <span className="ml-[0.5rem]">(Your Address)</span>
-              </TableCell>
-              <TableCell>{showAccount(item.inviteBy)}</TableCell>
-              <TableCell>{formatNumberWithUnit(totalNovaPoints)}</TableCell>
-            </TableRow>
-          ) : (
-            <TableRow key={index}>
-              <TableCell>{item.rank}</TableCell>
-              <TableCell>{showAccount(item.address)}</TableCell>
-              <TableCell>{showAccount(item.inviteBy)}</TableCell>
-              <TableCell>
-                {formatNumberWithUnit(
-                  (+item?.novaPoint || 0) + (+item?.referPoint || 0)
-                )}
-              </TableCell>
-            </TableRow>
-          )
-        )}
-      </TableBody>
-    </Table>
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
+        </TableHeader>
+
+        <TableBody
+          items={data}
+          isLoading={isLoading}
+          loadingContent={<Spinner label="Loading..." />}
+        >
+          {data.map((item: any, index: number) =>
+            index === 0 &&
+            item?.address?.toLowerCase() === address?.toLowerCase() ? (
+              <TableRow
+                key={index}
+                className="self-data border-b-1 border-slate-600"
+              >
+                <TableCell>{item.rank}</TableCell>
+                <TableCell>
+                  {showAccount(item.address)}{" "}
+                  <span className="ml-[0.5rem]">(Your Address)</span>
+                </TableCell>
+                <TableCell>{showAccount(item.inviteBy)}</TableCell>
+                <TableCell>{formatNumberWithUnit(totalNovaPoints)}</TableCell>
+              </TableRow>
+            ) : (
+              <TableRow key={index}>
+                <TableCell>{item.rank}</TableCell>
+                <TableCell>{showAccount(item.address)}</TableCell>
+                <TableCell>{showAccount(item.inviteBy)}</TableCell>
+                <TableCell>
+                  {formatNumberWithUnit(
+                    (+item?.novaPoint || 0) + (+item?.referPoint || 0)
+                  )}
+                </TableCell>
+              </TableRow>
+            )
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
 }
