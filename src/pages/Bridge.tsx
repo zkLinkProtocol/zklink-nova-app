@@ -210,7 +210,7 @@ export default function Bridge() {
           </ul>
         </div>
 
-        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+        {/* <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
           🎁 Mystery Box Season 2 (Starting April 24):
         </h3>
         <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
@@ -226,7 +226,7 @@ export default function Bridge() {
             </a>{" "}
             participants can mint a mystery box.
           </p>
-        </div>
+        </div> */}
         <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
           🎁 Invite Box
         </h3>

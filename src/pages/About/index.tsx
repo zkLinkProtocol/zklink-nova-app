@@ -462,16 +462,8 @@ export default function About() {
           </div>
           <div className="paragraph">
             <p>
-              Addtional 900 boxes will be distributed among 900 lucky{" "}
-              <a
-                href="https://app.galxe.com/quest/zkLink/GCqPcthi45"
-                target="_blank"
-                className="text-green inline-flex items-center gap-1"
-              >
-                <span>Galxe Quest</span>
-                <img src="/img/icon-open-in-new-green.svg" width={14} />
-              </a>{" "}
-              participants.
+              An additional 900 boxes will be distributed to 900 lucky
+              participants in the Galxe Quest. (Quest will be back online soon)
             </p>
           </div>
           <div className="paragraph">
