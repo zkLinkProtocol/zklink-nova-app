@@ -136,7 +136,7 @@ export default function NFTLuckWinner() {
         const arr = community.map(
           (item: TopInviteAndRandomRes, index: number) => ({
             ...item,
-            rewardType: "Community Wiinner",
+            rewardType: "Wiinner",
             rank: index + 1,
           })
         );
@@ -182,16 +182,17 @@ export default function NFTLuckWinner() {
   return (
     <div className="relative z-1">
       <p className="py-2 text-[20px] font-satoshi text-[#B9C7D0] font-[700]">
-        Each day, top 100 referrers of previous day and 900 daily{" "}
+        Each day, top 100 referrers of previous day and participants of
+        community activites (join{" "}
         <a
-          href="https://app.galxe.com/quest/zkLink/GCqPcthi45"
+          href="https://discord.com/invite/zklink"
           target="_blank"
           className="text-green inline-flex items-center gap-1"
         >
-          <span>Galxe Quest</span>
+          <span>Discord</span>
           <img src="/img/icon-open-in-new-green.svg" width={14} />
-        </a>{" "}
-        participants can mint a mystery box. Additionally, every 1 ETH deposit
+        </a>
+        ) participants can mint a mystery box. Additionally, every 1 ETH deposit
         can earn you an extra referral spot. In cases where multiple users have
         the same referral ranking, we randomly select some users to ensure that
         the daily distribution of top referrers remains at 100.
