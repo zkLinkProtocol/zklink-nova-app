@@ -300,6 +300,13 @@ export const registerAccount = (
   });
 };
 
+export const registerAccountByBridge = (data: {
+  address: string;
+  code: string;
+  siganture: string;
+}): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/register/account/byBridge`, { ...data });
+
 export type AccessTokenParams = {
   code: string;
   grant_type: string;

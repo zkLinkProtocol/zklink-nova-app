@@ -5,6 +5,7 @@ import {
   getTwitterAccessToken,
   getTxByTxHash,
   registerAccount,
+  registerAccountByBridge,
 } from "@/api";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { SIGN_MESSAGE } from "@/constants/sign";
@@ -35,7 +36,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import qs from "qs";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -218,7 +219,7 @@ export default function SoftKYC() {
   const { openConnectModal } = useConnectModal();
   const verifyDepositModal = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { address, isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const {
     signature,
     inviteCode,
@@ -249,6 +250,13 @@ export default function SoftKYC() {
 
   const [depositThirdStatus, setDepositThirdStatus] = useState("");
   const [verifyDepositTabsActive, setVerifyDepositTabsActive] = useState(0);
+
+  const [isDepositViaThirdParty, setIsDepositViaThirdParty] = useState(false);
+
+  const isCheckedDeposit = useMemo(() => {
+    return !!depositTx || isDepositViaThirdParty;
+  }, [depositTx, isDepositViaThirdParty]);
+
   const verifyDepositTabs = [
     {
       title: "Deposit via the Official Bridge",
@@ -491,16 +499,19 @@ export default function SoftKYC() {
     }
   };
 
-  // TODO: Verify deposit via third party
   const verifyDepositViaThirdParty = async () => {
     if (!address) return;
     setDepositThirdStatus("");
     setVerifyDepositThirdLoading(true);
 
     try {
-      const res = await checkBridge(address);
+      const res = await checkBridge(
+        "0x57b5A6c8558f26292bf928E81aDecCD4110d6Bbe"
+      );
       if (res.result) {
-        setDepositThirdStatus(VerifyResult.SUCCESS);
+        setIsDepositViaThirdParty(true);
+        verifyDepositModal.onClose();
+        toast.success("Your code has been successfully verified.");
       } else {
         setDepositThirdStatus(VerifyResult.FAILED);
       }
@@ -531,15 +542,12 @@ export default function SoftKYC() {
 
   // Submit user bind form
   const handleSubmitError = (message?: string) => {
-    if (message && message?.toLowerCase().includes("twitter")) {
-      setTwitterAccessToken("");
-    } else {
-      dispatch(setIsCheckedInviteCode(false));
-      dispatch(setInviteCode(""));
-      dispatch(setDepositTx(""));
-      setTwitterAccessToken("");
-      dispatch(setSignature(""));
-    }
+    dispatch(setIsCheckedInviteCode(false));
+    dispatch(setInviteCode(""));
+    dispatch(setDepositTx(""));
+    setTwitterAccessToken("");
+    dispatch(setSignature(""));
+    setIsDepositViaThirdParty(false);
 
     toast.error(
       message
@@ -561,14 +569,24 @@ export default function SoftKYC() {
     }
 
     try {
-      const res = await registerAccount({
-        address: address,
-        code: inviteCodeValue,
-        siganture: signature,
-        accessToken: twitterAccessToken || null,
-        chainId: depositChainId,
-        txHash: depositTx,
-      });
+      let res;
+      if (isDepositViaThirdParty) {
+        // TODO
+        res = await registerAccountByBridge({
+          address: address,
+          code: inviteCodeValue,
+          siganture: signature,
+        });
+      } else {
+        res = await registerAccount({
+          address: address,
+          code: inviteCodeValue,
+          siganture: signature,
+          accessToken: twitterAccessToken || null,
+          chainId: depositChainId,
+          txHash: depositTx,
+        });
+      }
 
       if (+res?.status === 0) {
         getInviteFunc();
@@ -627,7 +645,7 @@ export default function SoftKYC() {
     if (
       validInviteCode(inviteCodeValue) &&
       isCheckedTwitter &&
-      depositTx &&
+      isCheckedDeposit &&
       isConnected &&
       signature
     ) {
@@ -635,13 +653,23 @@ export default function SoftKYC() {
     } else {
       setSubmitStatus(false);
     }
-  }, [inviteCodeValue, isCheckedTwitter, depositTx, isConnected, signature]);
+  }, [
+    inviteCodeValue,
+    isCheckedTwitter,
+    isCheckedDeposit,
+    isConnected,
+    signature,
+  ]);
 
   useEffect(() => {
     if (!inviteCodeValue || inviteCodeValue?.length !== 6) {
       dispatch(setIsCheckedInviteCode(false));
     }
   }, [inviteCodeValue]);
+
+  useEffect(() => {
+    setIsDepositViaThirdParty(false);
+  }, [address]);
 
   return (
     <BgBox>
@@ -774,13 +802,15 @@ export default function SoftKYC() {
           {/* Step 3: Bridge  */}
           <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
             <CardBox
-              className={`hidden md:block ${depositTx ? "successed" : ""}`}
+              className={`hidden md:block ${
+                isCheckedDeposit ? "successed" : ""
+              }`}
             >
               <StepNum>03</StepNum>
             </CardBox>
             <CardBox
               className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                depositTx ? "successed" : ""
+                isCheckedDeposit ? "successed" : ""
               }`}
             >
               <StepItem className="stepItem">
@@ -1002,9 +1032,9 @@ export default function SoftKYC() {
                   )}
                   {depositStatus === VerifyResult.FAILED && (
                     <p className="text-[#C57D10] py-4 text-[1rem]">
-                      {verifyDepositError
-                        ? verifyDepositError
-                        : "This Tx Hash does not meet the requirements. Please check the deposit amount, network, wallet address, and the Tx Hash itself."}
+                      This Tx Hash does not meet the requirements. Please check
+                      the deposit amount, network, wallet address, and the Tx
+                      Hash itself.
                     </p>
                   )}
                 </div>
@@ -1017,9 +1047,9 @@ export default function SoftKYC() {
                   Currently, the Aggregation Parade is open to users who deposit
                   more than 0.1 ETH or an equivalent amount of assets in single
                   tx through Owlto, Symbiosis, or Meson.{" "}
-                  <a href="" target="_blank" className="text-[#03D498]">
+                  {/* <a href="" target="_blank" className="text-[#03D498]">
                     Read More
-                  </a>
+                  </a> */}
                 </p>
                 <p className="mt-[1rem] text-[#fff] text-[1rem] font-[500]">
                   {address}
@@ -1044,7 +1074,7 @@ export default function SoftKYC() {
                     <p className="text-[#C57D10] py-4 text-[1rem]">
                       {verifyDepositError
                         ? verifyDepositError
-                        : "This Tx Hash does not meet the requirements. Please check the deposit amount, network, wallet address, and the Tx Hash itself."}
+                        : "This address does not meet the requirements. Please make sure you have completed a single transaction through supported third-party bridge and the bridged amount exceeds 0.1 ETH, 500 USDT, or 500 USDC."}
                     </p>
                   )}
                 </div>
