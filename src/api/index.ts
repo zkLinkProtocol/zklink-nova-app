@@ -300,6 +300,13 @@ export const registerAccount = (
   });
 };
 
+export const registerAccountByBridge = (data: {
+  address: string;
+  code: string;
+  siganture: string;
+}): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/register/account/byBridge`, { ...data });
+
 export type AccessTokenParams = {
   code: string;
   grant_type: string;
@@ -512,7 +519,9 @@ export const getNovaProjectPoints = (
     params: { address, project },
   });
 
-// cache/bridge/latest/points?name=meson
+export const checkBridge = async (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/check/bridge`, { params: { address } });
+
 
 export interface BridgePoints {
   errno: number;
