@@ -35,7 +35,7 @@ import fromList from "@/constants/fromChainList";
 import useTokenBalanceList from "@/hooks/useTokenList";
 import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { getDepositETHThreshold } from "@/api";
+import { checkWinnerAddress, getDepositETHThreshold } from "@/api";
 import { RootState } from "@/store";
 import {
   setInvite,
@@ -867,6 +867,23 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   const { mintable, minted } = useOldestFriendsStatus();
 
+  const [isCheckWinner, setIsCheckWinner] = useState(false);
+  const [isWhitelistWinner, setIsWhitelistWinner] = useState(false); // TODO: get from api
+
+  const checkWinnerAddressFunc = async () => {
+    if (!address) return;
+    const { result } = await checkWinnerAddress(
+      "0x3E9BBAC4FDD82F1ED910FB806A407A8ABB1BC195"
+    );
+    if (!!result) {
+      setIsCheckWinner(result);
+    }
+  };
+
+  useEffect(() => {
+    checkWinnerAddressFunc();
+  }, [address]);
+
   return (
     <>
       <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
@@ -1028,75 +1045,84 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
           )}
 
-          {/* TODO: show for Coinlist Participants */}
-          <div className="flex items-center justify-between mb-2 points-box">
-            <div className="flex items-center">
-              <span>zkLink Participants</span>
+          {isCheckWinner && (
+            <div className="flex items-center justify-between mb-2 points-box">
+              <div className="flex items-center">
+                <span>CoinList Participants' Rewards</span>
 
-              <img
-                src={"/img/icon-tooltip.png"}
-                className="w-[14px] cursor-pointer ml-1 mr-4"
-                data-tooltip-id="coinlist-participants"
-              />
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                  data-tooltip-id="coinlist-participants"
+                />
 
-              <ReactTooltip
-                id="coinlist-participants"
-                content="Previous zkLink Coinlist participants taking part in the
-                  zkLink Aggregation Parade will receive 1 mystery box which
-                  could win one of the following rewards: Nova Points
-                  boosters, NFT trademarks, and Lynks."
-                style={{
-                  fontSize: "14px",
-                  background: "#666",
-                  borderRadius: "0.5rem",
-                  maxWidth: "32rem",
-                }}
-              />
+                <ReactTooltip
+                  id="coinlist-participants"
+                  content="Previous zkLink Coinlist participants taking part in the zkLink Aggregation Parade will receive 1 mystery box, with chances to win rewards up to 1000 Nova Points, trademarks NFT, and Lynks."
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "30rem",
+                  }}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px]">
+                  1 Mystery Box
+                </span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[#0BC48F] text-[14px]">1 Mystery Box</span>
-              <img src="/img/icon-old-fren-right.svg" width={16} height={16} />
-            </div>
-          </div>
+          )}
 
-          {/* TODO: show for Coinlist Whitelist Users */}
-          <div className="flex items-center justify-between mb-2 points-box">
-            <div className="flex items-center">
-              <span>Coinlist Whitelist Users</span>
+          {isWhitelistWinner && (
+            <div className="flex items-center justify-between mb-2 points-box">
+              <div className="flex items-center">
+                <span>Coinlist Whitelist Users</span>
 
-              <img
-                src={"/img/icon-tooltip.png"}
-                className="w-[14px] cursor-pointer ml-1 mr-4"
-                data-tooltip-id="coinlist-whitelist"
-              />
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                  data-tooltip-id="coinlist-whitelist"
+                />
 
-              <ReactTooltip
-                id="coinlist-whitelist"
-                style={{
-                  fontSize: "14px",
-                  background: "#666",
-                  borderRadius: "0.5rem",
-                  maxWidth: "32rem",
-                }}
-                render={() => (
-                  <p>
-                    Previous zkLink Coinlist whitelist users taking part in the
-                    zkLink Aggregation Parade will receive 50 Nova Points,
-                    Equivalent to depositing{" "}
-                    <b className="font-[700] text-[#fff]">
-                      1 ETH into the Nova Network for 9 days.
-                    </b>
-                  </p>
-                )}
-              />
+                <ReactTooltip
+                  id="coinlist-whitelist"
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "32rem",
+                  }}
+                  render={() => (
+                    <p>
+                      Previous zkLink Coinlist whitelist users taking part in
+                      the zkLink Aggregation Parade will receive 50 Nova Points,
+                      Equivalent to depositing{" "}
+                      <b className="font-[700] text-[#fff]">
+                        1 ETH into the Nova Network for 9 days.
+                      </b>
+                    </p>
+                  )}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px]">
+                  +50 Nova Points
+                </span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[#0BC48F] text-[14px]">
-                +50 Nova Points
-              </span>
-              <img src="/img/icon-old-fren-right.svg" width={16} height={16} />
-            </div>
-          </div>
+          )}
 
           {/* <div className="flex items-center justify-between mb-2 points-box">
             <span>Est.fee</span>
@@ -1432,6 +1458,85 @@ export default function Bridge(props: IBridgeComponentProps) {
                 </div>
               )}
             </>
+          )}
+
+          {isCheckWinner && (
+            <div className="flex items-center justify-between gap-6 mb-2 points-box">
+              <div className="flex items-center">
+                <span>CoinList Participants' Rewards</span>
+
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                  data-tooltip-id="coinlist-participants"
+                />
+
+                <ReactTooltip
+                  id="coinlist-participants"
+                  content="Previous zkLink Coinlist participants taking part in the zkLink Aggregation Parade will receive 1 mystery box, with chances to win rewards up to 1000 Nova Points, trademarks NFT, and Lynks."
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "80vw",
+                  }}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px] whitespace-nowrap">
+                  1 Mystery Box
+                </span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </div>
+          )}
+
+          {isWhitelistWinner && (
+            <div className="flex items-center justify-between gap-6 mb-2 points-box">
+              <div className="flex items-center">
+                <span>Coinlist Whitelist Users</span>
+
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                  data-tooltip-id="coinlist-whitelist"
+                />
+
+                <ReactTooltip
+                  id="coinlist-whitelist"
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "80vw",
+                  }}
+                  render={() => (
+                    <p>
+                      Previous zkLink Coinlist whitelist users taking part in
+                      the zkLink Aggregation Parade will receive 50 Nova Points,
+                      Equivalent to depositing{" "}
+                      <b className="font-[700] text-[#fff]">
+                        1 ETH into the Nova Network for 9 days.
+                      </b>
+                    </p>
+                  )}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px] whitespace-nowrap">
+                  +50 Nova Points
+                </span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </div>
           )}
         </SelectBox>
         <div className="mt-8">

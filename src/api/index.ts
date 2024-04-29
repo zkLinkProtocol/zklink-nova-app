@@ -511,3 +511,8 @@ export const getNovaProjectPoints = (
   http.get(`${BASE_URL_LRT_POINTS}/nova/points/project`, {
     params: { address, project },
   });
+
+export const checkWinnerAddress = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/referrer/checkWinnerAddress`, {
+    params: { address },
+  });
