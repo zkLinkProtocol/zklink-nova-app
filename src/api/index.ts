@@ -519,13 +519,8 @@ export const getNovaProjectPoints = (
     params: { address, project },
   });
 
-export const checkWinnerAddress = (address: string): Promise<Response> =>
-  http.get(`${BASE_URL_API}/referrer/checkWinnerAddress`, {
-    params: { address },
-  });
 export const checkBridge = async (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/invite/check/bridge`, { params: { address } });
-// cache/bridge/latest/points?name=meson
 
 export interface BridgePoints {
   errno: number;
@@ -535,4 +530,9 @@ export interface BridgePoints {
 export const getBridgePoints = (name: string): Promise<BridgePoints> =>
   http.get(`${BASE_URL_LRT_POINTS}/cache/bridge/latest/points`, {
     params: { name },
+  });
+
+export const checkWinnerAddress = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/referrer/checkWinnerAddress`, {
+    params: { address },
   });
