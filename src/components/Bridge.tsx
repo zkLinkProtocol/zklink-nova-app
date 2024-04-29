@@ -872,9 +872,7 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   const checkWinnerAddressFunc = async () => {
     if (!address) return;
-    const { result } = await checkWinnerAddress(
-      "0x3E9BBAC4FDD82F1ED910FB806A407A8ABB1BC195"
-    );
+    const { result } = await checkWinnerAddress(address);
     if (!!result) {
       setIsCheckWinner(result);
     }
