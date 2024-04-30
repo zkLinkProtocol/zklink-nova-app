@@ -4,6 +4,7 @@ import MysteryBoxWinners from "@/components/Leaderboard/MysteryBoxWinners";
 import styled from "styled-components";
 import { useState } from "react";
 import { BgBox, BgCoverImg, TableBoxs } from "@/styles/common";
+import EcoBoxWinners from "@/components/Leaderboard/EcoBoxWinners";
 
 const TabItem = styled.div`
   border-radius: 1rem;
@@ -38,6 +39,7 @@ export default function Leaderboard() {
             "Points Leaderboard",
             "Trademarks Leaderboard",
             "Mystery Box Winners",
+            "Eco Box Winners",
           ].map((item, index) => (
             <TabItem
               key={index}
@@ -56,6 +58,7 @@ export default function Leaderboard() {
           {tabsActive === 0 && <PointsLeaderboard />}
           {tabsActive === 1 && <TrademarksLeaderboard />}
           {tabsActive === 2 && <MysteryBoxWinners />}
+          {tabsActive === 3 && <EcoBoxWinners />}
         </TableBoxs>
       </div>
     </BgBox>
