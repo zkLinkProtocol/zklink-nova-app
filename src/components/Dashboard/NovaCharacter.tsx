@@ -38,6 +38,7 @@ import { Abi } from "viem";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { getPointsRewardsTooltips } from "./PointsRewardsTooltips";
+import EcoBoxDrawAnimation from "../EcoBoxDrawAnimation";
 
 export const TxResult = styled.div`
   .statusImg {
@@ -663,6 +664,44 @@ export default function NovaCharacter() {
   }, [mintResult]);
 
   const [ecoBoxCount, setEcoBoxCount] = useState(1); // TODO: get from api
+  const ecoBoxModal = useDisclosure();
+  const [drawEcoBoxId, setDrawEcoBoxId] = useState<number>();
+  const [ecoBoxDrawing, setEcoBoxDrawing] = useState(false);
+  const [ecoBoxOpening, setEcoBoxOpening] = useState(false);
+
+  const handleOpenEcoBox = useCallback(() => {
+    ecoBoxModal.onOpen();
+  }, [ecoBoxModal]);
+
+  const handleDrawEcoBox = () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+          },
+        }
+      );
+      return;
+    }
+  };
+
+  const handleMintEcoBox = () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+          },
+        }
+      );
+      return;
+    }
+  };
 
   return (
     <>
@@ -734,6 +773,7 @@ export default function NovaCharacter() {
         <div className="w-full">
           <Button
             className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
+            onClick={handleOpenEcoBox}
             disabled={!ecoBoxCount}
             data-tooltip-id="eco-box-tooltip"
           >
@@ -1133,6 +1173,67 @@ export default function NovaCharacter() {
               {!isInvaidChain && isTrademarkApproved && "Mint"}
             </span>
           </Button>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isDismissable={false}
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        size="xl"
+        isOpen={ecoBoxModal.isOpen}
+        onOpenChange={ecoBoxModal.onOpenChange}
+      >
+        <ModalContent className="h-[100vh] overflow-auto md:h-auto">
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Open Eco Box
+              </ModalHeader>
+              <ModalBody className="px-0 ">
+                <div className="flex flex-col items-center ">
+                  <EcoBoxDrawAnimation
+                    type="MysteryBox"
+                    ref={drawRef}
+                    onDrawEnd={() => {
+                      setDrawing(false);
+                    }}
+                    targetImageIndex={drawEcoBoxId}
+                  />
+
+                  <p className="text-left text-[#C0C0C0] mt-4 mb-2 px-6 font-satoshi font-normal">
+                    Every day, the top 500 users who accumulate the most Nova
+                    Points by interacting with Nova ecosystem dApps have the
+                    opportunity to draw an Eco Box. Please notice that Nova
+                    points rewards are not NFT, they'll be added directly to
+                    your Nova Points.
+                  </p>
+                </div>
+
+                <div className="w-full">
+                  <div className="w-full flex items-center justify-between gap-4">
+                    <Button
+                      className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mb-4"
+                      onClick={handleDrawEcoBox}
+                    >
+                      {isInvaidChain && "Switch Network"}
+                      {!isInvaidChain && ecoBoxOpening && "Opening"}
+                      {!isInvaidChain &&
+                        !ecoBoxOpening &&
+                        `Open Box (${ecoBoxCount})`}
+                    </Button>
+                    <Button
+                      className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mb-4"
+                      onClick={handleMintEcoBox}
+                    >
+                      {isInvaidChain && "Switch Network"}
+                      {!isInvaidChain && ecoBoxDrawing && "Minting"}
+                      {!isInvaidChain && !ecoBoxDrawing && "Mint Booster"}
+                    </Button>
+                  </div>
+                </div>
+              </ModalBody>
+            </>
+          )}
         </ModalContent>
       </Modal>
     </>
