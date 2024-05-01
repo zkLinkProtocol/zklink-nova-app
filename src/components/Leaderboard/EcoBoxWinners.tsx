@@ -103,7 +103,7 @@ export default function EcoBoxWinners() {
       currentTs < todayReadyTime ? todayReadyTime - oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
-    getEcoRankFunc();
+    // getEcoRankFunc(); // TODO: wait for api online
   }, []);
 
   return (
@@ -196,7 +196,7 @@ export default function EcoBoxWinners() {
           <div className="absolute top-0 left-0 px-4  w-full h-full bg-[rgba(0,0,0,.8)] flex justify-center items-center rounded-[1rem]">
             <div className="text-[#C6D3DD] text-[20px] text-[center] leading-[24px]">
               <p className="text-center">
-                The Mystery Box winner list for this period is still being
+                The Eco Box winner list for this period is still being
                 calculated.
               </p>
               <p className="text-center">
