@@ -1,4 +1,4 @@
-import { getTopInviteAndRandom } from "@/api";
+import { getEcoRank } from "@/api";
 import {
   Spinner,
   Table,
@@ -13,13 +13,13 @@ import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { useAccount } from "wagmi";
 
-type TopInviteAndRandomRes = {
+type EcoRankRes = {
   address: string;
-  invitenNumber: number;
+  points: number;
   createdAt: string;
 };
 
-type TopInviteAndRandom = TopInviteAndRandomRes & {
+type TopInviteAndRandom = EcoRankRes & {
   rank: number;
   rewardType: string;
 };
@@ -47,9 +47,7 @@ export default function EcoBoxWinners() {
 
   const oneDay = 86400000;
   const [isLoading, setIsLoading] = useState(false);
-  const [inviteAndRandomList, setInviteAndRandomList] = useState<
-    TopInviteAndRandom[]
-  >([]);
+  const [ecoRankList, seEcoRankList] = useState<TopInviteAndRandom[]>([]);
 
   const [selectedEndTs, setSelectedEndTs] = useState(0);
   const selectedStartTs = useMemo(() => {
@@ -60,40 +58,29 @@ export default function EcoBoxWinners() {
     return moment(ts).format(formatter);
   };
 
-  const getTopInviteAndRandomFunc = async (date?: string) => {
+  const getTopInviteAndRandomFunc = async () => {
     setIsLoading(true);
     try {
-      const { result } = await getTopInviteAndRandom(date);
-      console.log("getTopInviteAndRandom", result);
+      const { result } = await getEcoRank();
+      console.log("eco rank", result);
 
-      let top100Arr: TopInviteAndRandom[] = [];
+      // let arr: TopInviteAndRandom[] = [];
 
-      if (result && result?.top100 && Array.isArray(result.top100)) {
-        const { top100 } = result;
-
-        const arr = top100.map(
-          (item: TopInviteAndRandomRes, index: number) => ({
-            ...item,
-            rewardType: "Top 500 Eco dApp User",
-            rank: index + 1,
-          })
+      if (result && Array.isArray(result)) {
+        const arr = result.map((item: EcoRankRes, index: number) => ({
+          ...item,
+          rewardType: "Top 500 Eco dApp User",
+          rank: index + 1,
+        }));
+        const self = arr.find(
+          (item) => item.address.toLowerCase() === walletAddress?.toLowerCase()
         );
-        top100Arr = arr;
+        if (self) {
+          arr.unshift(self);
+        }
+
+        seEcoRankList(arr);
       }
-
-      const all = top100Arr.map((item, index) => ({
-        ...item,
-        rank: index + 1,
-      }));
-
-      const self = all.find(
-        (item) => item.address.toLowerCase() === walletAddress?.toLowerCase()
-      );
-      if (self) {
-        all.unshift(self);
-      }
-
-      setInviteAndRandomList(all);
     } catch (error) {
       console.error(error);
     } finally {
@@ -171,11 +158,11 @@ export default function EcoBoxWinners() {
             )}
           </TableHeader>
           <TableBody
-            items={inviteAndRandomList}
+            items={ecoRankList}
             isLoading={isLoading}
             loadingContent={<Spinner label="Loading..." />}
           >
-            {inviteAndRandomList.map((item, index) => (
+            {ecoRankList.map((item, index) => (
               <TableRow
                 key={index}
                 className={`${
@@ -198,13 +185,13 @@ export default function EcoBoxWinners() {
                   )}
                 </TableCell>
                 <TableCell>{item.address}</TableCell>
-                <TableCell>{item.invitenNumber}</TableCell>
+                <TableCell>{item.points}</TableCell>
                 <TableCell>{item.rewardType}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        {inviteAndRandomList.length === 0 && (
+        {ecoRankList.length === 0 && (
           <div className="absolute top-0 left-0 px-4  w-full h-full bg-[rgba(0,0,0,.8)] flex justify-center items-center rounded-[1rem]">
             <div className="text-[#C6D3DD] text-[20px] text-[center] leading-[24px]">
               <p className="text-center">

@@ -27,7 +27,13 @@ import {
   useSwitchChain,
 } from "wagmi";
 import { config } from "@/constants/networks";
-import { getRemainDrawCount, drawTrademarkNFT, postNFTLashin } from "@/api";
+import {
+  getRemainDrawCount,
+  drawTrademarkNFT,
+  postNFTLashin,
+  getEcoRamain,
+  postEcoDraw,
+} from "@/api";
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 import OldestFriendsDrawAnimation from "../DrawAnimation/OldestFriends";
@@ -39,6 +45,7 @@ import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { getPointsRewardsTooltips } from "./PointsRewardsTooltips";
 import EcoBoxDrawAnimation from "../EcoBoxDrawAnimation";
+import { set } from "lodash";
 
 export const TxResult = styled.div`
   .statusImg {
@@ -663,7 +670,7 @@ export default function NovaCharacter() {
     }
   }, [mintResult]);
 
-  const [ecoBoxCount, setEcoBoxCount] = useState(1); // TODO: get from api
+  const [ecoBoxCount, setEcoBoxCount] = useState(0); // TODO: get from api
   const ecoBoxModal = useDisclosure();
   const [drawEcoBoxId, setDrawEcoBoxId] = useState<number>();
   const [ecoBoxDrawing, setEcoBoxDrawing] = useState(false);
@@ -686,6 +693,9 @@ export default function NovaCharacter() {
       );
       return;
     }
+
+    const res = postEcoDraw(address);
+    console.log(res);
   };
 
   const handleMintEcoBox = () => {
@@ -702,6 +712,20 @@ export default function NovaCharacter() {
       return;
     }
   };
+
+  const getEcoRemainCount = async () => {
+    if (!address) return;
+    const res = await getEcoRamain(address);
+    const { result } = res;
+
+    if (result && result?.remainMintNum) {
+      setEcoBoxCount(Number(result.remainMintNum) || 0);
+    }
+  };
+
+  useEffect(() => {
+    getEcoRemainCount();
+  }, [address]);
 
   return (
     <>
@@ -799,7 +823,7 @@ export default function NovaCharacter() {
             content="Every day, the top 500 users who accumulate the most Nova Points by interacting with Nova ecosystem dApps have the opportunity to draw an Eco Box, which contain Nova Points, Trademarks NFT and Lynks."
           />
         </div>
-        {mintable && (
+        {mintable && !minted && (
           <div className="w-full">
             <Button
               className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
