@@ -50,7 +50,7 @@ export default () => {
       {bridges.map((bridge, index) => (
         <a
           key={index}
-          className="mt-[1rem] px-[1rem] py-[0.75rem] bg-[#011C26] rounded-[1rem] block flex justify-between items-center"
+          className="mt-[1rem] px-[1rem] py-[0.75rem] bg-[#011C26] rounded-[1rem] block hover:bg-[#001117] flex justify-between items-center"
           href={bridge.link}
           target="_blank"
         >
