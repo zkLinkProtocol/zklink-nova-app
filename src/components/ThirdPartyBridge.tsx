@@ -27,7 +27,7 @@ export default () => {
         points: `${owltoBridgeNovaPoints} ${
           owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
         }`,
-        link: "https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
+        link: "https://owlto.finance/?to=zkLinkNova",
       },
       {
         iconURL: "/img/icon-symbiosis.svg",
@@ -37,7 +37,7 @@ export default () => {
         points: `${symbiosisBridgeNovaPoints} ${
           symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
         }`,
-        link: "https://owlto.finance/?to=zkLinkNova",
+        link: "https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
       },
     ];
   }, [mesonBridgeNovaPoints, owltoBridgeNovaPoints, symbiosisBridgeNovaPoints]);
