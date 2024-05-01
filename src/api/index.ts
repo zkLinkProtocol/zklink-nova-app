@@ -546,6 +546,4 @@ export const getEcoRank = (): Promise<Response> =>
   http.get(`${BASE_URL_API}/nft/ecology/rank`);
 
 export const postEcoDraw = (address: string): Promise<Response> =>
-  http.post(`${BASE_URL_API}/nft/ecology/nft/draw`, {
-    address,
-  });
+  http.post(`${BASE_URL_API}/nft/ecology/nft/draw?address=${address}`);

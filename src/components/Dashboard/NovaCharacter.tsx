@@ -45,7 +45,6 @@ import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { getPointsRewardsTooltips } from "./PointsRewardsTooltips";
 import EcoBoxDrawAnimation from "../EcoBoxDrawAnimation";
-import { set } from "lodash";
 
 export const TxResult = styled.div`
   .statusImg {
@@ -121,6 +120,32 @@ const OLDEST_FRIENDS_TOKEN_ID_MAP: Record<number, string> = {
   88: "Lynks",
 };
 
+const PRIZE_ID_NFT_MAP_V2_MAP: Record<number, string> = {
+  50: "+50 Nova Points",
+  100: "+100 Nova Points",
+  200: "+200 Nova Points",
+  500: "+500 Nova Points",
+  1000: "+1000 Nova Points",
+  1: "Oak Tree Roots",
+  2: "Magnifying Glass",
+  3: "Chess Knight",
+  4: "Binary Code Metrix Cube",
+  88: "Lynks",
+};
+
+const PRIZE_ID_NFT_MAP_V2: Record<number, number> = {
+  50: 0,
+  100: 1,
+  200: 2,
+  500: 3,
+  1000: 4,
+  1: 5,
+  2: 6,
+  3: 7,
+  4: 8,
+  88: 9,
+};
+
 const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
   return Object.keys(TRADEMARK_TOKEN_ID_MAP).findIndex(
     (key) => Number(key) === tokenId
@@ -152,6 +177,7 @@ export default function NovaCharacter() {
     sendUpgradeSBTTx,
     isApproving,
     publicClient,
+    sendMysteryOpenMintTxV2,
   } = useNovaDrawNFT();
 
   const { refreshBalanceId, updateRefreshBalanceId } = useMintStatus();
@@ -672,15 +698,25 @@ export default function NovaCharacter() {
 
   const [ecoBoxCount, setEcoBoxCount] = useState(0); // TODO: get from api
   const ecoBoxModal = useDisclosure();
-  const [drawEcoBoxId, setDrawEcoBoxId] = useState<number>();
+  const [ecoBoxDrawNftId, setEcoBoxDrawNftId] = useState<number>();
   const [ecoBoxDrawing, setEcoBoxDrawing] = useState(false);
   const [ecoBoxOpening, setEcoBoxOpening] = useState(false);
+
+  const [ecoBoxMintParams, setEcoBoxMintParams] = useState<{
+    tokenId: number;
+    nonce: number;
+    signature: string;
+    expiry: number;
+    mintType?: number;
+  }>();
 
   const handleOpenEcoBox = useCallback(() => {
     ecoBoxModal.onOpen();
   }, [ecoBoxModal]);
 
-  const handleDrawEcoBox = () => {
+  const ecoBoxDrawRef = useRef<{ start: (target: number) => void }>();
+
+  const handleDrawEcoBox = useCallback(async () => {
     if (!address) return;
     if (isInvaidChain) {
       switchChain(
@@ -694,24 +730,106 @@ export default function NovaCharacter() {
       return;
     }
 
-    const res = postEcoDraw(address);
-    console.log(res);
-  };
-
-  const handleMintEcoBox = () => {
-    if (!address) return;
-    if (isInvaidChain) {
-      switchChain(
-        { chainId: NOVA_CHAIN_ID },
-        {
-          onError: (e) => {
-            console.log(e);
-          },
-        }
-      );
+    if (novaBalance === 0) {
+      toast.error("Insuffcient gas for mint transaction.");
       return;
     }
-  };
+
+    if (!ecoBoxDrawNftId) {
+      setEcoBoxDrawing(true);
+      const res = await postEcoDraw(address);
+
+      if (res && res?.result) {
+        const { tokenId, nonce, signature, expiry, mintType } = res.result;
+        setEcoBoxMintParams({ tokenId, nonce, signature, expiry, mintType });
+        await ecoBoxDrawRef?.current?.start(PRIZE_ID_NFT_MAP_V2[tokenId]);
+
+        if ([50, 100, 200, 500, 1000].includes(tokenId)) {
+          await sleep(2000);
+          setEcoBoxDrawNftId(undefined);
+          //not actual nft. Just points.
+          setTrademarkMintStatus(MintStatus.Success);
+          setMintResult({
+            name: PRIZE_ID_NFT_MAP_V2_MAP[tokenId!],
+            img:
+              tokenId === 88
+                ? lynksNFTImg!
+                : `/img/img-trademark-${tokenId}.png`,
+          });
+          trademarkMintModal.onOpen();
+          ecoBoxModal.onClose();
+          getEcoRemainCount();
+          eventBus.emit("getInvite");
+        } else {
+          const drawPrizeId =
+            Number(tokenId) === 88 ? 9 : PRIZE_ID_NFT_MAP_V2[tokenId];
+          setEcoBoxDrawNftId(drawPrizeId);
+        }
+
+        setUpdate((update) => update + 1);
+        return; // draw first and then mint as step2.
+      }
+    }
+    let mintParams = { ...ecoBoxMintParams };
+
+    try {
+      //TODO call contract
+      trademarkMintModal.onOpen();
+      setTrademarkMintStatus(MintStatus.Minting);
+      if (!ecoBoxMintParams) {
+        const res = await postEcoDraw(address);
+        if (res && res.result) {
+          const { tokenId, nonce, signature, expiry, mintType } = res.result;
+          setEcoBoxMintParams({
+            tokenId,
+            nonce,
+            signature,
+            expiry,
+            mintType,
+          });
+          mintParams = { tokenId, nonce, signature, expiry, mintType };
+        }
+      }
+      await sendMysteryOpenMintTxV2(mintParams as TrademarkMintParams);
+      setTrademarkMintStatus(MintStatus.Success);
+      setMintResult({
+        name: PRIZE_ID_NFT_MAP_V2_MAP[mintParams.tokenId!],
+        img:
+          mintParams.tokenId === 88
+            ? lynksNFTImg!
+            : `/img/img-trademark-${mintParams!.tokenId}.png`,
+      });
+      updateRefreshBalanceId();
+      setEcoBoxDrawNftId(undefined);
+    } catch (e: any) {
+      console.error(e);
+      setTrademarkMintStatus(MintStatus.Failed);
+      if (e.message) {
+        if (e.message.includes("rejected the request")) {
+          setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
+        }
+      }
+    } finally {
+      getEcoRemainCount();
+      setEcoBoxDrawing(false);
+    }
+
+    setUpdate((update) => update + 1);
+  }, [
+    address,
+    ecoBoxModal,
+    ecoBoxDrawNftId,
+    isInvaidChain,
+    lynksNFTImg,
+    novaBalance,
+    sendOldestFriendsTrademarkMintTx,
+    switchChain,
+    trademarkMintModal,
+    trademarkMintParams,
+    updateRefreshBalanceId,
+  ]);
 
   const getEcoRemainCount = async () => {
     if (!address) return;
@@ -991,29 +1109,31 @@ export default function NovaCharacter() {
             <b className="text-[#fff] font-[700]">not NFT</b>, they'll be added
             directly to your Nova Points.
           </p>
-          <Button
-            onClick={handleOldestFriendsRewardsDrawAndMint}
-            className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
-            isLoading={mintLoading || oldestFriendsDrawing}
-            isDisabled={!isInvaidChain && minted}
-          >
-            <span>
-              {isInvaidChain && "Switch to Nova network to draw"}
-              {!isInvaidChain &&
-                (!oldestFriendsDrawedNftId || oldestFriendsDrawing) &&
-                "Draw"}
-              {!isInvaidChain &&
-                !!oldestFriendsDrawedNftId &&
-                !oldestFriendsDrawing &&
-                "Mint"}
-            </span>
-          </Button>
-          <Button
-            className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
-            onClick={() => oldestFriendsRewardsModal.onClose()}
-          >
-            Close
-          </Button>
+          <div>
+            <Button
+              onClick={handleOldestFriendsRewardsDrawAndMint}
+              className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+              isLoading={mintLoading || oldestFriendsDrawing}
+              isDisabled={minted}
+            >
+              <span>
+                {isInvaidChain && "Switch to Nova network to draw"}
+                {!isInvaidChain &&
+                  (!oldestFriendsDrawedNftId || oldestFriendsDrawing) &&
+                  "Draw"}
+                {!isInvaidChain &&
+                  !!oldestFriendsDrawedNftId &&
+                  !oldestFriendsDrawing &&
+                  "Mint"}
+              </span>
+            </Button>
+            <Button
+              className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
+              onClick={() => oldestFriendsRewardsModal.onClose()}
+            >
+              Close
+            </Button>
+          </div>
         </ModalContent>
       </Modal>
 
@@ -1203,61 +1323,59 @@ export default function NovaCharacter() {
       <Modal
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
-        size="xl"
+        size="2xl"
         isOpen={ecoBoxModal.isOpen}
         onOpenChange={ecoBoxModal.onOpenChange}
       >
-        <ModalContent className="h-[100vh] overflow-auto md:h-auto">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Open Eco Box
-              </ModalHeader>
-              <ModalBody className="px-0 ">
-                <div className="flex flex-col items-center ">
-                  <EcoBoxDrawAnimation
-                    type="MysteryBox"
-                    ref={drawRef}
-                    onDrawEnd={() => {
-                      setDrawing(false);
-                    }}
-                    targetImageIndex={drawEcoBoxId}
-                  />
+        <ModalContent className="mt-[2rem] py-4 md:px-4 h-[100vh] overflow-auto md:h-auto">
+          <ModalHeader className="flex flex-col gap-1">
+            Open Eco Box
+          </ModalHeader>
+          <ModalBody className="px-0 ">
+            <div className="flex flex-col items-center ">
+              <EcoBoxDrawAnimation
+                type="MysteryBox"
+                ref={ecoBoxDrawRef}
+                onDrawEnd={() => {
+                  setEcoBoxDrawing(false);
+                }}
+                targetImageIndex={ecoBoxDrawNftId}
+              />
 
-                  <p className="text-left text-[#C0C0C0] mt-4 mb-2 px-6 font-satoshi font-normal">
-                    Every day, the top 500 users who accumulate the most Nova
-                    Points by interacting with Nova ecosystem dApps have the
-                    opportunity to draw an Eco Box. Please notice that Nova
-                    points rewards are not NFT, they'll be added directly to
-                    your Nova Points.
-                  </p>
-                </div>
+              <p className="text-left text-[#C0C0C0] mt-4 mb-2 px-6 font-satoshi font-normal">
+                Every day, the top 500 users who accumulate the most Nova Points
+                by interacting with Nova ecosystem dApps have the opportunity to
+                draw an Eco Box. Please notice that Nova points rewards are not
+                NFT, they'll be added directly to your Nova Points.
+              </p>
+            </div>
 
-                <div className="w-full">
-                  <div className="w-full flex items-center justify-between gap-4">
-                    <Button
-                      className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mb-4"
-                      onClick={handleDrawEcoBox}
-                    >
-                      {isInvaidChain && "Switch Network"}
-                      {!isInvaidChain && ecoBoxOpening && "Opening"}
-                      {!isInvaidChain &&
-                        !ecoBoxOpening &&
-                        `Open Box (${ecoBoxCount})`}
-                    </Button>
-                    <Button
-                      className="gradient-btn w-full h-[48px] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] mb-4"
-                      onClick={handleMintEcoBox}
-                    >
-                      {isInvaidChain && "Switch Network"}
-                      {!isInvaidChain && ecoBoxDrawing && "Minting"}
-                      {!isInvaidChain && !ecoBoxDrawing && "Mint Booster"}
-                    </Button>
-                  </div>
-                </div>
-              </ModalBody>
-            </>
-          )}
+            <div>
+              <Button
+                onClick={handleDrawEcoBox}
+                className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
+                isLoading={mintLoading || ecoBoxDrawing}
+                isDisabled={ecoBoxCount === 0}
+              >
+                <span>
+                  {isInvaidChain && "Switch to Nova network to draw"}
+                  {!isInvaidChain &&
+                    (!ecoBoxDrawNftId || ecoBoxDrawing) &&
+                    "Draw"}
+                  {!isInvaidChain &&
+                    !!ecoBoxDrawNftId &&
+                    !ecoBoxDrawing &&
+                    "Mint"}
+                </span>
+              </Button>
+              <Button
+                className="secondary-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
+                onClick={() => ecoBoxModal.onClose()}
+              >
+                Close
+              </Button>
+            </div>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>

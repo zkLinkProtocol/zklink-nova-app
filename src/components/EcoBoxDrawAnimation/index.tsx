@@ -28,27 +28,27 @@ const TrademarkItems = [
 
 const MysteryboxItems = [
   {
-    name: "Nova +50 Booster",
+    name: "+50 Nova Points",
     img: "/img/img-point-booster-v2-1.png",
     tooltipId: 50,
   },
   {
-    name: "Nova +100 Booster",
+    name: "+100 Nova Points",
     img: "/img/img-point-booster-v2-2.png",
     tooltipId: 100,
   },
   {
-    name: "Nova +200 Booster",
+    name: "+200 Nova Points",
     img: "/img/img-point-booster-v2-3.png",
     tooltipId: 200,
   },
   {
-    name: "Nova +500 Booster",
+    name: "+500 Nova Points",
     img: "/img/img-point-booster-v2-4.png",
     tooltipId: 500,
   },
   {
-    name: "Nova +1000 Booster",
+    name: "+1000 Nova Points",
     img: "/img/img-point-booster-v2-5.png",
     tooltipId: 1000,
   },
