@@ -58,7 +58,7 @@ export default function EcoBoxWinners() {
     return moment(ts).format(formatter);
   };
 
-  const getTopInviteAndRandomFunc = async () => {
+  const getEcoRankFunc = async () => {
     setIsLoading(true);
     try {
       const { result } = await getEcoRank();
@@ -102,7 +102,7 @@ export default function EcoBoxWinners() {
       currentTs < todayReadyTime ? todayReadyTime - oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
-    getTopInviteAndRandomFunc(formatUtcDate(ts, "YYYY-MM-DD"));
+    getEcoRankFunc();
   }, []);
 
   return (
