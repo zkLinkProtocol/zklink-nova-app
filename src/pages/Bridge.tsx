@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Banner from "@/components/Banner";
+import ThirdPartyBridge from "@/components/ThirdPartyBridge";
 
 export const BgBox = styled.div`
   position: relative;
@@ -311,6 +312,7 @@ export default function Bridge() {
       <div className="block lg:flex md:py-24 pb-24 pt-6">
         <div className="md:hidden mx-6 mb-16">
           <BridgeComponent />
+          <ThirdPartyBridge />
         </div>
         <div className="px-6 pb-6 md:px-16 lg:px-32 lg:w-1/2">
           <h2 className="text-[32px] md:text-4xl mt-0 font-black leading-10">
@@ -335,6 +337,7 @@ export default function Bridge() {
         <div className="relative px-6 md:px-16 lg:px-32 lg:w-1/2">
           <div className="hidden md:block">
             <BridgeComponent />
+            <ThirdPartyBridge />
           </div>
 
           <div className="md:absolute left-0 bottom-0 flex flex-col md:items-end w-full px-8 md:px-16 lg:px-32">

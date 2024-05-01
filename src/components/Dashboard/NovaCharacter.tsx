@@ -945,7 +945,7 @@ export default function NovaCharacter() {
               fontFamily: "Satoshi",
               fontWeight: "400",
             }}
-            content="Every day, the top 500 users who accumulate the most Nova Points by interacting with Nova ecosystem dApps have the opportunity to draw an Eco Box, which contain Nova Points, Trademarks NFT and Lynks."
+            content="Every day, the top 500 users who accumulate the most Nova Points by interacting with Nova ecosystem dApps have the opportunity to draw an Eco Box, which contain Nova Points, Trademarks NFT and Lynks. Please mint SBT first."
           />
         </div>
         {mintable && !minted && (
