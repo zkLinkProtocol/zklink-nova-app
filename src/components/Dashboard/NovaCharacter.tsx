@@ -1186,12 +1186,6 @@ export default function NovaCharacter() {
                     className="w-[10rem] h-[10rem] rounded-xl my-4 bg-[#3C4550]"
                   />
 
-                  {mintResult?.name.includes("Nova points") &&
-                    !!mintPointsTips && (
-                      <p className="my-2 text-[16px] text-center">
-                        {getPointsRewardsTooltips(Number())}
-                      </p>
-                    )}
                   <p className="text-[24px] font-inter font-normal">
                     {mintResult?.name}
                   </p>
