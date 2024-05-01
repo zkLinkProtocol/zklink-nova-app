@@ -474,7 +474,7 @@ export default function About() {
             />
           </div>
 
-          <div className="paragraph title">Eco Box Rarity (30rd Apr. 2024)</div>
+          <div className="paragraph title">Eco Box Rarity</div>
           <div className="paragraph">
             The 50 Eco boxes will be distributed among top 500 users who
             accumulate the most Nova Points by interacting with Nova ecosystem

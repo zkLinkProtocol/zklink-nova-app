@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import moment from "moment";
 import { useAccount } from "wagmi";
+import { formatNumber2, formatNumberWithUnit } from "@/utils";
 
 type EcoRankRes = {
   address: string;
@@ -185,7 +186,7 @@ export default function EcoBoxWinners() {
                   )}
                 </TableCell>
                 <TableCell>{item.address}</TableCell>
-                <TableCell>{item.points}</TableCell>
+                <TableCell>{formatNumberWithUnit(item.points)}</TableCell>
                 <TableCell>{item.rewardType}</TableCell>
               </TableRow>
             ))}
