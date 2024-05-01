@@ -10,6 +10,16 @@ export default () => {
   const bridges = useMemo(() => {
     return [
       {
+        iconURL: "/img/icon-meson.svg",
+        name: "Meson Finance",
+        desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
+        tooltip: "",
+        points: `${mesonBridgeNovaPoints} ${
+          mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+        }`,
+        link: "https://meson.fi/zklink",
+      },
+      {
         iconURL: "/img/icon-owlto.svg",
         name: "Owlto Finance",
         desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
@@ -21,23 +31,13 @@ export default () => {
       },
       {
         iconURL: "/img/icon-symbiosis.svg",
-        name: "Owlto Finance",
+        name: "Symbiosis",
         desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
         tooltip: "",
         points: `${symbiosisBridgeNovaPoints} ${
           symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
         }`,
         link: "https://owlto.finance/?to=zkLinkNova",
-      },
-      {
-        iconURL: "/img/icon-meson.svg",
-        name: "Owlto Finance",
-        desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
-        tooltip: "",
-        points: `${mesonBridgeNovaPoints} ${
-          mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
-        }`,
-        link: "https://meson.fi/zklink",
       },
     ];
   }, [mesonBridgeNovaPoints, owltoBridgeNovaPoints, symbiosisBridgeNovaPoints]);
