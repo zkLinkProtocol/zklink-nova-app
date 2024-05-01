@@ -923,7 +923,7 @@ export default function NovaCharacter() {
           <Button
             className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
             onClick={handleOpenEcoBox}
-            disabled={!ecoBoxCount}
+            disabled={!ecoBoxCount || !nft}
             data-tooltip-id="eco-box-tooltip"
           >
             Open Your Eco Box ({ecoBoxCount}){" "}
