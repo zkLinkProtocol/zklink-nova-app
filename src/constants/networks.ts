@@ -1,17 +1,16 @@
-import { chains } from "./networks";
 import { Address, createClient } from "viem";
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
 import {
-  goerli,
   mainnet,
   sepolia,
   arbitrumSepolia,
   scrollSepolia,
   zkSyncSepoliaTestnet,
-  lineaTestnet,
+  lineaSepolia,
   linea,
   mantleTestnet,
+  mantleSepoliaTestnet,
   mantaTestnet,
   arbitrum,
   mantle,
@@ -19,7 +18,7 @@ import {
   manta,
   optimism,
   base,
-} from "@wagmi/core/chains";
+} from "viem/chains";
 
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
@@ -57,10 +56,10 @@ export const l1Networks = {
     name: "Ethereum",
     network: "mainnet",
   },
-  goerli: {
-    ...goerli,
-    name: "Ethereum Goerli Testnet",
-  },
+  // goerli: {
+  //   ...goerli,
+  //   name: "Ethereum Goerli Testnet",
+  // },
   sepolia: {
     ...sepolia,
     name: "Ethereum Sepolia Testnet",
@@ -99,17 +98,21 @@ export const l1Networks = {
     ...zkSyncSepoliaTestnet,
     name: "zkSync Sepolia Testnet",
   },
-  lineaGoerliTestnet: {
-    ...lineaTestnet,
-    name: "Linea Goerli Testnet",
+  lineaSepoliaTestnet: {
+    ...lineaSepolia,
+    name: "Linea Sepolia Testnet",
   },
   mantleGoerliTestnet: {
     ...mantleTestnet,
-    name: "Mantle Goerli Testnet",
+    name: "Mantle Sepolia Testnet",
   },
   mantaGoerliTestnet: {
     ...mantaTestnet,
     name: "Manta Goerli Testnet",
+  },
+  mantaSepoliaTestnet: {
+    ...mantleSepoliaTestnet,
+    name: "Manta Sepolia Testnet",
   },
   manta: {
     ...manta,
@@ -300,27 +303,27 @@ export const nexusNode: ZkSyncNetwork[] = [
 
 export const nexusGoerliNode: ZkSyncNetwork[] = [
   {
-    id: 810182,
-    key: "goerli",
+    id: 810181,
+    key: "sepolia",
     name: "zkLink Nova Testnet",
-    rpcUrl: "https://goerli.rpc.zklink.io",
+    rpcUrl: "https://sepolia.rpc.zklink.io",
     logoUrl: "/img/ethereum.svg",
-    blockExplorerUrl: "https://goerli.explorer.zklink.io",
-    blockExplorerApi: "https://goerli.explorer-api.zklink.io",
-    withdrawalFinalizerApi: "https://goerli.withdrawal-api.zklink.io",
+    blockExplorerUrl: "https://sepolia.explorer.zklink.io",
+    blockExplorerApi: "https://sepolia.explorer-api.zklink.io",
+    withdrawalFinalizerApi: "https://sepolia.withdrawal-api.zklink.io",
     mainContract: "0x80e41d1801E5b7F9a9f4e55Fd37bF2F3e797aC64",
     erc20BridgeL1: "0xa403d1A5B552BC17132aAD864F90472794678712",
     erc20BridgeL2: "0x369181F0724D485c2F50E918b1beCEc078C7077C",
     l1Gateway: "0x00546F01728048Af108223C41C4FaD7b124a476f",
     isEthGasToken: true,
     //TODO
-    l1Network: l1Networks.goerli,
+    l1Network: l1Networks.sepolia,
   },
   {
-    id: 810182,
+    id: 810181,
     key: PRIMARY_CHAIN_KEY, //"primary"
     name: "zkLink Nova Testnet",
-    rpcUrl: "https://goerli.rpc.zklink.io",
+    rpcUrl: "https://sepolia.rpc.zklink.io",
     logoUrl: "/img/linea.svg",
     blockExplorerUrl: "https://goerli.explorer.zklink.io",
     blockExplorerApi: "https://goerli.explorer-api.zklink.io",
@@ -330,13 +333,13 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     erc20BridgeL2: "0x7cB4A4fCF09dfF32f7f6557b966a942e803C7FAD",
     isEthGasToken: true,
     //TODO
-    l1Network: l1Networks.lineaGoerliTestnet,
+    l1Network: l1Networks.lineaSepoliaTestnet,
   },
   {
-    id: 810182,
+    id: 810181,
     key: "mantle",
     name: "zkLink Nova Testnet",
-    rpcUrl: "https://goerli.rpc.zklink.io",
+    rpcUrl: "https://sepolia.rpc.zklink.io",
     logoUrl: "/img/ethereum.svg",
     blockExplorerUrl: "https://goerli.explorer.zklink.io",
     blockExplorerApi: "https://goerli.explorer-api.zklink.io",
@@ -347,7 +350,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     l1Gateway: "0x7bf83D15C8f5a491B36506652A26d4bA0b6cC289",
     isEthGasToken: false,
     //TODO
-    l1Network: l1Networks.mantleGoerliTestnet,
+    l1Network: l1Networks.mantleSepoliaTestnet,
   },
 ];
 
@@ -372,7 +375,7 @@ const createEraChain = (network: ZkSyncNetwork) => {
       multicall3: {
         address:
           nodeType === "nexus-goerli"
-            ? "0x6F02406FC2495171dC03c7b6D80c2f327320C3f6"
+            ? "0x09d4800d1a84A13eadaf951CB0021D27211e0184"
             : "0x825267E0fA5CAe92F98540828a54198dcB3Eaeb5",
       },
     },
@@ -387,9 +390,9 @@ export const NetworkConfig =
 export const chains: readonly [Chain, ...Chain[]] =
   nodeType === "nexus-goerli"
     ? [
-        goerli,
-        lineaTestnet,
-        mantleTestnet,
+        sepolia,
+        lineaSepolia,
+        mantleSepoliaTestnet,
         createEraChain(nexusGoerliNode[0]) as Chain,
       ]
     : [
@@ -508,5 +511,4 @@ export const wagmiDefaultConfig = createConfig({
   client: ({ chain }) => {
     return createClient({ chain, transport: http() });
   },
-  
 });

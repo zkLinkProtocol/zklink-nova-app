@@ -33,7 +33,7 @@ import {
   encodeFunctionData,
   Abi,
 } from "viem";
-import { formatBalance, sleep } from "@/utils";
+import { formatBalance, getNovaDefaultProvider, sleep } from "@/utils";
 import axios from "axios";
 
 /**
@@ -57,6 +57,8 @@ export type MysteryboxMintParams = {
   signature: string;
   expiry: number;
 };
+
+const _provider = getNovaDefaultProvider();
 const useNovaDrawNFT = () => {
   const { chainId } = useAccount();
   const { address } = useAccount();
@@ -258,7 +260,7 @@ const useNovaDrawNFT = () => {
       args: tx.args,
     });
     const fee = await zkSyncProvider.attachEstimateFee(
-      IS_MAINNET ? "https://rpc.zklink.io" : "https://goerli.rpc.zklink.io"
+      IS_MAINNET ? "https://rpc.zklink.io" : "https://sepolia.rpc.zklink.io"
     )({
       from: address as `0x${string}`,
       to: tx.address as `0x${string}`,
@@ -340,6 +342,44 @@ const useNovaDrawNFT = () => {
   };
 
   const sendOldestFriendsTrademarkMintTx = async (
+    params: TrademarkMintParams & { mintType?: number }
+  ) => {
+    if (!address) return;
+    const isLynks = params?.tokenId === 88;
+    try {
+      setLoading(true);
+      const tx: WriteContractParameters = {
+        address: isLynks ? LYNKS_NFT_CONTRACT : TRADEMARK_NFT_CONTRACT,
+        abi: (isLynks ? NovaLynksNFT : NovaTrademarkNFT) as Abi,
+        functionName: isLynks ? "safeMintWithAuth" : "safeMintCommon",
+        args: isLynks
+          ? [address, params.nonce, params.expiry, params.signature]
+          : [
+              address,
+              params.nonce,
+              params.tokenId,
+              1,
+              params.expiry,
+              params.signature,
+              params.mintType,
+            ],
+      };
+      await insertEstimateFee(tx);
+      const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
+      await sleep(1000); //wait to avoid waitForTransactionReceipt failed
+      const res = await publicClient?.waitForTransactionReceipt({
+        hash,
+      });
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendEcoBoxMintTx = async (
     params: TrademarkMintParams & { mintType?: number }
   ) => {
     if (!address) return;
@@ -517,6 +557,7 @@ const useNovaDrawNFT = () => {
   };
 
   const sendMysteryOpenMintTxV2 = async (params: MysteryboxOpenParams) => {
+    console.log("sendMysteryOpenMintTxV2", params);
     if (!address) return;
     const isLynks = params?.tokenId === 88;
     const isTrademark = params?.tokenId && Number(params.tokenId) < 5;
@@ -652,6 +693,7 @@ const useNovaDrawNFT = () => {
     sendMysteryBurnTx,
     sendMysteryBurnTxV2,
     sendOldestFriendsTrademarkMintTx,
+    sendEcoBoxMintTx,
   };
 };
 

@@ -8,9 +8,9 @@ import NovaNFT from "@/constants/abi/NovaNFT.json";
 import { BigNumber } from "ethers";
 import { config } from "@/constants/networks";
 import { zkSyncProvider } from "./zksyncProviders";
-
+import { ethers } from "ethers";
 import { encodeFunctionData } from "viem";
-import { sleep } from "@/utils";
+import { sleep, getNovaDefaultProvider } from "@/utils";
 export type NOVA_NFT_TYPE = "ISTP" | "ESFJ" | "INFJ" | "ENTP";
 export type NOVA_NFT = {
   name: string;
@@ -26,37 +26,46 @@ const useNovaNFT = () => {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
 
+  const novaNFTContract = new ethers.Contract(
+    NOVA_NFT_CONTRACT,
+    NovaNFT.abi,
+    getNovaDefaultProvider()
+  );
+
   const getNFTBalance = useCallback(async (address: string) => {
-    const balance = await readContract(config, {
-      abi: NovaNFT.abi,
-      address: NOVA_NFT_CONTRACT as `0x${string}`,
-      functionName: "balanceOf",
-      args: [address],
-      chainId: NOVA_CHAIN_ID,
-    });
+    // const balance = await readContract(config, {
+    //   abi: NovaNFT.abi,
+    //   address: NOVA_NFT_CONTRACT as `0x${string}`,
+    //   functionName: "balanceOf",
+    //   args: [address],
+    //   chainId: NOVA_CHAIN_ID,
+    // });
+    const balance = await novaNFTContract.balanceOf(address);
     console.log("nft balance: ", balance);
     return balance;
   }, []);
 
   const getTokenIdByIndex = useCallback(async (address: string) => {
-    const tokenId = await readContract(config, {
-      abi: NovaNFT.abi,
-      address: NOVA_NFT_CONTRACT as `0x${string}`,
-      functionName: "tokenOfOwnerByIndex",
-      args: [address, 0],
-      chainId: NOVA_CHAIN_ID,
-    });
+    // const tokenId = await readContract(config, {
+    //   abi: NovaNFT.abi,
+    //   address: NOVA_NFT_CONTRACT as `0x${string}`,
+    //   functionName: "tokenOfOwnerByIndex",
+    //   args: [address, 0],
+    //   chainId: NOVA_CHAIN_ID,
+    // });
+    const tokenId = await novaNFTContract.tokenOfOwnerByIndex(address, 0);
     console.log("tokenId: ", tokenId);
     return tokenId as number;
   }, []);
   const getTokenURIByTokenId = useCallback(async (tokenId: number) => {
-    const tokenURI = await readContract(config, {
-      abi: NovaNFT.abi,
-      address: NOVA_NFT_CONTRACT as `0x${string}`,
-      functionName: "tokenURI",
-      args: [tokenId],
-      chainId: NOVA_CHAIN_ID,
-    });
+    // const tokenURI = await readContract(config, {
+    //   abi: NovaNFT.abi,
+    //   address: NOVA_NFT_CONTRACT as `0x${string}`,
+    //   functionName: "tokenURI",
+    //   args: [tokenId],
+    //   chainId: NOVA_CHAIN_ID,
+    // });
+    const tokenURI = await novaNFTContract.tokenURI(tokenId);
     console.log("tokenURI: ", tokenURI);
     return tokenURI as string;
   }, []);
@@ -130,7 +139,7 @@ const useNovaNFT = () => {
       });
       const fee = await zkSyncProvider.attachEstimateFee(
         nodeType === "nexus-goerli"
-          ? "https://goerli.rpc.zklink.io"
+          ? "https://sepolia.rpc.zklink.io"
           : "https://rpc.zklink.io"
       )({
         from: address as `0x${string}`,

@@ -359,3 +359,9 @@ export function findClosestMultiplier(
 
   return closestMultiplier;
 }
+
+export const getNovaDefaultProvider = () => {
+  const nodeType = import.meta.env.VITE_NODE_TYPE;
+  const nodeConfig = nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
+  return new ethers.providers.JsonRpcProvider(nodeConfig[0].rpcUrl);
+};
