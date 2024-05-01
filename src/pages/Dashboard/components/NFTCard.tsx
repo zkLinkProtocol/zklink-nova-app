@@ -132,12 +132,15 @@ const PRIZE_ID_NFT_MAP: Record<number, number> = {
 };
 
 const PRIZE_ID_NFT_MAP_V2: Record<number, number> = {
-  1: 1,
-  50: 2,
-  100: 3,
-  200: 4,
-  500: 5,
-  1000: 6,
+  50: 0,
+  100: 1,
+  200: 2,
+  500: 3,
+  1000: 4,
+  1: 5,
+  2: 6,
+  3: 7,
+  4: 8,
 };
 
 const ALL_NFTS = [
@@ -340,10 +343,12 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
         //     boosterNFTV2.read.balanceOf([address, item])
         //   )
         // );
+        console.log("boosterBalancesV2: ", boosterBalancesV2);
+
         for (let i = 0; i < 5; i++) {
           nfts.push({
             ...ALL_NFTS[i + 8],
-            balance: Number(boosterBalancesV2[i]),
+            balance: Number(boosterBalancesV2[i + 4]),
           });
         }
 

@@ -536,3 +536,29 @@ export const getNovaProjectPoints = (
 
 export const checkBridge = async (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/invite/check/bridge`, { params: { address } });
+
+export interface BridgePoints {
+  errno: number;
+  errmsg: string;
+  data: number;
+}
+export const getBridgePoints = (name: string): Promise<BridgePoints> =>
+  http.get(`${BASE_URL_LRT_POINTS}/cache/bridge/latest/points`, {
+    params: { name },
+  });
+
+export const checkWinnerAddress = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/referrer/checkWinnerAddress`, {
+    params: { address },
+  });
+
+export const getEcoRamain = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/nft/ecology/nft/remain`, {
+    params: { address },
+  });
+
+export const getEcoRank = (): Promise<Response> =>
+  http.get(`${BASE_URL_API}/nft/ecology/rank`);
+
+export const postEcoDraw = (address: string): Promise<Response> =>
+  http.post(`${BASE_URL_API}/nft/ecology/nft/draw?address=${address}`);

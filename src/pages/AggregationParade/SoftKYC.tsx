@@ -463,7 +463,6 @@ export default function SoftKYC() {
     try {
       let res;
       if (isDepositViaThirdParty) {
-        // TODO
         res = await registerAccountByBridge({
           address: address,
           code: inviteCodeValue,
@@ -756,14 +755,16 @@ export default function SoftKYC() {
         isOpen={verifyDepositModal.isOpen}
         onOpenChange={verifyDepositModal.onOpenChange}
       >
-        <ModalContent className="p-2 mb-20 md:mb-0">
-          <ModalHeader>Verify your deposit</ModalHeader>
-          <ModalBody>
+        <ModalContent className="py-4 mb-20 md:mb-0">
+          <ModalHeader className="px-2 md:px-8">
+            Verify your deposit
+          </ModalHeader>
+          <ModalBody className="px-2 md:px-8">
             <div className="p-[6px] flex justify-between items-center bg-[#313841] rounded-[64px] overflow-auto">
               {verifyDepositTabs.map((tab, index) => (
                 <div
                   key={index}
-                  className={`px-[24px] py-[6px] cursor-pointer ${
+                  className={`px-[9px] md:px-[18px] py-[6px] cursor-pointer ${
                     verifyDepositTabsActive === index
                       ? "bg-[#3D424D] rounded-[64px]"
                       : ""
@@ -771,7 +772,7 @@ export default function SoftKYC() {
                   onClick={() => setVerifyDepositTabsActive(index)}
                 >
                   <p
-                    className={`text-[16px] font-[700] whitespace-nowrap ${
+                    className={`text-[12px] md:text-[16px] font-[700] whitespace-nowrap ${
                       verifyDepositTabsActive === index
                         ? "text-[#fff]"
                         : "text-[#ccc]"
@@ -779,7 +780,7 @@ export default function SoftKYC() {
                   >
                     {tab.title}
                   </p>
-                  <p className="text-[#999] text-[12px] font-[400] whitespace-nowrap">
+                  <p className="text-[#999] text-[10px] md:text-[12px] text-center font-[400] whitespace-nowrap">
                     {tab.desc}
                   </p>
                 </div>
@@ -872,7 +873,7 @@ export default function SoftKYC() {
 
             {verifyDepositTabsActive === 1 && (
               <div className="mt-[1rem]">
-                <p className="text-[#A0A5AD] text-[1rem] font-[500] leading-[32px]">
+                <p className="text-[#A0A5AD] text-[1rem] font-[500]">
                   Currently, the Aggregation Parade is open to users who deposit
                   more than 0.1 ETH or an equivalent amount of assets in single
                   tx through Owlto, Symbiosis, or Meson.{" "}
@@ -880,8 +881,13 @@ export default function SoftKYC() {
                     Read More
                   </a> */}
                 </p>
-                <p className="mt-[1rem] text-[#fff] text-[1rem] font-[500]">
-                  {address}
+                <p
+                  className="mt-[1.5rem] pb-[0.8rem] text-[#fff] text-[14px] font-[500]"
+                  style={{
+                    borderBottom: "1px solid #fff",
+                  }}
+                >
+                  Connected Wallet ({showAccount(address)})
                 </p>
 
                 <div className="mt-[1rem] w-full">

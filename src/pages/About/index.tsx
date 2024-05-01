@@ -462,21 +462,27 @@ export default function About() {
           </div>
           <div className="paragraph">
             <p>
-              Addtional 900 boxes will be distributed among 900 lucky{" "}
-              <a
-                href="https://app.galxe.com/quest/zkLink/GCqPcthi45"
-                target="_blank"
-                className="text-green inline-flex items-center gap-1"
-              >
-                <span>Galxe Quest</span>
-                <img src="/img/icon-open-in-new-green.svg" width={14} />
-              </a>{" "}
-              participants.
+              An additional 900 boxes will be distributed to 900 lucky
+              participants in the Galxe Quest. (Quest will be back online soon)
             </p>
           </div>
           <div className="paragraph">
             <img
               src="/img/about-aggregation-parade-v2-2.jpg"
+              className="w-full"
+              onLoad={scrollToAnchor}
+            />
+          </div>
+
+          <div className="paragraph title">Eco Box Rarity (30rd Apr. 2024)</div>
+          <div className="paragraph">
+            The 50 Eco boxes will be distributed among top 500 users who
+            accumulate the most Nova Points by interacting with Nova ecosystem
+            dApps.
+          </div>
+          <div className="paragraph">
+            <img
+              src="/img/about-aggregation-parade-v2-3.png"
               className="w-full"
               onLoad={scrollToAnchor}
             />
@@ -545,7 +551,14 @@ export default function About() {
           </div>
         </div>
 
-        <div className="paragraph title title-2">Timeline</div>
+        <div
+          className="paragraph title title-2"
+          onClick={() =>
+            window.open("https://preview.portal.zklink.io/", "_blank")
+          }
+        >
+          Timeline
+        </div>
         <div className="paragraph">
           <div className="title">Phase 1: Aggregation Phase</div>
           <div className="before">

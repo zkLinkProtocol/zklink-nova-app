@@ -1,4 +1,4 @@
-import { getTopInviteAndRandom } from "@/api";
+import { getEcoRank } from "@/api";
 import {
   Spinner,
   Table,
@@ -7,26 +7,24 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  getKeyValue,
 } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
-import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 
 import moment from "moment";
 import { useAccount } from "wagmi";
 
-type TopInviteAndRandomRes = {
+type EcoRankRes = {
   address: string;
-  invitenNumber: number;
+  points: number;
   createdAt: string;
 };
 
-type TopInviteAndRandom = TopInviteAndRandomRes & {
+type TopInviteAndRandom = EcoRankRes & {
   rank: number;
   rewardType: string;
 };
 
-export default function NFTLuckWinner() {
+export default function EcoBoxWinners() {
   const { address: walletAddress } = useAccount();
   const columns = [
     {
@@ -39,7 +37,7 @@ export default function NFTLuckWinner() {
     },
     {
       key: "invitenNumber",
-      label: "Daily Referral Amount",
+      label: "Daily Eco Points",
     },
     {
       key: "rewardType",
@@ -49,112 +47,40 @@ export default function NFTLuckWinner() {
 
   const oneDay = 86400000;
   const [isLoading, setIsLoading] = useState(false);
-  const [inviteAndRandomList, setInviteAndRandomList] = useState<
-    TopInviteAndRandom[]
-  >([]);
+  const [ecoRankList, seEcoRankList] = useState<TopInviteAndRandom[]>([]);
 
   const [selectedEndTs, setSelectedEndTs] = useState(0);
   const selectedStartTs = useMemo(() => {
     return selectedEndTs - oneDay;
   }, [selectedEndTs]);
 
-  const isPrevDisabled = useMemo(() => {
-    const firstEpochTs = 1711620000000;
-    console.log("selectedEndTs", selectedEndTs);
-    if (isLoading || selectedEndTs <= firstEpochTs) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [isLoading, selectedEndTs]);
-
-  const isNextDisabled = useMemo(() => {
-    const currentTs = new Date().getTime();
-    if (
-      isLoading ||
-      (selectedEndTs > currentTs && inviteAndRandomList.length === 0)
-    ) {
-      return true;
-    }
-    return false;
-  }, [isLoading, inviteAndRandomList]);
-
   const formatUtcDate = (ts: number, formatter = "MM/DD/YYYY") => {
     return moment(ts).format(formatter);
   };
 
-  const handleSwitchDate = (type: "PREV" | "NEXT") => {
-    let ts = 0;
-    if (type === "PREV") {
-      ts = selectedEndTs - oneDay;
-    } else if (type === "NEXT") {
-      ts = selectedEndTs + oneDay;
-    }
-    setSelectedEndTs(ts);
-    getTopInviteAndRandomFunc(formatUtcDate(ts, "YYYY-MM-DD"));
-  };
-
-  const getTopInviteAndRandomFunc = async (date?: string) => {
+  const getEcoRankFunc = async () => {
     setIsLoading(true);
     try {
-      const { result } = await getTopInviteAndRandom(date);
-      console.log("getTopInviteAndRandom", result);
+      const { result } = await getEcoRank();
+      console.log("eco rank", result);
 
-      let top100Arr: TopInviteAndRandom[] = [];
-      let random100Arr: TopInviteAndRandom[] = [];
-      let communityArr: TopInviteAndRandom[] = [];
+      // let arr: TopInviteAndRandom[] = [];
 
-      if (result && result?.top100 && Array.isArray(result.top100)) {
-        const { top100 } = result;
-
-        const arr = top100.map(
-          (item: TopInviteAndRandomRes, index: number) => ({
-            ...item,
-            rewardType: "Top 100 Referrer",
-            rank: index + 1,
-          })
+      if (result && Array.isArray(result)) {
+        const arr = result.map((item: EcoRankRes, index: number) => ({
+          ...item,
+          rewardType: "Top 500 Eco dApp User",
+          rank: index + 1,
+        }));
+        const self = arr.find(
+          (item) => item.address.toLowerCase() === walletAddress?.toLowerCase()
         );
-        top100Arr = arr;
+        if (self) {
+          arr.unshift(self);
+        }
+
+        seEcoRankList(arr);
       }
-
-      if (result && result?.top100 && Array.isArray(result.random100)) {
-        const { random100 } = result;
-
-        const arr = random100.map(
-          (item: TopInviteAndRandomRes, index: number) => ({
-            ...item,
-            rewardType: "Lucky Lynks",
-            rank: index + 1,
-          })
-        );
-        random100Arr = arr;
-      }
-
-      if (result && result?.community && Array.isArray(result.community)) {
-        const { community } = result;
-
-        const arr = community.map(
-          (item: TopInviteAndRandomRes, index: number) => ({
-            ...item,
-            rewardType: "Wiinner",
-            rank: index + 1,
-          })
-        );
-        communityArr = arr;
-      }
-
-      const all = top100Arr
-        .concat(random100Arr, communityArr)
-        .map((item, index) => ({ ...item, rank: index + 1 }));
-
-      const self = all.find(
-        (item) => item.address.toLowerCase() === walletAddress?.toLowerCase()
-      );
-      if (self) {
-        all.unshift(self);
-      }
-
-      setInviteAndRandomList(all);
     } catch (error) {
       console.error(error);
     } finally {
@@ -176,26 +102,18 @@ export default function NFTLuckWinner() {
       currentTs < todayReadyTime ? todayReadyTime - oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
-    getTopInviteAndRandomFunc(formatUtcDate(ts, "YYYY-MM-DD"));
+    getEcoRankFunc();
   }, []);
 
   return (
     <div className="relative z-1">
       <p className="py-2 text-[20px] font-satoshi text-[#B9C7D0] font-[700]">
-        Each day, top 100 referrers of previous day and participants of
-        community activites (join{" "}
-        <a
-          href="https://discord.com/invite/zklink"
-          target="_blank"
-          className="text-green inline-flex items-center gap-1"
-        >
-          <span>Discord</span>
-          <img src="/img/icon-open-in-new-green.svg" width={14} />
-        </a>
-        ) participants can mint a mystery box. Additionally, every 1 ETH deposit
-        can earn you an extra referral spot. In cases where multiple users have
-        the same referral ranking, we randomly select some users to ensure that
-        the daily distribution of top referrers remains at 100.
+        Every day, the top 500 users who accumulate the most Nova Points by
+        interacting with Nova ecosystem dApps have the opportunity to draw an
+        Eco Box, which contain Nova Points, Trademarks NFT and Lynks. In cases
+        where multiple users have the same referral ranking, we randomly select
+        some users to ensure that the daily distribution of Eco Box remains at
+        500.
       </p>
       <div className="flex items-center py-4 px-2">
         <div className="flex items-center gap-2 text-[16px]">
@@ -240,11 +158,11 @@ export default function NFTLuckWinner() {
             )}
           </TableHeader>
           <TableBody
-            items={inviteAndRandomList}
+            items={ecoRankList}
             isLoading={isLoading}
             loadingContent={<Spinner label="Loading..." />}
           >
-            {inviteAndRandomList.map((item, index) => (
+            {ecoRankList.map((item, index) => (
               <TableRow
                 key={index}
                 className={`${
@@ -267,13 +185,13 @@ export default function NFTLuckWinner() {
                   )}
                 </TableCell>
                 <TableCell>{item.address}</TableCell>
-                <TableCell>{item.invitenNumber}</TableCell>
+                <TableCell>{item.points}</TableCell>
                 <TableCell>{item.rewardType}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        {inviteAndRandomList.length === 0 && (
+        {ecoRankList.length === 0 && (
           <div className="absolute top-0 left-0 px-4  w-full h-full bg-[rgba(0,0,0,.8)] flex justify-center items-center rounded-[1rem]">
             <div className="text-[#C6D3DD] text-[20px] text-[center] leading-[24px]">
               <p className="text-center">
