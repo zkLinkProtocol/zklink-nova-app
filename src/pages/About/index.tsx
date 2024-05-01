@@ -476,9 +476,8 @@ export default function About() {
 
           <div className="paragraph title">Eco Box Rarity</div>
           <div className="paragraph">
-            The 50 Eco boxes will be distributed among top 500 users who
-            accumulate the most Nova Points by interacting with Nova ecosystem
-            dApps.
+            Eco boxes will be distributed to the top 500 users who earn the most
+            Nova Points daily through interactions with Nova ecosystem dApps.
           </div>
           <div className="paragraph">
             <img
