@@ -37,7 +37,10 @@ import {
 import styled from "styled-components";
 import DrawAnimation from "../DrawAnimation";
 import OldestFriendsDrawAnimation from "../DrawAnimation/OldestFriends";
-import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
+import useNovaDrawNFT, {
+  MysteryboxOpenParams,
+  TrademarkMintParams,
+} from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { eventBus } from "@/utils/event-bus";
 import { Abi } from "viem";
@@ -122,11 +125,11 @@ const OLDEST_FRIENDS_TOKEN_ID_MAP: Record<number, string> = {
 };
 
 const PRIZE_ID_NFT_MAP_V2_MAP: Record<number, string> = {
-  50: "+50 Nova Points",
-  100: "+100 Nova Points",
-  200: "+200 Nova Points",
-  500: "+500 Nova Points",
-  1000: "+1000 Nova Points",
+  50: "+50 Nova points",
+  100: "+100 Nova points",
+  200: "+200 Nova points",
+  500: "+500 Nova points",
+  1000: "+1000 Nova points",
   1: "Oak Tree Roots",
   2: "Magnifying Glass",
   3: "Chess Knight",
@@ -172,6 +175,7 @@ export default function NovaCharacter() {
     trademarkNFT,
     sendTrademarkMintTx,
     sendOldestFriendsTrademarkMintTx,
+    sendEcoBoxMintTx,
     lynksNFT,
     isTrademarkApproved,
     sendTrademarkApproveTx,
@@ -687,7 +691,7 @@ export default function NovaCharacter() {
 
   const mintPointsTips = useMemo(() => {
     const isNovaPoints =
-      mintResult?.name && mintResult.name.includes("Nova points");
+      mintResult?.name && mintResult.name.toLowerCase().includes("nova points");
 
     if (isNovaPoints) {
       let match = mintResult.name.match(/\d+/);
@@ -755,7 +759,9 @@ export default function NovaCharacter() {
             img:
               tokenId === 88
                 ? lynksNFTImg!
-                : `/img/img-trademark-${tokenId}.png`,
+                : `/img/img-point-booster-v2-${
+                    PRIZE_ID_NFT_MAP_V2[tokenId!] + 1
+                  }.png`,
           });
           trademarkMintModal.onOpen();
           ecoBoxModal.onClose();
@@ -791,7 +797,7 @@ export default function NovaCharacter() {
           mintParams = { tokenId, nonce, signature, expiry, mintType };
         }
       }
-      await sendMysteryOpenMintTxV2(mintParams as TrademarkMintParams);
+      await sendEcoBoxMintTx(mintParams as TrademarkMintParams);
       setTrademarkMintStatus(MintStatus.Success);
       setMintResult({
         name: PRIZE_ID_NFT_MAP_V2_MAP[mintParams.tokenId!],
@@ -1204,7 +1210,7 @@ export default function NovaCharacter() {
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
                   <p className="text-[#C0C0C0]">
-                    {mintResult?.name.includes("Nova points")
+                    {mintResult?.name.toLowerCase().includes("nova points")
                       ? "You have received"
                       : "You have successfully minted"}
                   </p>
@@ -1218,7 +1224,7 @@ export default function NovaCharacter() {
                     {mintResult?.name}
                   </p>
 
-                  {mintResult?.name.includes("Nova points") &&
+                  {mintResult?.name.toLowerCase().includes("nova points") &&
                     !!mintPointsTips && (
                       <p className="my-2 text-[14px] text-center text-[#C0C0C0]">
                         {mintPointsTips}
@@ -1228,7 +1234,7 @@ export default function NovaCharacter() {
               )}
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="mt-6">
-                  {mintResult?.name.includes("Nova points") ? (
+                  {mintResult?.name.toLowerCase().includes("nova points") ? (
                     <Button
                       className="w-full gradient-btn"
                       onClick={() => trademarkMintModal.onClose()}
