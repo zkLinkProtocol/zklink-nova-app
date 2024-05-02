@@ -112,9 +112,9 @@ export default function EcoBoxWinners() {
         Every day, the top 500 users who accumulate the most Nova Points by
         interacting with Nova ecosystem dApps have the opportunity to draw an
         Eco Box, which contain Nova Points, Trademarks NFT and Lynks. In cases
-        where multiple users have the same referral ranking, we randomly select
-        some users to ensure that the daily distribution of Eco Box remains at
-        500.
+        where multiple users have the same eco points ranking, we randomly
+        select some users to ensure that the daily distribution of Eco Box
+        remains at 500.
       </p>
       <div className="flex items-center py-4 px-2">
         <div className="flex items-center gap-2 text-[16px]">
