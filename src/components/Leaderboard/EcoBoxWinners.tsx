@@ -103,7 +103,7 @@ export default function EcoBoxWinners() {
       currentTs < todayReadyTime ? todayReadyTime - oneDay : todayReadyTime;
     setSelectedEndTs(ts);
 
-    // getEcoRankFunc(); // TODO: wait for api online
+    getEcoRankFunc();
   }, []);
 
   return (
