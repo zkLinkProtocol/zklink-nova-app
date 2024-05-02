@@ -547,3 +547,8 @@ export const getEcoRank = (): Promise<Response> =>
 
 export const postEcoDraw = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/ecology/nft/draw?address=${address}`);
+
+export const getMemeMysteryboxReward = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/meme/meme/mysterybox/reward`, {
+    params: { address },
+  });

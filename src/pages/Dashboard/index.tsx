@@ -46,11 +46,12 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { setIsAdHide } from "@/store/modules/airdrop";
+import { setIsAdHide, setIsNovaChadNftHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Banner";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { Tooltip } from "react-tooltip";
+import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -140,7 +141,9 @@ export function DisclaimerFooter() {
 
 export default function Dashboard() {
   const { isConnected, address } = useAccount();
-  const { invite, isAdHide } = useSelector((store: RootState) => store.airdrop);
+  const { invite, isAdHide, isNovaChadNftHide } = useSelector(
+    (store: RootState) => store.airdrop
+  );
   const [tabsActive, setTabsActive] = useState(0);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [stakingUsdValue, setStakingUsdValue] = useState(0);
@@ -154,6 +157,8 @@ export default function Dashboard() {
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
   const [nftPhase, setNftPhase] = useState(2); // default: phase 2
   const adModal = useDisclosure();
+  const novaChadNftModal = useDisclosure();
+  const { isMemeMysteryboxReward } = useNovaChadNftStatus();
 
   const {
     novaPoints,
@@ -438,11 +443,15 @@ export default function Dashboard() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      if (!isAdHide) {
+
+      if (isMemeMysteryboxReward && !isNovaChadNftHide) {
+        novaChadNftModal.onOpen();
+      }
+      if (!isAdHide && (!isMemeMysteryboxReward || isNovaChadNftHide)) {
         adModal.onOpen();
       }
     }, 1000);
-  }, []);
+  }, [isAdHide, isNovaChadNftHide, isMemeMysteryboxReward]);
 
   const ecoDappsData = useMemo(() => {
     const lauyerbankPoints = [
@@ -648,6 +657,11 @@ export default function Dashboard() {
     }
   }, [address]);
 
+  const onCloseNovaChadNftModal = () => {
+    novaChadNftModal.onClose();
+    dispatch(setIsNovaChadNftHide(true));
+  };
+
   return (
     <BgBox>
       <BgCoverImg />
@@ -837,6 +851,42 @@ export default function Dashboard() {
               </ModalBody>
             </>
           )}
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        size="2xl"
+        hideCloseButton
+        isOpen={novaChadNftModal.isOpen}
+        onOpenChange={novaChadNftModal.onOpenChange}
+      >
+        <ModalContent className="mb-[3.75rem]">
+          <ModalBody className="pb-8">
+            <h4 className="py-[1.5rem] text-center text-[1.5rem]">
+              Congratulations, you've receive a mystery box!
+            </h4>
+            <div>
+              <div>
+                <img
+                  src="/img/img-mystery-box-v2.png"
+                  className="mx-auto w-[11.25rem] h-[11.25rem] block"
+                />
+              </div>
+              <p className="mt-[0.75rem] w-full text-center text-[0.75rem] text-[#fff] font-[400]">
+                Got to Nova NFTs and scroll down to mint!
+              </p>
+            </div>
+
+            <div>
+              <Button
+                className="gradient-btn mt-4 w-full py-[1rem]"
+                onClick={onCloseNovaChadNftModal}
+              >
+                <span className="text-[1rem] font-[700]">Confirm</span>
+              </Button>
+            </div>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </BgBox>

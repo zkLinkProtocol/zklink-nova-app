@@ -63,6 +63,7 @@ import { Switch, cn } from "@nextui-org/react";
 import { SourceTokenInfo, useMergeToken } from "@/hooks/useMergeToken";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
 
 const ModalSelectItem = styled.div`
   &:hover {
@@ -882,6 +883,8 @@ export default function Bridge(props: IBridgeComponentProps) {
     checkWinnerAddressFunc();
   }, [address]);
 
+  const { isMemeMysteryboxReward } = useNovaChadNftStatus();
+
   return (
     <>
       <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
@@ -1112,6 +1115,46 @@ export default function Bridge(props: IBridgeComponentProps) {
               <div className="flex items-center gap-2">
                 <span className="text-[#0BC48F] text-[14px]">
                   +50 Nova Points
+                </span>
+                <img
+                  src="/img/icon-old-fren-right.svg"
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </div>
+          )}
+
+          {isMemeMysteryboxReward && (
+            <div className="flex items-center justify-between mb-2 points-box">
+              <div className="flex items-center">
+                <span>NovaChadNFT Holder</span>
+
+                <img
+                  src={"/img/icon-tooltip.png"}
+                  className="w-[14px] cursor-pointer ml-1 mr-4"
+                  data-tooltip-id="nova-chad-nft"
+                />
+
+                <ReactTooltip
+                  id="nova-chad-nft"
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "20rem",
+                  }}
+                  render={() => (
+                    <p>
+                      NovaChadNFT holders will receive Mystery Box after joining
+                      the Aggregation Parade.
+                    </p>
+                  )}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0BC48F] text-[14px]">
+                  1 Mystery Box
                 </span>
                 <img
                   src="/img/icon-old-fren-right.svg"
