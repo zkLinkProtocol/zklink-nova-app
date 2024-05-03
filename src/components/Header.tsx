@@ -55,6 +55,7 @@ import { config } from "@/constants/networks";
 import toast from "react-hot-toast";
 import { eventBus } from "@/utils/event-bus";
 import { set } from "lodash";
+import { AiOutlineDown } from "react-icons/ai";
 
 const NavNet = styled.div`
   background: #313841;
@@ -391,20 +392,72 @@ export default function Header() {
                   </Tooltip>
                 )}
               </NavbarItem> */}
+
+            <NavbarItem>
+              <a href="https://meme-nft-site.vercel.app/" target="_blank">
+                Fusion Dance Parade🔥
+              </a>
+            </NavbarItem>
             <NavbarItem>
               <NavLink to="/leaderboard">Leaderboard</NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/about">About</NavLink>
+              <NavLink to="/bridge">Bridge</NavLink>
             </NavbarItem>
             <NavbarItem>
+              <NavLink to="/about">About</NavLink>
+            </NavbarItem>
+
+            <Dropdown>
+              <NavbarItem>
+                <DropdownTrigger>
+                  <Button
+                    disableRipple
+                    className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                    radius="sm"
+                    variant="light"
+                  >
+                    Useful Tools <AiOutlineDown />
+                  </Button>
+                </DropdownTrigger>
+              </NavbarItem>
+              <DropdownMenu
+                aria-label="ACME features"
+                className="w-[10rem]"
+                itemClasses={{
+                  base: "gap-4",
+                }}
+              >
+                <DropdownItem key="merge-token">
+                  <a href="https://zklink.io/merge" target="_blank">
+                    Merge Token
+                  </a>
+                </DropdownItem>
+                <DropdownItem key="unwrap">
+                  <NavLink to="/unwrap">Unwrap ETH</NavLink>
+                </DropdownItem>
+                <DropdownItem key="user-guide">
+                  <a
+                    href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
+                    target="_blank"
+                  >
+                    User Guide
+                  </a>
+                </DropdownItem>
+                <DropdownItem key="user-guide">
+                  <a href="https://explorer.zklink.io/" target="_blank">
+                    Explorer
+                  </a>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+
+            {/* <NavbarItem>
               <a href="https://zklink.io/merge" target="_blank">
                 Merge Token
               </a>
             </NavbarItem>
-            <NavbarItem>
-              <NavLink to="/bridge">Bridge</NavLink>
-            </NavbarItem>
+           
             <NavbarItem>
               <NavLink to="/unwrap">Unwrap ETH</NavLink>
             </NavbarItem>
@@ -420,7 +473,7 @@ export default function Header() {
               <a href="https://explorer.zklink.io/" target="_blank">
                 Explorer
               </a>
-            </NavbarItem>
+            </NavbarItem> */}
 
             {/* <NavbarItem>
                 <a
@@ -631,6 +684,12 @@ export default function Header() {
               Aggregation Parade
             </NavLink>
           </NavbarMenuItem>
+          <NavbarMenuItem>
+            <a href="https://meme-nft-site.vercel.app/" target="_blank">
+              Fusion Dance Parade🔥
+            </a>
+          </NavbarMenuItem>
+
           {/* <NavbarMenuItem>
                 {isActive() ? (
                   <NavLink to="/dashboard" className="nav-link">
@@ -654,40 +713,77 @@ export default function Header() {
               About
             </NavLink>
           </NavbarMenuItem>
-          <NavbarMenuItem>
-            <a href="https://zklink.io/merge" target="_blank" className="block">
-              Merge Token
-            </a>
-          </NavbarMenuItem>
+
           <NavbarMenuItem isActive={location.pathname === "/bridge"}>
             <NavLink to="/bridge" className="block">
               Bridge
             </NavLink>
           </NavbarMenuItem>
-          <NavbarMenuItem isActive={location.pathname === "/bridge"}>
-            <NavLink to="/unwrap" className="block">
-              Unwrap wETH
-            </NavLink>
-          </NavbarMenuItem>
 
-          <NavbarMenuItem>
-            <a
-              href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
-              target="_blank"
-              className="block"
+          <Dropdown>
+            <NavbarMenuItem>
+              <DropdownTrigger>
+                <Button
+                  disableRipple
+                  className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                  radius="sm"
+                  variant="light"
+                >
+                  <NavbarMenuItem className="flex items-center gap-2">
+                    Useful Tools <AiOutlineDown />
+                  </NavbarMenuItem>
+                </Button>
+              </DropdownTrigger>
+            </NavbarMenuItem>
+            <DropdownMenu
+              aria-label="ACME features"
+              className="w-[10rem]"
+              itemClasses={{
+                base: "gap-4",
+              }}
             >
-              User Guide
-            </a>
-          </NavbarMenuItem>
-          <NavbarMenuItem>
-            <a
-              href="https://explorer.zklink.io/"
-              target="_blank"
-              className="block"
-            >
-              Explorer
-            </a>
-          </NavbarMenuItem>
+              <DropdownItem key="merge-token">
+                <NavbarMenuItem>
+                  <a
+                    href="https://zklink.io/merge"
+                    target="_blank"
+                    className="block"
+                  >
+                    Merge Token
+                  </a>
+                </NavbarMenuItem>
+              </DropdownItem>
+              <DropdownItem key="unwrap">
+                <NavbarMenuItem isActive={location.pathname === "/bridge"}>
+                  <NavLink to="/unwrap" className="block">
+                    Unwrap wETH
+                  </NavLink>
+                </NavbarMenuItem>
+              </DropdownItem>
+              <DropdownItem key="user-guide">
+                <NavbarMenuItem>
+                  <a
+                    href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
+                    target="_blank"
+                    className="block"
+                  >
+                    User Guide
+                  </a>
+                </NavbarMenuItem>
+              </DropdownItem>
+              <DropdownItem key="user-guide">
+                <NavbarMenuItem>
+                  <a
+                    href="https://explorer.zklink.io/"
+                    target="_blank"
+                    className="block"
+                  >
+                    Explorer
+                  </a>
+                </NavbarMenuItem>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
           {/* <NavbarMenuItem>
                 <a
                   href={

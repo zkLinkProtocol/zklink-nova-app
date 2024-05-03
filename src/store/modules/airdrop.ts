@@ -21,6 +21,7 @@ export interface airdropState {
   isOkxFlag: boolean;
   isOkxUser: boolean;
   isAdHide: boolean;
+  isNovaChadNftHide: boolean;
 }
 
 const initialState: airdropState = {
@@ -44,6 +45,7 @@ const initialState: airdropState = {
   isOkxFlag: false,
   isOkxUser: false,
   isAdHide: false,
+  isNovaChadNftHide: false,
 };
 
 export const airdrop = createSlice({
@@ -107,6 +109,9 @@ export const airdrop = createSlice({
     setIsAdHide(state, action: PayloadAction<boolean>) {
       state.isAdHide = action.payload;
     },
+    setIsNovaChadNftHide(state, action: PayloadAction<boolean>) {
+      state.isNovaChadNftHide = action.payload;
+    },
   },
 });
 
@@ -130,5 +135,6 @@ export const {
   setIsOkxFlag,
   setIsOkxUser,
   setIsAdHide,
+  setIsNovaChadNftHide,
 } = airdrop.actions;
 export default airdrop.reducer;
