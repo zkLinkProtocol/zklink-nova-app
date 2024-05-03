@@ -264,7 +264,7 @@ export default function SoftKYC() {
     },
     {
       title: "Deposit via Third Party Bridge",
-      desc: "Deposit through Nova Parterner",
+      desc: "Deposit through Nova Parterners",
     },
   ];
 
