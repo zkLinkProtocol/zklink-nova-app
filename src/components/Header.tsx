@@ -397,7 +397,9 @@ export default function Header() {
               </NavbarItem> */}
 
             <NavbarItem>
-              <NavLink to="/">Fusion Dance Parade🔥</NavLink>
+              <a href="https://meme-nft-site.vercel.app/" target="_blank">
+                Fusion Dance Parade🔥
+              </a>
             </NavbarItem>
             <NavbarItem>
               <NavLink to="/leaderboard">Leaderboard</NavLink>
@@ -686,7 +688,9 @@ export default function Header() {
             </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem>
-            <NavLink to="/">Fusion Dance Parade🔥</NavLink>
+            <a href="https://meme-nft-site.vercel.app/" target="_blank">
+              Fusion Dance Parade🔥
+            </a>
           </NavbarMenuItem>
 
           {/* <NavbarMenuItem>
