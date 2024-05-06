@@ -35,7 +35,7 @@ import NovaPoints from "@/components/Dashboard/NovaPoints";
 import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
 import GroupMilestone from "@/components/Dashboard/GroupMilestone";
-import { formatNumberWithUnit } from "@/utils";
+import { formatNumberWithUnit, sleep } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
 import EcoDApps from "@/components/Dashboard/EcoDApps";
@@ -693,9 +693,25 @@ export default function Dashboard() {
     }
   }, [address]);
 
-  const onCloseNovaChadNftModal = () => {
+  const onCloseNovaChadNftModal = async () => {
     novaChadNftModal.onClose();
+    setTabsActive(TabType.NFTs);
+    setNftPhase(2);
+    await sleep(200);
+    scrollToAnchor("mysterybox");
     dispatch(setIsNovaChadNftHide(true));
+  };
+
+  const scrollToAnchor = (anchorName: string) => {
+    if (!!anchorName) {
+      let anchorElement = document.getElementById(anchorName);
+      if (anchorElement) {
+        const scrollTop = anchorElement.offsetTop;
+        window.scrollTo(0, scrollTop);
+        document.documentElement.scrollTop = scrollTop;
+        document.body.scrollTop = scrollTop;
+      }
+    }
   };
 
   return (
