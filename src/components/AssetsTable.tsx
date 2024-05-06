@@ -411,13 +411,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr.push(obj);
     });
 
-    arr = arr.sort((a, b) => +b.totalTvl - +a.totalTvl);
-
-    const ezEthIndex = arr.findIndex((item) => item.symbol === "ezETH");
-    const ezEthItem = arr.splice(ezEthIndex, 1);
-    arr.splice(4, 0, ezEthItem[0]);
-
-    console.log("account tvl list========>", arr);
     setTableList(arr);
   }, [
     isMyHolding,
@@ -448,12 +441,17 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => reg.test(item.symbol));
     }
 
-    const notNovaFilters = arr.filter((item) => !item.isNova);
-    const novaFilters = arr.filter((item) => item.isNova);
+    arr = arr.sort(
+      (a, b) =>
+        Number(findClosestMultiplier(b.multipliers)) -
+        Number(findClosestMultiplier(a.multipliers))
+    );
+    setFilterTableList(arr);
 
-    const newArr = [...novaFilters, ...notNovaFilters];
-
-    setFilterTableList(newArr);
+    // const notNovaFilters = arr.filter((item) => !item.isNova);
+    // const novaFilters = arr.filter((item) => item.isNova);
+    // const newArr = [...novaFilters, ...notNovaFilters];
+    // setFilterTableList(newArr);
   }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
 
   return (
