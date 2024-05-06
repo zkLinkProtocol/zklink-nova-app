@@ -679,8 +679,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
             ))}
           </div>
         </CardBox>
-
-        <CardBox className="nft-right mt-6 mb-5 md:mt-0 md:ml-10">
+        <CardBox
+          className="nft-right mt-6 mb-5 md:mt-0 md:ml-10"
+          id="mysterybox"
+        >
           <div className="w-full flex justify-between items-center">
             <div>
               <div className="flex items-center ">
