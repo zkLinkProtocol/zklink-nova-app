@@ -56,6 +56,7 @@ import toast from "react-hot-toast";
 import { eventBus } from "@/utils/event-bus";
 import { set } from "lodash";
 import { AiOutlineDown } from "react-icons/ai";
+import { FUSION_DANCE_PARADE_URL } from "@/constants";
 
 const NavNet = styled.div`
   background: #313841;
@@ -397,7 +398,7 @@ export default function Header() {
               </NavbarItem> */}
 
             <NavbarItem>
-              <a href="https://meme-nft-site.vercel.app/" target="_blank">
+              <a href={FUSION_DANCE_PARADE_URL} target="_blank">
                 Fusion Dance Parade🔥
               </a>
             </NavbarItem>
@@ -688,7 +689,7 @@ export default function Header() {
             </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem>
-            <a href="https://meme-nft-site.vercel.app/" target="_blank">
+            <a href={FUSION_DANCE_PARADE_URL} target="_blank">
               Fusion Dance Parade🔥
             </a>
           </NavbarMenuItem>
