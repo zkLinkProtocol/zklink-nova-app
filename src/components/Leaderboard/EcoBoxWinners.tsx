@@ -67,7 +67,12 @@ export default function EcoBoxWinners() {
 
       // let arr: TopInviteAndRandom[] = [];
 
-      if (result && Array.isArray(result)) {
+      if (result && Array.isArray(result) && result.length > 0) {
+        if (result[0]?.date) {
+          const ts = new Date(`${result[0].date} 10:00 utc`).getTime();
+          setSelectedEndTs(ts);
+        }
+
         const arr = result.map((item: EcoRankRes, index: number) => ({
           ...item,
           rewardType: "Top 500 Eco dApp User",
