@@ -168,6 +168,7 @@ export default function Dashboard() {
     aquaNovaPoints,
     izumiNovaPoints,
     symbiosisNovaPoints,
+    orbiterNovaPoints,
     mesonNovaPoints,
     owltoNovaPoints,
     dAppNovaPoints,
@@ -178,6 +179,7 @@ export default function Dashboard() {
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
+    orbiterBridgeNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -685,10 +687,9 @@ export default function Dashboard() {
     const orbiterPoints = [
       {
         name: "Nova Points",
-        value: formatNumberWithUnit(0), // TODO
+        value: formatNumberWithUnit(orbiterNovaPoints),
       },
     ];
-    const orbiterBridgeNovaPoints = 4; // TODO
     const orbiter = {
       name: "Orbiter",
       handler: "@Orbiter_Finance",
@@ -715,11 +716,11 @@ export default function Dashboard() {
       aqua,
       izumi,
       owlto,
+      orbiter,
       symbiosis,
       meson,
-      logx,
-      free,
-      orbiter,
+      // free,
+      // logx,
     ];
   }, [
     layerbankNovaPoints,
@@ -729,11 +730,13 @@ export default function Dashboard() {
     aquaNovaPoints,
     izumiNovaPoints,
     symbiosisNovaPoints,
+    orbiterNovaPoints,
     mesonNovaPoints,
     owltoNovaPoints,
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
+    orbiterBridgeNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);
