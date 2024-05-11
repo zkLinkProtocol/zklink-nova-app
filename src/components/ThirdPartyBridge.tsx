@@ -10,6 +10,14 @@ export default () => {
   const bridges = useMemo(() => {
     return [
       {
+        iconURL: "/img/icon-free.svg",
+        name: "Free (Official Bridge of Merlin Chain)",
+        desc: "bridge mbtc&solvbtc to earn nova points",
+        tooltip: "",
+        points: '',
+        link: "https://free.tech/zklink",
+      },
+      {
         iconURL: "/img/icon-meson.svg",
         name: "Meson Finance",
         desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",

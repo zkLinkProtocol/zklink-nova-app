@@ -1,4 +1,5 @@
 import { PRIMARY_CHAIN_KEY } from "./networks";
+
 export const STORAGE_NETWORK_KEY = "STORAGE_NETWORK_KEY";
 
 export const STORAGE_VERIFY_TX_KEY = "STORAGE_VERIFY_TX_KEY";
@@ -97,3 +98,9 @@ export const LYNKS_METADATA_PREFIX =
 
 export const PUFFER_TOKEN_ADDRESS =
   "0xdd6105865380984716C6B2a1591F9643e6ED1C48";
+
+const isProd = import.meta.env.PROD;
+
+export const FUSION_DANCE_PARADE_URL = isProd
+  ? "https://zklink.io/fusion-dance-parade"
+  : "https://preview.zklink.io/fusion-dance-parade";
