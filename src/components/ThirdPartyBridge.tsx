@@ -6,6 +6,7 @@ export default () => {
     mesonBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
     owltoBridgeNovaPoints,
+    orbiterBridgeNovaPoints,
   } = useNovaPoints();
   const bridges = useMemo(() => {
     return [
@@ -14,8 +15,18 @@ export default () => {
         name: "Free (Official Bridge of Merlin Chain)",
         desc: "Bridge M-BTC and solvBTC from Merlin to earn 1.5x Nova Points",
         tooltip: "",
-        points: '',
+        points: "",
         link: "https://free.tech/zklink",
+      },
+      {
+        iconURL: "/img/icon-orbiter.svg",
+        name: "Orbiter Finance",
+        desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
+        tooltip: "",
+        points: `${orbiterBridgeNovaPoints} ${
+          orbiterBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+        }`,
+        link: "https://www.orbiter.finance/?source=Ethereum&dest=zkLink%20Nova&token=ETH",
       },
       {
         iconURL: "/img/icon-meson.svg",
@@ -48,7 +59,12 @@ export default () => {
         link: "https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
       },
     ];
-  }, [mesonBridgeNovaPoints, owltoBridgeNovaPoints, symbiosisBridgeNovaPoints]);
+  }, [
+    mesonBridgeNovaPoints,
+    orbiterBridgeNovaPoints,
+    owltoBridgeNovaPoints,
+    symbiosisBridgeNovaPoints,
+  ]);
 
   return (
     <div>
@@ -66,7 +82,7 @@ export default () => {
             <img
               src={bridge.iconURL}
               alt={bridge.name}
-              className="w-[2.5rem] h-[2.5rem]"
+              className="w-[2.5rem] h-[2.5rem] rounded-full"
             />
             <div>
               <div className="text-[#fff] text-[1rem]">{bridge.name}</div>

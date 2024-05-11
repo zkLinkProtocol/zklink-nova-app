@@ -168,6 +168,7 @@ export default function Dashboard() {
     aquaNovaPoints,
     izumiNovaPoints,
     symbiosisNovaPoints,
+    orbiterNovaPoints,
     mesonNovaPoints,
     owltoNovaPoints,
     dAppNovaPoints,
@@ -178,6 +179,7 @@ export default function Dashboard() {
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
+    orbiterBridgeNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -485,6 +487,7 @@ export default function Dashboard() {
       } of Point`,
       status: "Live",
       multiplier: "2x Nova Points",
+      actionType: "Provide Liquidity",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
 
@@ -507,6 +510,7 @@ export default function Dashboard() {
       } of Point + Yield`,
       status: "Live",
       multiplier: "1.5x Nova Points",
+      actionType: "Provide Liquidity",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
 
@@ -530,6 +534,7 @@ export default function Dashboard() {
       } of Point + Yield`,
       status: "Live",
       multiplier: "2x Nova Points",
+      actionType: "Provide Liquidity",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
 
@@ -553,6 +558,7 @@ export default function Dashboard() {
       } of Point + Yield`,
       status: "Live",
       multiplier: "2x Nova Points",
+      actionType: "Provide Liquidity",
       description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
     };
 
@@ -576,6 +582,7 @@ export default function Dashboard() {
       reward: `${symbiosisBridgeNovaPoints} ${
         symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
       }`,
+      actionType: "Bridge",
       description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
       descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
     };
@@ -598,6 +605,7 @@ export default function Dashboard() {
       reward: `${mesonBridgeNovaPoints} ${
         mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
       }`,
+      actionType: "Bridge",
       description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
       descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
     };
@@ -622,11 +630,98 @@ export default function Dashboard() {
       reward: `${owltoBridgeNovaPoints} ${
         owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
       }`,
+      actionType: "Bridge",
       description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
       descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
     };
 
-    return [layerbank, linkswap, aqua, izumi, owlto, symbiosis, meson];
+    const logxPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), // TODO
+      },
+    ];
+    const logx = {
+      name: "LogX",
+      handler: "@LogX_trade",
+      link: "https://owlto.finance/?to=zkLinkNova",
+      iconURL: "/img/icon-logx.svg",
+      type: "Perp DEX",
+      points: logxPoints,
+      earned: `${logxPoints.length} ${
+        logxPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      multiplier: "2x Nova Points",
+      actionType: "Provide Liquidity",
+      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+    };
+
+    const freePoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), // TODO
+      },
+    ];
+    const freeBridgeNovaPoints = 4; // TODO
+    const free = {
+      name: "Free",
+      handler: "@FreeLayer2",
+      link: "https://free.tech/zklink",
+      iconURL: "/img/icon-free.svg",
+      type: "Cross-Chain",
+      points: freePoints,
+      earned: `${freePoints.length} ${
+        freePoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      reward: `${freeBridgeNovaPoints} ${
+        freeBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`,
+      actionType: "Bridge",
+      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+      descriptionTips:
+        "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
+    };
+
+    const orbiterPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(orbiterNovaPoints),
+      },
+    ];
+    const orbiter = {
+      name: "Orbiter",
+      handler: "@Orbiter_Finance",
+      link: "https://www.orbiter.finance/?source=Ethereum&dest=zkLink%20Nova&token=ETH",
+      iconURL: "/img/icon-orbiter.svg",
+      type: "Cross-Chain",
+      points: orbiterPoints,
+      earned: `${orbiterPoints.length} ${
+        orbiterPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      reward: `${orbiterBridgeNovaPoints} ${
+        orbiterBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      }`,
+      actionType: "Bridge",
+      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+      descriptionTips:
+        "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
+    };
+
+    return [
+      layerbank,
+      linkswap,
+      aqua,
+      izumi,
+      owlto,
+      orbiter,
+      symbiosis,
+      meson,
+      // free,
+      // logx,
+    ];
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,
@@ -635,11 +730,13 @@ export default function Dashboard() {
     aquaNovaPoints,
     izumiNovaPoints,
     symbiosisNovaPoints,
+    orbiterNovaPoints,
     mesonNovaPoints,
     owltoNovaPoints,
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
+    orbiterBridgeNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);
