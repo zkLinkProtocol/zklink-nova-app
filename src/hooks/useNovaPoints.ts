@@ -16,7 +16,7 @@ export const OKX_POINTS = 5;
 
 export default () => {
   const { address } = useAccount();
-  // const address = '0xa603106beBDD261868a7d9ECD7269ec4a714d11B'
+  // const address = '0xfb5eb3d27128a9dde885304e2653c41396e36662'
   const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const [novaPoints, setNovaPoints] = useState(0);
@@ -93,9 +93,11 @@ export default () => {
     getAquaNovaPointsFunc();
     getIzumiNovaPointsFunc();
     getSymbiosisNovaPointsFunc();
+    getOrbiterNovaPointsFunc();
     getMesonNovaPointsFunc();
     getOwltoNovaPointsFunc();
     getSymbiosisBridgePointsFunc();
+    getOrbiterBridgePointsFunc();
     getMesonisBridgePointsFunc();
     getOwltoBridgePointsFunc();
   };
@@ -128,6 +130,16 @@ export default () => {
 
     const points = data.reduce((prev, item) => prev + Number(item.points), 0);
     setSymbiosisNovaPoints(points);
+  };
+
+  const [orbiterNovaPoints, setOrbiterNovaPoints] = useState(0);
+  const getOrbiterNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "orbiter");
+    console.log("getNovaPointsFunc", data);
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setOrbiterNovaPoints(points);
   };
 
   const [mesonNovaPoints, setMesonNovaPoints] = useState(0);
@@ -206,6 +218,14 @@ export default () => {
     setSymbiosisBridgeNovaPoints(Number(data) || 0);
   };
 
+  const [orbiterBridgeNovaPoints, setOrbiterBridgeNovaPoints] = useState(0);
+  const getOrbiterBridgePointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getBridgePoints("orbiter");
+    console.log("getNovaPointsFunc", data);
+    setOrbiterBridgeNovaPoints(Number(data) || 0);
+  };
+
   const [mesonBridgeNovaPoints, setMesonBridgeNovaPoints] = useState(0);
   const getMesonisBridgePointsFunc = async () => {
     if (!address) return;
@@ -234,12 +254,14 @@ export default () => {
     izumiNovaPoints,
     aquaNovaPoints,
     symbiosisNovaPoints,
+    orbiterNovaPoints,
     mesonNovaPoints,
     owltoNovaPoints,
     dAppNovaPoints,
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
+    orbiterBridgeNovaPoints,
     getAllNovaPoints,
   };
 };

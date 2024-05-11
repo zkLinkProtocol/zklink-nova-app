@@ -66,6 +66,7 @@ interface EcoDAppsProps {
   status: string;
   description: string;
   earned: string;
+  actionType: string;
   booster?: string;
   multiplier?: string;
   reward?: string;
@@ -82,7 +83,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
       <div>
         <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
           <Td className="flex items-center gap-[0.5rem]">
-            <img src={data.iconURL} className="w-[2.25rem] h-[2.25rem]" />
+            <img src={data.iconURL} className="w-[2.25rem] h-[2.25rem] rounded-full" />
             <div>
               <p
                 className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
@@ -198,7 +199,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
                 onClick={() => warningModal.onOpen()}
               >
-                <span>Bridge</span>
+                <span>{data.actionType}</span>
                 <img
                   src="/img/icon-open-in-new.svg"
                   className="w-[1rem] h-[1rem]"
