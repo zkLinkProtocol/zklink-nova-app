@@ -260,8 +260,12 @@ export default function AssetsTable(props: IAssetsTableProps) {
   };
 
   const handleBridgeMore = (token: string) => {
-    setBridgeToken(token);
-    bridgeModal.onOpen();
+    if (token === "rsETH" || token === "M-BTC") {
+      window.open("https://free.tech/zklink");
+    } else {
+      setBridgeToken(token);
+      bridgeModal.onOpen();
+    }
   };
 
   const getTokenAndChain = (
