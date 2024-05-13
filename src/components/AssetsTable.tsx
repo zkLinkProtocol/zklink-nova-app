@@ -415,7 +415,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
       // not WETH
       if (
         obj.tokenAddress.toLowerCase() !==
-        "0x8280a4e7D5B3B658ec4580d3Bc30f5e50454F169"
+        "0x8280a4e7d5b3b658ec4580d3bc30f5e50454f169"
       ) {
         arr.push(obj);
       }
