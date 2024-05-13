@@ -24,7 +24,7 @@ import {
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { createConfig, http } from "wagmi";
-import { walletConnect } from "wagmi/connectors";
+import { walletConnect, safe } from "wagmi/connectors";
 import { BinanceWallet } from "./wallet/binanceWallet";
 const sourceId = 1; // mainnet
 
@@ -584,6 +584,10 @@ const connectors = connectorsForWallets(
         safeWallet,
       ],
     },
+    // {
+    //   groupName: 'Others',
+    //   wallets: [safeWallet],
+    // },
   ],
   {
     appName: "zklink Nova App",
@@ -606,6 +610,10 @@ export const wagmiDefaultConfig = createConfig({
       projectId,
       metadata,
       showQrModal: true,
+    }),
+    safe({
+      allowedDomains: [/app.safe.global$/],
+      debug: true,
     }),
   ],
   multiInjectedProviderDiscovery: true,
