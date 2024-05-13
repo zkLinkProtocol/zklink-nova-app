@@ -388,8 +388,11 @@ export default function AssetsTable(props: IAssetsTableProps) {
 
       // sum all chains token amount/tvl
       item.address.forEach((chains: any) => {
+        obj.tokenAddress = chains.l2Address;
         const accountTvlItem = getTokenAccountTvl(chains.l2Address);
         const totalTvlItem = getTotalTvl(chains.l2Address);
+
+        console.log("totalTvlItem", totalTvlItem);
 
         if (accountTvlItem) {
           obj.amount += +accountTvlItem.amount ? +accountTvlItem.amount : 0;
@@ -403,7 +406,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
           obj.totalTvl += +totalTvlItem.tvl
             ? +totalTvlItem.tvl * ethUsdPrice
             : 0;
-          obj.tokenAddress = totalTvlItem?.tokenAddress || "";
         }
 
         obj.iconURL =
@@ -412,7 +414,13 @@ export default function AssetsTable(props: IAssetsTableProps) {
             : obj.iconURL;
       });
 
-      arr.push(obj);
+      // not WETH
+      if (
+        obj.tokenAddress.toLowerCase() !==
+        "0x8280a4e7D5B3B658ec4580d3Bc30f5e50454F169"
+      ) {
+        arr.push(obj);
+      }
     });
 
     setTableList(arr);
@@ -450,6 +458,7 @@ export default function AssetsTable(props: IAssetsTableProps) {
         Number(findClosestMultiplier(b.multipliers)) -
         Number(findClosestMultiplier(a.multipliers))
     );
+    console.log("assets list: ", arr);
     setFilterTableList(arr);
 
     // const notNovaFilters = arr.filter((item) => !item.isNova);
