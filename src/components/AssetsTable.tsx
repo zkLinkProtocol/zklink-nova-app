@@ -392,8 +392,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
         const accountTvlItem = getTokenAccountTvl(chains.l2Address);
         const totalTvlItem = getTotalTvl(chains.l2Address);
 
-        console.log("totalTvlItem", totalTvlItem);
-
         if (accountTvlItem) {
           obj.amount += +accountTvlItem.amount ? +accountTvlItem.amount : 0;
           obj.tvl += +accountTvlItem.tvl
@@ -458,7 +456,6 @@ export default function AssetsTable(props: IAssetsTableProps) {
         Number(findClosestMultiplier(b.multipliers)) -
         Number(findClosestMultiplier(a.multipliers))
     );
-    console.log("assets list: ", arr);
     setFilterTableList(arr);
 
     // const notNovaFilters = arr.filter((item) => !item.isNova);
