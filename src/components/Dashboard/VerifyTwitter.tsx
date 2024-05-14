@@ -15,11 +15,9 @@ const env = import.meta.env.VITE_ENV;
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 
-export default () => {
+export default ({ binded }: { binded: boolean }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [twitterLoading, setTwitterLoading] = useState(false);
-
-  const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const getTwitterClientId = () => {
     let clientId = "";
@@ -106,7 +104,7 @@ export default () => {
               return;
             }
 
-            eventBus.emit("updateInvite");
+            eventBus.emit("getInvite");
             eventBus.emit("updateUserTvl");
           })
           .catch(() => {
@@ -140,7 +138,7 @@ export default () => {
     }
   }, [searchParams]);
 
-  return false ? (
+  return binded ? (
     <CardBox className="px-[1.5rem] py-[1.5rem] flex justify-between items-center successed">
       <div className="flex items-center gap-2">
         <img src="/img/icon-twitter.svg" width={20} />
@@ -155,7 +153,9 @@ export default () => {
       <div className="flex items-center gap-2">
         <img src="/img/icon-twitter.svg" width={20} />
         <span className="text-[1rem] font-[700]">
-          Follow @zkLinkNova & @zkLink_Official to fully Activate your account
+          Follow <a href="https://twitter.com/zkLinkNova">@zkLinkNova</a> &{" "}
+          <a href="https://twitter.com/zkLink_Official">@zkLink_Official</a> to
+          fully Activate your account
         </span>
       </div>
       <div className="flex items-center gap-[0.75rem]">
@@ -169,7 +169,7 @@ export default () => {
         <Button
           className="gradient-btn"
           onClick={() => {
-            eventBus.emit("updateInvite");
+            eventBus.emit("getInvite");
             eventBus.emit("updateUserTvl");
           }}
         >
