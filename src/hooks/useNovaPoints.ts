@@ -16,7 +16,7 @@ export const OKX_POINTS = 5;
 
 export default () => {
   const { address } = useAccount();
-  // const address = '0xfb5eb3d27128a9dde885304e2653c41396e36662'
+  // const address = "0xBF8Be86F321C5fBeDFA6dD07Ce4Ccb14C187e365";
   const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const [novaPoints, setNovaPoints] = useState(0);
@@ -162,7 +162,7 @@ export default () => {
     setOwltoNovaPoints(points);
   };
 
-  const dAppNovaPoints = useMemo(() => {
+  const dAppNovaPoints: number = useMemo(() => {
     return (
       layerbankNovaPoints +
       linkswapNovaPoints +
@@ -170,7 +170,8 @@ export default () => {
       izumiNovaPoints +
       symbiosisNovaPoints +
       mesonNovaPoints +
-      owltoNovaPoints
+      owltoNovaPoints +
+      orbiterNovaPoints
     );
   }, [
     layerbankNovaPoints,
@@ -180,6 +181,7 @@ export default () => {
     symbiosisNovaPoints,
     mesonNovaPoints,
     owltoNovaPoints,
+    orbiterNovaPoints,
   ]);
 
   useEffect(() => {
@@ -190,24 +192,19 @@ export default () => {
     const points =
       novaPoints +
       referPoints +
-      layerbankNovaPoints +
-      linkswapNovaPoints +
-      izumiNovaPoints +
-      aquaNovaPoints +
       trademarkPoints +
       okxPoints +
-      kolPoints;
+      kolPoints +
+      dAppNovaPoints;
+
     return points;
   }, [
     novaPoints,
     referPoints,
-    layerbankNovaPoints,
-    linkswapNovaPoints,
     trademarkPoints,
     okxPoints,
     kolPoints,
-    izumiNovaPoints,
-    aquaNovaPoints,
+    dAppNovaPoints,
   ]);
 
   const [symbiosisBridgeNovaPoints, setSymbiosisBridgeNovaPoints] = useState(0);
