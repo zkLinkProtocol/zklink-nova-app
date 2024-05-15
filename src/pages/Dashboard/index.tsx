@@ -860,7 +860,7 @@ export default function Dashboard() {
 
         {/* Right: tvl ... data */}
         <div className="md:w-full maxWid">
-          <VerifyTwitter />
+          <VerifyTwitter binded={userTvl.binded} />
 
           <div className="mt-[1.5rem]">
             <TvlSummary totalTvl={totalTvl} userTvl={userTvl} />
