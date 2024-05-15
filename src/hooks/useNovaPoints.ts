@@ -95,7 +95,7 @@ export default () => {
     getSymbiosisNovaPointsFunc();
     getOrbiterNovaPointsFunc();
     getMesonNovaPointsFunc();
-    getOwltoNovaPointsFunc();
+    // getOwltoNovaPointsFunc();
     getSymbiosisBridgePointsFunc();
     getOrbiterBridgePointsFunc();
     getMesonisBridgePointsFunc();
@@ -170,7 +170,7 @@ export default () => {
       izumiNovaPoints +
       symbiosisNovaPoints +
       mesonNovaPoints +
-      owltoNovaPoints +
+      // owltoNovaPoints +
       orbiterNovaPoints
     );
   }, [
