@@ -36,7 +36,7 @@ export default function Leaderboard() {
         {/* Tab btns */}
         <div className="flex items-center md:gap-[2rem] gap-[1re]">
           {[
-            "Points Leaderboard",
+            // "Points Leaderboard",
             "Trademarks Leaderboard",
             // "Mystery Box Winners",
             // "Eco Box Winners",
@@ -55,8 +55,8 @@ export default function Leaderboard() {
 
         {/* Content: tab views */}
         <TableBoxs className="mt-[2rem]">
-          {tabsActive === 0 && <PointsLeaderboard />}
-          {tabsActive === 1 && <TrademarksLeaderboard />}
+          {/* {tabsActive === 0 && <PointsLeaderboard />} */}
+          {tabsActive === 0 && <TrademarksLeaderboard />}
           {/* {tabsActive === 2 && <MysteryBoxWinners />} */}
           {/* {tabsActive === 3 && <EcoBoxWinners />} */}
         </TableBoxs>
