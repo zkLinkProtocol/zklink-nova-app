@@ -38,8 +38,8 @@ export default function Leaderboard() {
           {[
             "Points Leaderboard",
             "Trademarks Leaderboard",
-            "Mystery Box Winners",
-            "Eco Box Winners",
+            // "Mystery Box Winners",
+            // "Eco Box Winners",
           ].map((item, index) => (
             <TabItem
               key={index}
@@ -57,8 +57,8 @@ export default function Leaderboard() {
         <TableBoxs className="mt-[2rem]">
           {tabsActive === 0 && <PointsLeaderboard />}
           {tabsActive === 1 && <TrademarksLeaderboard />}
-          {tabsActive === 2 && <MysteryBoxWinners />}
-          {tabsActive === 3 && <EcoBoxWinners />}
+          {/* {tabsActive === 2 && <MysteryBoxWinners />} */}
+          {/* {tabsActive === 3 && <EcoBoxWinners />} */}
         </TableBoxs>
       </div>
     </BgBox>
