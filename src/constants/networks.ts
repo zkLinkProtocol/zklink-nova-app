@@ -438,6 +438,7 @@ import {
   rabbyWallet,
   metaMaskWallet,
   injectedWallet,
+  safeWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 okxWallet({
   projectId,
@@ -468,6 +469,7 @@ walletConnectWallet({
     metadata,
   },
 });
+safeWallet();
 const connectors = connectorsForWallets(
   [
     {
@@ -481,6 +483,7 @@ const connectors = connectorsForWallets(
         // rabbyWallet,
         metaMaskWallet,
         walletConnectWallet,
+        safeWallet,
       ],
     },
   ],
