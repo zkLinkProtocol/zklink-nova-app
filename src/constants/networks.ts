@@ -1,4 +1,5 @@
 import { Address, createClient } from "viem";
+
 import type { Token } from "@/types";
 import type { Chain } from "@wagmi/core/chains";
 import {
@@ -23,7 +24,7 @@ import {
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { createConfig, http } from "wagmi";
-import { walletConnect, safe } from "wagmi/connectors";
+import { walletConnect, safe } from "@wagmi/connectors";
 import { BinanceWallet } from "./wallet/binanceWallet";
 const sourceId = 1; // mainnet
 
@@ -591,7 +592,14 @@ export const wagmiDefaultConfig = createConfig({
       showQrModal: true,
     }),
     safe({
-      allowedDomains: [/app.safe.global$/],
+      allowedDomains: [
+        /app.safe.global$/,
+        /safe.zklink.io$/,
+        /safe.manta.network$/,
+        /multisig.mantle.xyz$/,
+        /safe.linea.build$/,
+        /blast-safe.io$/,
+      ],
       debug: true,
     }),
   ],
