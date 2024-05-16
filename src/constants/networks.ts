@@ -23,7 +23,7 @@ import {
 
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { createConfig, http } from "wagmi";
+import { createConfig, http } from "@wagmi/core";
 import { walletConnect, safe } from "@wagmi/connectors";
 import { BinanceWallet } from "./wallet/binanceWallet";
 const sourceId = 1; // mainnet
