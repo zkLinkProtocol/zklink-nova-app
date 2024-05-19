@@ -123,9 +123,11 @@ export default function PointsLeaderboard() {
   return (
     <>
       <p className="py-2 mb-[1rem] text-[14px] text-[#C6D3DD] font-[400]">
-        Please notice that some of your Nova Points may not be reflected on the
-        leaderboard at the moment, don't worry, you won't lose them. They'll all
-        be showed on the leaderboard soon.
+        Please note that the leaderboard currently displays only the Nova Points
+        earned through deposits and holdings. It does not yet include Nova
+        Points earned from interacting with eco dapps, invite boxes, and other
+        activities. Don't worry—you won't lose these points. They will be shown
+        on the leaderboard soon.
       </p>
       <Table
         removeWrapper
