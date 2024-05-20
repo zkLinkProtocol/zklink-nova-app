@@ -399,7 +399,7 @@ export default function Dashboard() {
     getReferralTvlFunc();
     getTotalTvlFunc();
     getEigenlayerPointsFunc();
-    // getPufferPointsFunc();
+    getPufferPointsFunc();
     getRenzoPointsFunc();
     getAccountTvlFunc();
     getMagpiePointsFunc();
