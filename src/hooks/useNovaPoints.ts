@@ -16,7 +16,6 @@ export const OKX_POINTS = 5;
 
 export default () => {
   const { address } = useAccount();
-  // const address = "0xBF8Be86F321C5fBeDFA6dD07Ce4Ccb14C187e365";
   const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const [novaPoints, setNovaPoints] = useState(0);

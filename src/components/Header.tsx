@@ -145,7 +145,7 @@ export default function Header() {
 
   const location = useLocation();
   const isActive = useCallback(() => {
-    return isConnected && Boolean(invite?.twitterHandler);
+    return isConnected && Boolean(invite?.code);
   }, [isConnected, invite]);
 
   const visitRewardFunc = async () => {
@@ -281,7 +281,7 @@ export default function Header() {
   }, [isConnected]);
 
   useEffect(() => {
-    if (isConnected && Boolean(invite?.twitterHandler)) {
+    if (isConnected && Boolean(invite?.code)) {
       dispatch(setIsActiveUser(true));
     } else {
       dispatch(setIsActiveUser(false));
