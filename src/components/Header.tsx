@@ -281,7 +281,7 @@ export default function Header() {
   }, [isConnected]);
 
   useEffect(() => {
-    if (isConnected && Boolean(invite?.twitterHandler)) {
+    if (isConnected && Boolean(invite?.code)) {
       dispatch(setIsActiveUser(true));
     } else {
       dispatch(setIsActiveUser(false));
