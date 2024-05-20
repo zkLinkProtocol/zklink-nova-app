@@ -141,7 +141,7 @@ export function DisclaimerFooter() {
 
 export default function Dashboard() {
   const { isConnected, address } = useAccount();
-  const { invite, isAdHide, isNovaChadNftHide } = useSelector(
+  const { invite, isAdHide, isNovaChadNftHide, isActiveUser } = useSelector(
     (store: RootState) => store.airdrop
   );
   const [tabsActive, setTabsActive] = useState(0);
@@ -399,7 +399,7 @@ export default function Dashboard() {
     getReferralTvlFunc();
     getTotalTvlFunc();
     getEigenlayerPointsFunc();
-    getPufferPointsFunc();
+    // getPufferPointsFunc();
     getRenzoPointsFunc();
     getAccountTvlFunc();
     getMagpiePointsFunc();
@@ -412,10 +412,10 @@ export default function Dashboard() {
     /**
      * return home page if not active
      */
-    if (!isConnected || !invite?.twitterHandler) {
+    if (!isActiveUser) {
       navigatorTo("/");
     }
-  }, [isConnected, invite]);
+  }, [isActiveUser]);
 
   const [isLoading, setIsLoading] = useState(false);
 
