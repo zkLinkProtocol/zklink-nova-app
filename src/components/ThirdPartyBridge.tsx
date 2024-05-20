@@ -38,16 +38,16 @@ export default () => {
         }`,
         link: "https://meson.fi/zklink",
       },
-      {
-        iconURL: "/img/icon-owlto.svg",
-        name: "Owlto Finance",
-        desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
-        tooltip: "",
-        points: `${owltoBridgeNovaPoints} ${
-          owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
-        }`,
-        link: "https://owlto.finance/?to=zkLinkNova",
-      },
+      // {
+      //   iconURL: "/img/icon-owlto.svg",
+      //   name: "Owlto Finance",
+      //   desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
+      //   tooltip: "",
+      //   points: `${owltoBridgeNovaPoints} ${
+      //     owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+      //   }`,
+      //   link: "https://owlto.finance/?to=zkLinkNova",
+      // },
       {
         iconURL: "/img/icon-symbiosis.svg",
         name: "Symbiosis",
@@ -89,7 +89,7 @@ export default () => {
               <div className="text-[#A0A5AD] text-[0.75rem]">{bridge.desc}</div>
             </div>
           </div>
-          <div className="flex items-center gap-[0.5rem] whitespace-nowrap">
+          <div className="min-w-[100px] flex justify-end items-center gap-[0.5rem] whitespace-nowrap">
             <span>{bridge.points}</span>
             <img src="img/icon-open-in-new.svg" />
           </div>
