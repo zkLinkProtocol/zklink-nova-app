@@ -1,7 +1,7 @@
-import { bindTwitter, getTwitterAccessToken } from "@/api";
+import { bindTwitter, getTwitterAccessToken, getUserTvl } from "@/api";
 import { RootState } from "@/store";
 import { CardBox } from "@/styles/common";
-import { getRandomNumber } from "@/utils";
+import { getRandomNumber, sleep } from "@/utils";
 import { eventBus } from "@/utils/event-bus";
 import { Button } from "@nextui-org/react";
 import qs from "qs";
@@ -18,7 +18,7 @@ const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 export default ({ binded }: { binded: boolean }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [twitterLoading, setTwitterLoading] = useState(false);
-
+  const { invite } = useSelector((store: RootState) => store.airdrop);
   const getTwitterClientId = () => {
     let clientId = "";
 
@@ -97,15 +97,13 @@ export default ({ binded }: { binded: boolean }) => {
             let { data } = await result.json();
             console.log("twitter data", data);
 
+            await sleep(3000);
             const res = await bindTwitter(address, access_token);
             console.log("bindTwitter", res);
             if (Number(res?.status) !== 0) {
               toastTwitterError(res.message);
               return;
             }
-
-            eventBus.emit("getInvite");
-            eventBus.emit("updateUserTvl");
           })
           .catch(() => {
             toastTwitterError();
@@ -138,44 +136,104 @@ export default ({ binded }: { binded: boolean }) => {
     }
   }, [searchParams]);
 
-  return binded ? (
-    <CardBox className="px-[1.5rem] py-[1.5rem] flex justify-between items-center successed">
-      <div className="flex items-center gap-2">
-        <img src="/img/icon-twitter.svg" width={20} />
-        <span className="text-[1rem] font-[700]">
-          Congratulations! your account has been activated now!
-        </span>
-      </div>
-      <img src="/img/icon-right.svg" width={20} className="ml-1" />
-    </CardBox>
-  ) : (
-    <CardBox className="px-[1.5rem] py-[1.5rem] flex justify-between items-center">
-      <div className="flex items-center gap-2">
-        <img src="/img/icon-twitter.svg" width={20} />
-        <span className="text-[1rem] font-[700]">
-          Follow <a href="https://twitter.com/zkLinkNova">@zkLinkNova</a> &{" "}
-          <a href="https://twitter.com/zkLink_Official">@zkLink_Official</a> to
-          fully Activate your account
-        </span>
-      </div>
-      <div className="flex items-center gap-[0.75rem]">
-        <Button
-          className="gradient-btn"
-          onClick={handleConnectTwitter}
-          isLoading={twitterLoading}
-        >
-          Follow
-        </Button>
-        <Button
-          className="gradient-btn"
-          onClick={() => {
-            eventBus.emit("getInvite");
-            eventBus.emit("updateUserTvl");
-          }}
-        >
-          Verify
-        </Button>
-      </div>
-    </CardBox>
+  const [isSucceed, setIsSucceed] = useState(false);
+
+  const verifyTwitter = async () => {
+    if (!address) return;
+    setTwitterLoading(true);
+    const res = await getUserTvl(address);
+    console.log("getUserTvlFunc", res);
+    setTwitterLoading(false);
+
+    if (res.result?.binded) {
+      setIsSucceed(true);
+    } else {
+      toast.error(
+        <div>
+          <p>Verification Failed</p>
+          <p>
+            Please follow{" "}
+            <a
+              href="https://twitter.com/zkLinkNova"
+              target="_blank"
+              className="link-underline"
+            >
+              @zkLinkNova
+            </a>{" "}
+            and{" "}
+            <a
+              href="https://twitter.com/zkLink_Official"
+              target="_blank"
+              className="link-underline"
+            >
+              @zkLink_Official
+            </a>{" "}
+            before verifying.
+          </p>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
+    }
+  };
+
+  return (
+    <>
+      {isSucceed ? (
+        <CardBox className="mb-[1.5rem] px-[1.5rem] py-[1.5rem] flex justify-between items-center successed">
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-twitter.svg" width={20} />
+            <span className="text-[1rem] font-[700]">
+              Congratulations! your account has been activated now!
+            </span>
+          </div>
+          <img src="/img/icon-right.svg" width={20} className="ml-1" />
+        </CardBox>
+      ) : (
+        <CardBox className="mb-[1.5rem] px-[1.5rem] py-[1.5rem] flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <img src="/img/icon-twitter.svg" width={20} />
+            <span className="text-[1rem] font-[700]">
+              Follow{" "}
+              <a
+                href="https://twitter.com/zkLinkNova"
+                target="_blank"
+                className="link-underline"
+              >
+                @zkLinkNova
+              </a>{" "}
+              &{" "}
+              <a
+                href="https://twitter.com/zkLink_Official"
+                target="_blank"
+                className="link-underline"
+              >
+                @zkLink_Official
+              </a>{" "}
+              to fully Activate your account
+            </span>
+          </div>
+          <div className="flex items-center gap-[0.75rem]">
+            {!invite?.code && (
+              <Button
+                className="gradient-btn"
+                onClick={handleConnectTwitter}
+                isLoading={twitterLoading}
+              >
+                Connect Twitter/X
+              </Button>
+            )}
+            <Button
+              className="gradient-btn"
+              isLoading={twitterLoading}
+              onClick={verifyTwitter}
+            >
+              Verify Following
+            </Button>
+          </div>
+        </CardBox>
+      )}
+    </>
   );
 };
