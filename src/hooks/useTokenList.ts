@@ -90,6 +90,7 @@ export const useTokenBalanceList = () => {
           isSameNetwork(networkKey, item.chain)
         );
         if (!item?.l1Address) continue;
+        if (item.chain === "Arbitrum" && token.symbol === "USDC") continue;
         if (item) {
           const imgItem = allTokens.find((at) =>
             isSameAddress(at.l1Address, item.l1Address)
