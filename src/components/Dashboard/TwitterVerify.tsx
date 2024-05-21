@@ -199,7 +199,7 @@ export default ({ binded }: { binded: boolean }) => {
               >
                 @zkLinkNova
               </a>{" "}
-              &{" "}
+              and{" "}
               <a
                 href="https://twitter.com/zkLink_Official"
                 target="_blank"
@@ -207,7 +207,7 @@ export default ({ binded }: { binded: boolean }) => {
               >
                 @zkLink_Official
               </a>{" "}
-              to fully Activate your account
+              for the latest updates!
             </span>
           </div>
           <div className="flex items-center gap-[0.75rem]">
