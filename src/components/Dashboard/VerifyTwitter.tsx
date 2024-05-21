@@ -66,6 +66,8 @@ export default ({ binded }: { binded: boolean }) => {
 
   const { address } = useAccount();
 
+  const [isBind, setIsBind] = useState(false);
+
   const bindTwitterFunc = async (code: string) => {
     if (!address) return;
     console.log("twitter auth code", code);
@@ -81,44 +83,38 @@ export default ({ binded }: { binded: boolean }) => {
       redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     };
-    try {
-      const { access_token } = await getTwitterAccessToken(params);
-      console.log(access_token);
+    const { access_token } = await getTwitterAccessToken(params);
+    console.log(access_token);
 
-      if (access_token && access_token !== "") {
-        fetch("/twitter/2/users/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        })
-          .then(async (result: any) => {
-            let { data } = await result.json();
-            console.log("twitter data", data);
+    await sleep(5000);
 
-            await sleep(3000);
-            const res = await bindTwitter(address, access_token);
-            console.log("bindTwitter", res);
-            if (Number(res?.status) === 0) {
-              eventBus.emit("getInvite");
-            } else {
-              toastTwitterError(res.message);
-            }
-          })
-          .catch(() => {
-            toastTwitterError();
-          });
-      } else {
-        toastTwitterError();
+    if (access_token && access_token !== "") {
+      try {
+        const res = await bindTwitter(address, access_token);
+        console.log("bind twitter res", res);
+        if (Number(res?.status) === 0) {
+          eventBus.emit("getInvite");
+          setIsBind(true);
+          setTwitterLoading(false);
+        } else {
+          setTwitterLoading(false);
+          toastTwitterError(res.message);
+        }
+      } catch (error: any) {
+        console.log("bind twitter error", error);
+        setTwitterLoading(false);
+        toastTwitterError(
+          error?.message === "twitter has been tied"
+            ? "Please try a different Twitter/X account"
+            : error?.message
+        );
       }
-    } catch (error: any) {
-      console.error(error);
-      toastTwitterError();
-    } finally {
-      setSearchParams("");
+    } else {
       setTwitterLoading(false);
+      toastTwitterError();
     }
+
+    setSearchParams("");
   };
 
   useEffect(() => {
@@ -200,7 +196,7 @@ export default ({ binded }: { binded: boolean }) => {
               <a
                 href="https://twitter.com/zkLinkNova"
                 target="_blank"
-                className="link-underline"
+                className="link-underline text-[#03D498]"
               >
                 @zkLinkNova
               </a>{" "}
@@ -208,7 +204,7 @@ export default ({ binded }: { binded: boolean }) => {
               <a
                 href="https://twitter.com/zkLink_Official"
                 target="_blank"
-                className="link-underline"
+                className="link-underline text-[#03D498]"
               >
                 @zkLink_Official
               </a>{" "}
@@ -216,7 +212,15 @@ export default ({ binded }: { binded: boolean }) => {
             </span>
           </div>
           <div className="flex items-center gap-[0.75rem]">
-            {!invite?.twitterHandler && (
+            {isBind || invite?.twitterHandler ? (
+              <Button
+                className="gradient-btn"
+                isLoading={twitterLoading}
+                onClick={verifyTwitter}
+              >
+                Verify Following
+              </Button>
+            ) : (
               <Button
                 className="gradient-btn"
                 onClick={handleConnectTwitter}
@@ -225,13 +229,6 @@ export default ({ binded }: { binded: boolean }) => {
                 Connect Twitter/X
               </Button>
             )}
-            <Button
-              className="gradient-btn"
-              isLoading={twitterLoading}
-              onClick={verifyTwitter}
-            >
-              Verify Following
-            </Button>
           </div>
         </CardBox>
       )}
