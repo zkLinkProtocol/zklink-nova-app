@@ -72,13 +72,13 @@ export default ({ binded }: { binded: boolean }) => {
     console.log("twitter auth code", code);
     setTwitterLoading(true);
 
-    const clientId = getTwitterClientId();
+    // const clientId = getTwitterClientId();
     const params = {
       code,
       grant_type: "authorization_code",
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
-      client_id: clientId,
+      client_id: twitterClientId,
       redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     };
