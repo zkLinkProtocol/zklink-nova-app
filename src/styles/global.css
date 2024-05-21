@@ -106,6 +106,7 @@
 
 .link-underline {
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .link-underline:hover {
