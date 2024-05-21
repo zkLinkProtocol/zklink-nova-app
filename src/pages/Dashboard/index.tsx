@@ -714,13 +714,13 @@ export default function Dashboard() {
     const interportPoints = [
       {
         name: "Nova Points",
-        value: formatNumberWithUnit(orbiterNovaPoints),
+        value: formatNumberWithUnit(interportNovaPoints),
       },
     ];
     const interport = {
       name: "Interport",
       handler: "@InterportFi",
-      link: "https://app.interport.fi/stablecoin-pools",
+      link: "https://app.interport.fi/stablecoin-pools?network=zkLink+Nova",
       iconURL: "/img/icon-interport.svg",
       type: "Cross-Chain",
       booster: "2x boost",

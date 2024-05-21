@@ -82,7 +82,10 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
       <div>
         <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
           <Td className="flex items-center gap-[0.5rem]">
-            <img src={data.iconURL} className="w-[2.25rem] h-[2.25rem] rounded-full" />
+            <img
+              src={data.iconURL}
+              className="w-[2.25rem] h-[2.25rem] rounded-full"
+            />
             <div>
               <p
                 className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
@@ -284,10 +287,10 @@ export default function EcoDApps({ data }: { data: EcoDAppsProps[] }) {
           ))}
         </div>
 
-        <p className="px-[1rem] py-[3rem] w-full text-[#999] text-[1rem] text-center">
+        {/* <p className="px-[1rem] py-[3rem] w-full text-[#999] text-[1rem] text-center">
           More zkLink Nova ecosystem dApps will be supported soon, and all Nova
           Points earned prior to dApp support will be retained.
-        </p>
+        </p> */}
       </CardBox>
     </>
   );
