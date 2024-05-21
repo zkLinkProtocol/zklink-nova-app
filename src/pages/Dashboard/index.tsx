@@ -180,6 +180,7 @@ export default function Dashboard() {
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
     orbiterBridgeNovaPoints,
+    interportNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -710,12 +711,36 @@ export default function Dashboard() {
         "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
     };
 
+    const interportPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(orbiterNovaPoints),
+      },
+    ];
+    const interport = {
+      name: "Interport",
+      handler: "@InterportFi",
+      link: "https://app.interport.fi/stablecoin-pools",
+      iconURL: "/img/icon-interport.svg",
+      type: "Cross-Chain",
+      booster: "2x boost",
+      points: interportPoints,
+      earned: `${interportPoints.length} ${
+        interportPoints.length > 1 ? "Types" : "Type"
+      } of Point + Yield`,
+      status: "Live",
+      multiplier: "2x Nova Points",
+      actionType: "Provide Liquidity",
+      description: `For each block that liquidity is in a pool you earn points multiplied by the liquidity you provided`,
+    };
+
     return [
       layerbank,
       linkswap,
       aqua,
       izumi,
       // owlto,
+      interport,
       orbiter,
       symbiosis,
       meson,
@@ -737,6 +762,7 @@ export default function Dashboard() {
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
     orbiterBridgeNovaPoints,
+    interportNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);
