@@ -37,10 +37,9 @@ export default ({ binded }: { binded: boolean }) => {
 
   const handleConnectTwitter = () => {
     setTwitterLoading(true);
-    const clientId = getTwitterClientId();
     const params = {
       response_type: "code",
-      client_id: clientId,
+      client_id: twitterClientId,
       redirect_uri: twitterCallbackURL,
       // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
       // redirect_uri: "http://localhost:3000/aggregation-parade",
