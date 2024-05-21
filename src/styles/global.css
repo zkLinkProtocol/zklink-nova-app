@@ -103,3 +103,11 @@
 .bg-transparent {
   background: transparent !important;
 }
+
+.link-underline {
+  text-decoration: underline;
+}
+
+.link-underline:hover {
+  text-decoration: underline;
+}

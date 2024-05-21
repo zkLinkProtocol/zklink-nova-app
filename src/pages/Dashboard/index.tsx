@@ -860,11 +860,14 @@ export default function Dashboard() {
 
         {/* Right: tvl ... data */}
         <div className="md:w-full maxWid">
-          <VerifyTwitter binded={userTvl.binded} />
+          {!invite?.twitterHandler && <VerifyTwitter binded={userTvl.binded} />}
 
-          <div className="mt-[1.5rem]">
-            <TvlSummary totalTvl={totalTvl} userTvl={userTvl} />
-          </div>
+          <TvlSummary
+            totalTvl={totalTvl}
+            userTvl={userTvl}
+            groupTvl={groupTvl}
+            referrerTvl={referralTvl}
+          />
 
           {/* Group Milestone */}
           <div className="mt-[2rem]">
