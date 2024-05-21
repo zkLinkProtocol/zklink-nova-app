@@ -100,9 +100,10 @@ export default ({ binded }: { binded: boolean }) => {
             await sleep(3000);
             const res = await bindTwitter(address, access_token);
             console.log("bindTwitter", res);
-            if (Number(res?.status) !== 0) {
+            if (Number(res?.status) === 0) {
+              eventBus.emit("getInvite");
+            } else {
               toastTwitterError(res.message);
-              return;
             }
           })
           .catch(() => {
@@ -215,7 +216,7 @@ export default ({ binded }: { binded: boolean }) => {
             </span>
           </div>
           <div className="flex items-center gap-[0.75rem]">
-            {!invite?.code && (
+            {!invite?.twitterHandler && (
               <Button
                 className="gradient-btn"
                 onClick={handleConnectTwitter}
