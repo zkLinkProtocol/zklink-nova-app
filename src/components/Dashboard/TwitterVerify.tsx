@@ -82,8 +82,18 @@ export default ({ binded }: { binded: boolean }) => {
       redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     };
-    const { access_token } = await getTwitterAccessToken(params);
-    console.log(access_token);
+    let access_token = "";
+    try {
+      const res = await getTwitterAccessToken(params);
+      if (res.access_token) {
+        access_token = res.access_token;
+      }
+    } catch (error) {
+      await sleep(5000);
+      toastTwitterError();
+    }
+    // const { access_token } = await getTwitterAccessToken(params);
+    // console.log(access_token);
 
     await sleep(5000);
 
@@ -126,7 +136,7 @@ export default ({ binded }: { binded: boolean }) => {
       return;
     }
 
-    if (code) {
+    if (code && !invite?.twitterHandler) {
       bindTwitterFunc(code);
       // setSearchParams("");
     }
