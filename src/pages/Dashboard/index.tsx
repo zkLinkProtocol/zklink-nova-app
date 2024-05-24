@@ -37,7 +37,7 @@ import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { formatNumberWithUnit, sleep } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
-import EcoDApps from "@/components/Dashboard/EcoDApps";
+import EcoDApps, { EcoDAppsProps } from "@/components/Dashboard/EcoDApps";
 import {
   Button,
   Checkbox,
@@ -54,6 +54,9 @@ import useNovaPoints from "@/hooks/useNovaPoints";
 import { Tooltip } from "react-tooltip";
 import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
 import TwitterVerify from "@/components/Dashboard/TwitterVerify";
+import { m } from "framer-motion";
+import { multiply } from "lodash";
+import axios, { all } from "axios";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -193,6 +196,8 @@ export default function Dashboard() {
     owltoBridgeNovaPoints,
     orbiterBridgeNovaPoints,
     interportNovaPoints,
+    allsparkNovaPoints,
+    logxNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -433,6 +438,7 @@ export default function Dashboard() {
     getRoyaltyBoosterFunc();
     getRsethPointsFunc();
     getUserTvlFunc();
+    getAllsparkTradePointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -468,6 +474,22 @@ export default function Dashboard() {
     );
   };
 
+  const [allsparkTradePoints, setAllsparkTradePoints] = useState(0);
+
+  const getAllsparkTradePointsFunc = async () => {
+    if (!address) return;
+    const { data: res } = await axios.post(
+      "https://allspark.finance/points/getUserTradePoints",
+      {
+        address,
+      }
+    );
+    console.log("allsparkTradePoints", res);
+    if ((res as any)?.data) {
+      setAllsparkTradePoints(res.data?.tradePoints || 0);
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
     setTimeout(() => {
@@ -501,21 +523,36 @@ export default function Dashboard() {
       //   value: formatNumberWithUnit(layerbankEigenlayerPoints),
       // },
     ];
-    const layerbank = {
+    const layerbank: EcoDAppsProps = {
       name: "LayerBank",
       handler: "@LayerBankFi",
       link: "https://zklink.layerbank.finance/",
       iconURL: "/img/icon-layerbank.svg",
-      booster: "2x boost",
+      booster: "Up to 10x boost",
       type: "Lending",
       points: lauyerbankPoints,
       earned: `${lauyerbankPoints.length} ${
         lauyerbankPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-      status: "Live",
-      multiplier: "2x Nova Points",
-      actionType: "Provide Liquidity",
-      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+      multiplierOrReward: "Multiplier",
+      details: [
+        {
+          status: "Live",
+          multiplier: "Up to 10x boost",
+          multiplierTips: (
+            <div>
+              <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+              <p>
+                4x for canonically bridged tokens (pufETH.eth, Manta.manta,
+                Stone.manta, wBTC.eth)
+              </p>
+              <p>2x for externally bridged tokens (solvBTC, mBTC, BTCT)</p>
+            </div>
+          ),
+          actionType: "Provide Liquidity",
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+        },
+      ],
     };
 
     const linkswapPoints = [
@@ -524,21 +561,25 @@ export default function Dashboard() {
         value: formatNumberWithUnit(linkswapNovaPoints),
       },
     ];
-    const linkswap = {
+    const linkswap: EcoDAppsProps = {
       name: "Linkswap",
       handler: "@LinkswapFinance",
       link: "https://linkswap.finance/earn",
       iconURL: "/img/icon-linkswap.svg",
-      booster: "1.5x boost",
       type: "DEX",
       points: linkswapPoints,
       earned: `${linkswapPoints.length} ${
         linkswapPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-      status: "Live",
-      multiplier: "1.5x Nova Points",
-      actionType: "Provide Liquidity",
-      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+      multiplierOrReward: "Multiplier",
+      details: [
+        {
+          status: "Live",
+          multiplier: "1.5x Nova Points",
+          actionType: "Provide Liquidity",
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+        },
+      ],
     };
 
     const aquaPoints = [
@@ -548,21 +589,32 @@ export default function Dashboard() {
       },
     ];
 
-    const aqua = {
+    const aqua: EcoDAppsProps = {
       name: "Aqua",
       handler: "@native_fi",
       link: "https://aqua.native.org/dashboard/user/?chainId=810180",
       iconURL: "/img/icon-aqua.svg",
-      booster: "2x boost",
+      booster: "Up to 10x boost",
       type: "Lending",
       points: aquaPoints,
       earned: `${aquaPoints.length} ${
         aquaPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-      status: "Live",
-      multiplier: "2x Nova Points",
-      actionType: "Provide Liquidity",
-      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+      details: [
+        {
+          status: "Live",
+          multiplier: "Up to 10x boost",
+          multiplierTips: (
+            <p>
+              10x for ETH/wETH and merged wBTC, USDT, USDC <br />
+              4x for canonically bridged tokens
+            </p>
+          ),
+          actionType: "Provide Liquidity",
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+        },
+      ],
+      multiplierOrReward: "Multiplier",
     };
 
     const izumiPoints = [
@@ -572,21 +624,37 @@ export default function Dashboard() {
       },
     ];
 
-    const izumi = {
+    const izumi: EcoDAppsProps = {
       name: "iZUMI",
       handler: "@izumi_Finance",
       link: "https://izumi.finance/trade/swap?chainId=810180",
       iconURL: "/img/icon-izumi.svg",
-      booster: "2x boost",
+      booster: "Up to 10x boost",
       type: "DEX",
       points: izumiPoints,
       earned: `${izumiPoints.length} ${
         izumiPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-      status: "Live",
-      multiplier: "2x Nova Points",
-      actionType: "Provide Liquidity",
-      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+      details: [
+        {
+          status: "Live",
+          multiplier: "Up to 10x boost",
+          multiplierTips: (
+            <div>
+              <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+              <p>3x for externally bridged tokens (solvBTC)</p>
+              <p>
+                Note: Boosts are provided only for effective liquidity. For AMM
+                DEX, two-sided liquidity provision is required to qualify for
+                the dApp booster.
+              </p>
+            </div>
+          ),
+          actionType: "Provide Liquidity",
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+        },
+      ],
+      multiplierOrReward: "Multiplier",
     };
 
     const symbiosisPoints = [
@@ -595,7 +663,7 @@ export default function Dashboard() {
         value: formatNumberWithUnit(symbiosisNovaPoints),
       },
     ];
-    const symbiosis = {
+    const symbiosis: EcoDAppsProps = {
       name: "Symbiosis",
       handler: "@symbiosis_fi",
       link: " https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
@@ -605,13 +673,18 @@ export default function Dashboard() {
       earned: `${symbiosisPoints.length} ${
         symbiosisPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-      status: "Live",
-      reward: `${symbiosisBridgeNovaPoints} ${
-        symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
-      }`,
-      actionType: "Bridge",
-      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
-      descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+      details: [
+        {
+          status: "Live",
+          reward: `${symbiosisBridgeNovaPoints} ${
+            symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+          }`,
+          actionType: "Bridge",
+          description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+          descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+        },
+      ],
+      multiplierOrReward: "Current Reward Level",
     };
 
     const mesonPoints = [
@@ -620,7 +693,7 @@ export default function Dashboard() {
         value: formatNumberWithUnit(mesonNovaPoints),
       },
     ];
-    const meson = {
+    const meson: EcoDAppsProps = {
       name: "Meson",
       handler: "@mesonfi",
       link: "https://meson.fi/zklink",
@@ -628,13 +701,18 @@ export default function Dashboard() {
       type: "Cross-Chain",
       points: mesonPoints,
       earned: `1 ${mesonPoints.length > 1 ? "Types" : "Type"} of Point`,
-      status: "Live",
-      reward: `${mesonBridgeNovaPoints} ${
-        mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
-      }`,
-      actionType: "Bridge",
-      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
-      descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+      details: [
+        {
+          status: "Live",
+          reward: `${mesonBridgeNovaPoints} ${
+            mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+          }`,
+          actionType: "Bridge",
+          description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+          descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+        },
+      ],
+      multiplierOrReward: "Current Reward Level",
     };
 
     const owltoPoints = [
@@ -643,7 +721,7 @@ export default function Dashboard() {
         value: formatNumberWithUnit(owltoNovaPoints),
       },
     ];
-    const owlto = {
+    const owlto: EcoDAppsProps = {
       name: "Owlto",
       handler: "@Owlto_Finance",
       link: "https://owlto.finance/?to=zkLinkNova",
@@ -653,35 +731,59 @@ export default function Dashboard() {
       earned: `${owltoPoints.length} ${
         owltoPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-      status: "Live",
-      reward: `${owltoBridgeNovaPoints} ${
-        owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
-      }`,
-      actionType: "Bridge",
-      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
-      descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+      details: [
+        {
+          status: "Live",
+          reward: `${owltoBridgeNovaPoints} ${
+            owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+          }`,
+          actionType: "Bridge",
+          description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+          descriptionTips: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
+        },
+      ],
+      multiplierOrReward: "Current Reward Level",
     };
 
     const logxPoints = [
       {
         name: "Nova Points",
-        value: formatNumberWithUnit(0), // TODO
+        value: formatNumberWithUnit(logxNovaPoints),
       },
     ];
-    const logx = {
+    const logx: EcoDAppsProps = {
       name: "LogX",
       handler: "@LogX_trade",
-      link: "https://owlto.finance/?to=zkLinkNova",
+      link: "",
+      booster: "10x boost & trading rewards",
       iconURL: "/img/icon-logx.svg",
       type: "Perp DEX",
       points: logxPoints,
       earned: `${logxPoints.length} ${
         logxPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-      status: "Live",
-      multiplier: "2x Nova Points",
-      actionType: "Provide Liquidity",
-      description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+      details: [
+        {
+          status: "Live",
+          multiplier: "10x boost & trading rewards",
+          multiplierTips: (
+            <div>
+              <p>10x points for LPs providing USDT</p>
+              <p>1 points for a trader’s every 1000 USD trading volume</p>
+            </div>
+          ),
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+          actionType: "Provide Liquidity",
+        },
+        {
+          status: "",
+          multiplier: "-",
+          description: `For every $1000 in trading volume on LogX, you will receive 1 Nova Point.`,
+          actionType: "Trade",
+          actionLink: "https://app.logx.trade/",
+        },
+      ],
+      multiplierOrReward: "Multiplier",
     };
 
     const freePoints = [
@@ -691,7 +793,7 @@ export default function Dashboard() {
       },
     ];
     const freeBridgeNovaPoints = 4; // TODO
-    const free = {
+    const free: EcoDAppsProps = {
       name: "Free",
       handler: "@FreeLayer2",
       link: "https://free.tech/zklink",
@@ -701,14 +803,20 @@ export default function Dashboard() {
       earned: `${freePoints.length} ${
         freePoints.length > 1 ? "Types" : "Type"
       } of Point`,
-      status: "Live",
-      reward: `${freeBridgeNovaPoints} ${
-        freeBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
-      }`,
-      actionType: "Bridge",
-      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
-      descriptionTips:
-        "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
+
+      details: [
+        {
+          status: "Live",
+          reward: `${freeBridgeNovaPoints} ${
+            freeBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+          }`,
+          actionType: "Bridge",
+          description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+          descriptionTips:
+            "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
+        },
+      ],
+      multiplierOrReward: "Current Reward Level",
     };
 
     const orbiterPoints = [
@@ -717,7 +825,7 @@ export default function Dashboard() {
         value: formatNumberWithUnit(orbiterNovaPoints),
       },
     ];
-    const orbiter = {
+    const orbiter: EcoDAppsProps = {
       name: "Orbiter",
       handler: "@Orbiter_Finance",
       link: "https://www.orbiter.finance/?source=Ethereum&dest=zkLink%20Nova&token=ETH",
@@ -727,14 +835,19 @@ export default function Dashboard() {
       earned: `${orbiterPoints.length} ${
         orbiterPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-      status: "Live",
-      reward: `${orbiterBridgeNovaPoints} ${
-        orbiterBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
-      }`,
-      actionType: "Bridge",
-      description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
-      descriptionTips:
-        "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
+      multiplierOrReward: "Current Reward Level",
+      details: [
+        {
+          status: "Live",
+          reward: `${orbiterBridgeNovaPoints} ${
+            orbiterBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+          }`,
+          actionType: "Bridge",
+          description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+          descriptionTips:
+            "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
+        },
+      ],
     };
 
     const interportPoints = [
@@ -743,24 +856,64 @@ export default function Dashboard() {
         value: formatNumberWithUnit(interportNovaPoints),
       },
     ];
-    const interport = {
+    const interport: EcoDAppsProps = {
       name: "Interport",
       handler: "@InterportFi",
+      booster: "10x boost",
       link: "https://app.interport.fi/stablecoin-pools?network=zkLink+Nova",
       iconURL: "/img/icon-interport.svg",
       type: "Cross-Chain",
-      booster: "2x boost",
       points: interportPoints,
       earned: `${interportPoints.length} ${
         interportPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-      status: "Live",
-      multiplier: "2x Nova Points",
-      actionType: "Provide Liquidity",
-      description: `For each block that liquidity is in a pool you earn points multiplied by the liquidity you provided`,
+      details: [
+        {
+          status: "Live",
+          multiplier: "10x boost",
+          multiplierTips: (
+            <div>
+              <p>10x for merged USDT and USDC</p>
+            </div>
+          ),
+          actionType: "Provide Liquidity",
+          description: `For each block that liquidity is in a pool you earn points multiplied by the liquidity you provided`,
+        },
+      ],
+      multiplierOrReward: "Multiplier",
     };
 
-    return [
+    const allsparkPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(allsparkNovaPoints),
+      },
+      {
+        name: "Allspark Trade Points",
+        value: formatNumberWithUnit(allsparkTradePoints),
+      },
+    ];
+
+    const allspark: EcoDAppsProps = {
+      name: "Allspark",
+      handler: "@AllsparkFinance",
+      link: "https://app.interport.fi/stablecoin-pools",
+      iconURL: "/img/icon-allspark.svg",
+      type: "Prediction",
+      points: allsparkPoints,
+      earned: `${allsparkPoints.length} ${
+        allsparkPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      details: [
+        {
+          status: "Live",
+          actionType: "Use Protocol",
+          description: `For each transaction you interact with Allspark, you could receive 0.5 Nova Points.`,
+        },
+      ],
+    };
+
+    const arr: EcoDAppsProps[] = [
       layerbank,
       linkswap,
       aqua,
@@ -770,9 +923,12 @@ export default function Dashboard() {
       orbiter,
       symbiosis,
       meson,
+      allspark,
       // free,
-      // logx,
+      logx,
     ];
+
+    return arr;
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,
@@ -789,6 +945,9 @@ export default function Dashboard() {
     owltoBridgeNovaPoints,
     orbiterBridgeNovaPoints,
     interportNovaPoints,
+    allsparkNovaPoints,
+    logxNovaPoints,
+    allsparkTradePoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);

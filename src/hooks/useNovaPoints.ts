@@ -99,6 +99,8 @@ export default () => {
     getMesonisBridgePointsFunc();
     getOwltoBridgePointsFunc();
     getInterportNovaPointsFunc();
+    getAllsparkNovaPointsFunc();
+    getLogxNovaPointsFunc();
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -164,6 +166,23 @@ export default () => {
     setOwltoNovaPoints(points);
   };
 
+  const [allsparkNovaPoints, setAllsparkNovaPoints] = useState(0);
+  const getAllsparkNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "allspark");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setAllsparkNovaPoints(points);
+  };
+  const [logxNovaPoints, setLogxNovaPoints] = useState(0);
+  const getLogxNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "logx");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setLogxNovaPoints(points);
+  };
+
   const dAppNovaPoints: number = useMemo(() => {
     return (
       layerbankNovaPoints +
@@ -174,7 +193,9 @@ export default () => {
       mesonNovaPoints +
       // owltoNovaPoints +
       orbiterNovaPoints +
-      interportNovaPoints
+      interportNovaPoints +
+      allsparkNovaPoints +
+      logxNovaPoints
     );
   }, [
     layerbankNovaPoints,
@@ -186,6 +207,8 @@ export default () => {
     owltoNovaPoints,
     orbiterNovaPoints,
     interportNovaPoints,
+    allsparkNovaPoints,
+    logxNovaPoints,
   ]);
 
   useEffect(() => {
@@ -264,6 +287,8 @@ export default () => {
     owltoBridgeNovaPoints,
     orbiterBridgeNovaPoints,
     interportNovaPoints,
+    allsparkNovaPoints,
+    logxNovaPoints,
     getAllNovaPoints,
   };
 };
