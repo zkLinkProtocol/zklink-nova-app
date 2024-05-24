@@ -41,7 +41,7 @@ import {
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { getInvite, okxVisitTask, visitReward } from "@/api";
+import { getInvite, getUserTvl, okxVisitTask, visitReward } from "@/api";
 import { FaBars, FaTimes } from "react-icons/fa";
 import {
   useConnectModal,
@@ -144,9 +144,6 @@ export default function Header() {
   const [searchParams] = useSearchParams();
 
   const location = useLocation();
-  const isActive = useCallback(() => {
-    return isConnected && Boolean(invite?.code);
-  }, [isConnected, invite]);
 
   const visitRewardFunc = async () => {
     if (!address) return;

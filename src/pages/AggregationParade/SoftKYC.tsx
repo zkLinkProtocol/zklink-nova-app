@@ -2,7 +2,6 @@ import {
   checkBridge,
   checkInviteCode,
   getInvite,
-  getTwitterAccessToken,
   getTxByTxHash,
   registerAccount,
   registerAccountByBridge,
@@ -55,14 +54,6 @@ const verifyFromList = [
   ...fromList,
   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
 ];
-
-// const verifyFromList = [...fromList];
-const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
-const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
-const env = import.meta.env.VITE_ENV;
-const isValidTwitterAccess = Boolean(
-  +import.meta.env.VITE_IS_VALID_TWITTER_ACCESS
-);
 
 const BgBox = styled.div`
   position: relative;
@@ -230,9 +221,6 @@ export default function SoftKYC() {
 
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
-  const [twitterAuthCode, setTwitterAuthCode] = useState("");
-  const [twitterAccessToken, setTwitterAccessToken] = useState("");
-  const [twitterLoading, setTwitterLoading] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<string>(
     String(fromList[0].chainId)
   );
@@ -308,99 +296,6 @@ export default function SoftKYC() {
       setIsInviteCodeLoading(false);
     }
   };
-
-  const getTwitterClientId = () => {
-    let clientId = "";
-
-    if (env === "production") {
-      const clientIds = twitterClientId.split(",");
-      const widgetClientIds = new Array(98).fill(clientIds[0]);
-      const randomClientIds = clientIds.concat(widgetClientIds);
-      const index = getRandomNumber(0, randomClientIds.length - 1);
-      clientId = randomClientIds[index];
-    } else {
-      clientId = twitterClientId;
-    }
-
-    return clientId;
-  };
-
-  const handleConnectTwitter = () => {
-    setTwitterLoading(true);
-    const clientId = getTwitterClientId();
-    const params = {
-      response_type: "code",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
-      scope:
-        "tweet.read%20tweet.write%20like.write%20users.read%20follows.read%20follows.write",
-      state: "state",
-      code_challenge: "challenge",
-      code_challenge_method: "plain",
-    };
-    const url = new URL(`https://twitter.com/i/oauth2/authorize`);
-    url.search = qs.stringify(params, { encode: false });
-
-    window.location.href = url.href;
-  };
-
-  const toastTwitterError = (text?: string) => {
-    console.error("Could not connect to Twitter. Try again.");
-    toast.error(text || "Could not connect to Twitter. Try again.", {
-      duration: 3000,
-    });
-    setTwitterLoading(false);
-  };
-
-  const getTwitterUserFunc = async (code: string) => {
-    setTwitterLoading(true);
-
-    const clientId = getTwitterClientId();
-    const params = {
-      code,
-      grant_type: "authorization_code",
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
-      code_verifier: "challenge",
-    };
-    try {
-      const { access_token } = await getTwitterAccessToken(params);
-      console.log(!access_token, isValidTwitterAccess);
-
-      if (access_token) {
-        setTwitterAccessToken(access_token);
-        /**
-         * Get twitter user info (if use)
-         * // const { data } = await getTwitterUser(access_token);
-         */
-        return;
-      }
-
-      if (isValidTwitterAccess && !access_token) {
-        toastTwitterError();
-      }
-    } catch (error: any) {
-      console.error(error);
-      if (isValidTwitterAccess) {
-        toastTwitterError();
-      }
-    } finally {
-      setTwitterAuthCode(code);
-      setTwitterLoading(false);
-    }
-  };
-
-  const [isCheckedTwitter, setIsCheckedTwitter] = useState(false);
-
-  useEffect(() => {
-    setIsCheckedTwitter(
-      isValidTwitterAccess ? Boolean(twitterAccessToken) : true
-    );
-  }, [isValidTwitterAccess, twitterAuthCode, twitterAccessToken]);
 
   const handleConnectAndSign = async () => {
     if (!isConnected || !address) {
@@ -543,14 +438,13 @@ export default function SoftKYC() {
     dispatch(setIsCheckedInviteCode(false));
     dispatch(setInviteCode(""));
     dispatch(setDepositTx(""));
-    setTwitterAccessToken("");
     dispatch(setSignature(""));
     setIsDepositViaThirdParty(false);
 
     toast.error(
       message
         ? message
-        : "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
+        : "Verification failed. Please recheck your invite code, wallet-tx hash relationship."
     );
   };
 
@@ -579,7 +473,7 @@ export default function SoftKYC() {
           address: address,
           code: inviteCodeValue,
           siganture: signature,
-          accessToken: twitterAccessToken || null,
+          accessToken: null,
           chainId: depositChainId,
           txHash: depositTx,
         });
@@ -600,8 +494,6 @@ export default function SoftKYC() {
   };
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    const error = searchParams.get("error");
     const verifyTx = searchParams.get("verifyTx");
 
     // if after deposit to link here, show verify tx modal
@@ -618,17 +510,6 @@ export default function SoftKYC() {
         setDepositTxHash(txhash);
       }
       verifyDepositModal.onOpen();
-    }
-
-    if (error) {
-      toastTwitterError();
-      setSearchParams("");
-      return;
-    }
-
-    if (code) {
-      getTwitterUserFunc(code);
-      setSearchParams("");
     }
   }, [searchParams]);
 
@@ -840,49 +721,6 @@ export default function SoftKYC() {
               </div>
             </CardBox>
           </div>
-
-          {/* Step 4: connect twitter */}
-          {/* <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox
-              className={`hidden md:block ${
-                isCheckedTwitter ? "successed" : ""
-              }`}
-            >
-              <StepNum>04</StepNum>
-            </CardBox>
-
-            <CardBox
-              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                isCheckedTwitter ? "successed" : ""
-              }`}
-            >
-              <StepItem className="stepItem">
-                <StepNum className="step-num md:hidden">04</StepNum>
-                <div>
-                  <p className="step-title">Connect Twitter</p>
-                  <p className="step-sub-title mt-[0.25rem]">
-                    You can only bind your Twitter account with one wallet
-                  </p>
-                </div>
-              </StepItem>
-              <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
-                {isCheckedTwitter ? (
-                  <img
-                    src="/img/icon-right.svg"
-                    className="w-[1.5rem] h-[1.5rem] mx-auto"
-                  />
-                ) : (
-                  <Button
-                    className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                    isLoading={twitterLoading}
-                    onClick={handleConnectTwitter}
-                  >
-                    <span className="ml-[0.5rem]">Connect Twitter/X</span>
-                  </Button>
-                )}
-              </div>
-            </CardBox>
-          </div> */}
 
           {/* Submit for user bind */}
           <div className="flex justify-center w-full md:px-[5rem] ">
