@@ -9,7 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { formatNumberWithUnit } from "@/utils";
 
@@ -53,7 +53,7 @@ const SubTh = styled.div`
   letter-spacing: -0.00438rem;
 `;
 
-interface EcoDAppsProps {
+export interface EcoDAppsProps {
   name: string;
   handler: string;
   link: string;
@@ -63,14 +63,20 @@ interface EcoDAppsProps {
     name: string;
     value: string;
   }[];
-  status: string;
-  description: string;
   earned: string;
-  actionType: string;
   booster?: string;
-  multiplier?: string;
-  reward?: string;
-  descriptionTips?: string;
+
+  multiplierOrReward?: string;
+  details: {
+    status: string;
+    multiplier?: string;
+    multiplierTips?: string | ReactNode;
+    reward?: string;
+    description: string;
+    descriptionTips?: string;
+    actionType: string;
+    actionLink?: string;
+  }[];
 }
 
 export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
@@ -78,12 +84,17 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
   const [recognize, setRecognize] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
 
+  const [link, setLink] = useState<string | undefined>(undefined);
+
   return (
     <>
       <div>
         <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
-          <Td className="flex items-center gap-[0.5rem]">
-            <img src={data.iconURL} className="w-[2.25rem] h-[2.25rem] rounded-full" />
+          <Td className="flex items-center gap-[0.5rem] min-w-[320px]">
+            <img
+              src={data.iconURL}
+              className="w-[2.25rem] h-[2.25rem] rounded-full"
+            />
             <div>
               <p
                 className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
@@ -110,7 +121,10 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
           </Td>
           <Td className="flex justify-between items-center">
             <div>
-              <GradientText data-tooltip-id={data.name}>
+              <GradientText
+                data-tooltip-id={data.name}
+                className="whitespace-nowrap mr-[16px]"
+              >
                 {data.earned}
               </GradientText>
               <ReactTooltip
@@ -153,58 +167,92 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
           <div className="px-[1.5rem] py-[1rem] flex justify-between border-b-1 border-[#292A2A]">
             <div>
               <SubTh>Status</SubTh>
-              <p className="text-[0.875rem] ">{data.status}</p>
+              {data.details.map((detail, index) => (
+                <p className="text-[0.875rem] mb-[16px]" key={index}>
+                  {detail.status}
+                </p>
+              ))}
             </div>
-            {data.reward ? (
+
+            {data?.multiplierOrReward && (
               <div>
-                <SubTh>Current Reward Level</SubTh>
-                <p className="text-[0.875rem]">{data.reward}</p>
-              </div>
-            ) : (
-              <div>
-                <SubTh>Multiplier</SubTh>
-                <p className="text-[0.875rem]">{data.multiplier}</p>
+                <SubTh>{data.multiplierOrReward}</SubTh>
+                {data.details.map((detail, index) => (
+                  <p className="text-[0.875rem] mb-[16px]" key={index}>
+                    <span>{detail?.multiplier || detail?.reward}</span>
+                    {detail?.multiplierTips && (
+                      <>
+                        <img
+                          src="/img/icon-info.svg"
+                          width={12}
+                          className="ml-2 inline-block"
+                          data-tooltip-id={`eco-multiplier-${data.handler}-${index}`}
+                        />
+                        <ReactTooltip
+                          id={`eco-multiplier-${data.handler}-${index}`}
+                          render={() => detail.multiplierTips}
+                          style={{
+                            fontSize: "14px",
+                            background: "#666",
+                            borderRadius: "0.5rem",
+                            maxWidth: "40rem",
+                          }}
+                        />
+                      </>
+                    )}
+                  </p>
+                ))}
               </div>
             )}
 
             <div>
               <SubTh>Description</SubTh>
-              <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
-                <span>{data.description}</span>
-                {data.descriptionTips && (
-                  <>
-                    <img
-                      src="/img/icon-info.svg"
-                      width={12}
-                      className="ml-2 inline-block"
-                      data-tooltip-id={`eco-dapp-${data.handler}`}
-                    />
-                    <ReactTooltip
-                      id={`eco-dapp-${data.handler}`}
-                      content={data.descriptionTips}
-                      style={{
-                        fontSize: "14px",
-                        background: "#666",
-                        borderRadius: "0.5rem",
-                        width: "42.5rem",
-                      }}
-                    />
-                  </>
-                )}
-              </p>
+              {data.details.map((detail, index) => (
+                <div key={index}>
+                  <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap mb-[16px]">
+                    <span>{detail.description}</span>
+                    {detail.descriptionTips && (
+                      <>
+                        <img
+                          src="/img/icon-info.svg"
+                          width={12}
+                          className="ml-2 inline-block"
+                          data-tooltip-id={`eco-desc-${data.handler}-${index}`}
+                        />
+                        <ReactTooltip
+                          id={`eco-desc-${data.handler}-${index}`}
+                          content={detail.descriptionTips}
+                          style={{
+                            fontSize: "14px",
+                            background: "#666",
+                            borderRadius: "0.5rem",
+                            width: "42.5rem",
+                          }}
+                        />
+                      </>
+                    )}
+                  </p>
+                </div>
+              ))}
             </div>
             <div className="text-right">
               <SubTh>Action</SubTh>
-              <p
-                className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
-                onClick={() => warningModal.onOpen()}
-              >
-                <span>{data.actionType}</span>
-                <img
-                  src="/img/icon-open-in-new.svg"
-                  className="w-[1rem] h-[1rem]"
-                />
-              </p>
+              {data.details.map((detail, index) => (
+                <p
+                  key={index}
+                  className="text-[0.875rem] flex items-center gap-1 cursor-pointer mb-[16px]"
+                  onClick={() => {
+                    setLink(detail.actionLink);
+                    warningModal.onOpen();
+                  }}
+                >
+                  <span>{detail.actionType}</span>
+                  <img
+                    src="/img/icon-open-in-new.svg"
+                    className="w-[1rem] h-[1rem]"
+                  />
+                </p>
+              ))}
             </div>
           </div>
         )}
@@ -255,7 +303,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 className="gradient-btn w-full h-[2.1875rem] flex justify-center items-center gap-[0.38rem] text-[1rem] tracking-[0.0625rem] flex-1"
                 disabled={!recognize}
                 onClick={() => {
-                  window.open(data.link, "_blank");
+                  window.open(link || data.link, "_blank");
                   warningModal.onClose();
                   setRecognize(false);
                 }}
@@ -276,19 +324,23 @@ export default function EcoDApps({ data }: { data: EcoDAppsProps[] }) {
       <CardBox className="relative mt-[1.5rem] min-h-[30rem] overflow-auto">
         <div className="min-w-[820px]">
           <div className="px-[1.5rem] py-[0.5rem] rounded-[1rem] bg-[#081A23] flex items-center">
-            {["Name", "Type", "Your Earned"].map((item, index) => (
+            {/* {["Name", "Type", "Your Earned"].map((item, index) => (
               <Th key={index}>{item}</Th>
-            ))}
+            ))} */}
+
+            <Th className="min-w-[320px]">Name</Th>
+            <Th>Type</Th>
+            <Th>Your Earned</Th>
           </div>
           {data.map((item, index) => (
             <EcoDAppsItem data={item} key={index} />
           ))}
         </div>
 
-        <p className="px-[1rem] py-[3rem] w-full text-[#999] text-[1rem] text-center">
+        {/* <p className="px-[1rem] py-[3rem] w-full text-[#999] text-[1rem] text-center">
           More zkLink Nova ecosystem dApps will be supported soon, and all Nova
           Points earned prior to dApp support will be retained.
-        </p>
+        </p> */}
       </CardBox>
     </>
   );
