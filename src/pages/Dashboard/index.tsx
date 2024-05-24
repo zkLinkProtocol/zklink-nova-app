@@ -23,7 +23,6 @@ import {
   getRsethPoints,
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
-  getUserTvl,
   getNovaProjectPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
@@ -276,19 +275,6 @@ export default function Dashboard() {
     setReferralTvl(res?.result || 0);
   };
 
-  const getUserTvlFunc = async () => {
-    if (!address) return;
-    const res = await getUserTvl(address);
-    console.log("getUserTvlFunc", res);
-    if (res.result) {
-      setUserTvl({
-        binded: res.result.binded,
-        groupTvl: Number(res.result.groupTvl) || 0,
-        referrerTvl: Number(res.result.referrerTvl) || 0,
-      });
-    }
-  };
-
   const getSupportTokensFunc = async () => {
     const res = await getSupportTokens();
     if (res && Array.isArray(res)) {
@@ -462,7 +448,6 @@ export default function Dashboard() {
     getAccountRefferalsTVLFunc();
     getGroupTvlFunc();
     getReferralTvlFunc();
-    getUserTvlFunc();
     getTotalTvlFunc();
     getEigenlayerPointsFunc();
     getPufferPointsFunc();
@@ -475,13 +460,6 @@ export default function Dashboard() {
     getAllsparkTradePointsFunc();
     getBedrockPointsFunc();
   }, [address]);
-
-  useEffect(() => {
-    eventBus.on("updateUserTvl", getUserTvlFunc);
-    return () => {
-      eventBus.remove("updateUserTvl", getUserTvlFunc);
-    };
-  }, []);
 
   useEffect(() => {
     /**
@@ -1299,7 +1277,12 @@ export default function Dashboard() {
         <div className="md:w-full maxWid">
           {!invite?.twitterHandler && <TwitterVerify />}
 
-          <TvlSummary totalTvl={totalTvl} userTvl={userTvl} />
+          <TvlSummary
+            totalTvl={totalTvl}
+            userTvl={userTvl}
+            groupTvl={groupTvl}
+            referrerTvl={referralTvl}
+          />
 
           {/* Group Milestone */}
           {/* <div className="mt-[2rem]">
