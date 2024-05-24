@@ -182,11 +182,6 @@ export default function Dashboard() {
   const adModal = useDisclosure();
   const novaChadNftModal = useDisclosure();
   const { isMemeMysteryboxReward } = useNovaChadNftStatus();
-  const [userTvl, setUserTvl] = useState<UserTvlData>({
-    binded: false,
-    groupTvl: 0,
-    referrerTvl: 0,
-  });
 
   const {
     novaPoints,
@@ -291,19 +286,6 @@ export default function Dashboard() {
     if (!address) return;
     const res = await getReferralTvl(address);
     setReferralTvl(res?.result || 0);
-  };
-
-  const getUserTvlFunc = async () => {
-    if (!address) return;
-    const res = await getUserTvl(address);
-    console.log("getUserTvlFunc", res);
-    if (res.result) {
-      setUserTvl({
-        binded: res.result.binded,
-        groupTvl: Number(res.result.groupTvl) || 0,
-        referrerTvl: Number(res.result.referrerTvl) || 0,
-      });
-    }
   };
 
   const getSupportTokensFunc = async () => {
@@ -788,7 +770,7 @@ export default function Dashboard() {
     const logx: EcoDAppsProps = {
       name: "LogX",
       handler: "@LogX_trade",
-      link: "",
+      link: "https://app.logx.trade/",
       booster: "10x boost & trading rewards",
       iconURL: "/img/icon-logx.svg",
       type: "Perp DEX",
@@ -1070,7 +1052,6 @@ export default function Dashboard() {
         {/* Right: tvl ... data */}
         <div className="md:w-full maxWid">
           {!userTvl.binded && <TwitterVerify binded={userTvl.binded} />}
-
 
           <TvlSummary
             totalTvl={totalTvl}
