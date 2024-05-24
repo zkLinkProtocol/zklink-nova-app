@@ -790,7 +790,7 @@ export default function Dashboard() {
       ),
       details: [
         {
-          multiplier: "10x boost & trading rewards",
+          multiplier: "10x boost",
           multiplierTips: true,
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
           actionType: "Provide Liquidity",
@@ -936,17 +936,17 @@ export default function Dashboard() {
 
     const arr: EcoDAppsProps[] = [
       layerbank,
-      linkswap,
+      logx,
       aqua,
       izumi,
       // owlto,
+      allspark,
       interport,
       orbiter,
       symbiosis,
       meson,
-      allspark,
       // free,
-      logx,
+      linkswap,
     ];
 
     return arr;

@@ -13,7 +13,7 @@ export default () => {
       {
         iconURL: "/img/icon-free.svg",
         name: "Free (Official Bridge of Merlin Chain)",
-        desc: "Bridge M-BTC and solvBTC from Merlin to earn 1.5x Nova Points",
+        desc: "Bridge Bitcoin assets from Merlin, BounceBit and BNB Smart Chains",
         tooltip: "",
         points: "",
         link: "https://free.tech/zklink",

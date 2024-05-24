@@ -120,7 +120,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 <span className="text text-[#0bc48f]">{data.booster}</span>
                 {data.boosterTips && (
                   <img
-                    src="/img/icon-info.svg"
+                    src="/img/icon-info-green.svg"
                     width={12}
                     className="ml-2 inline-block"
                     data-tooltip-id={`eco-booster-${data.handler}`}
@@ -268,11 +268,11 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                         warningModal.onOpen();
                       }}
                     >
-                      <span className="whitespace-nowrap">
+                      <span className="whitespace-nowrap text-[#0AC18D]">
                         {detail.actionType}
                       </span>
                       <img
-                        src="/img/icon-open-in-new.svg"
+                        src="/img/icon-open-in-new-green.svg"
                         className="w-[1rem] h-[1rem]"
                       />
                     </p>
