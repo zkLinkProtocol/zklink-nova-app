@@ -551,20 +551,21 @@ export default function Dashboard() {
         lauyerbankPoints.length > 1 ? "Types" : "Type"
       } of Point`,
       multiplierOrReward: "Multiplier",
+      status: "Live",
+      boosterTips: (
+        <div>
+          <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+          <p>
+            4x for canonically bridged tokens (pufETH.eth, Manta.manta,
+            Stone.manta, wBTC.eth)
+          </p>
+          <p>2x for externally bridged tokens (solvBTC, mBTC, BTCT)</p>
+        </div>
+      ),
       details: [
         {
-          status: "Live",
           multiplier: "Up to 10x boost",
-          multiplierTips: (
-            <div>
-              <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
-              <p>
-                4x for canonically bridged tokens (pufETH.eth, Manta.manta,
-                Stone.manta, wBTC.eth)
-              </p>
-              <p>2x for externally bridged tokens (solvBTC, mBTC, BTCT)</p>
-            </div>
-          ),
+          multiplierTips: true,
           actionType: "Provide Liquidity",
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
         },
@@ -588,9 +589,9 @@ export default function Dashboard() {
         linkswapPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
       multiplierOrReward: "Multiplier",
+      status: "Live",
       details: [
         {
-          status: "Live",
           multiplier: "1.5x Nova Points",
           actionType: "Provide Liquidity",
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -616,16 +617,17 @@ export default function Dashboard() {
       earned: `${aquaPoints.length} ${
         aquaPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
+      status: "Live",
+      boosterTips: (
+        <p>
+          10x for ETH/wETH and merged wBTC, USDT, USDC <br />
+          4x for canonically bridged tokens
+        </p>
+      ),
       details: [
         {
-          status: "Live",
           multiplier: "Up to 10x boost",
-          multiplierTips: (
-            <p>
-              10x for ETH/wETH and merged wBTC, USDT, USDC <br />
-              4x for canonically bridged tokens
-            </p>
-          ),
+          multiplierTips: true,
           actionType: "Provide Liquidity",
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
         },
@@ -651,21 +653,22 @@ export default function Dashboard() {
       earned: `${izumiPoints.length} ${
         izumiPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
+      status: "Live",
+      boosterTips: (
+        <div>
+          <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+          <p>3x for externally bridged tokens (solvBTC)</p>
+          <p>
+            Note: Boosts are provided only for effective liquidity. For AMM DEX,
+            two-sided liquidity provision is required to qualify for the dApp
+            booster.
+          </p>
+        </div>
+      ),
       details: [
         {
-          status: "Live",
           multiplier: "Up to 10x boost",
-          multiplierTips: (
-            <div>
-              <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
-              <p>3x for externally bridged tokens (solvBTC)</p>
-              <p>
-                Note: Boosts are provided only for effective liquidity. For AMM
-                DEX, two-sided liquidity provision is required to qualify for
-                the dApp booster.
-              </p>
-            </div>
-          ),
+          multiplierTips: true,
           actionType: "Provide Liquidity",
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
         },
@@ -689,9 +692,9 @@ export default function Dashboard() {
       earned: `${symbiosisPoints.length} ${
         symbiosisPoints.length > 1 ? "Types" : "Type"
       } of Point`,
+      status: "Live",
       details: [
         {
-          status: "Live",
           reward: `${symbiosisBridgeNovaPoints} ${
             symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
           }`,
@@ -717,9 +720,9 @@ export default function Dashboard() {
       type: "Cross-Chain",
       points: mesonPoints,
       earned: `1 ${mesonPoints.length > 1 ? "Types" : "Type"} of Point`,
+      status: "Live",
       details: [
         {
-          status: "Live",
           reward: `${mesonBridgeNovaPoints} ${
             mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
           }`,
@@ -747,9 +750,9 @@ export default function Dashboard() {
       earned: `${owltoPoints.length} ${
         owltoPoints.length > 1 ? "Types" : "Type"
       } of Point`,
+      status: "Live",
       details: [
         {
-          status: "Live",
           reward: `${owltoBridgeNovaPoints} ${
             owltoBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
           }`,
@@ -778,21 +781,21 @@ export default function Dashboard() {
       earned: `${logxPoints.length} ${
         logxPoints.length > 1 ? "Types" : "Type"
       } of Point`,
+      status: "Live",
+      boosterTips: (
+        <div>
+          <p>10x points for LPs providing USDT</p>
+          <p>1 points for a trader’s every 1000 USD trading volume</p>
+        </div>
+      ),
       details: [
         {
-          status: "Live",
           multiplier: "10x boost & trading rewards",
-          multiplierTips: (
-            <div>
-              <p>10x points for LPs providing USDT</p>
-              <p>1 points for a trader’s every 1000 USD trading volume</p>
-            </div>
-          ),
+          multiplierTips: true,
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
           actionType: "Provide Liquidity",
         },
         {
-          status: "",
           multiplier: "-",
           description: `For every $1000 in trading volume on LogX, you will receive 1 Nova Point.`,
           actionType: "Trade",
@@ -819,10 +822,9 @@ export default function Dashboard() {
       earned: `${freePoints.length} ${
         freePoints.length > 1 ? "Types" : "Type"
       } of Point`,
-
+      status: "Live",
       details: [
         {
-          status: "Live",
           reward: `${freeBridgeNovaPoints} ${
             freeBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
           }`,
@@ -852,9 +854,9 @@ export default function Dashboard() {
         orbiterPoints.length > 1 ? "Types" : "Type"
       } of Point`,
       multiplierOrReward: "Current Reward Level",
+      status: "Live",
       details: [
         {
-          status: "Live",
           reward: `${orbiterBridgeNovaPoints} ${
             orbiterBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
           }`,
@@ -883,15 +885,16 @@ export default function Dashboard() {
       earned: `${interportPoints.length} ${
         interportPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
+      status: "Live",
+      boosterTips: (
+        <div>
+          <p>10x for merged USDT and USDC</p>
+        </div>
+      ),
       details: [
         {
-          status: "Live",
+          multiplierTips: true,
           multiplier: "10x boost",
-          multiplierTips: (
-            <div>
-              <p>10x for merged USDT and USDC</p>
-            </div>
-          ),
           actionType: "Provide Liquidity",
           description: `For each block that liquidity is in a pool you earn points multiplied by the liquidity you provided`,
         },
@@ -920,9 +923,11 @@ export default function Dashboard() {
       earned: `${allsparkPoints.length} ${
         allsparkPoints.length > 1 ? "Types" : "Type"
       } of Point`,
+      status: "Live",
+      multiplierOrReward: "Multiplier",
       details: [
         {
-          status: "Live",
+          multiplier: "-",
           actionType: "Use Protocol",
           description: `For each transaction you interact with Allspark, you could receive 0.5 Nova Points.`,
         },
