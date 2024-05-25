@@ -51,9 +51,9 @@ export default function PointsLeaderboard() {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
-  const limit = 50;
+  const limit = 100;
 
   const { address } = useAccount();
 
