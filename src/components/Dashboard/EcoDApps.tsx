@@ -102,7 +102,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
               className="w-[2.25rem] h-[2.25rem] rounded-full"
             />
             <div>
-              <p
+              <div
                 className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
                 onClick={() => warningModal.onOpen()}
               >
@@ -111,7 +111,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                   src="/img/icon-open-in-new.svg"
                   className="w-[1rem] h-[1rem]"
                 />
-              </p>
+              </div>
               <p className="text-[0.625rem] text-[#0AC18D] font-[700]">
                 {data.handler}
               </p>
@@ -253,7 +253,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                   </TableTd>
                   <TableTd>
                     <SubTh className="text-right">Action</SubTh>
-                    <p
+                    <div
                       key={index}
                       className="text-[0.875rem] flex justify-end items-center gap-1 cursor-pointer"
                       onClick={() => {
@@ -268,7 +268,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                         src="/img/icon-open-in-new-green.svg"
                         className="w-[1rem] h-[1rem]"
                       />
-                    </p>
+                    </div>
                   </TableTd>
                 </tr>
               ))}
@@ -322,9 +322,9 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 className="gradient-btn w-full h-[2.1875rem] flex justify-center items-center gap-[0.38rem] text-[1rem] tracking-[0.0625rem] flex-1"
                 disabled={!recognize}
                 onClick={() => {
-                  window.open(link || data.link, "_blank");
-                  warningModal.onClose();
                   setRecognize(false);
+                  warningModal.onClose();
+                  window.open(link || data.link, "_blank");
                 }}
               >
                 Continue to Access

@@ -52,13 +52,10 @@ import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Banner";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { Tooltip } from "react-tooltip";
-import VerifyTwitter from "@/components/Dashboard/VerifyTwitter";
 import { eventBus } from "@/utils/event-bus";
 import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
 import TwitterVerify from "@/components/Dashboard/TwitterVerify";
-import { m } from "framer-motion";
-import { multiply } from "lodash";
-import axios, { all } from "axios";
+import axios from "axios";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -773,7 +770,7 @@ export default function Dashboard() {
     const logx: EcoDAppsProps = {
       name: "LogX",
       handler: "@LogX_trade",
-      link: "https://app.logx.trade/",
+      link: "https://app.logx.trade/liquidity",
       booster: "10x boost & trading rewards",
       iconURL: "/img/icon-logx.svg",
       type: "Perp DEX",
@@ -794,10 +791,11 @@ export default function Dashboard() {
           multiplierTips: true,
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
           actionType: "Provide Liquidity",
+          actionLink: "https://app.logx.trade/liquidity",
         },
         {
-          multiplierOrReward: 'Trading rewards',
-          multiplier: "-",
+          multiplierOrReward: "Trading rewards",
+          multiplier: "1 point / $1000 volume",
           description: `For every $1000 in trading volume on LogX, you will receive 1 Nova Point.`,
           actionType: "Trade",
           actionLink: "https://app.logx.trade/",
@@ -917,7 +915,7 @@ export default function Dashboard() {
     const allspark: EcoDAppsProps = {
       name: "Allspark",
       handler: "@AllsparkFinance",
-      link: "https://app.interport.fi/stablecoin-pools",
+      link: "https://www.allspark.finance/mantissa/",
       iconURL: "/img/icon-allspark.svg",
       type: "Prediction",
       points: allsparkPoints,
@@ -928,7 +926,7 @@ export default function Dashboard() {
       multiplierOrReward: "Trading Rewards",
       details: [
         {
-          multiplier: "-",
+          multiplier: "0.5 point per trade",
           actionType: "Use Protocol",
           description: `For each transaction you interact with Allspark, you could receive 0.5 Nova Points.`,
         },
