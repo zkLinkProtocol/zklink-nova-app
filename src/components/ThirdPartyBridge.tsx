@@ -12,7 +12,7 @@ export default () => {
     return [
       {
         iconURL: "/img/icon-free.svg",
-        name: "Free (Official Bridge of Merlin Chain)",
+        name: "Free",
         desc: "Bridge Bitcoin assets from Merlin, BounceBit and BNB Smart Chains",
         tooltip: "",
         points: "",
