@@ -544,13 +544,13 @@ export default function Dashboard() {
       handler: "@LayerBankFi",
       link: "https://zklink.layerbank.finance/",
       iconURL: "/img/icon-layerbank.svg",
-      booster: "Up to 10x boost",
+      booster: "Up to 10x",
       type: "Lending",
       points: lauyerbankPoints,
       earned: `${lauyerbankPoints.length} ${
         lauyerbankPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-      multiplierOrReward: "Multiplier",
+      multiplierOrReward: "Booster",
       status: "Live",
       boosterTips: (
         <div>
@@ -559,12 +559,12 @@ export default function Dashboard() {
             4x for canonically bridged tokens (pufETH.eth, Manta.manta,
             Stone.manta, wBTC.eth)
           </p>
-          <p>2x for externally bridged tokens (solvBTC, mBTC, BTCT)</p>
+          <p>2x for externally bridged tokens (solvBTC.m, mBTC, BTCT)</p>
         </div>
       ),
       details: [
         {
-          multiplier: "Up to 10x boost",
+          multiplier: "Up to 10x",
           multiplierTips: true,
           actionType: "Provide Liquidity",
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -588,7 +588,7 @@ export default function Dashboard() {
       earned: `${linkswapPoints.length} ${
         linkswapPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-      multiplierOrReward: "Multiplier",
+      multiplierOrReward: "Booster",
       status: "Live",
       details: [
         {
@@ -611,7 +611,7 @@ export default function Dashboard() {
       handler: "@native_fi",
       link: "https://aqua.native.org/dashboard/user/?chainId=810180",
       iconURL: "/img/icon-aqua.svg",
-      booster: "Up to 10x boost",
+      booster: "Up to 10x",
       type: "Lending",
       points: aquaPoints,
       earned: `${aquaPoints.length} ${
@@ -626,13 +626,13 @@ export default function Dashboard() {
       ),
       details: [
         {
-          multiplier: "Up to 10x boost",
+          multiplier: "Up to 10x",
           multiplierTips: true,
           actionType: "Provide Liquidity",
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
         },
       ],
-      multiplierOrReward: "Multiplier",
+      multiplierOrReward: "Booster",
     };
 
     const izumiPoints = [
@@ -647,7 +647,7 @@ export default function Dashboard() {
       handler: "@izumi_Finance",
       link: "https://izumi.finance/trade/swap?chainId=810180",
       iconURL: "/img/icon-izumi.svg",
-      booster: "Up to 10x boost",
+      booster: "Up to 10x",
       type: "DEX",
       points: izumiPoints,
       earned: `${izumiPoints.length} ${
@@ -657,7 +657,7 @@ export default function Dashboard() {
       boosterTips: (
         <div>
           <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
-          <p>3x for externally bridged tokens (solvBTC)</p>
+          <p>3x for externally bridged tokens (solvBTC.m)</p>
           <p>
             Note: Boosts are provided only for effective liquidity. For AMM DEX,
             two-sided liquidity provision is required to qualify for the dApp
@@ -667,13 +667,13 @@ export default function Dashboard() {
       ),
       details: [
         {
-          multiplier: "Up to 10x boost",
+          multiplier: "Up to 10x",
           multiplierTips: true,
           actionType: "Provide Liquidity",
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
         },
       ],
-      multiplierOrReward: "Multiplier",
+      multiplierOrReward: "Booster",
     };
 
     const symbiosisPoints = [
@@ -796,13 +796,14 @@ export default function Dashboard() {
           actionType: "Provide Liquidity",
         },
         {
+          multiplierOrReward: 'Trading rewards',
           multiplier: "-",
           description: `For every $1000 in trading volume on LogX, you will receive 1 Nova Point.`,
           actionType: "Trade",
           actionLink: "https://app.logx.trade/",
         },
       ],
-      multiplierOrReward: "Multiplier",
+      multiplierOrReward: "Booster",
     };
 
     const freePoints = [
@@ -899,7 +900,7 @@ export default function Dashboard() {
           description: `For each block that liquidity is in a pool you earn points multiplied by the liquidity you provided`,
         },
       ],
-      multiplierOrReward: "Multiplier",
+      multiplierOrReward: "Booster",
     };
 
     const allsparkPoints = [
@@ -924,7 +925,7 @@ export default function Dashboard() {
         allsparkPoints.length > 1 ? "Types" : "Type"
       } of Point`,
       status: "Live",
-      multiplierOrReward: "Multiplier",
+      multiplierOrReward: "Trading Rewards",
       details: [
         {
           multiplier: "-",
