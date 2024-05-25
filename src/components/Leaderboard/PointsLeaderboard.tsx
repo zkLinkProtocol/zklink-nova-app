@@ -126,8 +126,7 @@ export default function PointsLeaderboard() {
         Please note that the leaderboard currently displays only the Nova Points
         earned through deposits and holdings. It does not yet include Nova
         Points earned from interacting with eco dapps, invite boxes, and other
-        activities. Don't worry—you won't lose these points. They will be shown
-        on the leaderboard soon.
+        activities. Don't worry—you won't lose these points. 
       </p>
       <Table
         removeWrapper
