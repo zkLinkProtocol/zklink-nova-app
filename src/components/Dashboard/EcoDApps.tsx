@@ -9,7 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const Tag = styled.span`
@@ -42,6 +42,11 @@ const Td = styled.div`
   flex: 1 1 0px;
 `;
 
+const TableTd = styled.td`
+  padding: 10px;
+  vertical-align: top;
+`;
+
 const SubTh = styled.div`
   color: #7e7e7e;
   font-family: Satoshi;
@@ -52,7 +57,7 @@ const SubTh = styled.div`
   letter-spacing: -0.00438rem;
 `;
 
-interface EcoDAppsProps {
+export interface EcoDAppsProps {
   name: string;
   handler: string;
   link: string;
@@ -62,14 +67,21 @@ interface EcoDAppsProps {
     name: string;
     value: string;
   }[];
-  status: string;
-  description: string;
   earned: string;
-  actionType: string;
   booster?: string;
-  multiplier?: string;
-  reward?: string;
-  descriptionTips?: string;
+  status: string;
+  multiplierOrReward?: string;
+  boosterTips?: string | ReactNode;
+  details: {
+    multiplier?: string;
+    multiplierTips?: boolean;
+    reward?: string;
+    description: string;
+    descriptionTips?: string;
+    actionType: string;
+    actionLink?: string;
+    multiplierOrReward?: string;
+  }[];
 }
 
 export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
@@ -77,17 +89,19 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
   const [recognize, setRecognize] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
 
+  const [link, setLink] = useState<string | undefined>(undefined);
+
   return (
     <>
       <div>
         <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
-          <Td className="flex items-center gap-[0.5rem]">
+          <Td className="flex items-center gap-[0.5rem] min-w-[320px]">
             <img
               src={data.iconURL}
               className="w-[2.25rem] h-[2.25rem] rounded-full"
             />
             <div>
-              <p
+              <div
                 className="text-[1rem] font-[700] flex items-center gap-1 cursor-pointer"
                 onClick={() => warningModal.onOpen()}
               >
@@ -96,23 +110,34 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                   src="/img/icon-open-in-new.svg"
                   className="w-[1rem] h-[1rem]"
                 />
-              </p>
+              </div>
               <p className="text-[0.625rem] text-[#0AC18D] font-[700]">
                 {data.handler}
               </p>
             </div>
-            {data.booster && (
-              <Tag className="px-[1rem] py-[0.12rem]">
+            {/* {data.booster && (
+              <Tag className="px-[0.5rem] py-[0.12rem] flex">
                 <span className="text text-[#0bc48f]">{data.booster}</span>
-              </Tag>
-            )}
+                {data.boosterTips && (
+                  <img
+                    src="/img/icon-info-green.svg"
+                    width={12}
+                    className="ml-2 inline-block"
+                    data-tooltip-id={`eco-booster-${data.handler}`}
+                    alt=""
+                  />
+                )}</Tag>
+            )} */}
           </Td>
           <Td>
             <p className="text-[1rem] font-[700]">{data.type}</p>
           </Td>
           <Td className="flex justify-between items-center">
             <div>
-              <GradientText data-tooltip-id={data.name}>
+              <GradientText
+                data-tooltip-id={data.name}
+                className="whitespace-nowrap mr-[16px]"
+              >
                 {data.earned}
               </GradientText>
               <ReactTooltip
@@ -151,63 +176,102 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
           </Td>
         </div>
 
-        {!isCollapsed && (
-          <div className="px-[1.5rem] py-[1rem] flex justify-between border-b-1 border-[#292A2A]">
-            <div>
-              <SubTh>Status</SubTh>
-              <p className="text-[0.875rem] ">{data.status}</p>
-            </div>
-            {data.reward ? (
-              <div>
-                <SubTh>Current Reward Level</SubTh>
-                <p className="text-[0.875rem]">{data.reward}</p>
-              </div>
-            ) : (
-              <div>
-                <SubTh>Multiplier</SubTh>
-                <p className="text-[0.875rem]">{data.multiplier}</p>
-              </div>
-            )}
+        <ReactTooltip
+          id={`eco-booster-${data.handler}`}
+          render={() => data.boosterTips}
+          style={{
+            fontSize: "14px",
+            background: "#666",
+            borderRadius: "0.5rem",
+            maxWidth: "40rem",
+          }}
+        />
 
-            <div>
-              <SubTh>Description</SubTh>
-              <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
-                <span>{data.description}</span>
-                {data.descriptionTips && (
-                  <>
-                    <img
-                      src="/img/icon-info.svg"
-                      width={12}
-                      className="ml-2 inline-block"
-                      data-tooltip-id={`eco-dapp-${data.handler}`}
-                    />
-                    <ReactTooltip
-                      id={`eco-dapp-${data.handler}`}
-                      content={data.descriptionTips}
-                      style={{
-                        fontSize: "14px",
-                        background: "#666",
-                        borderRadius: "0.5rem",
-                        width: "42.5rem",
+        {!isCollapsed && (
+          <div className="px-[16px] py-[1rem] border-b-1 border-[#292A2A]">
+            <table className="w-full">
+              {data.details.map((detail, index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    index !== data.details.length - 1
+                      ? "border-b-1 border-[#292A2A]"
+                      : ""
+                  }`}
+                >
+                  <TableTd>
+                    <SubTh>Status</SubTh>
+                    <p className="text-[0.875rem]">{data.status}</p>
+                  </TableTd>
+                  <TableTd>
+                    <SubTh>
+                      {detail?.multiplierOrReward || data.multiplierOrReward}
+                    </SubTh>
+                    <p
+                      className="text-[0.875rem] flex items-center whitespace-nowrap"
+                      key={index}
+                    >
+                      <span>{detail?.multiplier || detail?.reward}</span>
+                      {detail?.multiplierTips && (
+                        <>
+                          <img
+                            src="/img/icon-info.svg"
+                            width={12}
+                            className="ml-2 inline-block"
+                            data-tooltip-id={`eco-booster-${data.handler}`}
+                          />
+                        </>
+                      )}
+                    </p>
+                  </TableTd>
+                  <TableTd>
+                    <SubTh>Description</SubTh>
+                    <p className="max-w-[27.1875rem] text-[0.875rem] whitespace-wrap">
+                      <span>{detail.description}</span>
+                      {detail.descriptionTips && (
+                        <>
+                          <img
+                            src="/img/icon-info.svg"
+                            width={12}
+                            className="ml-2 inline-block"
+                            data-tooltip-id={`eco-desc-${data.handler}-${index}`}
+                          />
+                          <ReactTooltip
+                            id={`eco-desc-${data.handler}-${index}`}
+                            content={detail.descriptionTips}
+                            style={{
+                              fontSize: "14px",
+                              background: "#666",
+                              borderRadius: "0.5rem",
+                              width: "42.5rem",
+                            }}
+                          />
+                        </>
+                      )}
+                    </p>
+                  </TableTd>
+                  <TableTd>
+                    <SubTh className="text-right">Action</SubTh>
+                    <div
+                      key={index}
+                      className="text-[0.875rem] flex justify-end items-center gap-1 cursor-pointer"
+                      onClick={() => {
+                        setLink(detail.actionLink);
+                        warningModal.onOpen();
                       }}
-                    />
-                  </>
-                )}
-              </p>
-            </div>
-            <div className="text-right">
-              <SubTh>Action</SubTh>
-              <p
-                className="text-[0.875rem] flex items-center gap-1 cursor-pointer"
-                onClick={() => warningModal.onOpen()}
-              >
-                <span>{data.actionType}</span>
-                <img
-                  src="/img/icon-open-in-new.svg"
-                  className="w-[1rem] h-[1rem]"
-                />
-              </p>
-            </div>
+                    >
+                      <span className="whitespace-nowrap text-[#0AC18D]">
+                        {detail.actionType}
+                      </span>
+                      <img
+                        src="/img/icon-open-in-new-green.svg"
+                        className="w-[1rem] h-[1rem]"
+                      />
+                    </div>
+                  </TableTd>
+                </tr>
+              ))}
+            </table>
           </div>
         )}
       </div>
@@ -257,9 +321,9 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 className="gradient-btn w-full h-[2.1875rem] flex justify-center items-center gap-[0.38rem] text-[1rem] tracking-[0.0625rem] flex-1"
                 disabled={!recognize}
                 onClick={() => {
-                  window.open(data.link, "_blank");
-                  warningModal.onClose();
                   setRecognize(false);
+                  warningModal.onClose();
+                  window.open(link || data.link, "_blank");
                 }}
               >
                 Continue to Access
@@ -278,9 +342,13 @@ export default function EcoDApps({ data }: { data: EcoDAppsProps[] }) {
       <CardBox className="relative mt-[1.5rem] min-h-[30rem] overflow-auto">
         <div className="min-w-[820px]">
           <div className="px-[1.5rem] py-[0.5rem] rounded-[1rem] bg-[#081A23] flex items-center">
-            {["Name", "Type", "Your Earned"].map((item, index) => (
+            {/* {["Name", "Type", "Your Earned"].map((item, index) => (
               <Th key={index}>{item}</Th>
-            ))}
+            ))} */}
+
+            <Th className="min-w-[320px]">Name</Th>
+            <Th>Type</Th>
+            <Th>Your Earned</Th>
           </div>
           {data.map((item, index) => (
             <EcoDAppsItem data={item} key={index} />
