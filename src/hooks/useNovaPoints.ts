@@ -101,6 +101,7 @@ export default () => {
     getInterportNovaPointsFunc();
     getAllsparkNovaPointsFunc();
     getLogxNovaPointsFunc();
+    getNovaswapNovaPointsFunc();
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -183,6 +184,15 @@ export default () => {
     setLogxNovaPoints(points);
   };
 
+  const [novaswapNovaPoints, setNovaswapNovaPoints] = useState(0);
+  const getNovaswapNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "novaswap");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setNovaswapNovaPoints(points);
+  };
+
   const dAppNovaPoints: number = useMemo(() => {
     return (
       layerbankNovaPoints +
@@ -195,7 +205,8 @@ export default () => {
       orbiterNovaPoints +
       interportNovaPoints +
       allsparkNovaPoints +
-      logxNovaPoints
+      logxNovaPoints +
+      novaswapNovaPoints
     );
   }, [
     layerbankNovaPoints,
@@ -209,6 +220,7 @@ export default () => {
     interportNovaPoints,
     allsparkNovaPoints,
     logxNovaPoints,
+    novaswapNovaPoints,
   ]);
 
   useEffect(() => {
@@ -289,6 +301,7 @@ export default () => {
     interportNovaPoints,
     allsparkNovaPoints,
     logxNovaPoints,
+    novaswapNovaPoints,
     getAllNovaPoints,
   };
 };

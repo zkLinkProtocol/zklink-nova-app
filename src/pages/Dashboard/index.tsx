@@ -919,7 +919,43 @@ export default function Dashboard() {
       ],
     };
 
+    const novaswapPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(0), //TODO
+      },
+    ];
+
+    const novaswap: EcoDAppsProps = {
+      name: "Novaswap",
+      handler: "@NovaSwap_fi",
+      link: "https://novaswap.exchange/#/pool",
+      iconURL: "/img/icon-novaswap.svg",
+      type: "DEX",
+      points: novaswapPoints,
+      earned: `${novaswapPoints.length} ${
+        novaswapPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      multiplierOrReward: "Booster",
+      boosterTips: (
+        <div>
+          <p>20x for ETH/wETH and merged wBTC, USDT, USDC</p>
+          <p>10x for canonically bridged tokens eligible to earn points</p>
+        </div>
+      ),
+      details: [
+        {
+          multiplier: "Up to 20x",
+          multiplierTips: true,
+          actionType: "Provide Liquidity",
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+        },
+      ],
+    };
+
     const arr: EcoDAppsProps[] = [
+      novaswap,
       layerbank,
       logx,
       aqua,
