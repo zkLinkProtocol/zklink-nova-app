@@ -1,5 +1,6 @@
 import { getAccountRank, getAccountsRank } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
+import { RootState } from "@/store";
 import { TableColumnItem } from "@/types";
 import { formatNumberWithUnit } from "@/utils";
 import {
@@ -13,6 +14,7 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 
 type DataItem = {
@@ -46,6 +48,8 @@ export default function PointsLeaderboard() {
       align: "end",
     },
   ];
+
+  const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const [data, setData] = useState<DataItem[]>([]);
   const [page, setPage] = useState(1);
@@ -126,7 +130,7 @@ export default function PointsLeaderboard() {
         Please note that the leaderboard currently displays only the Nova Points
         earned through deposits and holdings. It does not yet include Nova
         Points earned from interacting with eco dapps, invite boxes, and other
-        activities. Don't worry—you won't lose these points. 
+        activities. Don't worry—you won't lose these points.
       </p>
       <Table
         removeWrapper
@@ -161,18 +165,30 @@ export default function PointsLeaderboard() {
           {data.map((item: any, index: number) =>
             index === 0 &&
             item?.address?.toLowerCase() === address?.toLowerCase() ? (
-              <TableRow
-                key={index}
-                className="self-data border-b-1 border-slate-600"
-              >
-                <TableCell>{item.rank}</TableCell>
-                <TableCell>
-                  {showAccount(item.address)}{" "}
-                  <span className="ml-[0.5rem]">(Your Address)</span>
-                </TableCell>
-                <TableCell>{showAccount(item.inviteBy)}</TableCell>
-                <TableCell>{formatNumberWithUnit(totalNovaPoints)}</TableCell>
-              </TableRow>
+              !invite?.code ? (
+                <TableRow
+                  key={index}
+                  className="self-data border-b-1 border-slate-600"
+                >
+                  <TableCell>{""}</TableCell>
+                  <TableCell>Please activated your account first</TableCell>
+                  <TableCell>{""}</TableCell>
+                  <TableCell>{""}</TableCell>
+                </TableRow>
+              ) : (
+                <TableRow
+                  key={index}
+                  className="self-data border-b-1 border-slate-600"
+                >
+                  <TableCell>{item.rank}</TableCell>
+                  <TableCell>
+                    {showAccount(item.address)}{" "}
+                    <span className="ml-[0.5rem]">(Your Address)</span>
+                  </TableCell>
+                  <TableCell>{showAccount(item.inviteBy)}</TableCell>
+                  <TableCell>{formatNumberWithUnit(totalNovaPoints)}</TableCell>
+                </TableRow>
+              )
             ) : (
               <TableRow key={index}>
                 <TableCell>{item.rank}</TableCell>
