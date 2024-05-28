@@ -498,6 +498,39 @@ export default function Dashboard() {
       //   value: formatNumberWithUnit(layerbankEigenlayerPoints),
       // },
     ];
+
+    const novaSwap: EcoDAppsProps = {
+      name: "Novaswap",
+      handler: "@NovaSwap_fi",
+      link: "https://novaswap.exchange/#/pool",
+      iconURL: "/img/icon-novaswap.svg",
+      booster: "Up to 20x",
+      type: "DEX",
+      points: [
+        {
+          name: "Nova Points",
+          value: formatNumberWithUnit(layerbankNovaPoints),
+        },
+      ],
+      earned: `1 Type of Point`,
+      multiplierOrReward: "Booster",
+      status: "Live",
+      boosterTips: (
+        <div>
+          <p>20x for ETH/wETH and merged wBTC, USDT, USDC</p>
+          <p>10x for canonically bridged tokens eligible to earn points</p>
+        </div>
+      ),
+      details: [
+        {
+          multiplier: "Up to 20x",
+          multiplierTips: true,
+          actionType: "Provide Liquidity",
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+        },
+      ],
+    };
+
     const layerbank: EcoDAppsProps = {
       name: "LayerBank",
       handler: "@LayerBankFi",
@@ -863,6 +896,31 @@ export default function Dashboard() {
       multiplierOrReward: "Booster",
     };
 
+    const eddyFinance: EcoDAppsProps = {
+      name: "Eddy Finance",
+      handler: "@eddy_protocol",
+      link: "https://app.eddy.finance/swap",
+      iconURL: "/img/icon-eddyfinance.svg",
+      booster: "1 point/$1000 volume",
+      type: "DEX",
+      points: [
+        {
+          name: "Nova Points",
+          value: formatNumberWithUnit(layerbankNovaPoints),
+        },
+      ],
+      earned: `1 Type of Point`,
+      multiplierOrReward: "Booster",
+      status: "Live",
+      details: [
+        {
+          multiplier: "1 point/$1000 volume",
+          actionType: "Trade",
+          description: `For every $1000 in trading volume on Eddy Finance (Nova Network), you will receive 1 Nova Point.`,
+        },
+      ],
+    };
+
     const allsparkPoints = [
       {
         name: "Nova Points",
@@ -896,11 +954,13 @@ export default function Dashboard() {
     };
 
     const arr: EcoDAppsProps[] = [
+      novaSwap,
       layerbank,
       logx,
       aqua,
       izumi,
       // owlto,
+      eddyFinance,
       allspark,
       interport,
       orbiter,

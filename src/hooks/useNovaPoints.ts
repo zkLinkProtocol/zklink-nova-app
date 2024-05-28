@@ -24,6 +24,9 @@ export default () => {
   const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
   const [linkswapNovaPoints, setLinkswapNovaPoints] = useState(0);
 
+  const [novaSwapNovaPoints, setNovaSwapNovaPoints] = useState(0);
+  const [eddyFinanceNovaPoints, setEddyFinanceNovaPoints] = useState(0);
+
   const getAccountPointFunc = useCallback(async () => {
     if (!address) {
       setNovaPoints(0);
@@ -101,6 +104,7 @@ export default () => {
     getInterportNovaPointsFunc();
     getAllsparkNovaPointsFunc();
     getLogxNovaPointsFunc();
+    getNovaSwapNovaPointsFunc(), getEddyFinanceNovaPointsFunc();
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -183,6 +187,22 @@ export default () => {
     setLogxNovaPoints(points);
   };
 
+  const getNovaSwapNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "novaswap");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setNovaSwapNovaPoints(points);
+  };
+
+  const getEddyFinanceNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "eddy");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setEddyFinanceNovaPoints(points);
+  };
+
   const dAppNovaPoints: number = useMemo(() => {
     return (
       layerbankNovaPoints +
@@ -195,7 +215,9 @@ export default () => {
       orbiterNovaPoints +
       interportNovaPoints +
       allsparkNovaPoints +
-      logxNovaPoints
+      logxNovaPoints +
+      novaSwapNovaPoints +
+      eddyFinanceNovaPoints
     );
   }, [
     layerbankNovaPoints,
@@ -204,11 +226,12 @@ export default () => {
     izumiNovaPoints,
     symbiosisNovaPoints,
     mesonNovaPoints,
-    owltoNovaPoints,
     orbiterNovaPoints,
     interportNovaPoints,
     allsparkNovaPoints,
     logxNovaPoints,
+    novaSwapNovaPoints,
+    eddyFinanceNovaPoints,
   ]);
 
   useEffect(() => {
