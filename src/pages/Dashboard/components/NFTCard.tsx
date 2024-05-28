@@ -904,7 +904,7 @@ export default function NFTCard({ switchPhase }: NFTCardProps) {
                         window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
                       }
                     >
-                      Trade in Alienswap
+                      Trade
                     </Button>
                   )}
                 </div>

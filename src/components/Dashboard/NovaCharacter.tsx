@@ -1253,7 +1253,7 @@ export default function NovaCharacter() {
                         )
                       }
                     >
-                      Trade in Alienswap
+                      Trade
                     </Button>
                   )}
                 </div>

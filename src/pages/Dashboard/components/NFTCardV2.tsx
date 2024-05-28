@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { CardBox } from "@/styles/common";
 import {
   TRADEMARK_NFT_MARKET_URL,
-  MYSTERYBOX_NFT_MARKET_URL,
+  MYSTERYBOX_2_NFT_MARKET_URL,
   NOVA_CHAIN_ID,
   MintStatus,
 } from "@/constants";
@@ -694,10 +694,10 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
             </div>
             <Button
               className="gradient-btn"
-              isDisabled={true}
-              disabled={true}
+              // isDisabled={true}
+              // disabled={true}
               // TODO
-              // onClick={() => window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")}
+              onClick={() => window.open(MYSTERYBOX_2_NFT_MARKET_URL, "_blank")}
             >
               Buy
             </Button>
@@ -935,11 +935,11 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                       isDisabled={true}
                       disabled={true}
                       // TODO
-                      // onClick={() =>
-                      //   window.open(MYSTERYBOX_NFT_MARKET_URL, "_blank")
-                      // }
+                      onClick={() =>
+                        window.open(MYSTERYBOX_2_NFT_MARKET_URL, "_blank")
+                      }
                     >
-                      Trade in Alienswap
+                      Trade
                     </Button>
                   )}
                 </div>
