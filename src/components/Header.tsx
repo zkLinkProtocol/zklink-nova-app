@@ -24,7 +24,7 @@ import {
 } from "wagmi";
 import styled from "styled-components";
 import { scrollToTop, showAccount, sleep } from "@/utils";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import {
   setInvite,
   setSignature,
@@ -149,9 +149,6 @@ export default function Header() {
   const [searchParams] = useSearchParams();
 
   const location = useLocation();
-  const isActive = useCallback(() => {
-    return isConnected && Boolean(invite?.code);
-  }, [isConnected, invite]);
 
   const visitRewardFunc = async () => {
     if (!address) return;
@@ -248,8 +245,8 @@ export default function Header() {
   const getInviteFunc = async () => {
     if (!address || !apiToken) return;
 
+    console.log("getInviteFunc ===========", address, apiToken);
     try {
-      await sleep(500);
       const res = await getInvite(address);
       if (res?.result) {
         dispatch(setInvite(res?.result));
@@ -278,44 +275,44 @@ export default function Header() {
   }, []);
 
   const { handleSign } = useSignature();
-
   const getJWT = async () => {
     if (!address || !signature) return;
     const res = await authLogin({
       address,
-      siganture: signature,
+      signature,
     });
     console.log("auth login", res);
 
     if (res.status === "0" && !!res?.result) {
       dispatch(setApiToken(res.result));
       localStorage.setItem("API_TOKEN", res.result);
+      window.location.reload();
+      // forceUpdate();
     }
   };
 
   useEffect(() => {
     if (!!signatureAddress && !!address && address !== signatureAddress) {
-      dispatch(setSignature(""));
-      dispatch(setSignatureAddress(""));
-      dispatch(setTwitterAccessToken(""));
+      onDisconnect();
       dispatch(setApiToken(""));
       localStorage.removeItem("API_TOKEN");
-    }
-
-    console.log("address", address);
-    console.log("signature", signature);
-
-    if (!!address && !signature) {
-      handleSign();
-    }
-
-    if (!!address && !!signature && !apiToken) {
-      getJWT();
     }
   }, [signatureAddress, address, signature]);
 
   useEffect(() => {
-    if (apiToken) {
+    if (address && !signature) {
+      handleSign();
+    }
+  }, [address, signature]);
+
+  useEffect(() => {
+    if (signature && !apiToken) {
+      getJWT();
+    }
+  }, [signature, apiToken]);
+
+  useEffect(() => {
+    if (address && apiToken) {
       getInviteFunc();
     }
   }, [apiToken, address]);
@@ -323,12 +320,13 @@ export default function Header() {
   useEffect(() => {
     if (!isConnected) {
       dispatch(setSignature(""));
-      dispatch(setApiToken(""));
+      dispatch(setSignatureAddress(""));
       dispatch(setDepositTx(""));
       dispatch(setInvite(null));
+      dispatch(setApiToken(""));
       localStorage.removeItem("API_TOKEN");
     }
-  }, [isConnected]);
+  }, [isConnected, address]);
 
   useEffect(() => {
     if (isConnected && Boolean(invite?.code)) {
@@ -352,16 +350,6 @@ export default function Header() {
       console.log("=====================>disconnect");
     }
   };
-
-  const connections = useConnections();
-  // const connectors = useConnectors();
-  const connectorClient = useConnectorClient();
-
-  useEffect(() => {
-    console.log("======================>connections", connections);
-    console.log("======================>connectors", connectors);
-    console.log("======================>ConnectorClient", connectorClient);
-  }, [connections, connectors, connectorClient]);
 
   const handleCopyAddress = () => {
     if (!address) return;
