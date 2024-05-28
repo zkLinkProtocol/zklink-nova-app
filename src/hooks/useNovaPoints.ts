@@ -313,5 +313,7 @@ export default () => {
     allsparkNovaPoints,
     logxNovaPoints,
     getAllNovaPoints,
+    novaSwapNovaPoints,
+    eddyFinanceNovaPoints,
   };
 };
