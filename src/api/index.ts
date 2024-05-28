@@ -570,7 +570,7 @@ export const getMemeMysteryboxReward = (address: string): Promise<Response> =>
 
 export const authLogin = (data: {
   address: string;
-  siganture: string;
+  signature: string;
 }): Promise<Response> =>
   http.post(`${BASE_URL_API}/auth/login`, {
     ...data,
