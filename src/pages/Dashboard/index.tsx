@@ -196,6 +196,8 @@ export default function Dashboard() {
     interportNovaPoints,
     allsparkNovaPoints,
     logxNovaPoints,
+    novaSwapNovaPoints,
+    eddyFinanceNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -498,7 +500,6 @@ export default function Dashboard() {
       //   value: formatNumberWithUnit(layerbankEigenlayerPoints),
       // },
     ];
-
     const novaSwap: EcoDAppsProps = {
       name: "Novaswap",
       handler: "@NovaSwap_fi",
@@ -509,7 +510,7 @@ export default function Dashboard() {
       points: [
         {
           name: "Nova Points",
-          value: formatNumberWithUnit(layerbankNovaPoints),
+          value: formatNumberWithUnit(novaSwapNovaPoints),
         },
       ],
       earned: `1 Type of Point`,
@@ -906,7 +907,7 @@ export default function Dashboard() {
       points: [
         {
           name: "Nova Points",
-          value: formatNumberWithUnit(layerbankNovaPoints),
+          value: formatNumberWithUnit(eddyFinanceNovaPoints),
         },
       ],
       earned: `1 Type of Point`,
@@ -974,21 +975,22 @@ export default function Dashboard() {
   }, [
     layerbankNovaPoints,
     layerbankPufferPoints,
-    layerbankEigenlayerPoints,
+    novaSwapNovaPoints,
     linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
     symbiosisNovaPoints,
-    orbiterNovaPoints,
-    mesonNovaPoints,
-    owltoNovaPoints,
     symbiosisBridgeNovaPoints,
+    mesonNovaPoints,
     mesonBridgeNovaPoints,
+    owltoNovaPoints,
     owltoBridgeNovaPoints,
+    logxNovaPoints,
+    orbiterNovaPoints,
     orbiterBridgeNovaPoints,
     interportNovaPoints,
+    eddyFinanceNovaPoints,
     allsparkNovaPoints,
-    logxNovaPoints,
     allsparkTradePoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
