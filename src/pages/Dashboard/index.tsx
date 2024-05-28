@@ -503,7 +503,7 @@ export default function Dashboard() {
     const novaSwap: EcoDAppsProps = {
       name: "Novaswap",
       handler: "@NovaSwap_fi",
-      link: "https://novaswap.exchange/#/pool",
+      link: "https://novaswap.fi/",
       iconURL: "/img/icon-novaswap.svg",
       booster: "Up to 20x",
       type: "DEX",
@@ -955,7 +955,7 @@ export default function Dashboard() {
     };
 
     const arr: EcoDAppsProps[] = [
-      novaSwap,
+      // novaSwap,
       layerbank,
       logx,
       aqua,
