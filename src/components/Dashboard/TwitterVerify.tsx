@@ -1,4 +1,4 @@
-import { bindTwitter, getTwitterAccessToken, getUserTvl } from "@/api";
+import { bindTwitter, getInvite, getTwitterAccessToken } from "@/api";
 import { RootState } from "@/store";
 import { CardBox } from "@/styles/common";
 import { getRandomNumber, sleep } from "@/utils";
@@ -15,7 +15,7 @@ const env = import.meta.env.VITE_ENV;
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 
-export default ({ binded }: { binded: boolean }) => {
+export default () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [twitterLoading, setTwitterLoading] = useState(false);
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -82,8 +82,18 @@ export default ({ binded }: { binded: boolean }) => {
       redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     };
-    const { access_token } = await getTwitterAccessToken(params);
-    console.log(access_token);
+    let access_token = "";
+    try {
+      const res = await getTwitterAccessToken(params);
+      if (res.access_token) {
+        access_token = res.access_token;
+      }
+    } catch (error) {
+      await sleep(5000);
+      toastTwitterError();
+    }
+    // const { access_token } = await getTwitterAccessToken(params);
+    // console.log(access_token);
 
     await sleep(5000);
 
@@ -126,7 +136,7 @@ export default ({ binded }: { binded: boolean }) => {
       return;
     }
 
-    if (code) {
+    if (code && !invite?.twitterHandler) {
       bindTwitterFunc(code);
       // setSearchParams("");
     }
@@ -137,11 +147,11 @@ export default ({ binded }: { binded: boolean }) => {
   const verifyTwitter = async () => {
     if (!address) return;
     setTwitterLoading(true);
-    const res = await getUserTvl(address);
+    const res = await getInvite(address);
     console.log("getUserTvlFunc", res);
     setTwitterLoading(false);
 
-    if (res.result?.binded) {
+    if (res.result?.twitterHandler) {
       setIsSucceed(true);
     } else {
       toast.error(
@@ -199,7 +209,7 @@ export default ({ binded }: { binded: boolean }) => {
               >
                 @zkLinkNova
               </a>{" "}
-              &{" "}
+              and{" "}
               <a
                 href="https://twitter.com/zkLink_Official"
                 target="_blank"
@@ -207,7 +217,7 @@ export default ({ binded }: { binded: boolean }) => {
               >
                 @zkLink_Official
               </a>{" "}
-              to fully Activate your account
+              for the latest updates!
             </span>
           </div>
           <div className="flex items-center gap-[0.75rem]">

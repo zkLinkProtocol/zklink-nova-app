@@ -23,7 +23,6 @@ import {
   getRsethPoints,
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
-  getUserTvl,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +46,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { setIsAdHide, setIsNovaChadNftHide } from "@/store/modules/airdrop";
+import { setIsNovaChadNftHide } from "@/store/modules/airdrop";
 import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Banner";
 import useNovaPoints from "@/hooks/useNovaPoints";
@@ -156,7 +155,7 @@ export interface UserTvlData {
 
 export default function Dashboard() {
   const { isConnected, address } = useAccount();
-  const { invite, isAdHide, isNovaChadNftHide, isActiveUser } = useSelector(
+  const { invite, isNovaChadNftHide, isActiveUser } = useSelector(
     (store: RootState) => store.airdrop
   );
   const [tabsActive, setTabsActive] = useState(0);
@@ -176,7 +175,6 @@ export default function Dashboard() {
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
   const [nftPhase, setNftPhase] = useState(2); // default: phase 2
-  const adModal = useDisclosure();
   const novaChadNftModal = useDisclosure();
   const { isMemeMysteryboxReward } = useNovaChadNftStatus();
 
@@ -206,19 +204,6 @@ export default function Dashboard() {
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
-
-  const getUserTvlFunc = async () => {
-    if (!address) return;
-    const res = await getUserTvl(address);
-    console.log("getUserTvlFunc", res);
-    if (res.result) {
-      setUserTvl({
-        binded: res.result.binded,
-        groupTvl: Number(res.result.groupTvl) || 0,
-        referrerTvl: Number(res.result.referrerTvl) || 0,
-      });
-    }
-  };
 
   const getAccountRefferalsTVLFunc = async () => {
     if (!address) return;
@@ -433,7 +418,6 @@ export default function Dashboard() {
     getAccountRefferalsTVLFunc();
     getGroupTvlFunc();
     getReferralTvlFunc();
-    getUserTvlFunc();
     getTotalTvlFunc();
     getEigenlayerPointsFunc();
     getPufferPointsFunc();
@@ -443,16 +427,8 @@ export default function Dashboard() {
     getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
     getRsethPointsFunc();
-    getUserTvlFunc();
     getAllsparkTradePointsFunc();
   }, [address]);
-
-  useEffect(() => {
-    eventBus.on("updateUserTvl", getUserTvlFunc);
-    return () => {
-      eventBus.remove("updateUserTvl", getUserTvlFunc);
-    };
-  }, []);
 
   useEffect(() => {
     /**
@@ -465,27 +441,7 @@ export default function Dashboard() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [dontShowAgain, setDontShowAgain] = useState(true);
-
   const dispatch = useDispatch();
-  const handleAdClose = () => {
-    console.log("dontShowAgain", dontShowAgain);
-    if (dontShowAgain) {
-      dispatch(setIsAdHide(true));
-    }
-    adModal.onClose();
-  };
-
-  const handleAdJump = () => {
-    console.log("dontShowAgain", dontShowAgain);
-    if (dontShowAgain) {
-      dispatch(setIsAdHide(true));
-    }
-    window.open(
-      "https://www.okx.com/web3/discover/cryptopedia/event/28",
-      "_blank"
-    );
-  };
 
   const [allsparkTradePoints, setAllsparkTradePoints] = useState(0);
 
@@ -511,11 +467,8 @@ export default function Dashboard() {
       if (isMemeMysteryboxReward && !isNovaChadNftHide) {
         novaChadNftModal.onOpen();
       }
-      if (!isAdHide && (!isMemeMysteryboxReward || isNovaChadNftHide)) {
-        adModal.onOpen();
-      }
     }, 1000);
-  }, [isAdHide, isNovaChadNftHide, isMemeMysteryboxReward]);
+  }, [isNovaChadNftHide, isMemeMysteryboxReward]);
 
   const ecoDappsData = useMemo(() => {
     const lauyerbankPoints = [
@@ -1055,7 +1008,7 @@ export default function Dashboard() {
 
         {/* Right: tvl ... data */}
         <div className="md:w-full maxWid">
-          {!userTvl.binded && <TwitterVerify binded={userTvl.binded} />}
+          {invite?.code && <TwitterVerify />}
 
           <TvlSummary
             totalTvl={totalTvl}
@@ -1149,57 +1102,6 @@ export default function Dashboard() {
       <div className="relative mt-[3rem] md:pl-[4.75rem] md:pr-[6rem] px-[1rem] z-[1]">
         <DisclaimerFooter />
       </div>
-
-      <Modal
-        classNames={{ closeButton: "text-[1.5rem]" }}
-        size="md"
-        hideCloseButton
-        isOpen={adModal.isOpen}
-        onOpenChange={adModal.onOpenChange}
-      >
-        <ModalContent className="mb-[3.75rem]">
-          {(onClose) => (
-            <>
-              <ModalHeader className="text-center text-[1.5rem]">
-                Join Nova Cryptopedia Event and Win $300k in Rewards!
-              </ModalHeader>
-              <ModalBody className="pb-8">
-                <div>
-                  <img src="/img/join-nova-cryptopedia.png" />
-                </div>
-
-                <div>
-                  <Checkbox
-                    classNames={{
-                      label: "text-[0.75rem] text-[#999] whitespace-nowrap",
-                    }}
-                    isSelected={dontShowAgain}
-                    onValueChange={setDontShowAgain}
-                  >
-                    {"Don't show again"}
-                  </Checkbox>
-                </div>
-
-                <div>
-                  <Button
-                    className="gradient-btn mt-4 w-full h-[2.1875rem] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1rem]"
-                    onClick={handleAdJump}
-                  >
-                    Join & Verify Now
-                  </Button>
-
-                  <Button
-                    className="mt-4 w-full h-[2.1875rem] py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
-                    onClick={handleAdClose}
-                  >
-                    Close
-                  </Button>
-                </div>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}

@@ -567,3 +567,11 @@ export const getMemeMysteryboxReward = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/meme/meme/mysterybox/reward`, {
     params: { address },
   });
+
+export const authLogin = (data: {
+  address: string;
+  siganture: string;
+}): Promise<Response> =>
+  http.post(`${BASE_URL_API}/auth/login`, {
+    ...data,
+  });

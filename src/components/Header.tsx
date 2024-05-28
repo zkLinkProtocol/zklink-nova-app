@@ -23,7 +23,7 @@ import {
   useConnectors,
 } from "wagmi";
 import styled from "styled-components";
-import { scrollToTop, showAccount } from "@/utils";
+import { scrollToTop, showAccount, sleep } from "@/utils";
 import { useCallback, useEffect, useState } from "react";
 import {
   setInvite,
@@ -38,10 +38,11 @@ import {
   setSignatureAddress,
   setIsOkxFlag,
   setIsOkxUser,
+  setApiToken,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { getInvite, getUserTvl, okxVisitTask, visitReward } from "@/api";
+import { authLogin, getInvite, okxVisitTask, visitReward } from "@/api";
 import { FaBars, FaTimes } from "react-icons/fa";
 import {
   useConnectModal,
@@ -57,6 +58,8 @@ import { eventBus } from "@/utils/event-bus";
 import { set } from "lodash";
 import { AiOutlineDown } from "react-icons/ai";
 import { FUSION_DANCE_PARADE_URL } from "@/constants";
+import useSignature from "@/hooks/useSignature";
+import axios from "axios";
 
 const NavNet = styled.div`
   background: #313841;
@@ -134,6 +137,8 @@ export default function Header() {
     invite,
     isActiveUser,
     signatureAddress,
+    signature,
+    apiToken,
     inviteCode,
     isOkxFlag,
     isOkxUser,
@@ -238,10 +243,20 @@ export default function Header() {
     }
   };
   const getInviteFunc = async () => {
-    if (!address) return;
-    const res = await getInvite(address);
-    if (res?.result) {
-      dispatch(setInvite(res?.result));
+    if (!address || !apiToken) return;
+
+    try {
+      await sleep(500);
+      const res = await getInvite(address);
+      if (res?.result) {
+        dispatch(setInvite(res?.result));
+      }
+    } catch (error) {
+      if ((error as any)?.statusCode) {
+        console.log("invite error", error);
+        localStorage.removeItem("API_TOKEN");
+        dispatch(setApiToken(""));
+      }
     }
   };
 
@@ -259,21 +274,56 @@ export default function Header() {
     };
   }, []);
 
-  useEffect(() => {
-    getInviteFunc();
+  const { handleSign } = useSignature();
 
+  const getJWT = async () => {
+    if (!address || !signature) return;
+    const res = await authLogin({
+      address,
+      siganture: signature,
+    });
+    console.log("auth login", res);
+
+    if (res.status === "0" && !!res?.result) {
+      dispatch(setApiToken(res.result));
+      localStorage.setItem("API_TOKEN", res.result);
+    }
+  };
+
+  useEffect(() => {
     if (!!signatureAddress && !!address && address !== signatureAddress) {
       dispatch(setSignature(""));
       dispatch(setSignatureAddress(""));
       dispatch(setTwitterAccessToken(""));
+      dispatch(setApiToken(""));
+      localStorage.removeItem("API_TOKEN");
     }
-  }, [signatureAddress, address]);
+
+    console.log("address", address);
+    console.log("signature", signature);
+
+    if (!!address && !signature) {
+      handleSign();
+    }
+
+    if (!!address && !!signature && !apiToken) {
+      getJWT();
+    }
+  }, [signatureAddress, address, signature]);
+
+  useEffect(() => {
+    if (apiToken) {
+      getInviteFunc();
+    }
+  }, [apiToken, address]);
 
   useEffect(() => {
     if (!isConnected) {
       dispatch(setSignature(""));
+      dispatch(setApiToken(""));
       dispatch(setDepositTx(""));
       dispatch(setInvite(null));
+      localStorage.removeItem("API_TOKEN");
     }
   }, [isConnected]);
 

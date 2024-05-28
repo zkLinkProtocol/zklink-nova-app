@@ -18,6 +18,7 @@ export interface airdropState {
   depositTx: string;
   isCheckedInviteCode: boolean;
   signatureAddress: string;
+  apiToken: string;
   isOkxFlag: boolean;
   isOkxUser: boolean;
   isAdHide: boolean;
@@ -42,6 +43,7 @@ const initialState: airdropState = {
   depositTx: "",
   isCheckedInviteCode: false,
   signatureAddress: "",
+  apiToken: "",
   isOkxFlag: false,
   isOkxUser: false,
   isAdHide: false,
@@ -112,6 +114,9 @@ export const airdrop = createSlice({
     setIsNovaChadNftHide(state, action: PayloadAction<boolean>) {
       state.isNovaChadNftHide = action.payload;
     },
+    setApiToken(state, action: PayloadAction<string>) {
+      state.apiToken = action.payload;
+    },
   },
 });
 
@@ -136,5 +141,6 @@ export const {
   setIsOkxUser,
   setIsAdHide,
   setIsNovaChadNftHide,
+  setApiToken,
 } = airdrop.actions;
 export default airdrop.reducer;
