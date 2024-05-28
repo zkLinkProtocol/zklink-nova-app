@@ -1,4 +1,4 @@
-import { bindTwitter, getTwitterAccessToken, getUserTvl } from "@/api";
+import { bindTwitter, getInvite, getTwitterAccessToken } from "@/api";
 import { RootState } from "@/store";
 import { CardBox } from "@/styles/common";
 import { getRandomNumber, sleep } from "@/utils";
@@ -15,7 +15,7 @@ const env = import.meta.env.VITE_ENV;
 const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
 const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
 
-export default ({ binded }: { binded: boolean }) => {
+export default () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [twitterLoading, setTwitterLoading] = useState(false);
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -147,11 +147,11 @@ export default ({ binded }: { binded: boolean }) => {
   const verifyTwitter = async () => {
     if (!address) return;
     setTwitterLoading(true);
-    const res = await getUserTvl(address);
+    const res = await getInvite(address);
     console.log("getUserTvlFunc", res);
     setTwitterLoading(false);
 
-    if (res.result?.binded) {
+    if (res.result?.twitterHandler) {
       setIsSucceed(true);
     } else {
       toast.error(

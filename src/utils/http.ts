@@ -10,6 +10,20 @@ const http = axios.create({
 //     // if (_.isPlainObject(data)) data = qs.stringify(data);
 //     return data;
 // };
+
+http.interceptors.request.use(
+  (config) => {
+    const apiToken = localStorage.getItem("API_TOKEN");
+    if (!!apiToken) {
+      config.headers["Authorization"] = `Bearer ${apiToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 http.interceptors.response.use(
   (response) => {
     return response.data;
