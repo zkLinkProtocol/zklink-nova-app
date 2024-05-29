@@ -67,6 +67,8 @@ export default () => {
 
   const [isBind, setIsBind] = useState(false);
 
+  const [twitterAccessToken, setTwitterAccessToken] = useState("");
+
   const bindTwitterFunc = async (code: string) => {
     if (!address) return;
     console.log("twitter auth code", code);
@@ -82,48 +84,48 @@ export default () => {
       redirect_uri: twitterCallbackURL,
       code_verifier: "challenge",
     };
-    let access_token = "";
     try {
       const res = await getTwitterAccessToken(params);
       if (res.access_token) {
-        access_token = res.access_token;
+        await sleep(5000);
+        setTwitterLoading(false);
+        setTwitterAccessToken(res.access_token);
       }
     } catch (error) {
       await sleep(5000);
+      setTwitterLoading(false);
       toastTwitterError();
     }
     // const { access_token } = await getTwitterAccessToken(params);
     // console.log(access_token);
 
-    await sleep(5000);
-
-    if (access_token && access_token !== "") {
-      try {
-        const res = await bindTwitter(address, access_token);
-        console.log("bind twitter res", res);
-        if (Number(res?.status) === 0) {
-          eventBus.emit("getInvite");
-          setIsBind(true);
-          setTwitterLoading(false);
-        } else {
-          setTwitterLoading(false);
-          toastTwitterError(res.message);
-        }
-      } catch (error: any) {
-        console.log("bind twitter error", error);
-        setTwitterLoading(false);
-        toastTwitterError(
-          error?.message === "twitter has been tied"
-            ? "Please try a different Twitter/X account"
-            : error?.message
-        );
-      }
-    } else {
-      setTwitterLoading(false);
-      toastTwitterError();
-    }
-
     setSearchParams("");
+  };
+
+  const verifyTwitterFunc = async () => {
+    if (!address || !twitterAccessToken) return;
+    setTwitterLoading(true);
+
+    try {
+      const res = await bindTwitter(address, twitterAccessToken);
+      console.log("bind twitter res", res);
+      if (Number(res?.status) === 0) {
+        eventBus.emit("getInvite");
+        setIsBind(true);
+        setTwitterLoading(false);
+      } else {
+        setTwitterLoading(false);
+        toastTwitterError(res.message);
+      }
+    } catch (error: any) {
+      console.log("bind twitter error", error);
+      setTwitterLoading(false);
+      toastTwitterError(
+        error?.message === "twitter has been tied"
+          ? "Please try a different Twitter/X account"
+          : error?.message
+      );
+    }
   };
 
   useEffect(() => {
@@ -221,7 +223,7 @@ export default () => {
             </span>
           </div>
           <div className="flex items-center gap-[0.75rem]">
-            {isBind || invite?.twitterHandler ? (
+            {twitterAccessToken ? (
               <Button
                 className="gradient-btn"
                 isLoading={twitterLoading}
@@ -232,7 +234,7 @@ export default () => {
             ) : (
               <Button
                 className="gradient-btn"
-                onClick={handleConnectTwitter}
+                onClick={verifyTwitterFunc}
                 isLoading={twitterLoading}
               >
                 Connect Twitter/X
