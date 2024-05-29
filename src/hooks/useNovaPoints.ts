@@ -52,11 +52,9 @@ export default () => {
       setLayerbankNovaPoints(0);
       return;
     }
-    const { data } = await getLayerbankNovaPoints(address);
-    if (data && Array.isArray(data) && data.length > 0) {
-      const points = data.reduce((prev, item) => prev + item.realPoints, 0);
-      setLayerbankNovaPoints(points);
-    }
+    const { data } = await getNovaProjectPoints(address, "layerbank");
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setLayerbankNovaPoints(points);
   };
 
   const getLinkswapNovaPointsFunc = async () => {
