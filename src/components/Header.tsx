@@ -23,8 +23,8 @@ import {
   useConnectors,
 } from "wagmi";
 import styled from "styled-components";
-import { scrollToTop, showAccount } from "@/utils";
-import { useCallback, useEffect, useState } from "react";
+import { scrollToTop, showAccount, sleep } from "@/utils";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import {
   setInvite,
   setSignature,
@@ -38,10 +38,11 @@ import {
   setSignatureAddress,
   setIsOkxFlag,
   setIsOkxUser,
+  setApiToken,
 } from "@/store/modules/airdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
-import { getInvite, okxVisitTask, visitReward } from "@/api";
+import { authLogin, getInvite, okxVisitTask, visitReward } from "@/api";
 import { FaBars, FaTimes } from "react-icons/fa";
 import {
   useConnectModal,
@@ -57,6 +58,8 @@ import { eventBus } from "@/utils/event-bus";
 import { set } from "lodash";
 import { AiOutlineDown } from "react-icons/ai";
 import { FUSION_DANCE_PARADE_URL } from "@/constants";
+import useSignature from "@/hooks/useSignature";
+import axios from "axios";
 
 const NavNet = styled.div`
   background: #313841;
@@ -134,6 +137,8 @@ export default function Header() {
     invite,
     isActiveUser,
     signatureAddress,
+    signature,
+    apiToken,
     inviteCode,
     isOkxFlag,
     isOkxUser,
@@ -144,9 +149,6 @@ export default function Header() {
   const [searchParams] = useSearchParams();
 
   const location = useLocation();
-  const isActive = useCallback(() => {
-    return isConnected && Boolean(invite?.code);
-  }, [isConnected, invite]);
 
   const visitRewardFunc = async () => {
     if (!address) return;
@@ -241,10 +243,20 @@ export default function Header() {
     }
   };
   const getInviteFunc = async () => {
-    if (!address) return;
-    const res = await getInvite(address);
-    if (res?.result) {
-      dispatch(setInvite(res?.result));
+    if (!address || !apiToken) return;
+
+    console.log("getInviteFunc ===========", address, apiToken);
+    try {
+      const res = await getInvite(address);
+      if (res?.result) {
+        dispatch(setInvite(res?.result));
+      }
+    } catch (error) {
+      if ((error as any)?.statusCode) {
+        console.log("invite error", error);
+        localStorage.removeItem("API_TOKEN");
+        dispatch(setApiToken(""));
+      }
     }
   };
 
@@ -262,23 +274,59 @@ export default function Header() {
     };
   }, []);
 
-  useEffect(() => {
-    getInviteFunc();
+  const { handleSign } = useSignature();
+  const getJWT = async () => {
+    if (!address || !signature) return;
+    const res = await authLogin({
+      address,
+      signature,
+    });
+    console.log("auth login", res);
 
-    if (!!signatureAddress && !!address && address !== signatureAddress) {
-      dispatch(setSignature(""));
-      dispatch(setSignatureAddress(""));
-      dispatch(setTwitterAccessToken(""));
+    if (res.status === "0" && !!res?.result) {
+      dispatch(setApiToken(res.result));
+      localStorage.setItem("API_TOKEN", res.result);
+      window.location.reload();
+      // forceUpdate();
     }
-  }, [signatureAddress, address]);
+  };
+
+  useEffect(() => {
+    if (!!signatureAddress && !!address && address !== signatureAddress) {
+      onDisconnect();
+      dispatch(setApiToken(""));
+      localStorage.removeItem("API_TOKEN");
+    }
+  }, [signatureAddress, address, signature]);
+
+  useEffect(() => {
+    if (address && !signature) {
+      handleSign();
+    }
+  }, [address, signature]);
+
+  useEffect(() => {
+    if (signature && !apiToken) {
+      getJWT();
+    }
+  }, [signature, apiToken]);
+
+  useEffect(() => {
+    if (address && apiToken) {
+      getInviteFunc();
+    }
+  }, [apiToken, address]);
 
   useEffect(() => {
     if (!isConnected) {
       dispatch(setSignature(""));
+      dispatch(setSignatureAddress(""));
       dispatch(setDepositTx(""));
       dispatch(setInvite(null));
+      dispatch(setApiToken(""));
+      localStorage.removeItem("API_TOKEN");
     }
-  }, [isConnected]);
+  }, [isConnected, address]);
 
   useEffect(() => {
     if (isConnected && Boolean(invite?.code)) {
@@ -302,16 +350,6 @@ export default function Header() {
       console.log("=====================>disconnect");
     }
   };
-
-  const connections = useConnections();
-  // const connectors = useConnectors();
-  const connectorClient = useConnectorClient();
-
-  useEffect(() => {
-    console.log("======================>connections", connections);
-    console.log("======================>connectors", connectors);
-    console.log("======================>ConnectorClient", connectorClient);
-  }, [connections, connectors, connectorClient]);
 
   const handleCopyAddress = () => {
     if (!address) return;

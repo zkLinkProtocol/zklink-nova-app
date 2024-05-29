@@ -23,7 +23,6 @@ import {
   getRsethPoints,
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
-  getUserTvl,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -167,11 +166,6 @@ export default function Dashboard() {
   const [nftPhase, setNftPhase] = useState(2); // default: phase 2
   const novaChadNftModal = useDisclosure();
   const { isMemeMysteryboxReward } = useNovaChadNftStatus();
-  const [userTvl, setUserTvl] = useState<UserTvlData>({
-    binded: false,
-    groupTvl: 0,
-    referrerTvl: 0,
-  });
 
   const {
     novaPoints,
@@ -201,19 +195,6 @@ export default function Dashboard() {
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
-
-  const getUserTvlFunc = async () => {
-    if (!address) return;
-    const res = await getUserTvl(address);
-    console.log("getUserTvlFunc", res);
-    if (res.result) {
-      setUserTvl({
-        binded: res.result.binded,
-        groupTvl: Number(res.result.groupTvl) || 0,
-        referrerTvl: Number(res.result.referrerTvl) || 0,
-      });
-    }
-  };
 
   const getAccountRefferalsTVLFunc = async () => {
     if (!address) return;
@@ -437,7 +418,6 @@ export default function Dashboard() {
     getLayerbankPufferPointsFunc();
     getRoyaltyBoosterFunc();
     getRsethPointsFunc();
-    getUserTvlFunc();
     getAllsparkTradePointsFunc();
   }, [address]);
 
@@ -1079,7 +1059,7 @@ export default function Dashboard() {
 
         {/* Right: tvl ... data */}
         <div className="md:w-full maxWid">
-          {!userTvl.binded && <TwitterVerify binded={userTvl.binded} />}
+          {!invite?.twitterHandler && <TwitterVerify />}
 
           <TvlSummary
             totalTvl={totalTvl}

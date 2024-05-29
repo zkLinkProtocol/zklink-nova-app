@@ -8,6 +8,7 @@ type Response = {
   result?: any;
   error?: any;
   data?: any;
+  statusCode?: number;
 };
 
 const isProd = import.meta.env.PROD;
@@ -563,7 +564,10 @@ export const bindTwitter = (
   });
 };
 
-export const getUserTvl = (address: string): Promise<Response> =>
-  http.get(`${BASE_URL_API}/invite/user/tvl`, {
-    params: { address },
+export const authLogin = (data: {
+  address: string;
+  signature: string;
+}): Promise<Response> =>
+  http.post(`${BASE_URL_API}/auth/login`, {
+    ...data,
   });
