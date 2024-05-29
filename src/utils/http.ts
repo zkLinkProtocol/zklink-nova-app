@@ -11,18 +11,19 @@ const http = axios.create({
 //     return data;
 // };
 
-http.interceptors.request.use(
-  (config) => {
-    const apiToken = localStorage.getItem("API_TOKEN");
-    if (!!apiToken) {
-      config.headers["Authorization"] = `Bearer ${apiToken}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// http.interceptors.request.use(
+//   (config) => {
+//     // console.log("config", config);
+//     const apiToken = localStorage.getItem("API_TOKEN");
+//     if (!!apiToken) {
+//       config.headers["Authorization"] = `Bearer ${apiToken}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 http.interceptors.response.use(
   (response) => {
