@@ -1070,9 +1070,9 @@ export default function Dashboard() {
           />
 
           {/* Group Milestone */}
-          <div className="mt-[2rem]">
+          {/* <div className="mt-[2rem]">
             <GroupMilestone groupTvl={groupTvl} />
-          </div>
+          </div> */}
 
           <div className="mt-[2rem]">
             {/* Tabs btn: Assets | Trademark NFTs | Referral  */}
