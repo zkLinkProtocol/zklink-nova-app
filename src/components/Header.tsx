@@ -286,7 +286,7 @@ export default function Header() {
     if (res.status === "0" && !!res?.result) {
       dispatch(setApiToken(res.result));
       localStorage.setItem("API_TOKEN", res.result);
-      window.location.reload();
+      // window.location.reload();
       // forceUpdate();
     }
   };
