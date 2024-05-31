@@ -340,11 +340,11 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Loyalty Booster
                 </h4>
                 <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
-                  An extra boost for Loyalty users, tied with days in the
-                  Aggregation parade:
+                  An extra boost for Loyalty users,tied with days in the
+                  Aggregation parade (capped at 50%):
                   <br />
                   <br />
-                  Loyalty Booster = 0.5% * days joined.
+                  Loyalty Booster = min(50%, 0.5%*days joined)
                 </p>
               </div>
             )}
