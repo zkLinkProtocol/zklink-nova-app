@@ -55,6 +55,7 @@ import { eventBus } from "@/utils/event-bus";
 import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
 import TwitterVerify from "@/components/Dashboard/TwitterVerify";
 import axios from "axios";
+import NovaDropLink from "@/components/Dashboard/NovaDropLink";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -1032,6 +1033,7 @@ export default function Dashboard() {
       <div className="relative md:flex gap-[1.5rem] md:px-[4.75rem] px-[1rem] z-[1] pt-[1rem]">
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem] z-10">
+          <NovaDropLink />
           <NovaCharacter />
           <NovaPoints
             groupTvl={groupTvl}
