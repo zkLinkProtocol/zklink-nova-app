@@ -34,7 +34,7 @@ interface INovaPointsProps {
   royaltyBooster: number;
   okxPoints: number;
   kolPoints: number;
-  trademarkPoints: number;
+  otherNovaPoints: number;
   totalNovaPoints: number;
   kelpMiles: number;
   kelpEigenlayerPoints: number;
@@ -139,7 +139,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     royaltyBooster,
     okxPoints,
     kolPoints,
-    trademarkPoints,
+    otherNovaPoints,
     totalNovaPoints,
     kelpMiles,
     kelpEigenlayerPoints,
@@ -244,22 +244,21 @@ export default function NovaPoints(props: INovaPointsProps) {
               render={() => (
                 <div>
                   <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by Your Holding</span>
-                    <span>
-                      {formatNumberWithUnit(novaPoints + okxPoints + kolPoints)}
-                    </span>
+                    <span>Earned by Holding & Depositing</span>
+                    <span>{formatNumberWithUnit(novaPoints + kolPoints)}</span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned from Interacting with dApps</span>
+                    <span>{formatNumberWithUnit(dAppNovaPoints)}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by Referring Friends</span>
                     <span>{formatNumberWithUnit(referPoints)}</span>
                   </p>
+
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by interacting with dApp</span>
-                    <span>{formatNumberWithUnit(dAppNovaPoints)}</span>
-                  </p>
-                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by opening invite box</span>
-                    <span>{trademarkPoints}</span>
+                    <span>Earned by Other Campaign Activities</span>
+                    <span>{otherNovaPoints + okxPoints}</span>
                   </p>
                   {/* <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by OKX points</span>
