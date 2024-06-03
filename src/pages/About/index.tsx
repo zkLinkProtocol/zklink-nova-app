@@ -273,7 +273,12 @@ export default function About() {
             .
           </div>
           <div>
-            <img src="/img/image2.svg" alt="" className="w-full" />
+            <img
+              src="/img/image2.svg"
+              alt=""
+              className="w-full"
+              onLoad={scrollToAnchor}
+            />
           </div>
         </div>
         <div className="paragraph">
