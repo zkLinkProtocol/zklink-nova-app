@@ -72,7 +72,7 @@ export default () => {
     }
   };
 
-  const trademarkPoints = useMemo(() => {
+  const otherNovaPoints = useMemo(() => {
     const points = Number(invite?.points) || 0;
     return address ? points : 0;
   }, [invite?.points]);
@@ -240,7 +240,7 @@ export default () => {
     const points =
       novaPoints +
       referPoints +
-      trademarkPoints +
+      otherNovaPoints +
       okxPoints +
       kolPoints +
       dAppNovaPoints;
@@ -249,7 +249,7 @@ export default () => {
   }, [
     novaPoints,
     referPoints,
-    trademarkPoints,
+    otherNovaPoints,
     okxPoints,
     kolPoints,
     dAppNovaPoints,
@@ -292,7 +292,7 @@ export default () => {
     referPoints,
     layerbankNovaPoints,
     linkswapNovaPoints,
-    trademarkPoints,
+    otherNovaPoints,
     okxPoints,
     kolPoints,
     totalNovaPoints,

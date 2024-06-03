@@ -180,7 +180,7 @@ export default function Dashboard() {
     mesonNovaPoints,
     owltoNovaPoints,
     dAppNovaPoints,
-    trademarkPoints,
+    otherNovaPoints,
     okxPoints,
     kolPoints,
     totalNovaPoints,
@@ -1048,7 +1048,7 @@ export default function Dashboard() {
             royaltyBooster={royaltyBooster}
             okxPoints={okxPoints}
             kolPoints={kolPoints}
-            trademarkPoints={trademarkPoints}
+            otherNovaPoints={otherNovaPoints}
             totalNovaPoints={totalNovaPoints}
             kelpMiles={kelpMiles}
             kelpEigenlayerPoints={kelpEigenlayerPoints}
