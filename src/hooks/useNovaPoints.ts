@@ -24,6 +24,9 @@ export default () => {
   const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
   const [linkswapNovaPoints, setLinkswapNovaPoints] = useState(0);
 
+  const [novaSwapNovaPoints, setNovaSwapNovaPoints] = useState(0);
+  const [eddyFinanceNovaPoints, setEddyFinanceNovaPoints] = useState(0);
+
   const getAccountPointFunc = useCallback(async () => {
     if (!address) {
       setNovaPoints(0);
@@ -49,11 +52,9 @@ export default () => {
       setLayerbankNovaPoints(0);
       return;
     }
-    const { data } = await getLayerbankNovaPoints(address);
-    if (data && Array.isArray(data) && data.length > 0) {
-      const points = data.reduce((prev, item) => prev + item.realPoints, 0);
-      setLayerbankNovaPoints(points);
-    }
+    const { data } = await getNovaProjectPoints(address, "layerbank");
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setLayerbankNovaPoints(points);
   };
 
   const getLinkswapNovaPointsFunc = async () => {
@@ -71,7 +72,7 @@ export default () => {
     }
   };
 
-  const trademarkPoints = useMemo(() => {
+  const otherNovaPoints = useMemo(() => {
     const points = Number(invite?.points) || 0;
     return address ? points : 0;
   }, [invite?.points]);
@@ -101,6 +102,7 @@ export default () => {
     getInterportNovaPointsFunc();
     getAllsparkNovaPointsFunc();
     getLogxNovaPointsFunc();
+    getNovaSwapNovaPointsFunc(), getEddyFinanceNovaPointsFunc();
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -183,6 +185,22 @@ export default () => {
     setLogxNovaPoints(points);
   };
 
+  const getNovaSwapNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "novaswap");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setNovaSwapNovaPoints(points);
+  };
+
+  const getEddyFinanceNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "eddy");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setEddyFinanceNovaPoints(points);
+  };
+
   const dAppNovaPoints: number = useMemo(() => {
     return (
       layerbankNovaPoints +
@@ -195,7 +213,9 @@ export default () => {
       orbiterNovaPoints +
       interportNovaPoints +
       allsparkNovaPoints +
-      logxNovaPoints
+      logxNovaPoints +
+      novaSwapNovaPoints +
+      eddyFinanceNovaPoints
     );
   }, [
     layerbankNovaPoints,
@@ -204,11 +224,12 @@ export default () => {
     izumiNovaPoints,
     symbiosisNovaPoints,
     mesonNovaPoints,
-    owltoNovaPoints,
     orbiterNovaPoints,
     interportNovaPoints,
     allsparkNovaPoints,
     logxNovaPoints,
+    novaSwapNovaPoints,
+    eddyFinanceNovaPoints,
   ]);
 
   useEffect(() => {
@@ -219,7 +240,7 @@ export default () => {
     const points =
       novaPoints +
       referPoints +
-      trademarkPoints +
+      otherNovaPoints +
       okxPoints +
       kolPoints +
       dAppNovaPoints;
@@ -228,7 +249,7 @@ export default () => {
   }, [
     novaPoints,
     referPoints,
-    trademarkPoints,
+    otherNovaPoints,
     okxPoints,
     kolPoints,
     dAppNovaPoints,
@@ -271,7 +292,7 @@ export default () => {
     referPoints,
     layerbankNovaPoints,
     linkswapNovaPoints,
-    trademarkPoints,
+    otherNovaPoints,
     okxPoints,
     kolPoints,
     totalNovaPoints,
@@ -290,5 +311,7 @@ export default () => {
     allsparkNovaPoints,
     logxNovaPoints,
     getAllNovaPoints,
+    novaSwapNovaPoints,
+    eddyFinanceNovaPoints,
   };
 };

@@ -34,7 +34,7 @@ interface INovaPointsProps {
   royaltyBooster: number;
   okxPoints: number;
   kolPoints: number;
-  trademarkPoints: number;
+  otherNovaPoints: number;
   totalNovaPoints: number;
   kelpMiles: number;
   kelpEigenlayerPoints: number;
@@ -139,7 +139,7 @@ export default function NovaPoints(props: INovaPointsProps) {
     royaltyBooster,
     okxPoints,
     kolPoints,
-    trademarkPoints,
+    otherNovaPoints,
     totalNovaPoints,
     kelpMiles,
     kelpEigenlayerPoints,
@@ -244,22 +244,21 @@ export default function NovaPoints(props: INovaPointsProps) {
               render={() => (
                 <div>
                   <p className="flex justify-between gap-4 items-center font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by Your Holding</span>
-                    <span>
-                      {formatNumberWithUnit(novaPoints + okxPoints + kolPoints)}
-                    </span>
+                    <span>Earned by Holding & Depositing</span>
+                    <span>{formatNumberWithUnit(novaPoints + kolPoints)}</span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
+                    <span>Earned from Interacting with dApps</span>
+                    <span>{formatNumberWithUnit(dAppNovaPoints)}</span>
                   </p>
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by Referring Friends</span>
                     <span>{formatNumberWithUnit(referPoints)}</span>
                   </p>
+
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by interacting with dApp</span>
-                    <span>{formatNumberWithUnit(dAppNovaPoints)}</span>
-                  </p>
-                  <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
-                    <span>Earned by opening invite box</span>
-                    <span>{trademarkPoints}</span>
+                    <span>Earned by Other Campaign Activities</span>
+                    <span>{otherNovaPoints + okxPoints}</span>
                   </p>
                   {/* <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by OKX points</span>
@@ -274,10 +273,10 @@ export default function NovaPoints(props: INovaPointsProps) {
             />
 
             <GreenTag
-              data-tooltip-id="booster-learn-more"
+              // data-tooltip-id="booster-learn-more"
               className="py-[0.375rem] w-[5.625rem] text-[1rem]"
             >
-              {formatNumber2(totalBooster)}x
+              {royaltyBooster}x
             </GreenTag>
 
             <ReactTooltip
@@ -340,11 +339,11 @@ export default function NovaPoints(props: INovaPointsProps) {
                   Loyalty Booster
                 </h4>
                 <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
-                  An extra boost for Loyalty users, tied with days in the
-                  Aggregation parade:
+                  An extra boost for Loyalty users,tied with days in the
+                  Aggregation parade (capped at 50%):
                   <br />
                   <br />
-                  Loyalty Booster = 0.5% * days joined.
+                  Loyalty Booster = min(50%, 0.5%*days joined)
                 </p>
               </div>
             )}

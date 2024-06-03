@@ -13,8 +13,9 @@ const http = axios.create({
 
 http.interceptors.request.use(
   (config) => {
+    // console.log("config", config, config.url?.includes("/lrt-points"));
     const apiToken = localStorage.getItem("API_TOKEN");
-    if (!!apiToken) {
+    if (!!apiToken && !config.url?.includes("/lrt-points")) {
       config.headers["Authorization"] = `Bearer ${apiToken}`;
     }
     return config;

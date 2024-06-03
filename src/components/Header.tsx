@@ -286,7 +286,7 @@ export default function Header() {
     if (res.status === "0" && !!res?.result) {
       dispatch(setApiToken(res.result));
       localStorage.setItem("API_TOKEN", res.result);
-      window.location.reload();
+      // window.location.reload();
       // forceUpdate();
     }
   };
@@ -306,7 +306,7 @@ export default function Header() {
   }, [address, signature]);
 
   useEffect(() => {
-    if (signature && !apiToken) {
+    if (signature) {
       getJWT();
     }
   }, [signature, apiToken]);
@@ -316,6 +316,23 @@ export default function Header() {
       getInviteFunc();
     }
   }, [apiToken, address]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+
+    if (address && signature) {
+      timer = setInterval(() => {
+        // This will run every hour
+        getJWT();
+      }, 60 * 60 * 1000);
+    } else {
+      timer && clearInterval(timer);
+    }
+
+    return () => {
+      timer && clearInterval(timer);
+    };
+  }, [address, signature]);
 
   useEffect(() => {
     if (!isConnected) {
