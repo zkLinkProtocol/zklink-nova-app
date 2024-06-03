@@ -51,133 +51,151 @@ export default function Bridge() {
     <>
       <div className="text-base mt-8">
         <h2 className="text-[1.5rem] text-[#fff] font-[700]">
-          Aggregation Parade Phase II
+          Aggregation Parade Season II
         </h2>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          The minimal entry requirement has been lowered from 0.25ETH/
-          equivalent to{" "}
-          <b className="text-[#fff] font-[700]">0.1ETH/ equivalent</b>.
+          1. 💎Continue reaping loyalty rewards from season I by maintaining
+          your funds on Nova L3
         </p>
         <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          Anti-Sybil measures will be taken once withdrawal is available. For
-          instance, users won't have instant deposit rewards when they deposit
-          assets.
+          2. 🎯Get up to x5 Nova Point boost for Merge Tokens
         </p>
-
-        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
-          ❤️ Rewarding Loyal Users of Aggregation Parade:
-        </h3>
-        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>
-            All users' points will be boosted by a Loyalty Booster, which is
-            calculated in proportion to the days they joined the Agg parade:
-          </p>
-          <ul>
-            <li className="before">
-              Loyalty Booster= 0.5% * num of days they joined
-            </li>
-            <li className="before">
-              Nova point_after the boost= (1+loyalty booster) * Nova
-              point_before the boost
-            </li>
-          </ul>
-        </div>
-
-        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
-          🙆 Rewarding zkLink's Oldest Friends:
-        </h3>
-        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>
-            zkLink's oldest friends (previous campaign participants) taking part
-            in the zkLink Aggregation Parade will have the opportunity to win
-            one of the following rewards: point boosters, NFT trademarks, and
-            Lynks. See examples of past campaigns below.
-          </p>
-          <br />
-          <ul>
-            <li className="before">
-              zkLink Nexus Playground Alpha Mainnet Celebration Campaign
-            </li>
-            <li className="before">zkLink Summer Tour</li>
-            <li className="before">Dunkirk Asset Recovery Test</li>
-            <li className="before">zkLink loyalty NFT</li>
-            <li className="before">And more</li>
-          </ul>
-        </div>
-
-        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
-          🚀 Token Merge Bonus (begins 10AM Apr 9, 2024 UTC), unlock another
-          chance to boost your Nova points!
-        </h3>
-        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>💎merged wBTC: 2.5x;</p>
-          <p>💎merged stablecoins: 3x</p>
-        </div>
-        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
-          💡 Ecosystem Bootstrap Bonuses:
-        </h3>
-        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
-          <p>
-            Engage with Nova dApps for additional Nova point incentives (1.5 -
-            2x boost for asset interactions). Read more details{" "}
-            <a
-              href="https://blog.zk.link/aggregation-parade-phase-ii-defis-turn-to-blossom-on-zklink-nova-7b30e2ab1d82"
-              target="_blank"
-              style={{ color: "#03d498" }}
-            >
-              here
-            </a>
-            .
-            <br />
-            <br />
-            More ECO DApps bonus boost will be updated by Apr 14th, 2024
-          </p>
-        </div>
-      </div>
-
-      <div className="text-base mt-8 text-[#A0A5AD]">
-        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
-          💻 How we calculate Nova Points
-        </h3>
-        <p className="mt-[0.75rem]">
-          You can see the detail and formula of how we calculate Nova points{" "}
-          <a
-            href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
-            target="_blank"
-            style={{ color: "#03d498" }}
-          >
-            here
-          </a>
-          .
-        </p>
-        <p className="mt-6">
-          <span className="font-bold text-[#fff]">
-            Holding assets on Nova:{" "}
-          </span>
-          Holding any supported assets on Nova allows you to accrue Nova points
-          every 8 hours until the final Nova Point computation date.
-        </p>
-        <p className="mt-6">
-          <span className="font-bold text-[#fff]">Referral Rewards: </span>
-          By inviting friends, you can earn 10% of the Nova points they earn
-          throughout the duration of the Aggregation Parade.
-        </p>
-
-        <p className="mt-6">
-          <span className="font-bold text-[#fff]">Token Multiplier: </span>
-          Tokens are categorized into three tiers, with higher liquidity tokens
-          receiving more Nova Points.
-        </p>
-
-        <p className="mt-6">
-          <span className="font-bold text-[#fff]">Group Multiplier: </span>
-          You, along with the users you've referred and their subsequent
-          referrals, will be placed into the same group. This group has the
-          potential to unlock Group Booster by achieving the following
-          Milestones.
+        <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          3. 🙌Maximize your Nova point boost by interacting with dApps within
+          Nova’s Ecosystem
         </p>
       </div>
     </>
+    // <>
+    //   <div className="text-base mt-8">
+    //     <h2 className="text-[1.5rem] text-[#fff] font-[700]">
+    //       Aggregation Parade Phase II
+    //     </h2>
+    //     <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+    //       The minimal entry requirement has been lowered from 0.25ETH/
+    //       equivalent to{" "}
+    //       <b className="text-[#fff] font-[700]">0.1ETH/ equivalent</b>.
+    //     </p>
+    //     <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+    //       Anti-Sybil measures will be taken once withdrawal is available. For
+    //       instance, users won't have instant deposit rewards when they deposit
+    //       assets.
+    //     </p>
+
+    //     <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+    //       ❤️ Rewarding Loyal Users of Aggregation Parade:
+    //     </h3>
+    //     <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+    //       <p>
+    //         All users' points will be boosted by a Loyalty Booster, which is
+    //         calculated in proportion to the days they joined the Agg parade:
+    //       </p>
+    //       <ul>
+    //         <li className="before">
+    //           Loyalty Booster= 0.5% * num of days they joined
+    //         </li>
+    //         <li className="before">
+    //           Nova point_after the boost= (1+loyalty booster) * Nova
+    //           point_before the boost
+    //         </li>
+    //       </ul>
+    //     </div>
+
+    //     <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+    //       🙆 Rewarding zkLink's Oldest Friends:
+    //     </h3>
+    //     <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+    //       <p>
+    //         zkLink's oldest friends (previous campaign participants) taking part
+    //         in the zkLink Aggregation Parade will have the opportunity to win
+    //         one of the following rewards: point boosters, NFT trademarks, and
+    //         Lynks. See examples of past campaigns below.
+    //       </p>
+    //       <br />
+    //       <ul>
+    //         <li className="before">
+    //           zkLink Nexus Playground Alpha Mainnet Celebration Campaign
+    //         </li>
+    //         <li className="before">zkLink Summer Tour</li>
+    //         <li className="before">Dunkirk Asset Recovery Test</li>
+    //         <li className="before">zkLink loyalty NFT</li>
+    //         <li className="before">And more</li>
+    //       </ul>
+    //     </div>
+
+    //     <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+    //       🚀 Token Merge Bonus (begins 10AM Apr 9, 2024 UTC), unlock another
+    //       chance to boost your Nova points!
+    //     </h3>
+    //     <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+    //       <p>💎merged wBTC: 2.5x;</p>
+    //       <p>💎merged stablecoins: 3x</p>
+    //     </div>
+    //     <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+    //       💡 Ecosystem Bootstrap Bonuses:
+    //     </h3>
+    //     <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+    //       <p>
+    //         Engage with Nova dApps for additional Nova point incentives (1.5 -
+    //         2x boost for asset interactions). Read more details{" "}
+    //         <a
+    //           href="https://blog.zk.link/aggregation-parade-phase-ii-defis-turn-to-blossom-on-zklink-nova-7b30e2ab1d82"
+    //           target="_blank"
+    //           style={{ color: "#03d498" }}
+    //         >
+    //           here
+    //         </a>
+    //         .
+    //         <br />
+    //         <br />
+    //         More ECO DApps bonus boost will be updated by Apr 14th, 2024
+    //       </p>
+    //     </div>
+    //   </div>
+
+    //   <div className="text-base mt-8 text-[#A0A5AD]">
+    //     <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+    //       💻 How we calculate Nova Points
+    //     </h3>
+    //     <p className="mt-[0.75rem]">
+    //       You can see the detail and formula of how we calculate Nova points{" "}
+    //       <a
+    //         href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
+    //         target="_blank"
+    //         style={{ color: "#03d498" }}
+    //       >
+    //         here
+    //       </a>
+    //       .
+    //     </p>
+    //     <p className="mt-6">
+    //       <span className="font-bold text-[#fff]">
+    //         Holding assets on Nova:{" "}
+    //       </span>
+    //       Holding any supported assets on Nova allows you to accrue Nova points
+    //       every 8 hours until the final Nova Point computation date.
+    //     </p>
+    //     <p className="mt-6">
+    //       <span className="font-bold text-[#fff]">Referral Rewards: </span>
+    //       By inviting friends, you can earn 10% of the Nova points they earn
+    //       throughout the duration of the Aggregation Parade.
+    //     </p>
+
+    //     <p className="mt-6">
+    //       <span className="font-bold text-[#fff]">Token Multiplier: </span>
+    //       Tokens are categorized into three tiers, with higher liquidity tokens
+    //       receiving more Nova Points.
+    //     </p>
+
+    //     <p className="mt-6">
+    //       <span className="font-bold text-[#fff]">Group Multiplier: </span>
+    //       You, along with the users you've referred and their subsequent
+    //       referrals, will be placed into the same group. This group has the
+    //       potential to unlock Group Booster by achieving the following
+    //       Milestones.
+    //     </p>
+    //   </div>
+    // </>
   );
 
   const NovaNFT = () => (
@@ -316,9 +334,9 @@ export default function Bridge() {
         </div>
         <div className="px-6 pb-6 md:px-16 lg:px-32 lg:w-1/2">
           <h2 className="text-[32px] md:text-4xl mt-0 font-black leading-10">
-            Bridge To zkLink Nova To Earn Extra Yield & Token Rewards
+            Bridge to zkLink Nova to Earn Nova Points & $ZKL
           </h2>
-          <div className="inline-flex items-center mt-7 bg-[#1E1F24] px-2 py-2 rounded-md">
+          {/* <div className="inline-flex items-center mt-7 bg-[#1E1F24] px-2 py-2 rounded-md">
             {ActiveTypes.map((item, index) => (
               <Button
                 onClick={() => setActiveType(item.value)}
@@ -332,9 +350,11 @@ export default function Bridge() {
               </Button>
             ))}
           </div>
-          {activeType === "nft" ? <NovaNFT /> : <NovaPoints />}
+          {activeType === "nft" ? <NovaNFT /> : <NovaPoints />} */}
+
+          <NovaPoints />
         </div>
-        <div className="relative px-6 md:px-16 lg:px-32 lg:w-1/2">
+        <div className="relative px-6 md:px-16 lg:px-32 lg:w-1/2 md:min-h-[1080px]">
           <div className="hidden md:block">
             <BridgeComponent />
             <ThirdPartyBridge />
