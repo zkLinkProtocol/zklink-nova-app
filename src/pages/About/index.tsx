@@ -185,6 +185,44 @@ export default function About() {
           Nova points which impacts your final reward.
         </div>
 
+        <div className="paragraph">
+          <p className="title">
+            The campaign will be divided into two Seasons:
+          </p>
+          <div>
+            <ul>
+              <li className="before">
+                Season 1 of #zkLinkNovaAggParade Season 1 has concluded and
+                snapshot of Nova Points taken on May 30, 2024, at 12am UTC 
+              </li>
+              <li className="before">
+                Season 2 will commence 31st May 2024 across a 3 month period
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="paragraph">
+          <p className="title">Important updates on Season II</p>
+          <div>
+            <ul>
+              <li className="before">
+                Duration: 31st May 2024 - 31st Aug 2, 2024
+              </li>
+              <li className="before">Group Booster feature will be removed</li>
+              <li className="before">Loyalty Booster will be capped at 50%</li>
+              <li className="before">
+                3% of $ZKL of total supply will be allocated to season II
+              </li>
+              <li className="before">
+                Nova points boost will target rewarding user activities
+                associated with DApp interaction within Nova Ecosystem (Find out
+                more under Eco dApp section)
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div className="paragraph1 title title-2">How to earn Nova points?</div>
         <div className="paragraph">
           You can see the detail and formula of how we calculate Nova points{" "}
@@ -197,13 +235,7 @@ export default function About() {
           </a>
           .
         </div>
-        <div>
-          <img
-            src="/img/image4.svg"
-            className="w-full"
-            onLoad={scrollToAnchor}
-          />
-        </div>
+
         <div className="paragraph">
           <div className="title mt-4">Minimal Entry:</div>
           <div>1. First 7 days 0.1 ETH (Or Equivalent)</div>
@@ -222,7 +254,7 @@ export default function About() {
           </ul>
           <div className="title">
             To join the Aggregation Parade, make sure your deposit surpasses the
-            Minimum Entry.
+            Minimum Entry of 0.1ETH or equivalent.
           </div>
         </div>
         <div className="paragraph">
@@ -240,11 +272,14 @@ export default function About() {
             </a>
             .
           </div>
-          <img
-            src="/img/image2.svg"
-            className="w-full"
-            onLoad={scrollToAnchor}
-          />
+          <div>
+            <img
+              src="/img/image2.svg"
+              alt=""
+              className="w-full"
+              onLoad={scrollToAnchor}
+            />
+          </div>
         </div>
         <div className="paragraph">
           <div>
@@ -266,58 +301,8 @@ export default function About() {
             you will also earn 10 points.
           </div>
         </div>
-        <div className="paragraph">
-          <div className="title">Multiplier</div>
-          <div>
-            <span className="title">Early Bird Multiplier: </span>During Phase 1
-            of the Nova Campaign, withdrawals are temporarily restricted for a{" "}
-            <span className="title">Maximum</span> of 30 days.
-          </div>
-          <div className="marginLeft">a. First week: 2x Nova Points</div>
-          <div className="marginLeft">b. 2nd week: 1.5x Nova Points</div>
-          <div className="marginLeft">c. 3rd & 4th week: 1.2x Nova Points</div>
-          <div className="title">
-            The Early Bird Multiplier{" "}
-            <span className="text-[#03D498]">concludes immediately</span> in the
-            event where zkLink Nova removes the withdrawal restriction.
-          </div>
-        </div>
-        <div className="paragraph">
-          <div>
-            <span className="title">Token Multiplier:</span> Tokens are
-            categorized into three tiers, with higher liquidity tokens receiving
-            more Nova Points.
-          </div>
-        </div>
-        <div className="paragraph">
-          <div>
-            <span className="title">Deposit Multiplier:</span> After making a
-            valid deposit, you will instantly receive a x10 Nova Points boost.
-          </div>
-        </div>
-        <div className="paragraph">
-          <div>
-            <span className="title">Group Multiplier:</span> You, along with the
-            users you've referred and their subsequent referrals, will be placed
-            into the same group. This group has the potential to unlock Group
-            Booster by achieving the following Milestones.
-          </div>
-        </div>
-        <div className="paragraph">
-          <img
-            src="/img/image3.svg"
-            className="w-full"
-            onLoad={scrollToAnchor}
-          />
-        </div>
+
         <div className="paragraph title title-2">How to earn Nova NFTs?</div>
-        <div className="paragraph">
-          <div>You will get ONE of the FOUR Nova SBT once you bridge</div>
-          <div className="before">0.1ETH (In the first 7 days) OR</div>
-          <div className="before">
-            0.25 ETH (After day 7th) into zkLink Nova
-          </div>
-        </div>
 
         {/* <div className='flex paragraph'>
                     <img src="/img/4.png" alt="" className='person'/>
