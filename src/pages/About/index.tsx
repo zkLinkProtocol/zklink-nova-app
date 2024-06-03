@@ -272,6 +272,9 @@ export default function About() {
             </a>
             .
           </div>
+          <div>
+            <img src="/img/image2.svg" alt="" className="w-full" />
+          </div>
         </div>
         <div className="paragraph">
           <div>
