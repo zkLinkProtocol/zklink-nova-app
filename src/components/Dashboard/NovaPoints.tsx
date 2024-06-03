@@ -274,10 +274,10 @@ export default function NovaPoints(props: INovaPointsProps) {
             />
 
             <GreenTag
-              data-tooltip-id="booster-learn-more"
+              // data-tooltip-id="booster-learn-more"
               className="py-[0.375rem] w-[5.625rem] text-[1rem]"
             >
-              {formatNumber2(totalBooster)}x
+              {royaltyBooster}x
             </GreenTag>
 
             <ReactTooltip
