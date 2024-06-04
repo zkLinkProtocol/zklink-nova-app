@@ -453,8 +453,8 @@ export default function Header() {
               </NavbarItem> */}
 
             <NavbarItem>
-              <a href={FUSION_DANCE_PARADE_URL} target="_blank">
-                Fusion Dance Parade🔥
+              <a href="https://zklink.io/novadrop" target="_blank">
+                NovaDrop🔥
               </a>
             </NavbarItem>
             <NavbarItem>
@@ -744,8 +744,8 @@ export default function Header() {
             </NavLink>
           </NavbarMenuItem>
           <NavbarMenuItem>
-            <a href={FUSION_DANCE_PARADE_URL} target="_blank">
-              Fusion Dance Parade🔥
+            <a href="https://zklink.io/novadrop" target="_blank">
+              NovaDrop🔥
             </a>
           </NavbarMenuItem>
 
