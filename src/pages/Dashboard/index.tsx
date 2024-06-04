@@ -936,7 +936,7 @@ export default function Dashboard() {
     };
 
     const arr: EcoDAppsProps[] = [
-      // novaSwap,
+      novaSwap,
       layerbank,
       logx,
       aqua,
