@@ -672,7 +672,7 @@ export default function SoftKYC() {
             YOU'RE ALMOST THERE
           </SubTitleText>
           <TitleText className="text-left md:text-center">
-            To join the zkLink Aggregation Parade
+            To join the zkLink Aggregation Parade S2
           </TitleText>
         </div>
 
