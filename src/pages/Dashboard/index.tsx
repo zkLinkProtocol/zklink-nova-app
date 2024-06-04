@@ -581,10 +581,10 @@ export default function Dashboard() {
     ];
 
     const aqua: EcoDAppsProps = {
-      name: "Aqua",
+      name: "Native Lend",
       handler: "@native_fi",
-      link: "https://aqua.native.org/dashboard/user/?chainId=810180",
-      iconURL: "/img/icon-aqua.svg",
+      link: "https://native.org/lend?utm_campaign=zklink_nova&utm_source=custom&utm_medium=2xpoints?chainId=810180",
+      iconURL: "/img/icon-native.svg",
       booster: "Up to 10x",
       type: "Lending",
       points: aquaPoints,
