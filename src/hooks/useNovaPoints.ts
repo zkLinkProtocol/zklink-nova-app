@@ -5,6 +5,7 @@ import {
   getLayerbankNovaPoints,
   getLinkswapNovaPoints,
   getNovaProjectPoints,
+  getPointsDetail,
 } from "@/api";
 import { RootState } from "@/store";
 import Decimal from "decimal.js";
@@ -26,6 +27,26 @@ export default () => {
 
   const [novaSwapNovaPoints, setNovaSwapNovaPoints] = useState(0);
   const [eddyFinanceNovaPoints, setEddyFinanceNovaPoints] = useState(0);
+
+  const [pointsDetail, setPointsDetail] = useState({
+    refPoints: 0,
+    boostPoints: 0,
+    okxCampaignPoints: 0,
+  });
+
+  const getPointsDetailFunc = async () => {
+    if (!address) return;
+    const { result } = await getPointsDetail();
+    // console.log("getPointsDetail", res);
+    if (result) {
+      setPointsDetail({
+        refPoints: Number(result?.refPoints) || 0,
+        boostPoints: Number(result?.boostPoints) || 0,
+        okxCampaignPoints: Number(result?.okxCampaignPoints) || 0,
+      });
+    }
+    // setPointsDetail(data);
+  };
 
   const getAccountPointFunc = useCallback(async () => {
     if (!address) {
@@ -73,9 +94,14 @@ export default () => {
   };
 
   const otherNovaPoints = useMemo(() => {
-    const points = Number(invite?.points) || 0;
+    const points =
+      (Number(invite?.points) || 0) +
+      pointsDetail.okxCampaignPoints +
+      pointsDetail.refPoints +
+      pointsDetail.boostPoints;
+
     return address ? points : 0;
-  }, [invite?.points]);
+  }, [invite?.points, pointsDetail]);
 
   const kolPoints = useMemo(() => {
     const points =
@@ -102,7 +128,9 @@ export default () => {
     getInterportNovaPointsFunc();
     getAllsparkNovaPointsFunc();
     getLogxNovaPointsFunc();
-    getNovaSwapNovaPointsFunc(), getEddyFinanceNovaPointsFunc();
+    getNovaSwapNovaPointsFunc();
+    getEddyFinanceNovaPointsFunc();
+    getPointsDetailFunc();
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -238,22 +266,10 @@ export default () => {
 
   const totalNovaPoints = useMemo(() => {
     const points =
-      novaPoints +
-      referPoints +
-      otherNovaPoints +
-      okxPoints +
-      kolPoints +
-      dAppNovaPoints;
+      novaPoints + referPoints + otherNovaPoints + kolPoints + dAppNovaPoints;
 
     return points;
-  }, [
-    novaPoints,
-    referPoints,
-    otherNovaPoints,
-    okxPoints,
-    kolPoints,
-    dAppNovaPoints,
-  ]);
+  }, [novaPoints, referPoints, otherNovaPoints, kolPoints, dAppNovaPoints]);
 
   const [symbiosisBridgeNovaPoints, setSymbiosisBridgeNovaPoints] = useState(0);
   const getSymbiosisBridgePointsFunc = async () => {
@@ -310,6 +326,7 @@ export default () => {
     interportNovaPoints,
     allsparkNovaPoints,
     logxNovaPoints,
+    pointsDetail,
     getAllNovaPoints,
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
