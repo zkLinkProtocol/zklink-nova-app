@@ -451,11 +451,18 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => reg.test(item.symbol));
     }
 
-    arr = arr.sort(
-      (a, b) =>
-        Number(findClosestMultiplier(b.multipliers)) -
-        Number(findClosestMultiplier(a.multipliers))
-    );
+    arr = arr
+      .filter(
+        (item) =>
+          item?.multipliers &&
+          Number(findClosestMultiplier(item.multipliers)) !== 0
+      )
+      .sort(
+        (a, b) =>
+          Number(findClosestMultiplier(b.multipliers)) -
+          Number(findClosestMultiplier(a.multipliers))
+      );
+
     setFilterTableList(arr);
 
     // const notNovaFilters = arr.filter((item) => !item.isNova);
