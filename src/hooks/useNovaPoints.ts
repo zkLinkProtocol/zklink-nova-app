@@ -21,7 +21,6 @@ export default () => {
 
   const [novaPoints, setNovaPoints] = useState(0);
   const [referPoints, setReferPoints] = useState(0);
-  const [okxPoints, setOkxPoints] = useState(0);
   const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
   const [linkswapNovaPoints, setLinkswapNovaPoints] = useState(0);
 
@@ -45,28 +44,18 @@ export default () => {
         okxCampaignPoints: Number(result?.okxCampaignPoints) || 0,
       });
     }
-    // setPointsDetail(data);
+
+    setReferPoints(Number(result?.refPoints) || 0);
   };
 
   const getAccountPointFunc = useCallback(async () => {
     if (!address) {
       setNovaPoints(0);
-      setReferPoints(0);
       return;
     }
     const { result } = await getAccountPoint(address);
     setNovaPoints(Number(result?.novaPoint) || 0);
-
-    const apiReferPoints = Number(result?.referPoint) || 0;
-    setReferPoints(
-      !!invite?.triplePoints ? apiReferPoints * 3 : apiReferPoints
-    );
-
-    if (result?.novaPoint !== 0) {
-      const okx = await checkOkx(address);
-      setOkxPoints(okx ? OKX_POINTS : 0);
-    }
-  }, [address, invite?.triplePoints]);
+  }, [address]);
 
   const getLayerbankNovaPointsFunc = async () => {
     if (!address) {
@@ -97,7 +86,6 @@ export default () => {
     const points =
       (Number(invite?.points) || 0) +
       pointsDetail.okxCampaignPoints +
-      pointsDetail.refPoints +
       pointsDetail.boostPoints;
 
     return address ? points : 0;
@@ -309,7 +297,6 @@ export default () => {
     layerbankNovaPoints,
     linkswapNovaPoints,
     otherNovaPoints,
-    okxPoints,
     kolPoints,
     totalNovaPoints,
     izumiNovaPoints,
