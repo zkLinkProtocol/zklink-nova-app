@@ -86,6 +86,8 @@ export const useTokenBalanceList = () => {
       const tokens = [];
       for (const token of supportedTokens) {
         if (token.symbol === "ETH") continue;
+        const multiplier = findClosestMultiplier(token.multipliers ?? []);
+        if (multiplier === 0) continue;
         const item = token.address.find((item) =>
           isSameNetwork(networkKey, item.chain)
         );
@@ -97,7 +99,7 @@ export const useTokenBalanceList = () => {
           );
           tokens.push({
             ...token,
-            multiplier: findClosestMultiplier(token.multipliers ?? []),
+            multiplier: multiplier,
             address: item.l1Address,
             networkKey,
             networkName: item.chain,
