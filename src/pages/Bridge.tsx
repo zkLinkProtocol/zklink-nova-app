@@ -64,6 +64,54 @@ export default function Bridge() {
           3. 🙌Maximize your Nova point boost by interacting with dApps within
           Nova’s Ecosystem
         </p>
+        <p className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          4. Nova Lynks holder of season I & II to split 10M $ZKL (Available for
+          purchase on{" "}
+          <a
+            href="https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-lynks"
+            target="_blank"
+            className="text-[#03d498] underline underline-offset-1"
+          >
+            OKX NFT Marketplace
+          </a>
+          )
+        </p>
+      </div>
+
+      <div>
+        <h3 className="mt-[1.25rem] text-[1rem] text-[#fff] font-[500]">
+          😀 Nova NFT Introduction
+        </h3>
+        <div className="mt-[0.75rem] text-[1rem] text-[#A0A5AD] font-[500]">
+          <p>
+            You will be able to mint one of the four Nova SBT once you bridge a
+            minimal worth of 0.1 ETH.
+          </p>
+        </div>
+      </div>
+      <div className="text-base mt-8">
+        <div className="flex items-center mt-8 mb-8">
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-1.svg"}
+            alt=""
+          />
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-2.svg"}
+            alt=""
+          />
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-3.svg"}
+            alt=""
+          />
+          <img
+            className="w-16 h-16 md:w-20 md:h-20 mr-6"
+            src={"/img/nft-4.svg"}
+            alt=""
+          />
+        </div>
       </div>
     </>
     // <>
