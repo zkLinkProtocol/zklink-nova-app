@@ -1820,24 +1820,12 @@ export default function Bridge(props: IBridgeComponentProps) {
                           </span>
                         </TokenYieldBox>
                       )}
-                      {(item.symbol === "Stone" ||
-                        item.symbol === "wUSDm" ||
-                        item.symbol === "Manta") && (
-                        <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
-                          <span className={`token-yield token-yield-6`}>
-                            Extra Nova
-                          </span>
-                        </TokenYieldBox>
-                      )}
 
                       {(item.symbol === "mstETH" ||
                         item.symbol === "mswETH" ||
                         item.symbol === "mmETH" ||
                         item.symbol === "mwBETH") && (
                         <TokenYieldBox className="flex items-center ml-0 md:ml-2 md:hidden">
-                          <span className={`token-yield token-yield-6`}>
-                            Extra Nova
-                          </span>
                           <span className={`token-yield token-yield-1`}>
                             EL Points
                           </span>
@@ -1880,24 +1868,11 @@ export default function Bridge(props: IBridgeComponentProps) {
                       </TokenYieldBox>
                     )}
 
-                    {(item.symbol === "Stone" ||
-                      item.symbol === "wUSDm" ||
-                      item.symbol === "Manta") && (
-                      <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
-                        <span className={`token-yield token-yield-6`}>
-                          Extra Nova
-                        </span>
-                      </TokenYieldBox>
-                    )}
-
                     {(item.symbol === "mstETH" ||
                       item.symbol === "mswETH" ||
                       item.symbol === "mmETH" ||
                       item.symbol === "mwBETH") && (
                       <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
-                        <span className={`token-yield token-yield-6`}>
-                          Extra Nova
-                        </span>
                         <span className={`token-yield token-yield-1`}>
                           EigenLayer Points
                         </span>
