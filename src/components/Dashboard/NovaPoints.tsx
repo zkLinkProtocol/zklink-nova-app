@@ -32,7 +32,6 @@ interface INovaPointsProps {
   renzoEigenLayerPoints: number;
   magpiePointsData: { points: number; layerPoints: number };
   royaltyBooster: number;
-  okxPoints: number;
   kolPoints: number;
   otherNovaPoints: number;
   totalNovaPoints: number;
@@ -137,7 +136,6 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoEigenLayerPoints,
     magpiePointsData,
     royaltyBooster,
-    okxPoints,
     kolPoints,
     otherNovaPoints,
     totalNovaPoints,
@@ -258,7 +256,7 @@ export default function NovaPoints(props: INovaPointsProps) {
 
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by Other Campaign Activities</span>
-                    <span>{otherNovaPoints + okxPoints}</span>
+                    <span>{otherNovaPoints}</span>
                   </p>
                   {/* <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by OKX points</span>

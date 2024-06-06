@@ -571,3 +571,6 @@ export const authLogin = (data: {
   http.post(`${BASE_URL_API}/auth/login`, {
     ...data,
   });
+
+export const getPointsDetail = (): Promise<Response> =>
+  http.get(`${BASE_URL_API}/referrer/points/detail`);

@@ -181,7 +181,6 @@ export default function Dashboard() {
     owltoNovaPoints,
     dAppNovaPoints,
     otherNovaPoints,
-    okxPoints,
     kolPoints,
     totalNovaPoints,
     symbiosisBridgeNovaPoints,
@@ -193,6 +192,7 @@ export default function Dashboard() {
     logxNovaPoints,
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
+    pointsDetail,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -1046,7 +1046,6 @@ export default function Dashboard() {
             magpiePointsData={magpiePointsData}
             dAppNovaPoints={dAppNovaPoints}
             royaltyBooster={royaltyBooster}
-            okxPoints={okxPoints}
             kolPoints={kolPoints}
             otherNovaPoints={otherNovaPoints}
             totalNovaPoints={totalNovaPoints}
