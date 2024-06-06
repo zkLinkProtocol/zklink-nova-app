@@ -38,6 +38,8 @@ interface INovaPointsProps {
   kelpMiles: number;
   kelpEigenlayerPoints: number;
   dAppNovaPoints: number;
+  bedrockPoints: number;
+  bedrockEigenlayerPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -142,6 +144,8 @@ export default function NovaPoints(props: INovaPointsProps) {
     kelpMiles,
     kelpEigenlayerPoints,
     dAppNovaPoints,
+    bedrockPoints,
+    bedrockEigenlayerPoints,
   } = props;
   // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -186,6 +190,13 @@ export default function NovaPoints(props: INovaPointsProps) {
         pointsValue: kelpMiles,
         eigenlayerValue: kelpEigenlayerPoints,
       },
+      {
+        icon: "/img/icon-bedrock.svg",
+        pointsName: "Bedrock Diamonds",
+        eigenlayerName: "Bedrock",
+        pointsValue: bedrockPoints,
+        eigenlayerValue: bedrockEigenlayerPoints,
+      },
     ];
     if (isHidePoints) {
       setOtherPointsList(otherPoints.filter((item) => item.pointsValue >= 0.1));
@@ -201,6 +212,8 @@ export default function NovaPoints(props: INovaPointsProps) {
     magpiePointsData,
     kelpMiles,
     kelpEigenlayerPoints,
+    bedrockPoints,
+    bedrockEigenlayerPoints,
   ]);
 
   const totalBooster = useMemo(() => {
