@@ -400,6 +400,24 @@ export default function Dashboard() {
     setKelpEigenlayerPoints(elPoints);
   };
 
+  const [bedrockPoints, setBedrockPoints] = useState(0);
+  const [bedrockEigenlayerPoints, setBedrockEigenlayerPoints] = useState(0);
+
+  const getBedrockPointsFunc = async () => {
+    // const address = "0x0b16661A9Fd190f2e6bE81743EAd70ed430b85D2";
+    const res = await axios.get(
+      `https://points.magic.top/eigenlayer/points/${address}`
+    );
+
+    const { data, code } = res?.data;
+
+    console.log("getBedrockPointsFunc", data);
+    if (code === 200 && data) {
+      setBedrockPoints(Number(data?.totalPoint) || 0);
+      setBedrockEigenlayerPoints(Number(data?.totalEigenPodPoint) || 0);
+    }
+  };
+
   /**
    * Init: Get data from server
    */
@@ -420,6 +438,7 @@ export default function Dashboard() {
     getRoyaltyBoosterFunc();
     getRsethPointsFunc();
     getAllsparkTradePointsFunc();
+    getBedrockPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -1051,6 +1070,8 @@ export default function Dashboard() {
             totalNovaPoints={totalNovaPoints}
             kelpMiles={kelpMiles}
             kelpEigenlayerPoints={kelpEigenlayerPoints}
+            bedrockPoints={bedrockPoints}
+            bedrockEigenlayerPoints={bedrockEigenlayerPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}
