@@ -193,6 +193,7 @@ export default function Dashboard() {
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
     pointsDetail,
+    rubicNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -404,9 +405,16 @@ export default function Dashboard() {
   const [bedrockEigenlayerPoints, setBedrockEigenlayerPoints] = useState(0);
 
   const getBedrockPointsFunc = async () => {
-    // const address = "0x0b16661A9Fd190f2e6bE81743EAd70ed430b85D2";
+    const address = "0xbecd67861bf48D3760cC8CBc24550381024D3Ad3";
     const res = await axios.get(
-      `https://points.magic.top/eigenlayer/points/${address}`
+      `https://points.magic.top/third_protocol/get_userpoint_by_contract_address/0xAd16eDCF7DEB7e90096A259c81269d811544B6B6/${address}`,
+      {
+        headers: {
+          accept: "application/json",
+          "x-api-key":
+            "E9XFnNGAthUbj6RhqZ2TVYbSJ4VgfLDs3GfZusYBSpJeGcHdnCa5ztY9N2qdYYC5D4fgZUnPtwNRC4RMvGHR6jzmMhvNjUAzFEyJRhYRS5D8tQseatv2autYMaCKtQJ4",
+        },
+      }
     );
 
     const { data, code } = res?.data;
@@ -482,6 +490,33 @@ export default function Dashboard() {
   }, [isNovaChadNftHide, isMemeMysteryboxReward]);
 
   const ecoDappsData = useMemo(() => {
+    const rubicPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(rubicNovaPoints),
+      },
+    ];
+    const rubic: EcoDAppsProps = {
+      name: "Rubic",
+      handler: "@CryptoRubic",
+      link: "https://novaswap.exchange/#/pool",
+      iconURL: "/img/icon-rubic.svg",
+      type: "Cross-Chain",
+      points: rubicPoints,
+      earned: `${rubicPoints.length} ${
+        rubicPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      multiplierOrReward: "Trading Rewards",
+      details: [
+        {
+          multiplier: "1 point per trade",
+          actionType: "Use Protocol",
+          description: `For each transaction you interact with Allspark, you could receive 1 Nova Points.`,
+        },
+      ],
+    };
+
     const lauyerbankPoints = [
       {
         name: "Nova Points",
@@ -955,6 +990,7 @@ export default function Dashboard() {
     };
 
     const arr: EcoDAppsProps[] = [
+      rubic,
       novaSwap,
       layerbank,
       logx,
@@ -992,6 +1028,7 @@ export default function Dashboard() {
     eddyFinanceNovaPoints,
     allsparkNovaPoints,
     allsparkTradePoints,
+    rubicNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);
