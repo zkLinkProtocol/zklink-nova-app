@@ -990,7 +990,6 @@ export default function Dashboard() {
     };
 
     const arr: EcoDAppsProps[] = [
-      rubic,
       novaSwap,
       layerbank,
       logx,
@@ -999,6 +998,7 @@ export default function Dashboard() {
       // owlto,
       eddyFinance,
       allspark,
+      rubic,
       interport,
       orbiter,
       symbiosis,
