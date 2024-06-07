@@ -119,6 +119,16 @@ export default () => {
     getNovaSwapNovaPointsFunc();
     getEddyFinanceNovaPointsFunc();
     getPointsDetailFunc();
+    getRubicNovaPointsFunc();
+  };
+
+  const [rubicNovaPoints, setRubicNovaPoints] = useState(0);
+  const getRubicNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "rubic");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setRubicNovaPoints(points);
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -317,5 +327,6 @@ export default () => {
     getAllNovaPoints,
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
+    rubicNovaPoints,
   };
 };
