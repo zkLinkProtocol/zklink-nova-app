@@ -499,7 +499,7 @@ export default function Dashboard() {
     const rubic: EcoDAppsProps = {
       name: "Rubic",
       handler: "@CryptoRubic",
-      link: "https://novaswap.exchange/#/pool",
+      link: "https://rubic.exchange/",
       iconURL: "/img/icon-rubic.svg",
       type: "Cross-Chain",
       points: rubicPoints,
@@ -512,7 +512,7 @@ export default function Dashboard() {
         {
           multiplier: "1 point per trade",
           actionType: "Use Protocol",
-          description: `For each transaction you interact with Allspark, you could receive 1 Nova Points.`,
+          description: `For each transaction you interact with Rubic, you could receive 1 Nova Points.`,
         },
       ],
     };
