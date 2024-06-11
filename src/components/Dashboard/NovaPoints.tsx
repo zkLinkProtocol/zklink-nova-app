@@ -372,7 +372,7 @@ export default function NovaPoints(props: INovaPointsProps) {
           content="More points will be listed here soon."
         />
 
-        {Number(invite?.points) !== 0 && (
+        {/* {Number(invite?.points) !== 0 && (
           <div className="text-[14px] text-[#919192] leading-[1] flex items-end gap-2">
             <span className="text-[1.5rem] text-[#0ABB8A] font-[700]">
               +{invite?.points}
@@ -383,7 +383,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               Invite Box, Eco Box {minted && ", Old Friend Rewards"}
             </span>
           </div>
-        )}
+        )} */}
 
         <div className="mt-[3rem] w-full flex justify-between items-center">
           <div className="text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">
