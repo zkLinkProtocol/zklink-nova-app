@@ -192,7 +192,6 @@ export default function Dashboard() {
     owltoNovaPoints,
     dAppNovaPoints,
     otherNovaPoints,
-    okxPoints,
     kolPoints,
     totalNovaPoints,
     symbiosisBridgeNovaPoints,
@@ -204,6 +203,8 @@ export default function Dashboard() {
     logxNovaPoints,
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
+    pointsDetail,
+    rubicNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -411,6 +412,31 @@ export default function Dashboard() {
     setKelpEigenlayerPoints(elPoints);
   };
 
+  const [bedrockPoints, setBedrockPoints] = useState(0);
+  const [bedrockEigenlayerPoints, setBedrockEigenlayerPoints] = useState(0);
+
+  const getBedrockPointsFunc = async () => {
+    const address = "0xbecd67861bf48D3760cC8CBc24550381024D3Ad3";
+    const res = await axios.get(
+      `https://points.magic.top/third_protocol/get_userpoint_by_contract_address/0xAd16eDCF7DEB7e90096A259c81269d811544B6B6/${address}`,
+      {
+        headers: {
+          accept: "application/json",
+          "x-api-key":
+            "E9XFnNGAthUbj6RhqZ2TVYbSJ4VgfLDs3GfZusYBSpJeGcHdnCa5ztY9N2qdYYC5D4fgZUnPtwNRC4RMvGHR6jzmMhvNjUAzFEyJRhYRS5D8tQseatv2autYMaCKtQJ4",
+        },
+      }
+    );
+
+    const { data, code } = res?.data;
+
+    console.log("getBedrockPointsFunc", data);
+    if (code === 200 && data) {
+      setBedrockPoints(Number(data?.totalPoint) || 0);
+      setBedrockEigenlayerPoints(Number(data?.totalEigenPodPoint) || 0);
+    }
+  };
+
   /**
    * Init: Get data from server
    */
@@ -431,6 +457,7 @@ export default function Dashboard() {
     getRoyaltyBoosterFunc();
     getRsethPointsFunc();
     getAllsparkTradePointsFunc();
+    getBedrockPointsFunc();
   }, [address]);
 
   useEffect(() => {
@@ -474,6 +501,33 @@ export default function Dashboard() {
   }, [isNovaChadNftHide, isMemeMysteryboxReward]);
 
   const ecoDappsData = useMemo(() => {
+    const rubicPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(rubicNovaPoints),
+      },
+    ];
+    const rubic: EcoDAppsProps = {
+      name: "Rubic",
+      handler: "@CryptoRubic",
+      link: "https://rubic.exchange/",
+      iconURL: "/img/icon-rubic.svg",
+      type: "Cross-Chain",
+      points: rubicPoints,
+      earned: `${rubicPoints.length} ${
+        rubicPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      status: "Live",
+      multiplierOrReward: "Trading Rewards",
+      details: [
+        {
+          multiplier: "1 point per trade",
+          actionType: "Use Protocol",
+          description: `For each transaction you interact with Rubic, you could receive 1 Nova Points.`,
+        },
+      ],
+    };
+
     const lauyerbankPoints = [
       {
         name: "Nova Points",
@@ -592,10 +646,10 @@ export default function Dashboard() {
     ];
 
     const aqua: EcoDAppsProps = {
-      name: "Aqua",
+      name: "Native Lend",
       handler: "@native_fi",
-      link: "https://aqua.native.org/dashboard/user/?chainId=810180",
-      iconURL: "/img/icon-aqua.svg",
+      link: "https://native.org/lend?utm_campaign=zklink_nova&utm_source=custom&utm_medium=2xpoints?chainId=810180",
+      iconURL: "/img/icon-native.svg",
       booster: "Up to 10x",
       type: "Lending",
       points: aquaPoints,
@@ -947,7 +1001,7 @@ export default function Dashboard() {
     };
 
     const arr: EcoDAppsProps[] = [
-      // novaSwap,
+      novaSwap,
       layerbank,
       logx,
       aqua,
@@ -955,6 +1009,7 @@ export default function Dashboard() {
       // owlto,
       eddyFinance,
       allspark,
+      rubic,
       interport,
       orbiter,
       symbiosis,
@@ -984,6 +1039,7 @@ export default function Dashboard() {
     eddyFinanceNovaPoints,
     allsparkNovaPoints,
     allsparkTradePoints,
+    rubicNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);
@@ -1057,12 +1113,13 @@ export default function Dashboard() {
             magpiePointsData={magpiePointsData}
             dAppNovaPoints={dAppNovaPoints}
             royaltyBooster={royaltyBooster}
-            okxPoints={okxPoints}
             kolPoints={kolPoints}
             otherNovaPoints={otherNovaPoints}
             totalNovaPoints={totalNovaPoints}
             kelpMiles={kelpMiles}
             kelpEigenlayerPoints={kelpEigenlayerPoints}
+            bedrockPoints={bedrockPoints}
+            bedrockEigenlayerPoints={bedrockEigenlayerPoints}
           />
           <StakingValue
             stakingUsdValue={stakingUsdValue}

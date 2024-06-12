@@ -5,6 +5,7 @@ import {
   getLayerbankNovaPoints,
   getLinkswapNovaPoints,
   getNovaProjectPoints,
+  getPointsDetail,
 } from "@/api";
 import { RootState } from "@/store";
 import Decimal from "decimal.js";
@@ -20,32 +21,41 @@ export default () => {
 
   const [novaPoints, setNovaPoints] = useState(0);
   const [referPoints, setReferPoints] = useState(0);
-  const [okxPoints, setOkxPoints] = useState(0);
   const [layerbankNovaPoints, setLayerbankNovaPoints] = useState(0);
   const [linkswapNovaPoints, setLinkswapNovaPoints] = useState(0);
 
   const [novaSwapNovaPoints, setNovaSwapNovaPoints] = useState(0);
   const [eddyFinanceNovaPoints, setEddyFinanceNovaPoints] = useState(0);
 
+  const [pointsDetail, setPointsDetail] = useState({
+    refPoints: 0,
+    boostPoints: 0,
+    okxCampaignPoints: 0,
+  });
+
+  const getPointsDetailFunc = async () => {
+    if (!address) return;
+    const { result } = await getPointsDetail();
+    // console.log("getPointsDetail", res);
+    if (result) {
+      setPointsDetail({
+        refPoints: Number(result?.refPoints) || 0,
+        boostPoints: Number(result?.boostPoints) || 0,
+        okxCampaignPoints: Number(result?.okxCampaignPoints) || 0,
+      });
+    }
+
+    setReferPoints(Number(result?.refPoints) || 0);
+  };
+
   const getAccountPointFunc = useCallback(async () => {
     if (!address) {
       setNovaPoints(0);
-      setReferPoints(0);
       return;
     }
     const { result } = await getAccountPoint(address);
     setNovaPoints(Number(result?.novaPoint) || 0);
-
-    const apiReferPoints = Number(result?.referPoint) || 0;
-    setReferPoints(
-      !!invite?.triplePoints ? apiReferPoints * 3 : apiReferPoints
-    );
-
-    if (result?.novaPoint !== 0) {
-      const okx = await checkOkx(address);
-      setOkxPoints(okx ? OKX_POINTS : 0);
-    }
-  }, [address, invite?.triplePoints]);
+  }, [address]);
 
   const getLayerbankNovaPointsFunc = async () => {
     if (!address) {
@@ -73,9 +83,13 @@ export default () => {
   };
 
   const otherNovaPoints = useMemo(() => {
-    const points = Number(invite?.points) || 0;
+    const points =
+      (Number(invite?.points) || 0) +
+      pointsDetail.okxCampaignPoints +
+      pointsDetail.boostPoints;
+
     return address ? points : 0;
-  }, [invite?.points]);
+  }, [invite?.points, pointsDetail]);
 
   const kolPoints = useMemo(() => {
     const points =
@@ -102,7 +116,19 @@ export default () => {
     getInterportNovaPointsFunc();
     getAllsparkNovaPointsFunc();
     getLogxNovaPointsFunc();
-    getNovaSwapNovaPointsFunc(), getEddyFinanceNovaPointsFunc();
+    getNovaSwapNovaPointsFunc();
+    getEddyFinanceNovaPointsFunc();
+    getPointsDetailFunc();
+    getRubicNovaPointsFunc();
+  };
+
+  const [rubicNovaPoints, setRubicNovaPoints] = useState(0);
+  const getRubicNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "rubic");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setRubicNovaPoints(points);
   };
 
   const [aquaNovaPoints, setAquaNovaPoints] = useState(0);
@@ -238,22 +264,10 @@ export default () => {
 
   const totalNovaPoints = useMemo(() => {
     const points =
-      novaPoints +
-      referPoints +
-      otherNovaPoints +
-      okxPoints +
-      kolPoints +
-      dAppNovaPoints;
+      novaPoints + referPoints + otherNovaPoints + kolPoints + dAppNovaPoints;
 
     return points;
-  }, [
-    novaPoints,
-    referPoints,
-    otherNovaPoints,
-    okxPoints,
-    kolPoints,
-    dAppNovaPoints,
-  ]);
+  }, [novaPoints, referPoints, otherNovaPoints, kolPoints, dAppNovaPoints]);
 
   const [symbiosisBridgeNovaPoints, setSymbiosisBridgeNovaPoints] = useState(0);
   const getSymbiosisBridgePointsFunc = async () => {
@@ -293,7 +307,6 @@ export default () => {
     layerbankNovaPoints,
     linkswapNovaPoints,
     otherNovaPoints,
-    okxPoints,
     kolPoints,
     totalNovaPoints,
     izumiNovaPoints,
@@ -310,8 +323,10 @@ export default () => {
     interportNovaPoints,
     allsparkNovaPoints,
     logxNovaPoints,
+    pointsDetail,
     getAllNovaPoints,
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
+    rubicNovaPoints,
   };
 };

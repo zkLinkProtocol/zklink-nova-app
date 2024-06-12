@@ -32,13 +32,14 @@ interface INovaPointsProps {
   renzoEigenLayerPoints: number;
   magpiePointsData: { points: number; layerPoints: number };
   royaltyBooster: number;
-  okxPoints: number;
   kolPoints: number;
   otherNovaPoints: number;
   totalNovaPoints: number;
   kelpMiles: number;
   kelpEigenlayerPoints: number;
   dAppNovaPoints: number;
+  bedrockPoints: number;
+  bedrockEigenlayerPoints: number;
 }
 
 export interface OtherPointsItem {
@@ -137,13 +138,14 @@ export default function NovaPoints(props: INovaPointsProps) {
     renzoEigenLayerPoints,
     magpiePointsData,
     royaltyBooster,
-    okxPoints,
     kolPoints,
     otherNovaPoints,
     totalNovaPoints,
     kelpMiles,
     kelpEigenlayerPoints,
     dAppNovaPoints,
+    bedrockPoints,
+    bedrockEigenlayerPoints,
   } = props;
   // const royaltyBooster = 0.205;
   const { invite } = useSelector((store: RootState) => store.airdrop);
@@ -188,6 +190,13 @@ export default function NovaPoints(props: INovaPointsProps) {
         pointsValue: kelpMiles,
         eigenlayerValue: kelpEigenlayerPoints,
       },
+      {
+        icon: "/img/icon-bedrock.svg",
+        pointsName: "Bedrock Diamonds",
+        eigenlayerName: "Bedrock",
+        pointsValue: bedrockPoints,
+        eigenlayerValue: bedrockEigenlayerPoints,
+      },
     ];
     if (isHidePoints) {
       setOtherPointsList(otherPoints.filter((item) => item.pointsValue >= 0.1));
@@ -203,6 +212,8 @@ export default function NovaPoints(props: INovaPointsProps) {
     magpiePointsData,
     kelpMiles,
     kelpEigenlayerPoints,
+    bedrockPoints,
+    bedrockEigenlayerPoints,
   ]);
 
   const totalBooster = useMemo(() => {
@@ -258,7 +269,7 @@ export default function NovaPoints(props: INovaPointsProps) {
 
                   <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by Other Campaign Activities</span>
-                    <span>{otherNovaPoints + okxPoints}</span>
+                    <span>{otherNovaPoints}</span>
                   </p>
                   {/* <p className="flex justify-between gap-4 items-center mt-[0.5rem] font-[400] text-[14px] leading-[1.5rem] tracking-[0.06rem]">
                     <span>Earned by OKX points</span>
@@ -361,7 +372,7 @@ export default function NovaPoints(props: INovaPointsProps) {
           content="More points will be listed here soon."
         />
 
-        {Number(invite?.points) !== 0 && (
+        {/* {Number(invite?.points) !== 0 && (
           <div className="text-[14px] text-[#919192] leading-[1] flex items-end gap-2">
             <span className="text-[1.5rem] text-[#0ABB8A] font-[700]">
               +{invite?.points}
@@ -372,7 +383,7 @@ export default function NovaPoints(props: INovaPointsProps) {
               Invite Box, Eco Box {minted && ", Old Friend Rewards"}
             </span>
           </div>
-        )}
+        )} */}
 
         <div className="mt-[3rem] w-full flex justify-between items-center">
           <div className="text-[1rem] font-[700] text-[1rem] leading-[1.5rem] tracking-[0.06rem] flex items-center gap-[0.5rem]">

@@ -451,11 +451,18 @@ export default function AssetsTable(props: IAssetsTableProps) {
       arr = arr.filter((item) => reg.test(item.symbol));
     }
 
-    arr = arr.sort(
-      (a, b) =>
-        Number(findClosestMultiplier(b.multipliers)) -
-        Number(findClosestMultiplier(a.multipliers))
-    );
+    arr = arr
+      .filter(
+        (item) =>
+          item?.multipliers &&
+          Number(findClosestMultiplier(item.multipliers)) !== 0
+      )
+      .sort(
+        (a, b) =>
+          Number(findClosestMultiplier(b.multipliers)) -
+          Number(findClosestMultiplier(a.multipliers))
+      );
+
     setFilterTableList(arr);
 
     // const notNovaFilters = arr.filter((item) => !item.isNova);
@@ -594,24 +601,11 @@ export default function AssetsTable(props: IAssetsTableProps) {
                         </TokenYieldBox>
                       )}
 
-                      {(item?.symbol === "Stone" ||
-                        item?.symbol === "wUSDm" ||
-                        item?.symbol === "Manta") && (
-                        <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
-                          <span className={`token-yield token-yield-6`}>
-                            Extra Nova
-                          </span>
-                        </TokenYieldBox>
-                      )}
-
                       {(item?.symbol === "mstETH" ||
                         item?.symbol === "mswETH" ||
                         item?.symbol === "mmETH" ||
                         item?.symbol === "mwBETH") && (
                         <TokenYieldBox className="hidden items-center md:flex md:items-center md:ml-2">
-                          <span className={`token-yield token-yield-6`}>
-                            Extra Nova
-                          </span>
                           <span className={`token-yield token-yield-1`}>
                             EigenLayer Points
                           </span>

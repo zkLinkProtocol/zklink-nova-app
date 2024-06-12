@@ -58,7 +58,7 @@ const BgBox = styled.div`
     margin-left: 30px;
   }
   .tr {
-    width: 80%;
+    /* width: 80%; */
     display: flex;
     justify-content: space-around;
     height: 60px;
@@ -69,7 +69,8 @@ const BgBox = styled.div`
     border-radius: 10px 10px 0 0;
   }
   .td {
-    width: 150px;
+    /* min-width: 150px; */
+    width: 50%;
     color: #fff;
     text-align: center;
     font-family: Satoshi;
@@ -152,6 +153,53 @@ export default function About() {
   useEffect(() => {
     scrollToAnchor();
   }, [searchParams]);
+
+  const tokenList1 = [
+    { token: "ETH (Merge)", boost: "5" },
+    { token: "wETH (Merge)", boost: "5" },
+    { token: "wBTC (Merge)", boost: "5" },
+    { token: "USDT (Merge)", boost: "5" },
+    { token: "USDC (Merge)", boost: "5" },
+    { token: "DAI (Merge)", boost: "5" },
+    { token: "wBTC", boost: "2" },
+    { token: "USDT", boost: "2" },
+    { token: "USDC", boost: "2" },
+    { token: "DAI", boost: "2" },
+    { token: "uniETH", boost: "2" },
+    { token: "mstETH", boost: "2" },
+    { token: "mswETH", boost: "2" },
+    { token: "mmETH", boost: "2" },
+    { token: "mwBETH", boost: "2" },
+    { token: "uniBTC", boost: "1" },
+    { token: "ARB", boost: "1" },
+    { token: "OP", boost: "1" },
+    { token: "wMNT", boost: "1" },
+    { token: "MANTA", boost: "1" },
+    { token: "wUSDm", boost: "1" },
+  ];
+
+  const tokenList2 = [
+    { token: "Stone", boost: "1" },
+    { token: "swETH", boost: "1" },
+    { token: "wstETH", boost: "1" },
+    { token: "nETH", boost: "1" },
+    { token: "rsETH", boost: "1" },
+    { token: "pufETH", boost: "1" },
+    { token: "CYBER", boost: "1" },
+    { token: "GAL", boost: "1" },
+    { token: "BEL", boost: "1" },
+    { token: "ARPA", boost: "1" },
+    { token: "weETH", boost: "1" },
+    { token: "ezETH", boost: "1" },
+    { token: "rswETH", boost: "1" },
+    { token: "rnETH", boost: "1" },
+    { token: "solvBTC", boost: "1" },
+    { token: "M-BTC", boost: "1" },
+    { token: "solvBTC.m", boost: "1" },
+    { token: "BTCT", boost: "1" },
+    { token: "BBTC", boost: "1" },
+    { token: "BBUSD", boost: "1" },
+  ];
 
   return (
     <BgBox className="relative pb-[3rem]">
@@ -262,31 +310,46 @@ export default function About() {
           <div>
             Holding any supported assets on Nova allows you to accrue Nova
             points every 8 hours until the final Nova Point computation date.
-            Check how your Nova points are computed by holding Value{" "}
-            <a
-              className="jump"
-              href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
-              target="_blank"
-            >
-              here
-            </a>
-            .
           </div>
-          <div>
-            <img src="/img/image2.svg" alt="" className="w-full" />
+          <div className="flex gap-[20px] mt-[30px]">
+            {/* <img
+              src="/img/image2.svg"
+              alt=""
+              className="w-full"
+              onLoad={scrollToAnchor}
+            /> */}
+            <div className="w-1/2">
+              <table className="w-full">
+                <tr className="tr">
+                  <td className="td">Token</td>
+                  <td className="td">Boost</td>
+                </tr>
+                {tokenList1.map((item, index) => (
+                  <tr className="tr" key={index}>
+                    <td className="td">{item.token}</td>
+                    <td className="td">{item.boost}</td>
+                  </tr>
+                ))}
+              </table>
+            </div>
+
+            <div className="w-1/2">
+              <table className="w-full">
+                <tr className="tr">
+                  <td className="td">Token</td>
+                  <td className="td">Boost</td>
+                </tr>
+                {tokenList2.map((item, index) => (
+                  <tr className="tr" key={index}>
+                    <td className="td">{item.token}</td>
+                    <td className="td">{item.boost}</td>
+                  </tr>
+                ))}
+              </table>
+            </div>
           </div>
         </div>
-        <div className="paragraph">
-          <div>
-            Tokens are categorized into three classes, with higher liquidity
-            tokens receiving more Nova Points.
-          </div>
-          <ul>
-            <li className="before">Class I: Multiplier 2x</li>
-            <li className="before">Class II: Multiplier 1.5x</li>
-            <li className="before">Class III: Multiplier 1x</li>
-          </ul>
-        </div>
+
         <div className="paragraph">
           <div className="title">Referral Rewards</div>
           <div>
