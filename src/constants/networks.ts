@@ -18,6 +18,7 @@ import {
   manta,
   optimism,
   base,
+  scroll,
 } from "viem/chains";
 
 import { defineChain } from "viem";
@@ -129,6 +130,10 @@ export const l1Networks = {
   base: {
     ...base,
     name: "Base Mainnet",
+  },
+  scroll: {
+    ...scroll,
+    name: "Scroll Mainnet",
   },
 } as const;
 export type L1Network = Chain;
@@ -299,6 +304,22 @@ export const nexusNode: ZkSyncNetwork[] = [
     isEthGasToken: true,
     l1Network: l1Networks.base,
   },
+  {
+    id: 810180,
+    key: "scroll",
+    name: "zkLink Nova",
+    rpcUrl: "https://rpc.zklink.io",
+    logoUrl: "/img/scroll.svg",
+    blockExplorerUrl: "https://explorer.zklink.io",
+    blockExplorerApi: "https://explorer-api.zklink.io",
+    withdrawalFinalizerApi: "https://withdrawal-api.zklink.io",
+    mainContract: "0x119B9459D9119D07c23aD06778AeaBec804Fd1a2",
+    erc20BridgeL1: "0x3C7c0ebFCD5786ef48df5ed127cdDEb806db976c",
+    erc20BridgeL2: "0xC97c5E43c14D4F524347795410C299db1FA331b3",
+    l1Gateway: "0x986c905087a663db3C81ad319b94c1E9dd388e92",
+    isEthGasToken: true,
+    l1Network: l1Networks.scroll,
+  },
 ];
 
 export const nexusGoerliNode: ZkSyncNetwork[] = [
@@ -406,6 +427,7 @@ export const chains: readonly [Chain, ...Chain[]] =
         blast,
         optimism,
         base,
+        scroll,
       ];
 // export const wagmiConfig = defaultWagmiConfig({
 //   chains: chains,

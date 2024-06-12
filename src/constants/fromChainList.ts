@@ -12,6 +12,7 @@ import zkscyncIcon from "../assets/img/zksync.svg";
 import blastIcon from "../assets/img/blast.svg";
 import optimismIcon from "../assets/img/optimism.svg";
 import baseIcon from "../assets/img/base.svg";
+import scrollIcon from "../assets/img/scroll.svg";
 import {
   sepolia,
   goerli,
@@ -27,6 +28,7 @@ import {
   arbitrum,
   optimism,
   base,
+  scroll,
 } from "@wagmi/core/chains";
 import { blast } from "./networks";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
@@ -143,6 +145,16 @@ const FromListMainnet = [
     chainName: "Base",
     explorerUrl: base.blockExplorers.default.url,
     rpcUrl: base.rpcUrls.default.http[0],
+  },
+  {
+    label: "Scroll",
+    icon: scrollIcon,
+    chainId: scroll.id,
+    networkKey: "scroll",
+    isEthGasToken: true,
+    chainName: "Scroll",
+    explorerUrl: scroll.blockExplorers.default.url,
+    rpcUrl: scroll.rpcUrls.default.http[0],
   },
 ];
 
