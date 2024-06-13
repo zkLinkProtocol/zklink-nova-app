@@ -405,7 +405,7 @@ export default function Dashboard() {
   const [bedrockEigenlayerPoints, setBedrockEigenlayerPoints] = useState(0);
 
   const getBedrockPointsFunc = async () => {
-    const address = "0xbecd67861bf48D3760cC8CBc24550381024D3Ad3";
+    // const address = "0xbecd67861bf48D3760cC8CBc24550381024D3Ad3";
     const res = await axios.get(
       `https://points.magic.top/third_protocol/get_userpoint_by_contract_address/0xAd16eDCF7DEB7e90096A259c81269d811544B6B6/${address}`,
       {
@@ -421,8 +421,8 @@ export default function Dashboard() {
 
     console.log("getBedrockPointsFunc", data);
     if (code === 200 && data) {
-      setBedrockPoints(Number(data?.totalPoint) || 0);
-      setBedrockEigenlayerPoints(Number(data?.totalEigenPodPoint) || 0);
+      setBedrockPoints(Number(data?.diamond) || 0);
+      setBedrockEigenlayerPoints(Number(data?.elpoint) || 0);
     }
   };
 
