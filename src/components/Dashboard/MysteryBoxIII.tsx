@@ -233,7 +233,7 @@ export default function MysteryBoxIII() {
 
   return (
     <>
-      {remainDrawCount && remainDrawCount > 0 && (
+      {remainDrawCount > 0 && (
         <Container className="my-[32px] px-[24px] py-[16px] flex justify-between items-center">
           <img
             src="/img/img-mystery-box-v2.png"
