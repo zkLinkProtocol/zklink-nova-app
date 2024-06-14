@@ -23,8 +23,6 @@ const TrademarkItems = [
   { name: "Magnifying Glass", img: "img-trademark-2.png" },
   { name: "Chess Knight", img: "img-trademark-3.png" },
   { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
-  { name: "+1 Nova points", img: "img-trademark-6.png", tooltipId: 1 },
-  { name: "+5 Nova points", img: "img-trademark-7.png", tooltipId: 5 },
   { name: "+10 Nova points", img: "img-trademark-8.png", tooltipId: 10 },
   { name: "+50 Nova points", img: "img-trademark-9.png", tooltipId: 50 },
 ];

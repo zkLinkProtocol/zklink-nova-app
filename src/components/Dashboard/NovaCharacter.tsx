@@ -107,8 +107,6 @@ const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   2: "Magnifying Glass",
   3: "Chess Knight",
   4: "Binary Code Metrix Cube",
-  6: "+1 Nova points",
-  7: "+5 Nova points",
   8: "+10 Nova points",
   9: "+50 Nova points",
   88: "Lynks",
