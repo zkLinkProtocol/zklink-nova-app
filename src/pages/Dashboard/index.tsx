@@ -1087,8 +1087,8 @@ export default function Dashboard() {
         {/* Left: nova points ... data */}
         <div className="md:w-[27.125rem] z-10">
           <NovaDropLink />
-          <MysteryBoxIII />
           <NovaCharacter />
+          <MysteryBoxIII />
           <NovaPoints
             groupTvl={groupTvl}
             referPoints={referPoints}
