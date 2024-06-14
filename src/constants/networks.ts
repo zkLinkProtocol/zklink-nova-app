@@ -502,7 +502,6 @@ export const chains: readonly [Chain, ...Chain[]] =
         manta,
         mantle,
         createEraChain(nexusNode[0]) as Chain,
-        blast,
         optimism,
         base,
         scroll,
