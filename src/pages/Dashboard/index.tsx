@@ -32,18 +32,15 @@ import NovaCharacter from "@/components/Dashboard/NovaCharacter";
 import NovaPoints from "@/components/Dashboard/NovaPoints";
 import StakingValue from "@/components/Dashboard/StakingValue";
 import TvlSummary from "@/components/Dashboard/TvlSummary";
-import GroupMilestone from "@/components/Dashboard/GroupMilestone";
 import { formatNumberWithUnit, sleep } from "@/utils";
 import NFTCard from "./components/NFTCard";
 import NFTCardV2 from "./components/NFTCardV2";
 import EcoDApps, { EcoDAppsProps } from "@/components/Dashboard/EcoDApps";
 import {
   Button,
-  Checkbox,
   Modal,
   ModalBody,
   ModalContent,
-  ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
 import { setIsNovaChadNftHide } from "@/store/modules/airdrop";
@@ -51,11 +48,11 @@ import { PUFFER_TOKEN_ADDRESS } from "@/constants";
 import Banner from "@/components/Banner";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { Tooltip } from "react-tooltip";
-import { eventBus } from "@/utils/event-bus";
 import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
 import TwitterVerify from "@/components/Dashboard/TwitterVerify";
 import axios from "axios";
 import NovaDropLink from "@/components/Dashboard/NovaDropLink";
+import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -1091,6 +1088,7 @@ export default function Dashboard() {
         <div className="md:w-[27.125rem] z-10">
           <NovaDropLink />
           <NovaCharacter />
+          <MysteryBoxIII />
           <NovaPoints
             groupTvl={groupTvl}
             referPoints={referPoints}

@@ -103,15 +103,8 @@ export const TxResult = styled.div`
 `;
 //tokenId from api => image id of frontend
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
-  1: "Oak Tree Roots",
-  2: "Magnifying Glass",
-  3: "Chess Knight",
-  4: "Binary Code Metrix Cube",
-  6: "+1 Nova points",
-  7: "+5 Nova points",
   8: "+10 Nova points",
   9: "+50 Nova points",
-  88: "Lynks",
 };
 
 const OLDEST_FRIENDS_TOKEN_ID_MAP: Record<number, string> = {
@@ -918,8 +911,7 @@ export default function NovaCharacter() {
             </div>
           </Tooltip>
         </div>
-        {/* TODO */}
-        <div className="w-full">
+        {/* <div className="w-full">
           <Button
             className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
             onClick={handleOpenEcoBox}
@@ -947,7 +939,7 @@ export default function NovaCharacter() {
             }}
             content="Every day, the top 500 users who accumulate the most Nova Points by interacting with Nova ecosystem dApps have the opportunity to draw an Eco Box, which contain Nova Points, Trademarks NFT and Lynks. Please mint SBT first."
           />
-        </div>
+        </div> */}
         {mintable && !minted && (
           <div className="w-full">
             <Button

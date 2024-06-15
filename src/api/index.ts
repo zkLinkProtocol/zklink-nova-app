@@ -574,3 +574,9 @@ export const authLogin = (data: {
 
 export const getPointsDetail = (): Promise<Response> =>
   http.get(`${BASE_URL_API}/referrer/points/detail`);
+
+export const getMystery3Reamin = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/nft/mystery3/remain`, { params: { address } });
+
+export const drawMystery3 = (address: string): Promise<Response> =>
+  http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
