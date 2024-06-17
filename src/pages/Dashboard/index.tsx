@@ -192,7 +192,7 @@ export default function Dashboard() {
     pointsDetail,
     rubicNovaPoints,
     zkdxNovaPoints,
-    wagmiNovaPoints
+    wagmiNovaPoints,
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -535,6 +535,7 @@ export default function Dashboard() {
       // },
     ];
     const novaSwap: EcoDAppsProps = {
+      isFeatured: true,
       name: "Novaswap",
       handler: "@NovaSwap_fi",
       link: "https://novaswap.fi/",
@@ -548,7 +549,12 @@ export default function Dashboard() {
         },
       ],
       earned: `1 Type of Point`,
-
+      boosterTooltips: (
+        <div>
+          <p>20x for ETH/wETH and merged wBTC, USDT, USDC</p>
+          <p>10x for canonically bridged tokens eligible to earn points</p>
+        </div>
+      ),
       details: [
         {
           status: "Live",
@@ -577,7 +583,16 @@ export default function Dashboard() {
       earned: `${lauyerbankPoints.length} ${
         lauyerbankPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-
+      boosterTooltips: (
+        <div>
+          <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+          <p>
+            4x for canonically bridged tokens (pufETH.eth, Manta.manta,
+            Stone.manta, wBTC.eth)
+          </p>
+          <p>2x for externally bridged tokens (solvBTC.m, mBTC, BTCT)</p>
+        </div>
+      ),
       details: [
         {
           status: "Live",
@@ -644,7 +659,12 @@ export default function Dashboard() {
       earned: `${aquaPoints.length} ${
         aquaPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-
+      boosterTooltips: (
+        <p>
+          10x for ETH/wETH and merged wBTC, USDT, USDC <br />
+          4x for canonically bridged tokens
+        </p>
+      ),
       details: [
         {
           status: "Live",
@@ -680,7 +700,17 @@ export default function Dashboard() {
       earned: `${izumiPoints.length} ${
         izumiPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-
+      boosterTooltips: (
+        <div>
+          <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+          <p>3x for externally bridged tokens (solvBTC.m)</p>
+          <p>
+            Note: Boosts are provided only for effective liquidity. For AMM DEX,
+            two-sided liquidity provision is required to qualify for the dApp
+            booster.
+          </p>
+        </div>
+      ),
       details: [
         {
           status: "Live",
@@ -801,13 +831,19 @@ export default function Dashboard() {
       name: "LogX",
       handler: "@LogX_trade",
       link: "https://app.logx.trade/liquidity",
-      booster: "10x boost & trading rewards",
+      booster: "Up to 10x",
       iconURL: "/img/icon-logx.svg",
       type: "Perp DEX",
       points: logxPoints,
       earned: `${logxPoints.length} ${
         logxPoints.length > 1 ? "Types" : "Type"
       } of Point`,
+      boosterTooltips: (
+        <div>
+          <p>10x points for LPs providing USDT</p>
+          <p>1 points for a trader’s every 1000 USD trading volume</p>
+        </div>
+      ),
       details: [
         {
           status: "Live",
@@ -915,7 +951,11 @@ export default function Dashboard() {
       earned: `${interportPoints.length} ${
         interportPoints.length > 1 ? "Types" : "Type"
       } of Point + Yield`,
-
+      boosterTooltips: (
+        <div>
+          <p>10x for merged USDT and USDC</p>
+        </div>
+      ),
       details: [
         {
           status: "Live",
@@ -949,7 +989,7 @@ export default function Dashboard() {
         {
           status: "Live",
           tagLabel: "Booster",
-          tag: "1 point/$1000 volume",
+          tag: "1 point / $200 volume",
           actionType: "Trade",
           description: `For every $1000 in trading volume on Eddy Finance (Nova Network), you will receive 1 Nova Point.`,
         },
@@ -998,15 +1038,19 @@ export default function Dashboard() {
     const zkdx: EcoDAppsProps = {
       name: "zkDX",
       handler: "@zkDXio",
-      link: "https://app.zkdx.io/trade",
-      booster: "Up to 10x Nova Points",
+      link: "https://app.zkdx.io/stakingliquidity",
+      booster: "Up to 10x",
       iconURL: "/img/icon-zkdx.svg",
       type: "Perp DEX",
       points: zkdxPoints,
       earned: `${zkdxPoints.length} ${
         zkdxPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-
+      boosterTooltips: (
+        <div>
+          <p>10x for ETH and Merged USDC</p>
+        </div>
+      ),
       details: [
         {
           status: "Live",
@@ -1019,7 +1063,7 @@ export default function Dashboard() {
           ),
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
           actionType: "Provide Liquidity",
-          actionLink: "https://app.zkdx.io/trade",
+          actionLink: "https://app.zkdx.io/stakingliquidity",
         },
         {
           status: "Live",
@@ -1043,14 +1087,18 @@ export default function Dashboard() {
       name: "Wagmi",
       handler: "@popsiclefinance",
       link: "https://app.wagmi.com/liquidity/pools",
-      booster: "Up to 10x Nova Points",
+      booster: "Up to 10x",
       iconURL: "/img/icon-wagmi.svg",
       type: "DEX",
       points: wagmiPoints,
       earned: `${wagmiPoints.length} ${
         wagmiPoints.length > 1 ? "Types" : "Type"
       } of Point`,
-
+      boosterTooltips: (
+        <div>
+          <p>10x for ETH and Merged wBTC, USDC</p>
+        </div>
+      ),
       details: [
         {
           status: "Live",
@@ -1093,7 +1141,7 @@ export default function Dashboard() {
       symbiosis,
       meson,
       // free,
-      linkswap,
+      // linkswap,
     ];
 
     return arr;
@@ -1101,7 +1149,7 @@ export default function Dashboard() {
     layerbankNovaPoints,
     layerbankPufferPoints,
     novaSwapNovaPoints,
-    linkswapNovaPoints,
+    // linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
     symbiosisNovaPoints,
@@ -1119,7 +1167,7 @@ export default function Dashboard() {
     allsparkTradePoints,
     rubicNovaPoints,
     zkdxNovaPoints,
-    wagmiNovaPoints
+    wagmiNovaPoints,
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);

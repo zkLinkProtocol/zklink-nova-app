@@ -69,7 +69,8 @@ export interface EcoDAppsProps {
   }[];
   earned: string;
   booster?: string;
-  boosterTips?: string | ReactNode;
+  boosterTooltips?: string | ReactNode;
+  isFeatured?: boolean;
   details: {
     status: string;
     tagLabel: string;
@@ -82,6 +83,23 @@ export interface EcoDAppsProps {
   }[];
 }
 
+const Featured = styled.div`
+  /* position: absolute;
+  top: 0;
+  left: 0; */
+  padding: 0 8px;
+  height: 24px;
+  color: #080d11;
+  font-family: "Chakra Petch";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  border-radius: 4px;
+  /* border-radius: 0px 4px 4px 0px; */
+  background: #f2cd0c;
+`;
+
 export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
   const warningModal = useDisclosure();
   const [recognize, setRecognize] = useState(false);
@@ -91,7 +109,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
 
   return (
     <>
-      <div>
+      <div className={`relative`}>
         <div className="px-[1.5rem] py-[1rem] flex items-center border-b-1 border-[#292A2A]">
           <Td className="flex items-center gap-[0.5rem] min-w-[320px]">
             <img
@@ -114,10 +132,42 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
               </p>
             </div>
             {data.booster && (
-              <Tag className="px-[0.5rem] py-[0.12rem] flex">
+              <Tag
+                className="px-[0.5rem] py-[0.12rem] flex"
+                data-tooltip-id={`eco-booster-${data.handler}`}
+              >
                 <span className="text text-[#0bc48f]">{data.booster}</span>
+                {data.boosterTooltips && (
+                  <img
+                    src="/img/icon-info-green.svg"
+                    width={12}
+                    height={12}
+                    className="ml-2 inline-block"
+                    data-tooltip-id={`eco-booster-${data.handler}`}
+                    alt=""
+                  />
+                )}
+
+                <ReactTooltip
+                  id={`eco-booster-${data.handler}`}
+                  render={() => data.boosterTooltips}
+                  style={{
+                    fontSize: "14px",
+                    background: "#666",
+                    borderRadius: "0.5rem",
+                    maxWidth: "40rem",
+                    zIndex: 9999,
+                  }}
+                />
               </Tag>
             )}
+
+            {/* {data.isFeatured && (
+              <Featured className="flex justify-center items-center gap-[4px]">
+                <img src="/img/icon-star.svg" alt="" width={16} height={16} />
+                <span>Featured</span>
+              </Featured>
+            )} */}
           </Td>
           <Td>
             <p className="text-[1rem] font-[700]">{data.type}</p>
@@ -195,11 +245,11 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                             src="/img/icon-info.svg"
                             width={12}
                             className="ml-2 inline-block"
-                            data-tooltip-id={`eco-booster-${data.handler}`}
+                            data-tooltip-id={`eco-tag-${data.handler}`}
                           />
 
                           <ReactTooltip
-                            id={`eco-booster-${data.handler}`}
+                            id={`eco-tag-${data.handler}`}
                             render={() => detail.tagTooltips}
                             style={{
                               fontSize: "14px",

@@ -250,7 +250,7 @@ export default () => {
   const dAppNovaPoints: number = useMemo(() => {
     return (
       layerbankNovaPoints +
-      linkswapNovaPoints +
+      // linkswapNovaPoints +
       aquaNovaPoints +
       izumiNovaPoints +
       symbiosisNovaPoints +
@@ -267,7 +267,7 @@ export default () => {
     );
   }, [
     layerbankNovaPoints,
-    linkswapNovaPoints,
+    // linkswapNovaPoints,
     aquaNovaPoints,
     izumiNovaPoints,
     symbiosisNovaPoints,
