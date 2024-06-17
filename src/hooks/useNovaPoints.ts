@@ -231,7 +231,7 @@ export default () => {
   const [zkdxNovaPoints, setZkdxNovaPoints] = useState(0);
   const getZkdxNovaPointsFunc = async () => {
     if (!address) return;
-    const { data } = await getNovaProjectPoints(address, "logx");
+    const { data } = await getNovaProjectPoints(address, "zkdx");
 
     const points = data.reduce((prev, item) => prev + Number(item.points), 0);
     setZkdxNovaPoints(points);
