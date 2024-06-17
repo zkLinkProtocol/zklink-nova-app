@@ -999,7 +999,7 @@ export default function Dashboard() {
       handler: "@zkDXio",
       link: "https://app.zkdx.io/trade",
       booster: "Up to 10x Nova Points",
-      iconURL: "/img/icon-logx.svg",
+      iconURL: "/img/icon-zkdx.svg",
       type: "Perp DEX",
       points: zkdxPoints,
       earned: `${zkdxPoints.length} ${
