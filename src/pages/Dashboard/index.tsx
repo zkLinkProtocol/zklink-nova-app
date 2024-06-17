@@ -192,6 +192,7 @@ export default function Dashboard() {
     pointsDetail,
     rubicNovaPoints,
     zkdxNovaPoints,
+    wagmiNovaPoints
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -1031,11 +1032,56 @@ export default function Dashboard() {
       ],
     };
 
+    const wagmiPoints = [
+      {
+        name: "Nova Points",
+        value: formatNumberWithUnit(wagmiNovaPoints),
+      },
+    ];
+
+    const wagmi: EcoDAppsProps = {
+      name: "Wagmi",
+      handler: "@popsiclefinance",
+      link: "https://app.wagmi.com/liquidity/pools",
+      booster: "Up to 10x Nova Points",
+      iconURL: "/img/icon-wagmi.svg",
+      type: "DEX",
+      points: wagmiPoints,
+      earned: `${wagmiPoints.length} ${
+        wagmiPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+
+      details: [
+        {
+          status: "Live",
+          tagLabel: "Booster",
+          tag: "Up to 10x",
+          tagTooltips: (
+            <div>
+              <p>10x for ETH and Merged wBTC, USDC</p>
+            </div>
+          ),
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+          actionType: "Provide Liquidity",
+          actionLink: "https://app.wagmi.com/liquidity/pools",
+        },
+        {
+          status: "Live",
+          tagLabel: "Trading rewards",
+          tag: "1 point / $200 volume",
+          description: `For every $200 in trading volume on Wagmi, you will receive 1 Nova Point.`,
+          actionType: "Trade",
+          actionLink: "https://app.wagmi.com/trade/swap",
+        },
+      ],
+    };
+
     const arr: EcoDAppsProps[] = [
       novaSwap,
       layerbank,
       logx,
       aqua,
+      wagmi,
       izumi,
       zkdx,
       // owlto,
@@ -1073,6 +1119,7 @@ export default function Dashboard() {
     allsparkTradePoints,
     rubicNovaPoints,
     zkdxNovaPoints,
+    wagmiNovaPoints
   ]);
   const [remainMintCount, setRemainMintCount] = useState(0);
   const [remainMintCountV2, setRemainMintCountV2] = useState(0);

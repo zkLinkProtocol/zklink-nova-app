@@ -121,6 +121,7 @@ export default () => {
     getPointsDetailFunc();
     getRubicNovaPointsFunc();
     getZkdxNovaPointsFunc();
+    getWagmiNovaPointsFunc();
   };
 
   const [rubicNovaPoints, setRubicNovaPoints] = useState(0);
@@ -237,6 +238,15 @@ export default () => {
     setZkdxNovaPoints(points);
   };
 
+  const [wagmiNovaPoints, setWagmiNovaPoints] = useState(0);
+  const getWagmiNovaPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getNovaProjectPoints(address, "zkdx");
+
+    const points = data.reduce((prev, item) => prev + Number(item.points), 0);
+    setWagmiNovaPoints(points);
+  };
+
   const dAppNovaPoints: number = useMemo(() => {
     return (
       layerbankNovaPoints +
@@ -252,7 +262,8 @@ export default () => {
       logxNovaPoints +
       novaSwapNovaPoints +
       eddyFinanceNovaPoints +
-      zkdxNovaPoints
+      zkdxNovaPoints +
+      wagmiNovaPoints
     );
   }, [
     layerbankNovaPoints,
@@ -268,6 +279,7 @@ export default () => {
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
     zkdxNovaPoints,
+    wagmiNovaPoints,
   ]);
 
   useEffect(() => {
@@ -341,5 +353,6 @@ export default () => {
     eddyFinanceNovaPoints,
     rubicNovaPoints,
     zkdxNovaPoints,
+    wagmiNovaPoints,
   };
 };
