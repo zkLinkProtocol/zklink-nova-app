@@ -1048,7 +1048,7 @@ export default function Dashboard() {
       } of Point`,
       boosterTooltips: (
         <div>
-          <p>10x for ETH and Merged USDC</p>
+          <p>10x for Merged ETH, USDC</p>
         </div>
       ),
       details: [
@@ -1058,7 +1058,7 @@ export default function Dashboard() {
           tag: "Up to 10x",
           tagTooltips: (
             <div>
-              <p>10x for ETH and Merged USDC</p>
+              <p>10x for Merged ETH, USDC</p>
             </div>
           ),
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -1096,7 +1096,7 @@ export default function Dashboard() {
       } of Point`,
       boosterTooltips: (
         <div>
-          <p>10x for ETH and Merged wBTC, USDC</p>
+          <p>10x for Merged wBTC, wETH, USDT</p>
         </div>
       ),
       details: [
@@ -1106,7 +1106,7 @@ export default function Dashboard() {
           tag: "Up to 10x",
           tagTooltips: (
             <div>
-              <p>10x for ETH and Merged wBTC, USDC</p>
+              <p>10x for Merged wBTC, wETH, USDT</p>
             </div>
           ),
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
