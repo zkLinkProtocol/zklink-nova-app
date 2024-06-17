@@ -69,18 +69,16 @@ export interface EcoDAppsProps {
   }[];
   earned: string;
   booster?: string;
-  status: string;
-  multiplierOrReward?: string;
   boosterTips?: string | ReactNode;
   details: {
-    multiplier?: string;
-    multiplierTips?: boolean;
-    reward?: string;
+    status: string;
+    tagLabel: string;
+    tag: string;
+    tagTooltips?: string | ReactNode;
     description: string;
     descriptionTips?: string;
     actionType: string;
     actionLink?: string;
-    multiplierOrReward?: string;
   }[];
 }
 
@@ -115,19 +113,11 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 {data.handler}
               </p>
             </div>
-            {/* {data.booster && (
+            {data.booster && (
               <Tag className="px-[0.5rem] py-[0.12rem] flex">
                 <span className="text text-[#0bc48f]">{data.booster}</span>
-                {data.boosterTips && (
-                  <img
-                    src="/img/icon-info-green.svg"
-                    width={12}
-                    className="ml-2 inline-block"
-                    data-tooltip-id={`eco-booster-${data.handler}`}
-                    alt=""
-                  />
-                )}</Tag>
-            )} */}
+              </Tag>
+            )}
           </Td>
           <Td>
             <p className="text-[1rem] font-[700]">{data.type}</p>
@@ -176,17 +166,6 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
           </Td>
         </div>
 
-        <ReactTooltip
-          id={`eco-booster-${data.handler}`}
-          render={() => data.boosterTips}
-          style={{
-            fontSize: "14px",
-            background: "#666",
-            borderRadius: "0.5rem",
-            maxWidth: "40rem",
-          }}
-        />
-
         {!isCollapsed && (
           <div className="px-[16px] py-[1rem] border-b-1 border-[#292A2A]">
             <table className="w-full">
@@ -201,24 +180,33 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 >
                   <TableTd>
                     <SubTh>Status</SubTh>
-                    <p className="text-[0.875rem]">{data.status}</p>
+                    <p className="text-[0.875rem]">{detail.status}</p>
                   </TableTd>
                   <TableTd>
-                    <SubTh>
-                      {detail?.multiplierOrReward || data.multiplierOrReward}
-                    </SubTh>
+                    <SubTh>{detail.tagLabel}</SubTh>
                     <p
                       className="text-[0.875rem] flex items-center whitespace-nowrap"
                       key={index}
                     >
-                      <span>{detail?.multiplier || detail?.reward}</span>
-                      {detail?.multiplierTips && (
+                      <span>{detail.tag}</span>
+                      {detail?.tagTooltips && (
                         <>
                           <img
                             src="/img/icon-info.svg"
                             width={12}
                             className="ml-2 inline-block"
                             data-tooltip-id={`eco-booster-${data.handler}`}
+                          />
+
+                          <ReactTooltip
+                            id={`eco-booster-${data.handler}`}
+                            render={() => detail.tagTooltips}
+                            style={{
+                              fontSize: "14px",
+                              background: "#666",
+                              borderRadius: "0.5rem",
+                              maxWidth: "40rem",
+                            }}
                           />
                         </>
                       )}
