@@ -137,7 +137,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                 data-tooltip-id={`eco-booster-${data.handler}`}
               >
                 <span className="text text-[#0bc48f]">{data.booster}</span>
-                {data.boosterTooltips && (
+                {/* {data.boosterTooltips && (
                   <img
                     src="/img/icon-info-green.svg"
                     width={12}
@@ -146,7 +146,7 @@ export function EcoDAppsItem({ data }: { data: EcoDAppsProps }) {
                     data-tooltip-id={`eco-booster-${data.handler}`}
                     alt=""
                   />
-                )}
+                )} */}
 
                 <ReactTooltip
                   id={`eco-booster-${data.handler}`}
