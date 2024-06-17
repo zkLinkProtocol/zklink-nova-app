@@ -847,7 +847,7 @@ export default function Dashboard() {
       details: [
         {
           status: "Live",
-          tag: "10x boost",
+          tag: "Up to 10x",
           tagLabel: "Trading rewards",
           tagTooltips: (
             <div>
@@ -943,7 +943,7 @@ export default function Dashboard() {
     const interport: EcoDAppsProps = {
       name: "Interport",
       handler: "@InterportFi",
-      booster: "10x boost",
+      booster: "Up to 10x",
       link: "https://app.interport.fi/stablecoin-pools?network=zkLink+Nova",
       iconURL: "/img/icon-interport.svg",
       type: "Cross-Chain",
@@ -960,7 +960,7 @@ export default function Dashboard() {
         {
           status: "Live",
           tagLabel: "Booster",
-          tag: "10x boost",
+          tag: "Up to 10x",
           tagTooltips: (
             <div>
               <p>10x for merged USDT and USDC</p>
