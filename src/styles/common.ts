@@ -19,6 +19,28 @@ export const GradientButton = styled.span`
   }
 `;
 
+export const GradientButton2 = styled.span`
+  background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
+  display: inline-block;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+  color: #fff;
+  text-align: center;
+  font-family: "Chakra Petch";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px; /* 100% */
+  letter-spacing: -0.5px;
+  
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+`;
+
 export const BgBox = styled.div`
   position: relative;
   padding-top: 4.5rem;
