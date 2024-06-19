@@ -5,6 +5,7 @@ import SideRefeffal from "@/components/DashboardS2/Side/SideRefeffal";
 import SideNovaPoints from "@/components/DashboardS2/Side/SideNovaPoints";
 import SideProjectPoints from "@/components/DashboardS2/Side/SideProjectPoints";
 import SideNovaNFT from "@/components/DashboardS2/Side/SideNovaNFT";
+import TvlList, { TvlItem } from "@/components/DashboardS2/TvlList";
 
 const Banner1 = styled.div`
   padding: 15px 0;
@@ -179,6 +180,57 @@ const UserInfo = styled.div`
 `;
 
 export default function DashboardS2() {
+  const tvlList: TvlItem[] = [
+    {
+      title: "3,500,000 $ZKL",
+      name: "HOLDING",
+      currentTvl: "1.23m",
+      targetTvl: "5m",
+      nextMilestone: "3,500,000 $ZKL",
+      progress: "100%",
+    },
+    {
+      title: "500,000 $ZKL",
+      name: "SPOT DEX",
+      currentTvl: "1.23m",
+      targetTvl: "5m",
+      nextMilestone: "3,500,000 $ZKL",
+      progress: "20%",
+    },
+    {
+      title: "500,000 $ZKL",
+      name: "PERP DEX",
+      currentTvl: "1.23m",
+      targetTvl: "5m",
+      nextMilestone: "3,500,000 $ZKL",
+      progress: "20%",
+    },
+    {
+      title: "100,000 $ZKL",
+      name: "LENDING",
+      currentTvl: "1.23m",
+      targetTvl: "5m",
+      nextMilestone: "3,500,000 $ZKL",
+      progress: "20%",
+    },
+    {
+      title: "100,000 $ZKL",
+      name: "GAMEFI",
+      currentTvl: "1.23m",
+      targetTvl: "5m",
+      nextMilestone: "3,500,000 $ZKL",
+      progress: "20%",
+    },
+    {
+      title: "100,000 $ZKL",
+      name: "OTHER",
+      currentTvl: "1.23m",
+      targetTvl: "5m",
+      nextMilestone: "3,500,000 $ZKL",
+      progress: "20%",
+    },
+  ];
+
   return (
     <div className="relative pt-[64px] bg-[#0F242E] min-w-[1440px]">
       <div>
@@ -297,6 +349,10 @@ export default function DashboardS2() {
               ratio.
             </div>
           </Title>
+
+          <div>
+            <TvlList tvlList={tvlList} />
+          </div>
         </Content>
       </div>
     </div>
