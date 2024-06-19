@@ -1021,7 +1021,7 @@ export default function Dashboard() {
         {
           status: "Live",
           tagLabel: "Trading Rewards",
-          tag: "0.5 point per trade",
+          tag: "1 point per trade",
           actionType: "Use Protocol",
           description: `For each transaction you interact with Allspark, you could receive 0.5 Nova Points.`,
         },
