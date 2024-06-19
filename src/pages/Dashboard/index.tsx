@@ -862,7 +862,7 @@ export default function Dashboard() {
         {
           status: "Live",
           tagLabel: "Trading rewards",
-          tag: "1 point / $1000 volume",
+          tag: "1 point / $200 volume",
           description: `For every $1000 in trading volume on LogX, you will receive 1 Nova Point.`,
           actionType: "Trade",
           actionLink: "https://app.logx.trade/",
