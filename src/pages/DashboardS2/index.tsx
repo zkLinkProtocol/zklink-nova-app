@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import SideRefeffal from "@/components/DashboardS2/Side/SideRefeffal";
+import SideReferral from "@/components/DashboardS2/Side/SideReferral";
 import SideNovaPoints from "@/components/DashboardS2/Side/SideNovaPoints";
 import SideProjectPoints from "@/components/DashboardS2/Side/SideProjectPoints";
 import SideNovaNFT from "@/components/DashboardS2/Side/SideNovaNFT";
@@ -9,6 +9,7 @@ import UserInfo from "@/components/DashboardS2/Side/UserInfo";
 import SocialMedia from "@/components/DashboardS2/Side/SocialMedia";
 import Banner from "@/components/DashboardS2/Banner";
 import EcoDApps from "@/components/DashboardS2/EcoDApps";
+import { useState } from "react";
 
 const Side = styled.div`
   position: relative;
@@ -17,6 +18,16 @@ const Side = styled.div`
   min-width: 440px;
   min-height: 1200px;
   background: #011a24;
+
+  &.collapsed {
+    width: 80px;
+    min-width: 80px;
+
+    .title,
+    .side-content {
+      display: none;
+    }
+  }
 
   .title {
     color: #fff;
@@ -32,7 +43,10 @@ const Side = styled.div`
 const Content = styled.div`
   margin-left: 10px;
   padding: 40px 75px;
-  width: 100%;
+  width: calc(100% - 440px);
+  &.collapsed {
+    width: calc(100% - 80px);
+  }
   /* height: 1494px; */
   /* background: #011a24; */
 `;
@@ -156,37 +170,67 @@ export default function DashboardS2() {
       progress: "20%",
     },
   ];
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className="relative pt-[64px] bg-[#0F242E] min-w-[1440px]">
       <Banner />
 
       <div className="flex">
-        <Side>
-          <div className="flex">
+        <Side className={`${isCollapsed ? "collapsed" : ""}`}>
+          <div className="flex justify-between items-center">
             <span className="title">Portfolio</span>
+            {isCollapsed ? (
+              <img
+                src="/img/icon-increase.svg"
+                alt=""
+                width={32}
+                height={32}
+                onClick={() => setIsCollapsed(false)}
+              />
+            ) : (
+              <img
+                src="/img/icon-decrease.svg"
+                alt=""
+                width={32}
+                height={32}
+                onClick={() => setIsCollapsed(true)}
+              />
+            )}
+            {/* <img src="/img/icon-increase.svg" alt="" width={32} height={32} />
+            <img src="/img/icon-decrease.svg" alt="" width={32} height={32} /> */}
           </div>
-          <UserInfo />
-
-          <SideRefeffal />
-          <SideNovaPoints />
-          <SideProjectPoints />
-          <SideNovaNFT />
+          <div className="side-content">
+            <UserInfo />
+            <SideReferral />
+            <SideNovaPoints />
+            <SideProjectPoints />
+            <SideNovaNFT />
+          </div>
 
           <div className="absolute bottom-[40px] left-0 right-0 w-full">
-            <SocialMedia />
-            <div className="mt-[24px]">
+            <SocialMedia isCollapsed={isCollapsed} />
+            <div className="disclaimer mt-[24px]">
               <Link
                 to="/about?anchor=disclaimer"
-                className="block text-center text-[#999] text-[24px]"
+                className="flex justify-center block text-center text-[#999] text-[24px]"
               >
-                zkLink Nova Disclaimer
+                {isCollapsed ? (
+                  <img
+                    src="/img/icon-warning-white.svg"
+                    alt=""
+                    width={32}
+                    height={32}
+                  />
+                ) : (
+                  "zkLink Nova Disclaimer"
+                )}
               </Link>
             </div>
           </div>
         </Side>
 
-        <Content>
+        <Content className={`${isCollapsed ? "collapsed" : ""}`}>
           <Title>
             <div className="flex justify-between">
               <span className="main-title">Aggregation Parade Season II</span>

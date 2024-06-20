@@ -20,6 +20,13 @@ const Table = styled.table`
 
   .td {
     padding: 28px 24px;
+    color: #fff;
+    font-family: "Chakra Petch";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 100% */
+    letter-spacing: -0.5px;
   }
 
   .name {
@@ -170,7 +177,7 @@ export const EcoDApp = (props: { data: EcoDAppItem }) => {
         <td className="td"></td>
         <td className="td text-right">
           <div>{data.protocolAllocated}</div>
-          <div>{data.type} Points</div>
+          <div className="sub-title mt-[4px]">{data.type} Points</div>
         </td>
         <td className="td text-right">{data.yourPoints}</td>
         <td className="td w-[160px]">
@@ -196,11 +203,11 @@ export const EcoDApp = (props: { data: EcoDAppItem }) => {
                   </td>
                   <td className="detail-td">
                     <div className="detail-label">Description</div>
-                    <div>{detail.description}</div>
+                    <div className="detail-value">{detail.description}</div>
                   </td>
                   <td className="detail-td text-right">
                     <div className="detail-label">Action</div>
-                    <div className="flex justify-end items-center gap-[4px]">
+                    <div className="detail-value flex justify-end items-center gap-[4px]">
                       <a
                         href={detail.actionLink}
                         target="_blank"

@@ -31,8 +31,6 @@ export const GradientButton2 = styled.span`
   font-family: "Chakra Petch";
   font-size: 20px;
   font-style: normal;
-  font-weight: 700;
-  line-height: 20px; /* 100% */
   letter-spacing: -0.5px;
   
   &.disabled {
