@@ -4,12 +4,22 @@ import SideReferral from "@/components/DashboardS2/Side/SideReferral";
 import SideNovaPoints from "@/components/DashboardS2/Side/SideNovaPoints";
 import SideProjectPoints from "@/components/DashboardS2/Side/SideProjectPoints";
 import SideNovaNFT from "@/components/DashboardS2/Side/SideNovaNFT";
-import TvlList, { TvlItem } from "@/components/DashboardS2/TvlList";
 import UserInfo from "@/components/DashboardS2/Side/UserInfo";
 import SocialMedia from "@/components/DashboardS2/Side/SocialMedia";
 import Banner from "@/components/DashboardS2/Banner";
 import EcoDApps from "@/components/DashboardS2/EcoDApps";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import {
+  SupportToken,
+  getAccountTvl,
+  getExplorerTokenTvl,
+  getSupportTokens,
+  getTokenPrice,
+  getTotalTvlByToken,
+} from "@/api";
+import AssetsTable from "@/components/DashboardS2/AssetsTable";
+import TvlCard, { TvlItem } from "@/components/DashboardS2/TvlCard";
 
 const Side = styled.div`
   position: relative;
@@ -110,14 +120,23 @@ const Title = styled.div`
   }
 `;
 
-const HoldingPoints = styled.div`
-  font-family: "Chakra Petch";
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 32px;
-  letter-spacing: -0.5px;
-`;
+export type TotalTvlItem = {
+  symbol: string;
+  tokenAddress: string;
+  amount: string;
+  tvl: string;
+  type: string;
+  yieldType: string;
+  iconURL: string | null;
+};
+
+export type AccountTvlItem = {
+  tvl: string;
+  amount: string;
+  tokenAddress: string;
+  symbol: string;
+  iconURL: string | null;
+};
 
 export default function DashboardS2() {
   const tvlList: TvlItem[] = [
@@ -170,7 +189,70 @@ export default function DashboardS2() {
       progress: "20%",
     },
   ];
+
+  const [tabActive, setTabActive] = useState<string | undefined>(undefined);
+
+  const { address } = useAccount();
+
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const [ethUsdPrice, setEthUsdPrice] = useState(0);
+  const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
+  const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
+  const [accountTvlData, setAccountTvlData] = useState<AccountTvlItem[]>([]);
+
+  const getAccountTvlFunc = async () => {
+    let usdPrice = 0;
+    const tokenList = await getExplorerTokenTvl(true);
+    const ethToken = tokenList.find((item) => item.symbol === "ETH");
+    if (ethToken) {
+      const res = await getTokenPrice(ethToken.l2Address);
+      usdPrice = +res.usdPrice || 0;
+      setEthUsdPrice(usdPrice);
+    }
+
+    if (!address) return;
+
+    const res = await getAccountTvl(address);
+    const { result } = res;
+    let data = [];
+    if (result && Array.isArray(result) && result.length > 0) {
+      data = result;
+    }
+    setAccountTvlData(data);
+
+    let usd = 0;
+    let eth = 0;
+    data.forEach((item) => {
+      usd += +item?.tvl;
+      eth += +item?.tvl;
+    });
+    // setStakingEthValue(eth);
+    // setStakingUsdValue(usd * usdPrice);
+  };
+
+  const getSupportTokensFunc = async () => {
+    const res = await getSupportTokens();
+    if (res && Array.isArray(res)) {
+      setSupportTokens(res);
+    }
+  };
+
+  const getTotalTvlByTokenFunc = async () => {
+    const res = await getTotalTvlByToken();
+    const { result } = res;
+    let arr = [];
+    if (result && Array.isArray(result) && result.length > 0) {
+      arr = result;
+    }
+    setTotalTvlList(arr);
+  };
+
+  useEffect(() => {
+    getAccountTvlFunc();
+    getSupportTokensFunc();
+    getTotalTvlByTokenFunc();
+  }, [address]);
 
   return (
     <div className="relative pt-[64px] bg-[#0F242E] min-w-[1440px]">
@@ -252,20 +334,27 @@ export default function DashboardS2() {
             </div>
           </Title>
 
-          <TvlList tvlList={tvlList} />
-          {/* 
-          <HoldingPoints className="mt-[40px] flex justify-between items-center">
-            <div>
-              <span className="text-[#999]">Total Holding Points: </span>
-              <span className="text-[#fff]">100,000,000</span>
-            </div>
-            <div>
-              <span className="text-[#999]">Your Holding Points: </span>
-              <span className="text-[#fff]">456</span>
-            </div>
-          </HoldingPoints> */}
+          <div className="mt-[40px] flex flex-wrap gap-[24px]">
+            {tvlList.map((tvlItem, index) => (
+              <TvlCard
+                key={index}
+                data={tvlItem}
+                tabActive={tabActive}
+                handleClick={setTabActive}
+              />
+            ))}
+          </div>
 
-          <EcoDApps />
+          {tabActive === "HOLDING" ? (
+            <AssetsTable
+              ethUsdPrice={ethUsdPrice}
+              supportTokens={supportTokens}
+              totalTvlList={totalTvlList}
+              accountTvlData={accountTvlData}
+            />
+          ) : (
+            <EcoDApps tabActive={tabActive} />
+          )}
         </Content>
       </div>
     </div>

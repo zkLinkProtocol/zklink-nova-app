@@ -9,12 +9,17 @@ export interface TvlItem {
   progress: string;
 }
 
-const TvlCard = styled.div`
+const Conatainer = styled.div`
   padding: 24px;
   /* max-width: 424px; */
   height: 200px;
   background: #011a24;
   flex-basis: calc(33.333% - 16px);
+  cursor: pointer;
+
+  &.active {
+    background: #2e4542;
+  }
 
   .title {
     color: #fff;
@@ -82,10 +87,22 @@ const ProgressBar = styled.div`
   }
 `;
 
-function TvlItem(props: TvlItem) {
-  const { title, name, currentTvl, targetTvl, nextMilestone, progress } = props;
+export default function TvlCard(props: {
+  data: TvlItem;
+  tabActive?: string;
+  handleClick: (type: string | undefined) => void;
+}) {
+  const { title, name, currentTvl, targetTvl, nextMilestone, progress } =
+    props.data;
+  const { handleClick, tabActive } = props;
+
   return (
-    <TvlCard>
+    <Conatainer
+      onClick={() =>
+        handleClick(tabActive && tabActive === name ? undefined : name)
+      }
+      className={tabActive && tabActive === name ? "active" : ""}
+    >
       <div className="title">{title}</div>
       <div className="name mt-[12px]">{name}</div>
 
@@ -111,18 +128,21 @@ function TvlItem(props: TvlItem) {
           {progress === "100%" ? "Maximum" : ""}
         </div>
       </ProgressBar>
-    </TvlCard>
+    </Conatainer>
   );
 }
 
-export default function TvlList(props: { tvlList: TvlItem[] }) {
-  const { tvlList } = props;
+// export default function TvlList(props: {
+//   tvlList: TvlItem[];
+//   handleClick: (type: string) => void;
+// }) {
+//   const { tvlList } = props;
 
-  return (
-    <div className="mt-[40px] flex flex-wrap gap-[24px]">
-      {tvlList.map((tvlItem, index) => (
-        <TvlItem {...tvlItem} key={index} />
-      ))}
-    </div>
-  );
-}
+//   return (
+//     <div className="mt-[40px] flex flex-wrap gap-[24px]">
+//       {tvlList.map((tvlItem, index) => (
+//         <TvlItem {...tvlItem} key={index}  />
+//       ))}
+//     </div>
+//   );
+// }
