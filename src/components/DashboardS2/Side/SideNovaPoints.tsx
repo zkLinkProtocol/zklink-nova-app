@@ -3,10 +3,11 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 40px 0;
+  padding: 20px 0;
   border-bottom: 1px solid #999;
 
   .sub-title {
+    padding: 20px 0;
     color: #fff;
     font-family: "Chakra Petch";
     font-size: 24px;
@@ -90,7 +91,10 @@ export default () => {
         <div>
           <div>
             {list.map((item, index) => (
-              <div key={index} className="mt-[24px] flex justify-between items-center">
+              <div
+                key={index}
+                className="mb-[24px] flex justify-between items-center"
+              >
                 <div className="label">{item.label}</div>
                 <div className="value">{item.value}</div>
               </div>

@@ -3,10 +3,11 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 40px 0;
+  padding: 20px 0;
   border-bottom: 1px solid #999;
 
   .sub-title {
+    padding: 20px 0;
     color: #fff;
     font-family: "Chakra Petch";
     font-size: 24px;
@@ -71,12 +72,12 @@ export default () => {
       elPointsValue: "0",
     },
     {
-        iconURL: "/img/icon-bedrock.svg",
-        pointsLabel: "Bedrock Diamonds",
-        pointsValue: "0",
-        elPointsLabel: "Eigenlayer Points (Bedrock)",
-        elPointsValue: "0",
-      },
+      iconURL: "/img/icon-bedrock.svg",
+      pointsLabel: "Bedrock Diamonds",
+      pointsValue: "0",
+      elPointsLabel: "Eigenlayer Points (Bedrock)",
+      elPointsValue: "0",
+    },
   ];
 
   return (
@@ -100,7 +101,7 @@ export default () => {
               <div>
                 <div
                   key={index}
-                  className="mt-[24px] flex justify-between items-center"
+                  className="flex justify-between items-center"
                 >
                   <div className="label flex items-center gap-[8px]">
                     <img
@@ -116,7 +117,7 @@ export default () => {
                 </div>
                 <div
                   key={index}
-                  className="mt-[8px] ml-[32px] flex justify-between items-center"
+                  className="mt-[8px] mb-[24px] ml-[32px] flex justify-between items-center"
                 >
                   <div className="label">{item.elPointsLabel}</div>
                   <div className="value">{item.elPointsValue}</div>

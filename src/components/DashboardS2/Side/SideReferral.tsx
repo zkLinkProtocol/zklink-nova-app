@@ -1,4 +1,6 @@
+import { RootState } from "@/store";
 import { GradientButton2 } from "@/styles/common";
+import { getTweetShareText } from "@/utils";
 import {
   Button,
   Modal,
@@ -8,14 +10,17 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 40px 0;
+  padding: 20px 0;
   border-bottom: 1px solid #999;
 
   .sub-title {
+    padding: 20px 0;
     color: #fff;
     font-family: "Chakra Petch";
     font-size: 24px;
@@ -44,7 +49,8 @@ const Container = styled.div`
     font-weight: 400;
     line-height: 24px; /* 100% */
     letter-spacing: -0.5px;
-    &.text-green {
+    &.text-green,
+    .text-green {
       color: #0aba89;
     }
     .more {
@@ -76,6 +82,8 @@ const RefeffalList = styled.div`
 export default () => {
   const [isOpen, setIsOpen] = useState(false);
   const referralsModal = useDisclosure();
+  const { invite } = useSelector((store: RootState) => store.airdrop);
+
   const referralList = [
     {
       name: "user123",
@@ -127,6 +135,12 @@ export default () => {
     },
   ];
 
+  const handleCopy = () => {
+    if (!invite?.code) return;
+    navigator.clipboard.writeText(invite?.code);
+    toast.success("Copied", { duration: 2000 });
+  };
+
   return (
     <>
       <Container>
@@ -144,11 +158,31 @@ export default () => {
 
         {isOpen && (
           <div>
-            <div className="mt-[24px]">
+            <div>
               <div className="flex justify-between">
                 <div>
                   <div className="referral-label">Your Invite Code</div>
-                  <div className="referral-value text-green">AA33B8</div>
+                  <div className="referral-value flex items-center gap-[8px]">
+                    <span className="text-green">{invite?.code}</span>
+                    <img
+                      src="/img/icon-copy2.svg"
+                      className="w-[16px] h-[16px] cursor-pointer"
+                      onClick={() => handleCopy()}
+                    />
+
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${getTweetShareText(
+                        invite?.code ?? ""
+                      )}`}
+                      data-show-count="false"
+                      target="_blank"
+                    >
+                      <img
+                        src="/img/icon-x.svg"
+                        className="w-[16px] h-[16px] cursor-pointer"
+                      />
+                    </a>
+                  </div>
                 </div>
                 <div>
                   <div className="referral-label text-right">Invited By</div>
@@ -162,7 +196,7 @@ export default () => {
                 <div>
                   <div className="referral-label">Referrers</div>
                   <div className="referral-value">
-                    AA33B8{" "}
+                    User123{" "}
                     <span className="more" onClick={referralsModal.onOpen}>
                       More
                     </span>
@@ -175,7 +209,7 @@ export default () => {
               </div>
             </div>
 
-            <div className="mt-[24px]">
+            <div className="mt-[24px] pb-[20px]">
               <GradientButton2 className="open-btn disabled">
                 Open Invite Box
               </GradientButton2>
