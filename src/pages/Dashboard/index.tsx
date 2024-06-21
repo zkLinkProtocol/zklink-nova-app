@@ -1038,7 +1038,7 @@ export default function Dashboard() {
     const zkdx: EcoDAppsProps = {
       name: "zkDX",
       handler: "@zkDXio",
-      link: "https://app.zkdx.io/buy_zklp",
+      link: "https://app.zkdx.io/tokenomics?chainid=810180",
       booster: "Up to 10x",
       iconURL: "/img/icon-zkdx.svg",
       type: "Perp DEX",
@@ -1063,7 +1063,7 @@ export default function Dashboard() {
           ),
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
           actionType: "Provide Liquidity",
-          actionLink: "https://app.zkdx.io/buy_zklp",
+          actionLink: "https://app.zkdx.io/tokenomics?chainid=810180",
         },
         {
           status: "Live",
@@ -1071,7 +1071,7 @@ export default function Dashboard() {
           tag: "1 point / $200 volume",
           description: `For every $200 in trading volume on zkDX, you will receive 1 Nova Point.`,
           actionType: "Trade",
-          actionLink: "https://app.zkdx.io/trade",
+          actionLink: "https://app.zkdx.io/trade?chainid=810180",
         },
       ],
     };
