@@ -25,6 +25,7 @@ import {
 import { config } from "@/constants/networks";
 import { formatBalance } from "@/utils";
 import { getPointsRewardsTooltips } from "@/components/Dashboard/PointsRewardsTooltips";
+import CheckinModal from "../CheckinModal";
 
 const Container = styled.div`
   .nft-num {
@@ -408,7 +409,8 @@ export default () => {
                 />
               </div>
 
-              <div className="check-in">Check In</div>
+              {/* <div className="check-in">Check In</div> */}
+              <CheckinModal />
             </div>
 
             <div className="mt-[20px]">

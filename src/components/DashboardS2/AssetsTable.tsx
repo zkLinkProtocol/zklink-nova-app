@@ -1,4 +1,3 @@
-import { CardBox } from "@/styles/common";
 import {
   Button,
   Checkbox,
