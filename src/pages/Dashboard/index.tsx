@@ -1038,7 +1038,7 @@ export default function Dashboard() {
     const zkdx: EcoDAppsProps = {
       name: "zkDX",
       handler: "@zkDXio",
-      link: "https://app.zkdx.io/stakingliquidity",
+      link: "https://app.zkdx.io/buy_zklp",
       booster: "Up to 10x",
       iconURL: "/img/icon-zkdx.svg",
       type: "Perp DEX",
@@ -1063,7 +1063,7 @@ export default function Dashboard() {
           ),
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
           actionType: "Provide Liquidity",
-          actionLink: "https://app.zkdx.io/stakingliquidity",
+          actionLink: "https://app.zkdx.io/buy_zklp",
         },
         {
           status: "Live",
