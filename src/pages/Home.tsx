@@ -9,6 +9,8 @@ import { RootState } from "@/store";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
+import { BlurBox } from "@/styles/common";
+import SocialMedia from "@/components/SocialMedia";
 
 const BgBox = styled.div`
   width: 100%;
@@ -205,20 +207,6 @@ const TitleBox = styled.div`
   }
 `;
 
-const Tag = styled.div`
-  border-radius: 100px;
-  border: 0.6px solid rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px);
-  color: var(--Green, #03d498);
-  text-align: center;
-  font-family: Satoshi;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 26px; /* 162.5% */
-`;
-
 export default function Home() {
   const { inviteCode, isActiveUser } = useSelector(
     (store: RootState) => store.airdrop
@@ -275,7 +263,9 @@ export default function Home() {
       {/* Title */}
       <TitleBox className="text-left md:text-center">
         <div className="mt-[100px] flex justify-center">
-          <Tag className="px-[16px] py-[14px]">Welcome To zkLink Nova</Tag>
+          <BlurBox className="px-[16px] py-[14px]">
+            Welcome To zkLink Nova
+          </BlurBox>
         </div>
         <div className="mt-[20px] flex justify-center px-6">
           <h2 className="title  text-[1.8rem] md:text-[56px] leading-10 md:leading-[50px]">
@@ -348,7 +338,7 @@ export default function Home() {
             className={`submit-btn mt-[26px] text-center text-[16px] leading-[52px] w-[125px] h-[52px] bg-[#03D498] rounded-[100px] text-[#030D19] flex items-center gap-[10px] ${
               isSubmitDisabled ? "opacity-50" : ""
             }`}
-            disabled={isSubmitDisabled}
+            isDisabled={isSubmitDisabled}
             onClick={enterInviteCode}
           >
             <span>Submit</span>
@@ -364,29 +354,15 @@ export default function Home() {
 
       <div>
         <div className="flex justify-center mt-[60px]">
-          <Tag className="px-[16px] py-[14px]">zkLink Nova Network TVL</Tag>
+          <BlurBox className="px-[16px] py-[14px]">
+            zkLink Nova Network TVL
+          </BlurBox>
         </div>
         <div className="mt-[26px] flex justify-center">
           <TotalTvlCard />
         </div>
-        <div className="flex justify-center">
-          <Tag className="mt-[60px] px-[26px] py-[12px] flex items-center gap-[1.25rem]">
-            <a href="https://blog.zk.link/" target="_blank">
-              <img src="/img/icon-medium.svg" className="w-[32px] h-[32px]" />
-            </a>
-            <a href="https://discord.com/invite/zklink" target="_blank">
-              <img src="/img/icon-dc.svg" className="w-[32px] h-[32px]" />
-            </a>
-            <a href="https://t.me/zkLinkorg">
-              <img src="/img/icon-tg.svg" className="w-[32px] h-[32px]" />
-            </a>
-            <a href="https://twitter.com/zkLink_Official" target="_blank">
-              <img src="/img/icon-twitter.svg" className="w-[24px] h-[24px]" />
-            </a>
-            <a href="https://github.com/zkLinkProtocol" target="_blank">
-              <img src="/img/icon-github.svg" className="w-[32px] h-[32px]" />
-            </a>
-          </Tag>
+        <div className="mt-[60px] flex justify-center">
+          <SocialMedia />
         </div>
       </div>
     </BgBox>

@@ -224,3 +224,18 @@ export const GradientBorder = styled.div`
     background: linear-gradient(90deg, #48ecae 0%, #3a50ed 52.9%, #49cdd7 100%);
   }
 `;
+
+
+export const BlurBox = styled.div`
+  border-radius: 100px;
+  border: 0.6px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  color: var(--Green, #03d498);
+  text-align: center;
+  font-family: Satoshi;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1; /* 162.5% */
+`;
