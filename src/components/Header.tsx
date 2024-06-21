@@ -632,27 +632,14 @@ export default function Header() {
                 <DropdownTrigger>
                   <Button
                     // variant="bordered"
-                    className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
+                    className="px-[24px] py-[20px] md:h-[52px] bg-[#03D498] rounded-[100px] flex justify-center items-center md:gap-[10px]"
                     disableAnimation
                   >
-                    <img
-                      className="hidden md:block"
-                      width={20}
-                      height={20}
-                      src="/img/icon-wallet.svg"
-                    />
-                    <img
-                      className="md:hidden"
-                      width={22}
-                      height={22}
-                      src="/img/icon-wallet-white.svg"
-                    />
+                    <img width={20} height={20} src="/img/icon-wallet2.svg" />
 
                     {/* <ConnectButton /> */}
                     <ButtonText
-                      className={`text-white md:text-[#03d498] ${
-                        isConnected ? "ml-2 md:ml-0" : ""
-                      }`}
+                      className={`${isConnected ? "ml-2 md:ml-0" : ""}`}
                     >
                       {showAccount(address)}
                     </ButtonText>
