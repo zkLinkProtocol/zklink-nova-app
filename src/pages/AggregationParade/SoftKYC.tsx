@@ -736,7 +736,7 @@ export default function SoftKYC() {
                   <span className="ml-[0.5rem]">Verify</span>
                   <img
                     src="/img/icon-submit-arrow.svg"
-                    className="w-[16px] h-[16px]"
+                    className="w-[13px] h-[10px]"
                   />
                 </Button>
 
@@ -788,7 +788,7 @@ export default function SoftKYC() {
                   </span>
                   <img
                     src="/img/icon-submit-arrow.svg"
-                    className="w-[16px] h-[16px]"
+                    className="w-[13px] h-[10px]"
                   />
                 </Button>
               </div>
@@ -829,7 +829,7 @@ export default function SoftKYC() {
                   </Tooltip>
                   <img
                     src="/img/icon-submit-arrow.svg"
-                    className="w-[16px] h-[16px]"
+                    className="w-[13px] h-[10px]"
                   />
                 </Button>
 
@@ -844,7 +844,7 @@ export default function SoftKYC() {
                     <span className="ml-[0.5rem]">Verify</span>
                     <img
                       src="/img/icon-submit-arrow.svg"
-                      className="w-[16px] h-[16px]"
+                      className="w-[13px] h-[10px]"
                     />
                   </Button>
                 </Tooltip>
@@ -864,7 +864,7 @@ export default function SoftKYC() {
               </p>
               <img
                 src="/img/icon-submit-arrow.svg"
-                className="w-[16px] h-[16px]"
+                className="w-[13px] h-[10px]"
               />
             </Button>
           </div>
