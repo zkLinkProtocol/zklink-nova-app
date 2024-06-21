@@ -1,6 +1,5 @@
 import {
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   NavbarMenuToggle,
@@ -15,22 +14,14 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
-import {
-  useAccount,
-  useDisconnect,
-  useConnections,
-  useConnectorClient,
-  useConnectors,
-} from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import styled from "styled-components";
-import { scrollToTop, showAccount, sleep } from "@/utils";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { scrollToTop, showAccount } from "@/utils";
+import { useEffect, useState } from "react";
 import {
   setInvite,
   setSignature,
-  setDepositStatus,
   airdropState,
-  setDepositL1TxHash,
   setTwitterAccessToken,
   setInviteCode,
   setIsActiveUser,
@@ -52,14 +43,19 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { BrowserView } from "react-device-detect";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
-import { config } from "@/constants/networks";
 import toast from "react-hot-toast";
 import { eventBus } from "@/utils/event-bus";
-import { set } from "lodash";
 import { AiOutlineDown } from "react-icons/ai";
-import { FUSION_DANCE_PARADE_URL } from "@/constants";
 import useSignature from "@/hooks/useSignature";
-import axios from "axios";
+
+const Container = styled.div`
+  .navbar {
+    /* height: 92px; */
+    border-bottom: 0.6px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+  }
+`;
 
 const NavNet = styled.div`
   background: #313841;
@@ -393,16 +389,18 @@ export default function Header() {
   }, [location.pathname]);
 
   return (
-    <>
+    <Container>
       <Navbar
         // shouldHideOnScroll
-        className={`bg-navBackground md:bg-transparent md:px-[1.5rem] py-[0.75rem] fixed pt-0 ${
+        className={`navbar md:px-[1.5rem] md:h-[92px] fixed pt-0 ${
           isMenuOpen ? "bg-mobile" : ""
         }`}
-        style={{
-          // position: isHeaderTop ? 'fixed' : 'sticky',
-          background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
-        }}
+        style={
+          {
+            // position: isHeaderTop ? 'fixed' : 'sticky',
+            // background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
+          }
+        }
         maxWidth="full"
         isBlurred={false}
         isMenuOpen={isMenuOpen}
@@ -904,6 +902,6 @@ export default function Header() {
           </div>
         )}
       </BrowserView>
-    </>
+    </Container>
   );
 }

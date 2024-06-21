@@ -1,60 +1,51 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import OTPInput from "react-otp-input";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setInviteCode } from "@/store/modules/airdrop";
-import { FooterTvlText } from "@/styles/common";
 import "@/styles/otp-input.css";
 import TotalTvlCard from "@/components/TotalTvlCard";
 import { RootState } from "@/store";
-import { useStartTimerStore } from "@/hooks/useStartTimer";
-import { useAccount } from "wagmi";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
-import Countdown from "@/components/Countdown";
 import Loading from "@/components/Loading";
-import { formatNumberWithUnit } from "@/utils";
+
 const BgBox = styled.div`
   width: 100%;
-  min-height: 100vh;
-  background-image: image-set(
+  /* min-height: 100vh; */
+  min-height: 1212px;
+  /* background-image: image-set(
     "/img/bg-home@0.5x.png" 0.5x,
     "/img/bg-home@1x.png" 1x,
     "/img/bg-home@2x.png" 2x
-  );
+  ); */
+  background-image: url("/img/bg-s2.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 50%;
 `;
 
 const CardBox = styled.div`
-  border-radius: 16px;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(15.800000190734863px);
+  border-radius: 20px;
+  border: 0.6px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
 `;
 const TitleBox = styled.div`
-  // h2{
-  //   margin-left: 120px;
-  // }
-  .headTitle {
-    justify-content: center;
-    margin-bottom: 20px;
-  }
   .flexBox {
     justify-content: center;
   }
   .title {
-    color: #c2e2ff;
+    color: #fff;
     font-family: Satoshi;
     font-style: normal;
     font-weight: 900;
-    letter-spacing: -0.03125rem;
+    letter-spacing: -0.168px;
   }
   .sub-title {
-    color: #c6d3dd;
+    color: #fff;
     font-family: Satoshi;
     font-style: normal;
-    letter-spacing: -0.03125rem;
   }
   @keyframes width {
     0% {
@@ -89,14 +80,19 @@ const TitleBox = styled.div`
     }
   }
   .box {
-    width: 500px;
+    width: 420px;
     height: 52px;
     border-radius: 8px;
     // background: rgba(0, 0, 0, 0.40);
     // backdrop-filter: blur(15.800000190734863px);
     overflow: hidden;
-    padding: 2px 16px;
+    /* padding: 2px 16px; */
     position: relative;
+
+    border-radius: 16.986px;
+    border: 0.679px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16.98630142211914px);
     // animation-name: width;
     // animation-duration: 10s;
     // animation-iteration-count: infinite;
@@ -177,7 +173,7 @@ const TitleBox = styled.div`
       }
     }
     .inner {
-      width: 500px;
+      width: 420px;
       font-family: Satoshi;
       font-size: 40px;
       font-style: normal;
@@ -209,30 +205,24 @@ const TitleBox = styled.div`
   }
 `;
 
-const ConnectWalletText = styled.span`
-  color: #c6ddda;
+const Tag = styled.div`
+  border-radius: 100px;
+  border: 0.6px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  color: var(--Green, #03d498);
   text-align: center;
   font-family: Satoshi;
-  font-size: 1rem;
+  font-size: 16px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 1.5rem; /* 150% */
-  letter-spacing: -0.03125rem;
-`;
-
-const FooterBox = styled.div`
-  /* position: fixed; */
-  /* bottom: 2rem; */
-  /* left: 50%; */
-  /* transform: translate(-50%, 0); */
+  font-weight: 700;
+  line-height: 26px; /* 162.5% */
 `;
 
 export default function Home() {
-  const { isConnected } = useAccount();
   const { inviteCode, isActiveUser } = useSelector(
     (store: RootState) => store.airdrop
   );
-  const { campaignStart } = useStartTimerStore();
   const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] =
     useState({
       otp: inviteCode || "",
@@ -247,7 +237,6 @@ export default function Home() {
   const handleOTPChange = (otp: string) => {
     setConfig((prevConfig) => ({ ...prevConfig, otp }));
   };
-  const arr = ["ETH", "Stablecoins", "LSTs", "LRTs", "L2 Native Assets"];
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
     if (!otp || otp.length !== 6) return;
@@ -276,18 +265,25 @@ export default function Home() {
     handleOTPChange(inviteCode);
   }, [inviteCode]);
 
+  const isSubmitDisabled = useMemo(() => {
+    return !otp || otp.length !== 6;
+  }, [otp]);
+
   return (
-    <BgBox className="relative pt-[116px] pb-[7.5rem] md:pt-[7.5rem] md:pb-[8.5rem]">
+    <BgBox className="relative pt-[92px] pb-[65px]">
       {isLoading && <Loading />}
       {/* Title */}
       <TitleBox className="text-left md:text-center">
-        <div className="flex headTitle px-6">
-          <h2 className="title md:pl-[1.56rem] text-[1.8rem] md:text-[2.5rem]  leading-10 md:leading-[3.5rem]">
+        <div className="mt-[100px] flex justify-center">
+          <Tag className="px-[16px] py-[14px]">Welcome To zkLink Nova</Tag>
+        </div>
+        <div className="mt-[20px] flex justify-center px-6">
+          <h2 className="title  text-[1.8rem] md:text-[56px] leading-10 md:leading-[50px]">
             The ONLY Aggregated L3 with added yield for
           </h2>
         </div>
         <div className="flex flexBox">
-          <div className="box mr-0 md:mr-[30px]">
+          <div className="box mr-0 mt-[32px]">
             <div className="move">
               <div className="inner">ETH</div>
               <div className="inner">Stablecoins</div>
@@ -297,23 +293,23 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <p className="sub-title mt-4 pl-6 pr-6 lg:pr-8 text-[1rem] md:text-[1.5rem] leading-[2rem]">
+        <p className="sub-title my-[32px] pl-6 pr-6 lg:pr-8 text-[1rem] md:text-[26px] leading-[20px]">
           Bridge to earn Mega Yield and $ZKL on zkLink Nova
         </p>
       </TitleBox>
 
       {/* Form: Invite code */}
-      <CardBox className="mt-[2.5rem] mx-6 py-8 px-[1.375rem] md:px-[1rem] md:mx-auto flex flex-col items-center text-center w-auto md:w-[26rem]">
+      <CardBox className="mx-6 py-[30px] px-[1.375rem] md:px-[50px] md:mx-auto  md:w-[546px] flex flex-col items-center text-center w-auto md:w-[26rem]">
         <TitleBox>
-          <h4 className="title text-[1.5rem] leading-[1rem]">
+          <h4 className="title text-[26px] leading-[19px]">
             Enter Your Invite Code
           </h4>
-          <p className="sub-title mt-[0.75rem] text-[1rem] leading-[1.5rem]">
+          <p className="sub-title opacity-80 text-[1rem] mt-[16px] leading-[11px]">
             To participate in the campaign
           </p>
         </TitleBox>
 
-        <div className="mt-8">
+        <div className="mt-[26px]">
           <OTPInput
             inputStyle="inputStyle"
             numInputs={numInputs}
@@ -327,13 +323,21 @@ export default function Home() {
           />
         </div>
 
-        <div className="mt-[1.5rem] text-[1rem]">
+        <div className="mt-[26px] text-[1rem] leading-[18px]">
           Join our{" "}
-          <a href="https://discord.com/invite/zklink" className="text-[#1CFFE4]" target="_blank">
+          <a
+            href="https://discord.com/invite/zklink"
+            className="text-[#03D498]"
+            target="_blank"
+          >
             Discord
           </a>{" "}
           or search{" "}
-          <a href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click" className="text-[#1CFFE4]" target="_blank">
+          <a
+            href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
+            className="text-[#03D498]"
+            target="_blank"
+          >
             #zkLinkNovaAggParade
           </a>{" "}
           on twitter for invite code
@@ -341,66 +345,50 @@ export default function Home() {
 
         <div>
           <Button
-            className={`gradient-btn mt-[2rem] px-[2rem] h-[2.46875rem] text-center text-[1rem] leading-[2.46875rem] w-[15.97rem]`}
-            disabled={!otp || otp.length !== 6}
+            className={`submit-btn mt-[26px] text-center text-[16px] leading-[52px] w-[125px] h-[52px] bg-[#03D498] rounded-[100px] text-[#030D19] flex items-center gap-[10px] ${
+              isSubmitDisabled ? "opacity-50" : ""
+            }`}
+            disabled={isSubmitDisabled}
             onClick={enterInviteCode}
           >
-            SUBMIT
+            <span>Submit</span>
+            <img
+              src="/img/icon-submit-arrow.svg"
+              alt=""
+              width={13}
+              height={10}
+            />
           </Button>
         </div>
-
-        {/* {!isConnected && (
-          <div className="mt-4">
-            <ConnectWalletText
-              className="cursor-pointer text-[1rem]"
-              onClick={() => web3Modal.open()}
-            >
-              Connect Wallet
-            </ConnectWalletText>
-          </div>
-        )} */}
       </CardBox>
 
-      <FooterBox className="w-full fixed left-0 bottom-0 bg-black bg-opacity-75 flex flex-wrap items-center justify-center  md:justify-between px-2 md:px-10 lg:px-36 py-4">
-        {/* Footer: total tvl data */}
-        <div className="flex flex-col mb-8">
-          <span className="text-[1.25rem] text-center">
-            zkLink Nova Network TVL
-          </span>
+      <div>
+        <div className="flex justify-center mt-[60px]">
+          <Tag className="px-[16px] py-[14px]">zkLink Nova Network TVL</Tag>
+        </div>
+        <div className="mt-[26px] flex justify-center">
           <TotalTvlCard />
         </div>
-        {/* <TotalTvlCard /> */}
-
-        {/* Footer: nav links */}
-        <div className="right-[6rem] bottom-[1rem] flex justify-end items-end">
-          <div className="flex items-center gap-[1.25rem]">
+        <div className="flex justify-center">
+          <Tag className="mt-[60px] px-[26px] py-[12px] flex items-center gap-[1.25rem]">
             <a href="https://blog.zk.link/" target="_blank">
-              <img
-                src="/img/icon-medium.svg"
-                className="w-[1.5rem] h-[1.5rem]"
-              />
+              <img src="/img/icon-medium.svg" className="w-[32px] h-[32px]" />
             </a>
             <a href="https://discord.com/invite/zklink" target="_blank">
-              <img src="/img/icon-dc.svg" className="w-[1.5rem] h-[1.5rem]" />
+              <img src="/img/icon-dc.svg" className="w-[32px] h-[32px]" />
             </a>
             <a href="https://t.me/zkLinkorg">
-              <img src="/img/icon-tg.svg" className="w-[1.5rem] h-[1.5rem]" />
+              <img src="/img/icon-tg.svg" className="w-[32px] h-[32px]" />
             </a>
             <a href="https://twitter.com/zkLink_Official" target="_blank">
-              <img
-                src="/img/icon-twitter.svg"
-                className="w-[1.25rem] h-[1.25rem]"
-              />
+              <img src="/img/icon-twitter.svg" className="w-[24px] h-[24px]" />
             </a>
             <a href="https://github.com/zkLinkProtocol" target="_blank">
-              <img
-                src="/img/icon-github.svg"
-                className="w-[1.5rem] h-[1.5rem]"
-              />
+              <img src="/img/icon-github.svg" className="w-[32px] h-[32px]" />
             </a>
-          </div>
+          </Tag>
         </div>
-      </FooterBox>
+      </div>
     </BgBox>
   );
 }
