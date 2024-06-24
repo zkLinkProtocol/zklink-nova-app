@@ -1099,7 +1099,7 @@ export default function Dashboard() {
     const wagmi: EcoDAppsProps = {
       name: "Wagmi",
       handler: "@popsiclefinance",
-      link: "https://app.wagmi.com/liquidity/pools",
+      link: "https://app.wagmi.com/liquidity/pools?chain=810180",
       booster: "Up to 10x",
       iconURL: "/img/icon-wagmi.svg",
       type: "DEX",
@@ -1124,7 +1124,7 @@ export default function Dashboard() {
           ),
           description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
           actionType: "Provide Liquidity",
-          actionLink: "https://app.wagmi.com/liquidity/pools",
+          actionLink: "https://app.wagmi.com/liquidity/pools?chain=810180",
         },
         {
           status: "Live",
@@ -1132,7 +1132,8 @@ export default function Dashboard() {
           tag: "1 point / $200 volume",
           description: `For every $200 in trading volume on Wagmi, you will receive 1 Nova Point.`,
           actionType: "Trade",
-          actionLink: "https://app.wagmi.com/trade/swap",
+          actionLink:
+            "https://app.wagmi.com/trade/swap?chain=810180&inputCurrency=ETH&outputCurrency=0x2F8A25ac62179B31D62D7F80884AE57464699059",
         },
       ],
     };
