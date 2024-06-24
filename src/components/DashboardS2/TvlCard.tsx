@@ -1,3 +1,4 @@
+import { TvlCategory } from "@/api";
 import styled from "styled-components";
 
 export interface TvlItem {

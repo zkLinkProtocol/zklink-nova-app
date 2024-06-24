@@ -600,3 +600,17 @@ export const getNovaCategoryPoints = (
   http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`, {
     params: { address },
   });
+
+export interface TvlCategory {
+  name: string;
+  tvl: string;
+}
+
+interface TvlCategoryResponse {
+  errno: number;
+  errmsg: string;
+  data: TvlCategory[];
+}
+
+export const getTvlCategory = (): Promise<TvlCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/tvl/category`);

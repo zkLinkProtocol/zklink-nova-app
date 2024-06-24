@@ -8,20 +8,24 @@ import UserInfo from "@/components/DashboardS2/Side/UserInfo";
 import SocialMedia from "@/components/DashboardS2/Side/SocialMedia";
 import Banner from "@/components/DashboardS2/Banner";
 import EcoDApps from "@/components/DashboardS2/EcoDApps";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import {
   NovaCategoryPoints,
   SupportToken,
+  TvlCategory,
   getAccountTvl,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
   getSupportTokens,
   getTokenPrice,
   getTotalTvlByToken,
+  getTvlCategory,
 } from "@/api";
 import AssetsTable from "@/components/DashboardS2/AssetsTable";
 import TvlCard, { TvlItem } from "@/components/DashboardS2/TvlCard";
+import { formatNumberWithUnit } from "@/utils";
+import numeral from "numeral";
 
 const Side = styled.div`
   position: relative;
@@ -141,63 +145,6 @@ export type AccountTvlItem = {
 };
 
 export default function DashboardS2() {
-  const tvlList: TvlItem[] = [
-    {
-      title: "3,500,000 $ZKL",
-      name: "HOLDING",
-      category: "holding",
-      currentTvl: "1.23m",
-      targetTvl: "5m",
-      nextMilestone: "3,500,000 $ZKL",
-      progress: "100%",
-    },
-    {
-      title: "500,000 $ZKL",
-      name: "SPOT DEX",
-      category: "spotdex",
-      currentTvl: "1.23m",
-      targetTvl: "5m",
-      nextMilestone: "3,500,000 $ZKL",
-      progress: "20%",
-    },
-    {
-      title: "500,000 $ZKL",
-      name: "PERP DEX",
-      category: "perpdex",
-      currentTvl: "1.23m",
-      targetTvl: "5m",
-      nextMilestone: "3,500,000 $ZKL",
-      progress: "20%",
-    },
-    {
-      title: "100,000 $ZKL",
-      name: "LENDING",
-      category: "lending",
-      currentTvl: "1.23m",
-      targetTvl: "5m",
-      nextMilestone: "3,500,000 $ZKL",
-      progress: "20%",
-    },
-    {
-      title: "100,000 $ZKL",
-      name: "GAMEFI",
-      category: "gamefi",
-      currentTvl: "1.23m",
-      targetTvl: "5m",
-      nextMilestone: "3,500,000 $ZKL",
-      progress: "20%",
-    },
-    {
-      title: "100,000 $ZKL",
-      name: "OTHER",
-      category: "other",
-      currentTvl: "1.23m",
-      targetTvl: "5m",
-      nextMilestone: "3,500,000 $ZKL",
-      progress: "20%",
-    },
-  ];
-
   const [tabActive, setTabActive] = useState<string | undefined>(undefined);
 
   const { address } = useAccount();
@@ -267,11 +214,95 @@ export default function DashboardS2() {
     setNovaCategoryPoints(res?.data || []);
   };
 
+  const getTvlCategoryByName = (name: string) => {
+    const category = tvlCategory.find((item) => item.name === name);
+    return category;
+  };
+
+  const [tvlCategory, setTvlCategory] = useState<TvlCategory[]>([]);
+  const tvlList = useMemo(() => {
+    const spotdex = getTvlCategoryByName("spotdex");
+    const perpdex = getTvlCategoryByName("perpdex");
+    const lending = getTvlCategoryByName("lending");
+    const gamefi = getTvlCategoryByName("gamefi");
+    const other = getTvlCategoryByName("other");
+
+    console.log("spotdex", spotdex, numeral(spotdex?.tvl || 0).format("0,0.00a"));
+    console.log("perpdex", perpdex, formatNumberWithUnit(perpdex?.tvl || 0));
+
+    const arr: TvlItem[] = [
+      {
+        title: "3,500,000 $ZKL",
+        name: "HOLDING",
+        category: "holding",
+        currentTvl: formatNumberWithUnit(0),
+        targetTvl: "5m",
+        nextMilestone: "3,500,000 $ZKL",
+        progress: "100%",
+      },
+      {
+        title: "500,000 $ZKL",
+        name: "SPOT DEX",
+        category: "spotdex",
+        currentTvl: formatNumberWithUnit(spotdex?.tvl || 0),
+
+        targetTvl: "5m",
+        nextMilestone: "3,500,000 $ZKL",
+        progress: "20%",
+      },
+      {
+        title: "500,000 $ZKL",
+        name: "PERP DEX",
+        category: "perpdex",
+        currentTvl: formatNumberWithUnit(perpdex?.tvl || 0),
+        targetTvl: "5m",
+        nextMilestone: "3,500,000 $ZKL",
+        progress: "20%",
+      },
+      {
+        title: "100,000 $ZKL",
+        name: "LENDING",
+        category: "lending",
+        currentTvl: formatNumberWithUnit(lending?.tvl || 0),
+        targetTvl: "5m",
+        nextMilestone: "3,500,000 $ZKL",
+        progress: "20%",
+      },
+      {
+        title: "100,000 $ZKL",
+        name: "GAMEFI",
+        category: "gamefi",
+        currentTvl: formatNumberWithUnit(gamefi?.tvl || 0),
+        targetTvl: "5m",
+        nextMilestone: "3,500,000 $ZKL",
+        progress: "20%",
+      },
+      {
+        title: "100,000 $ZKL",
+        name: "OTHER",
+        category: "other",
+        currentTvl: formatNumberWithUnit(other?.tvl || 0),
+        targetTvl: "5m",
+        nextMilestone: "3,500,000 $ZKL",
+        progress: "20%",
+      },
+    ];
+
+    return arr;
+  }, [tvlCategory]);
+
+  const getTvlCategoryFunc = async () => {
+    const res = await getTvlCategory();
+    console.log("getTvlCategory", res);
+    setTvlCategory(res?.data || []);
+  };
+
   useEffect(() => {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getNovaCategoryPointsFunc();
+    getTvlCategoryFunc();
   }, [address]);
 
   return (
