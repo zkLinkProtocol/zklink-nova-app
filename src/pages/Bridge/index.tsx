@@ -1,17 +1,13 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { ReactNode, useState } from "react";
 import classnames from "classnames";
 import "@/styles/otp-input.css";
 import BridgeComponent from "@/components/Bridge";
-import { Button } from "@nextui-org/react";
 import styled from "styled-components";
 import { FooterTvlText } from "@/styles/common";
 import TotalTvlCard from "@/components/TotalTvlCard";
-import { useAccount } from "wagmi";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Banner from "@/components/Banner";
 import ThirdPartyBridge from "@/components/ThirdPartyBridge";
-
+import "./index.scss";
+import { TRADEMARK_NFT_MARKET_URL } from "@/constants";
 export const BgBox = styled.div`
   position: relative;
   padding-top: 4.5rem;
@@ -365,6 +361,96 @@ export default function Bridge() {
     </>
   );
 
+  const Header = () => (
+    <div className="flex flex-col px-6 pb-6 md:px-16 lg:px-32 pt-20">
+      <h1 className="text-[56px] mb-6 text-white font-bold leading-[41px]">
+        zk.Link Nova
+      </h1>
+      <p className="text-[20px] text-white font-bold">
+        The Industry's Leading L3 Aggregating Fragmented Liquidity Across
+        Ethereum
+      </p>
+    </div>
+  );
+
+  const SeasonTwoItems = [
+    "Continue reaping loyalty rewards from season I by maintaining your funds on Nova L3",
+    "Get up to x5 Nova Point boost for Merge Tokens",
+    "Maximize your Nova point boost by interacting with dApps within Nova’s Ecosystem",
+    () => (
+      <p>
+        Nova Lynks holder of season I & II to split 10M $ZKL (Available for
+        purchase on{" "}
+        <a
+          className="text-[#03D498] "
+          target="_blank"
+          href={TRADEMARK_NFT_MARKET_URL}
+        >
+          OKX NFT Marketplace
+        </a>
+        )
+      </p>
+    ),
+  ];
+
+  const NftIntroduction = () => (
+    <div className="bridge-bg-main mt-10">
+      <p className="text-[22px] font-bold leading-5 mb-6">
+        Nova NFT Introduction
+      </p>
+      <div className="bridge-divide"></div>
+      <p className="text-[16px] font-normal leading-6 my-6">
+        You will be able to mint one of the four Nova SBT once you bridge a
+        minimal worth of 0.1 ETH.
+      </p>
+      <div className="flex items-center justify-between md:justify-start">
+        <img
+          className="w-16 h-16 md:w-20 md:h-20 md:mr-6"
+          src={"/img/nft-1.svg"}
+          alt=""
+        />
+        <img
+          className="w-16 h-16 md:w-20 md:h-20 md:mr-6"
+          src={"/img/nft-2.svg"}
+          alt=""
+        />
+        <img
+          className="w-16 h-16 md:w-20 md:h-20 md:mr-6"
+          src={"/img/nft-3.svg"}
+          alt=""
+        />
+        <img
+          className="w-16 h-16 md:w-20 md:h-20"
+          src={"/img/nft-4.svg"}
+          alt=""
+        />
+      </div>
+    </div>
+  );
+
+  const SeasonTwo = () => (
+    <div className="bridge-bg-main mt-10">
+      <p className="text-[24px] font-bold  mb-6">
+        Aggregation Parade Season II
+      </p>
+      <div className="bridge-divide"></div>
+      <ul className="season-two-list mt-6 ">
+        {SeasonTwoItems.map(
+          (item: string | (() => JSX.Element), index: number) => (
+            <li key={index} className="flex mb-6">
+              <img
+                src="./img/icon-check.svg"
+                alt=""
+                className="w-[18px] h-[18px] mr-2 mt-1"
+              />
+              {typeof item === "string" ? <p>{item}</p> : item()}
+            </li>
+          )
+        )}
+      </ul>
+    </div>
+  );
+
   return (
     <BgBox>
       {/* <div className="relative mb-4 z-[10]">
@@ -374,35 +460,21 @@ export default function Bridge() {
           className="w-full block md:hidden"
         />
       </div> */}
-      <Banner />
-      <div className="block lg:flex md:py-24 pb-24 pt-6">
+      {/* <Banner /> */}
+      <Header />
+      <div className="block lg:flex md:py-24 pt-6">
         <div className="md:hidden mx-6 mb-16">
           <BridgeComponent />
           <ThirdPartyBridge />
         </div>
-        <div className="px-6 pb-6 md:px-16 lg:px-32 lg:w-1/2">
+        <div className="px-6 pb-6 md:pl-16 lg:pl-32 lg:w-1/2">
           <h2 className="text-[32px] md:text-4xl mt-0 font-black leading-10">
             Bridge to zkLink Nova to Earn Nova Points & $ZKL
           </h2>
-          {/* <div className="inline-flex items-center mt-7 bg-[#1E1F24] px-2 py-2 rounded-md">
-            {ActiveTypes.map((item, index) => (
-              <Button
-                onClick={() => setActiveType(item.value)}
-                className={classnames(
-                  activeType === item.value ? "gradient-btn" : "default-btn",
-                  " px-[1rem] py-[0.5rem] text-[1rem] ",
-                  index === 0 ? "mr-4" : 0
-                )}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </div>
-          {activeType === "nft" ? <NovaNFT /> : <NovaPoints />} */}
-
-          <NovaPoints />
+          <SeasonTwo />
+          <NftIntroduction />
         </div>
-        <div className="relative px-6 md:px-16 lg:px-32 lg:w-1/2 md:min-h-[1080px]">
+        <div className="relative p-6 md:pr-16 lg:pr-32 lg:w-1/2 md:min-h-[1080px]">
           <div className="hidden md:block">
             <BridgeComponent />
             <ThirdPartyBridge />
