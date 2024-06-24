@@ -255,7 +255,7 @@ export default function About() {
           <div>
             <ul>
               <li className="before">
-                Duration: 31st May 2024 - 31st Aug 2, 2024
+                Duration: 31st May 2024 - 31st Aug, 2024
               </li>
               <li className="before">Group Booster feature will be removed</li>
               <li className="before">Loyalty Booster will be capped at 50%</li>
