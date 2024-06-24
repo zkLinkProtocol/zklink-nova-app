@@ -1,4 +1,6 @@
+import { NovaCategoryPoints } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
+import { formatNumberWithUnit } from "@/utils";
 import {
   Button,
   Modal,
@@ -119,7 +121,7 @@ const EarnButton = styled.span`
 `;
 
 interface EcoDAppItem {
-  tab: string;
+  category?: string;
   iconURL: string;
   name: string;
   link: string;
@@ -254,17 +256,56 @@ export const EcoDApp = (props: {
   );
 };
 
-export default ({ tabActive }: { tabActive?: string }) => {
+export default ({
+  tabActive,
+  novaCategoryPoints,
+}: {
+  tabActive?: string;
+  novaCategoryPoints: NovaCategoryPoints[];
+}) => {
   const {
     orbiterBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
   } = useNovaPoints();
 
+  const categoryMap = {
+    spotdex: "DEX",
+    lending: "Lending",
+    perpdex: "PERP DEX",
+    gamefi: "GAMEFI",
+    other: "",
+  };
+
+  const geNovaCategoryPointsByProject = (project: string) => {
+    console.log('novaCategoryPoints', novaCategoryPoints)
+    const obj = novaCategoryPoints.find((item) => item.project === project);
+    // const obj = {
+    //   ...findObj,
+    //   tab: findObj ? categoryMap[findObj.category] : "",
+    // };
+    return obj;
+  };
+
   const ecoDAppsList = useMemo(() => {
+    const novaswap = geNovaCategoryPointsByProject("novaswap");
+    const izumi = geNovaCategoryPointsByProject("izumi");
+    const wagmi = geNovaCategoryPointsByProject("wagmi");
+    const eddy = geNovaCategoryPointsByProject("eddy");
+    const logx = geNovaCategoryPointsByProject("logx");
+    const zkdx = geNovaCategoryPointsByProject("zkdx");
+    const layerbank = geNovaCategoryPointsByProject("layerbank");
+    const aqua = geNovaCategoryPointsByProject("aqua");
+    const allspark = geNovaCategoryPointsByProject("allspark");
+    const rubic = geNovaCategoryPointsByProject("rubic");
+    const interport = geNovaCategoryPointsByProject("interport");
+    const orbiter = geNovaCategoryPointsByProject("orbiter");
+    const symbiosis = geNovaCategoryPointsByProject("symbiosis");
+    const meson = geNovaCategoryPointsByProject("meson");
+
     const arr: EcoDAppItem[] = [
       {
-        tab: "SPOT DEX",
+        category: novaswap?.category,
         iconURL: "/img/icon-novaswap.svg",
         name: "Novaswap",
         link: "https://novaswap.fi/",
@@ -273,8 +314,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
         type: "DEX",
         idFeatured: true,
         rewards: "20x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(novaswap?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(novaswap?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -296,7 +337,7 @@ export default ({ tabActive }: { tabActive?: string }) => {
         ],
       },
       {
-        tab: "LENDING",
+        category: layerbank?.category,
         iconURL: "/img/icon-layerbank.svg",
         name: "LayerBank",
         link: "https://zklink.layerbank.finance/",
@@ -304,8 +345,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
           "The aggregation liquidity perp dex. The aggregation liquidity......",
         type: "Lending",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(layerbank?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(layerbank?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -324,7 +365,7 @@ export default ({ tabActive }: { tabActive?: string }) => {
         ],
       },
       {
-        tab: "PERP DEX",
+        category: logx?.category,
         iconURL: "/img/icon-logx.svg",
         name: "LogX",
         link: "https://app.logx.trade/liquidity",
@@ -332,8 +373,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
           "The aggregation liquidity perp dex. The aggregation liquidity......",
         type: "Perp DEX",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(logx?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(logx?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -359,7 +400,7 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "LENDING",
+        category: aqua?.category,
         iconURL: "/img/icon-native.svg",
         name: "Native Lend",
         link: "https://native.org/lend?utm_campaign=zklink_nova&utm_source=custom&utm_medium=2xpoints?chainId=810180",
@@ -367,8 +408,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
           "The aggregation liquidity perp dex. The aggregation liquidity......",
         type: "Lending",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(aqua?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(aqua?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -386,7 +427,41 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "SPOT DEX",
+        category: wagmi?.category,
+        iconURL: "/img/icon-wagmi.svg",
+        name: "Wagmi",
+        link: "https://app.wagmi.com/liquidity/pools",
+        subTitle:
+          "The aggregation liquidity perp dex. The aggregation liquidity......",
+        type: "DEX",
+        rewards: "10x",
+        protocolAllocated: formatNumberWithUnit(wagmi?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(wagmi?.holdingPoints || 0), // TODO
+        details: [
+          {
+            booster: (
+              <div>
+                <p>10x for Merged wBTC, wETH, USDT</p>
+              </div>
+            ),
+            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            action: "Provide Liquidity",
+          },
+          {
+            booster: (
+              <div>
+                <p>1 point / $200 volume</p>
+              </div>
+            ),
+            description: `For every $200 in trading volume on Wagmi, you will receive 1 Nova Point.`,
+            action: "Trade",
+            actionLink: "https://app.wagmi.com/trade/swap",
+          },
+        ],
+      },
+
+      {
+        category: izumi?.category,
         iconURL: "/img/icon-izumi.svg",
         name: "iZUMI",
         link: "https://izumi.finance/trade/swap?chainId=810180",
@@ -394,8 +469,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
           "The aggregation liquidity perp dex. The aggregation liquidity......",
         type: "DEX",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(izumi?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(izumi?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -416,7 +491,7 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "PERP DEX",
+        category: zkdx?.category,
         iconURL: "/img/icon-zkdx.svg",
         name: "zkDX",
         link: "https://app.zkdx.io/stakingliquidity",
@@ -424,8 +499,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
           "The aggregation liquidity perp dex. The aggregation liquidity......",
         type: "Perp DEX",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(zkdx?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(zkdx?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -450,7 +525,7 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "SPOT DEX",
+        category: eddy?.category,
         iconURL: "/img/icon-eddyfinance.svg",
         name: "Eddy Finance",
         link: "https://app.eddy.finance/swap",
@@ -458,8 +533,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
           "The aggregation liquidity perp dex. The aggregation liquidity......",
         type: "DEX",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(eddy?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(eddy?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -474,7 +549,7 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "SPOT DEX",
+        category: allspark?.category,
         iconURL: "/img/icon-allspark.svg",
         name: "Allspark",
         link: "https://www.allspark.finance/mantissa/",
@@ -482,8 +557,8 @@ export default ({ tabActive }: { tabActive?: string }) => {
           "The aggregation liquidity perp dex. The aggregation liquidity......",
         type: "DEX",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(allspark?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(allspark?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -498,16 +573,16 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "OTHER",
+        category: rubic?.category,
         iconURL: "/img/icon-rubic.svg",
         name: "Rubic",
         link: "https://rubic.exchange/",
         subTitle:
           "The aggregation liquidity perp dex. The aggregation liquidity......",
-        type: "Cross-Chain",
+        type: "",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(rubic?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(rubic?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -522,16 +597,16 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "OTHER",
+        category: interport?.category,
         iconURL: "/img/icon-interport.svg",
         name: "Interport",
         link: "https://app.interport.fi/stablecoin-pools?network=zkLink+Nova",
         subTitle:
           "The aggregation liquidity perp dex. The aggregation liquidity......",
-        type: "Cross-Chain",
+        type: "",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(interport?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(interport?.holdingPoints || 0), // TODO
         details: [
           {
             booster: (
@@ -546,16 +621,16 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "OTHER",
+        category: orbiter?.category,
         iconURL: "/img/icon-orbiter.svg",
         name: "Orbiter",
         link: "https://www.orbiter.finance/?source=Ethereum&dest=zkLink%20Nova&token=ETH",
         subTitle:
           "The aggregation liquidity perp dex. The aggregation liquidity......",
-        type: "Cross-Chain",
+        type: "",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(orbiter?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(orbiter?.holdingPoints || 0), // TODO
         details: [
           {
             booster: `${orbiterBridgeNovaPoints} Nova Points`,
@@ -566,16 +641,16 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "OTHER",
+        category: symbiosis?.category,
         iconURL: "/img/icon-symbiosis.svg",
         name: "Symbiosis",
         link: "https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
         subTitle:
           "The aggregation liquidity perp dex. The aggregation liquidity......",
-        type: "Cross-Chain",
+        type: "",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(symbiosis?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(symbiosis?.holdingPoints || 0), // TODO
         details: [
           {
             booster: `${symbiosisBridgeNovaPoints} Nova Points`,
@@ -586,16 +661,16 @@ export default ({ tabActive }: { tabActive?: string }) => {
       },
 
       {
-        tab: "OTHER",
+        category: meson?.category,
         iconURL: "/img/icon-meson.svg",
         name: "Meson",
         link: "https://meson.fi/zklink",
         subTitle:
           "The aggregation liquidity perp dex. The aggregation liquidity......",
-        type: "Cross-Chain",
+        type: "",
         rewards: "10x",
-        protocolAllocated: "0", // TODO
-        yourPoints: "0", // TODO
+        protocolAllocated: formatNumberWithUnit(meson?.refPoints || 0), // TODO
+        yourPoints: formatNumberWithUnit(meson?.holdingPoints || 0), // TODO
         details: [
           {
             booster: `${mesonBridgeNovaPoints} Nova Points`,
@@ -605,11 +680,16 @@ export default ({ tabActive }: { tabActive?: string }) => {
         ],
       },
     ];
-    return tabActive ? arr.filter((item) => item.tab === tabActive) : arr;
+
+    console.log("tabActive", tabActive, arr);
+
+    return tabActive ? arr.filter((item) => item?.category === tabActive) : arr;
   }, [
     orbiterBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
+    novaCategoryPoints,
+    geNovaCategoryPointsByProject,
     tabActive,
   ]);
 

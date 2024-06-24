@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export interface TvlItem {
   title: string;
+  category: string;
   name: string;
   currentTvl: string;
   targetTvl: string;
@@ -92,16 +93,23 @@ export default function TvlCard(props: {
   tabActive?: string;
   handleClick: (type: string | undefined) => void;
 }) {
-  const { title, name, currentTvl, targetTvl, nextMilestone, progress } =
-    props.data;
+  const {
+    title,
+    name,
+    category,
+    currentTvl,
+    targetTvl,
+    nextMilestone,
+    progress,
+  } = props.data;
   const { handleClick, tabActive } = props;
 
   return (
     <Conatainer
       onClick={() =>
-        handleClick(tabActive && tabActive === name ? undefined : name)
+        handleClick(tabActive && tabActive === category ? undefined : category)
       }
-      className={tabActive && tabActive === name ? "active" : ""}
+      className={tabActive && tabActive === category ? "active" : ""}
     >
       <div className="title">{title}</div>
       <div className="name mt-[12px]">{name}</div>

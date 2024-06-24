@@ -11,9 +11,11 @@ import EcoDApps from "@/components/DashboardS2/EcoDApps";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import {
+  NovaCategoryPoints,
   SupportToken,
   getAccountTvl,
   getExplorerTokenTvl,
+  getNovaCategoryPoints,
   getSupportTokens,
   getTokenPrice,
   getTotalTvlByToken,
@@ -143,6 +145,7 @@ export default function DashboardS2() {
     {
       title: "3,500,000 $ZKL",
       name: "HOLDING",
+      category: "holding",
       currentTvl: "1.23m",
       targetTvl: "5m",
       nextMilestone: "3,500,000 $ZKL",
@@ -151,6 +154,7 @@ export default function DashboardS2() {
     {
       title: "500,000 $ZKL",
       name: "SPOT DEX",
+      category: "spotdex",
       currentTvl: "1.23m",
       targetTvl: "5m",
       nextMilestone: "3,500,000 $ZKL",
@@ -159,6 +163,7 @@ export default function DashboardS2() {
     {
       title: "500,000 $ZKL",
       name: "PERP DEX",
+      category: "perpdex",
       currentTvl: "1.23m",
       targetTvl: "5m",
       nextMilestone: "3,500,000 $ZKL",
@@ -167,6 +172,7 @@ export default function DashboardS2() {
     {
       title: "100,000 $ZKL",
       name: "LENDING",
+      category: "lending",
       currentTvl: "1.23m",
       targetTvl: "5m",
       nextMilestone: "3,500,000 $ZKL",
@@ -175,6 +181,7 @@ export default function DashboardS2() {
     {
       title: "100,000 $ZKL",
       name: "GAMEFI",
+      category: "gamefi",
       currentTvl: "1.23m",
       targetTvl: "5m",
       nextMilestone: "3,500,000 $ZKL",
@@ -183,6 +190,7 @@ export default function DashboardS2() {
     {
       title: "100,000 $ZKL",
       name: "OTHER",
+      category: "other",
       currentTvl: "1.23m",
       targetTvl: "5m",
       nextMilestone: "3,500,000 $ZKL",
@@ -248,10 +256,22 @@ export default function DashboardS2() {
     setTotalTvlList(arr);
   };
 
+  const [novaCategoryPoints, setNovaCategoryPoints] = useState<
+    NovaCategoryPoints[]
+  >([]);
+
+  const getNovaCategoryPointsFunc = async () => {
+    if (!address) return;
+    const res = await getNovaCategoryPoints(address);
+    console.log("getNovaCategoryPoints", res);
+    setNovaCategoryPoints(res?.data || []);
+  };
+
   useEffect(() => {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
+    getNovaCategoryPointsFunc();
   }, [address]);
 
   return (
@@ -345,7 +365,7 @@ export default function DashboardS2() {
             ))}
           </div>
 
-          {tabActive === "HOLDING" ? (
+          {tabActive === "holding" ? (
             <AssetsTable
               ethUsdPrice={ethUsdPrice}
               supportTokens={supportTokens}
@@ -353,7 +373,10 @@ export default function DashboardS2() {
               accountTvlData={accountTvlData}
             />
           ) : (
-            <EcoDApps tabActive={tabActive} />
+            <EcoDApps
+              tabActive={tabActive}
+              novaCategoryPoints={novaCategoryPoints}
+            />
           )}
         </Content>
       </div>

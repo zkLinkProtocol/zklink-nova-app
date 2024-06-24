@@ -580,3 +580,23 @@ export const getMystery3Reamin = (address: string): Promise<Response> =>
 
 export const drawMystery3 = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
+
+export interface NovaCategoryPoints {
+  category: "spotdex" | "perpdex" | "lending" | "gamefi" | "other";
+  project: string;
+  holdingPoints: number;
+  refPoints: number;
+}
+
+interface NovaCategoryResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryPoints[];
+}
+
+export const getNovaCategoryPoints = (
+  address: string
+): Promise<NovaCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`, {
+    params: { address },
+  });
