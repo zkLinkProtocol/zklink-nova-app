@@ -7,7 +7,6 @@ import {
   registerAccount,
   registerAccountByBridge,
 } from "@/api";
-import TotalTvlCard from "@/components/TotalTvlCard";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { RootState } from "@/store";
 import {
@@ -51,7 +50,7 @@ import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { IS_MAINNET } from "@/constants";
 import Toast from "@/components/Toast";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import SocialMedia from "@/components/SocialMedia";
+import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 const verifyFromList = [
   ...fromList,
   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
@@ -872,13 +871,7 @@ export default function SoftKYC() {
       </div>
 
       {/* Total tvl */}
-      <div className="flex flex-col justify-center items-center w-full mt-[50px]">
-        <BlurBox className="px-[16px] py-[14px] mb-[26px]">TVL</BlurBox>
-        <TotalTvlCard />
-        <div className="mt-[60px] flex justify-center">
-          <SocialMedia />
-        </div>
-      </div>
+      <NovaNetworkTVL name='TVL' />
 
       {/* Verify deposit modal */}
       <Modal

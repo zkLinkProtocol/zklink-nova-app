@@ -4,13 +4,12 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setInviteCode } from "@/store/modules/airdrop";
 import "@/styles/otp-input.css";
-import TotalTvlCard from "@/components/TotalTvlCard";
 import { RootState } from "@/store";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import { BlurBox } from "@/styles/common";
-import SocialMedia from "@/components/SocialMedia";
+import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 
 const BgBox = styled.div`
   width: 100%;
@@ -352,19 +351,7 @@ export default function Home() {
         </div>
       </CardBox>
 
-      <div>
-        <div className="flex justify-center mt-[60px]">
-          <BlurBox className="px-[16px] py-[14px]">
-            zkLink Nova Network TVL
-          </BlurBox>
-        </div>
-        <div className="mt-[26px] flex justify-center">
-          <TotalTvlCard />
-        </div>
-        <div className="mt-[60px] flex justify-center">
-          <SocialMedia />
-        </div>
-      </div>
+      <NovaNetworkTVL />
     </BgBox>
   );
 }

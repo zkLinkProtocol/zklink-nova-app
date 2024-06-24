@@ -55,6 +55,14 @@ const Container = styled.div`
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
   }
+
+  .nav-link {
+    padding: 10px 14px;
+    &.active {
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.14);
+    }
+  }
 `;
 
 const NavNet = styled.div`
@@ -424,12 +432,12 @@ export default function Header() {
               {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
           </Link>
-          <NavNet className="hidden md:flex">
+          {/* <NavNet className="hidden md:flex">
             <div>Mainnet Live</div>
-          </NavNet>
+          </NavNet> */}
           {/* <NavBox> */}
           <NavbarContent
-            className="hidden md:flex gap-[2.5rem]"
+            className="hidden md:flex"
             justify="center"
           >
             <NavbarItem>
@@ -457,13 +465,19 @@ export default function Header() {
               </a>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/leaderboard">Leaderboard</NavLink>
+              <NavLink to="/leaderboard" className={"nav-link"}>
+                Leaderboard
+              </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/bridge">Bridge</NavLink>
+              <NavLink to="/bridge" className={"nav-link"}>
+                Bridge
+              </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/about">About</NavLink>
+              <NavLink to="/about" className={"nav-link"}>
+                About
+              </NavLink>
             </NavbarItem>
 
             <Dropdown>
