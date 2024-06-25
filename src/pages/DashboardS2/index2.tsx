@@ -14,6 +14,7 @@ import {
   getTvlCategory,
 } from "@/api";
 import { useAccount } from "wagmi";
+import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
 
 export type TotalTvlItem = {
   symbol: string;
@@ -210,26 +211,32 @@ export default function Dashboard() {
     {
       iconURL: "/img/icon-assets.svg",
       name: "Assets",
+      category: "assets",
     },
     {
       iconURL: "/img/icon-spotdex.svg",
       name: "Spot DEX",
+      category: "spotdex",
     },
     {
       iconURL: "/img/icon-perpdex.svg",
       name: "Perp DEX",
+      category: "perpdex",
     },
     {
       iconURL: "/img/icon-lending.svg",
       name: "Lending",
+      category: "lending",
     },
     {
       iconURL: "/img/icon-gamefi.svg",
       name: "GameFi",
+      category: "gamefi",
     },
     {
       iconURL: "/img/icon-others.svg",
       name: "Others",
+      category: "other",
     },
   ];
 
@@ -287,10 +294,22 @@ export default function Dashboard() {
     setTotalTvlList(arr);
   };
 
+  const [novaCategoryPoints, setNovaCategoryPoints] = useState<
+    NovaCategoryPoints[]
+  >([]);
+
+  const getNovaCategoryPointsFunc = async () => {
+    if (!address) return;
+    const res = await getNovaCategoryPoints(address);
+    console.log("getNovaCategoryPoints", res);
+    setNovaCategoryPoints(res?.data || []);
+  };
+
   useEffect(() => {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
+    getNovaCategoryPointsFunc();
   }, [address]);
 
   return (
@@ -371,12 +390,19 @@ export default function Dashboard() {
             </div>
 
             <div className="tab-content px-[31px] py-[32.5px]">
-              <Assets
-                ethUsdPrice={ethUsdPrice}
-                supportTokens={supportTokens}
-                totalTvlList={totalTvlList}
-                accountTvlData={accountTvlData}
-              />
+              {tabs2Active === 0 ? (
+                <Assets
+                  ethUsdPrice={ethUsdPrice}
+                  supportTokens={supportTokens}
+                  totalTvlList={totalTvlList}
+                  accountTvlData={accountTvlData}
+                />
+              ) : (
+                <EcoDApps
+                  tabActive={tabs2[tabs2Active]}
+                  novaCategoryPoints={novaCategoryPoints}
+                />
+              )}
             </div>
           </TabsCard>
         </div>

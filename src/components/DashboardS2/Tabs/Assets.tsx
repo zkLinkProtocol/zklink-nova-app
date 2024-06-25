@@ -317,6 +317,9 @@ export default function Assets(props: IAssetsTableProps) {
         const accountTvlItem = getTokenAccountTvl(chains.l2Address);
         const totalTvlItem = getTotalTvl(chains.l2Address);
 
+        console.log("accountTvlItem", accountTvlItem);
+        console.log("totalTvlItem", totalTvlItem);
+
         if (accountTvlItem) {
           obj.amount += +accountTvlItem.amount ? +accountTvlItem.amount : 0;
           obj.tvl += +accountTvlItem.tvl
@@ -388,6 +391,8 @@ export default function Assets(props: IAssetsTableProps) {
           Number(findClosestMultiplier(a.multipliers))
       );
 
+    console.log("assets list", arr);
+
     setFilterTableList(arr);
 
     // const notNovaFilters = arr.filter((item) => !item.isNova);
@@ -401,7 +406,11 @@ export default function Assets(props: IAssetsTableProps) {
       <div className="flex justify-between items-center">
         <div>
           <div className="holding-title flex items-center gap-[4px]">
-            <img src="/img/icon-assets.svg" alt="" className="w-[16px] h-[16px]" />
+            <img
+              src="/img/icon-assets.svg"
+              alt=""
+              className="w-[16px] h-[16px]"
+            />
             <span>Holding $ZKL Allocation</span>
           </div>
           <div className="holding-value mt-[16px]">5,000,000 $ZKL</div>
@@ -450,14 +459,18 @@ export default function Assets(props: IAssetsTableProps) {
             {filterTableList.map((item, index) => (
               <div className="row mb-[24px] flex items-center" key={index}>
                 <div className="list-content-item flex items-center gap-[10px]">
-                  <img
-                    src={item?.iconURL}
-                    alt=""
-                    className="w-[55px] h-[56px] rounded-full block"
-                  />
+                  {item?.iconURL && (
+                    <img
+                      src={item?.iconURL}
+                      alt=""
+                      className="w-[55px] h-[56px] rounded-full block"
+                    />
+                  )}
                   <div>
                     <div className="symbol">{item?.symbol}</div>
-                    <div className="name mt-[5px]">Ethereum</div>
+                    {item?.isNova && (
+                      <div className="name mt-[5px]">Merged Token</div>
+                    )}
                   </div>
                 </div>
                 <div className="col-line"></div>
