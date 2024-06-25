@@ -1,11 +1,5 @@
-import { lazy, Suspense, useEffect } from "react";
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useSearchParams,
-} from "react-router-dom";
+import { Suspense } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 
 import Home from "./pages/Home";
@@ -18,10 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About/index2";
 import UnwrapETH from "@/pages/UnwrapETH";
-import { useDispatch } from "react-redux";
-import { setInviteCode } from "./store/modules/airdrop";
-import Maintenance from "./components/Maintenance";
-import DashboardS2 from "./pages/DashboardS2";
+import DashboardS2 from "./pages/DashboardS2/index2";
 
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));

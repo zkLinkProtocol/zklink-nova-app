@@ -1,5 +1,5 @@
 import SoftKYC from "./SoftKYC";
-import Dashboard from "../DashboardS2";
+import Dashboard from "../DashboardS2/index2";
 import { airdropState } from "@/store/modules/airdrop";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
