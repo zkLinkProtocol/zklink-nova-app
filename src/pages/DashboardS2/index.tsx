@@ -306,7 +306,7 @@ export default function DashboardS2() {
   }, [address]);
 
   return (
-    <div className="relative pt-[64px] bg-[#0F242E] min-w-[1440px]">
+    <div className="relative pt-[92px] bg-[#0F242E] min-w-[1440px]">
       <Banner />
 
       <div className="flex">

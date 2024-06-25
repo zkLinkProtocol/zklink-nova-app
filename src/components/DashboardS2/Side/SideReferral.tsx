@@ -424,7 +424,7 @@ export default () => {
           {isOpen ? (
             <BsChevronUp className="text-[20px]" />
           ) : (
-            <BsChevronDown width={24} height={24} className="text-[24px]" />
+            <BsChevronDown className="text-[20px]" />
           )}
         </div>
 

@@ -16,7 +16,7 @@ import AggregationParade from "./pages/AggregationParade";
 import Bridge from "@/pages/Bridge";
 import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
-import About from "./pages/About";
+import About from "./pages/About/index2";
 import UnwrapETH from "@/pages/UnwrapETH";
 import { useDispatch } from "react-redux";
 import { setInviteCode } from "./store/modules/airdrop";
