@@ -14,7 +14,7 @@ import {
   Tab,
 } from "@nextui-org/react";
 import { useAccount, useSwitchChain } from "wagmi";
-import { AiOutlineCheck, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import { AiOutlineCheck } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { debounce } from "lodash";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
@@ -33,247 +33,27 @@ import { Token } from "@/hooks/useTokenList";
 import { formatTxHash, getTxHashExplorerLink, isSameAddress } from "@/utils";
 import CopyIcon from "../CopyIcon";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
-import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useConnections } from "wagmi";
-import { Switch, cn } from "@nextui-org/react";
 import { SourceTokenInfo, useMergeToken } from "@/hooks/useMergeToken";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
-import { Tooltip as ReactTooltip } from "react-tooltip";
 import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
-import "./index.scss";
-const ModalSelectItem = styled.div`
-  &:hover {
-    background-color: rgb(61, 66, 77);
-    border-radius: 8px;
-  }
-`;
+import BridgeCompPc from "./BridgeCompPc";
+import BridgeCompMobile from "./BridgeCompMobile";
+import {
+  ModalSelectItem,
+  AssetTypes,
+  TokenYieldBox,
+  Trans,
+} from "./Components";
 
-const Trans = styled.div`
-  .statusImg {
-    width: 128px;
-    margin-top: 20px;
-    margin-left: calc(50% - 64px);
-    margin-bottom: 23px;
-  }
-  .statusBut {
-    transform: scale(3.5);
-    background: transparent;
-    margin-top: 50px;
-    margin-left: calc(50% - 48px);
-    margin-bottom: 50px;
-  }
-  .title {
-    color: #fff;
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 32px; /* 133.333% */
-    letter-spacing: -0.5px;
-    margin-bottom: 23px;
-  }
-  .inner {
-    color: #a0a5ad;
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 32px; /* 133.333% */
-    letter-spacing: -0.5px;
-    margin-bottom: 23px;
-  }
-  .button {
-    height: 56px;
-    width: 100%;
-    border-radius: 8px;
-    background: linear-gradient(
-      90deg,
-      #48ecae 0%,
-      #3e52fc 51.07%,
-      #49ced7 100%
-    );
-    color: #fff;
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 56px;
-    letter-spacing: -0.5px;
-    margin-bottom: 24px;
-    cursor: pointer;
-  }
-  .view {
-    color: #48ecae;
-    background: transparent;
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 32px; /* 133.333% */
-    letter-spacing: -0.5px;
-    cursor: pointer;
-  }
-  .inline {
-    display: inline;
-  }
-`;
-
-const Container = styled.div`
-  background: #313841;
-  border-radius: 12px;
-  position: relative;
-  .mask-layer {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 1;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    /* display: flex; */
-  }
-`;
-export const SelectBox = styled.div`
-  & {
-    background: #23262d;
-    border-radius: 16px;
-  }
-  .selector {
-    background-color: #313841;
-    height: 40px;
-    &:hover {
-      background-color: rgb(85 90 102);
-    }
-  }
-  .points-box {
-    color: #a0a5ad;
-    font-size: 16px;
-    font-weight: 400;
-    .input-wrapper {
-      padding-top: 0;
-      padding-bottom: 0;
-      height: 38px;
-    }
-  }
-  .title {
-    color: #a0a5ad;
-    font-family: Satoshi;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 24px; /* 200% */
-    letter-spacing: -0.5px;
-  }
-`;
-
-export const TokenYieldBox = styled.div`
-  & .token-yield {
-    display: flex;
-    padding: 2px 8px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 6px;
-    color: #fff;
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 24px; /* 200% */
-    letter-spacing: -0.06px;
-    margin-right: 6px;
-    white-space: nowrap;
-  }
-  & .token-yield-1 {
-    background: linear-gradient(90deg, #64b3ec -0.39%, #1e1a6a 99.76%);
-  }
-  & .token-yield-2 {
-    background: linear-gradient(90deg, #874fff -0.39%, #41ff54 99.76%);
-  }
-  & .token-yield-3 {
-    background: linear-gradient(90deg, #ddf3fd 0%, #7c3dc8 0.01%, #0f002b 100%);
-  }
-  & .token-yield-4 {
-    background: linear-gradient(90deg, #0bc48f 0%, #00192b 107.78%);
-  }
-  & .token-yield-5 {
-    background: linear-gradient(90deg, #ace730 -0.39%, #324900 99.76%);
-  }
-  & .token-yield-6 {
-    background: linear-gradient(90deg, #3e9d8f -0.39%, #205049 99.76%);
-  }
-  & .token-yield-7 {
-    background: linear-gradient(90deg, #2e2758 -0.39%, #1e1839 99.76%);
-  }
-  & .token-yield-8 {
-    background: linear-gradient(90deg, #075a5a -0.39%, #000404 99.76%);
-  }
-`;
-
-const LoyaltyBoostBox = styled.div`
-  background: linear-gradient(90deg, #48ecae 0%, #3e52fc 51.07%, #49ced7 100%);
-  width: 100px;
-  height: 28px;
-  border-radius: 8px;
-  color: #ffffff;
-  text-align: center;
-  margin-left: 6px;
-  font-size: 12px;
-  line-height: 28px;
-`;
-
-const LoyaltyBoostTooltipContent = styled.div`
-  /* background: #666666; */
-  /* padding: 12px 16px; */
-  border-radius: 8px;
-  font-weight: 400;
-  font-size: 16px;
-  /* font-family: "Space Mono"; */
-`;
-
-const AssetTypes = [
-  { label: "ALL", value: "ALL" },
-  {
-    label: "Native",
-    value: "NATIVE",
-  },
-  {
-    label: "Stable",
-    value: "Stablecoin",
-  },
-  {
-    label: "Synthetic",
-    value: "Synthetic",
-  },
-  {
-    label: "RWA",
-    value: "RWA",
-  },
-  {
-    label: "LST",
-    value: "LST",
-  },
-  {
-    label: "LRT",
-    value: "LRT",
-  },
-];
 export interface IBridgeComponentProps {
   onClose?: () => void;
   bridgeToken?: string;
 }
-
-const ContentForMNTDeposit =
-  "When deposit MNT, we will transfer MNT to wMNT and then deposit wMNT for you.";
 export default function Bridge(props: IBridgeComponentProps) {
   const { onClose, bridgeToken } = props;
   // const web3Modal = useWeb3Modal();
@@ -800,7 +580,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     onClose?.();
   }, [
     address,
-    nativeTokenBalance,
     invalidChain,
     amount,
     transLoadModal,
@@ -811,6 +590,8 @@ export default function Bridge(props: IBridgeComponentProps) {
     sendDepositTx,
     tokenFiltered,
     tokenActive,
+    nativeTokenBalance,
+    mergeSupported,
     isMergeSelected,
     addTxHash,
     dispatch,
@@ -818,33 +599,6 @@ export default function Bridge(props: IBridgeComponentProps) {
     networkKey,
     transFailModal,
   ]);
-
-  const ContainerCover = () => {
-    return (
-      <div className="mask-layer flex flex-col items-center justify-center p-[1.5rem]">
-        <p className="text-center text-[1rem]">
-          The deposit function on this page is currently undergoing an upgrade
-        </p>
-        <p className="mt-2 text-[1rem] text-[#999] text-center">
-          You can still participate the parade by deposit through the zkLink
-          Nova Portal and copy your deposit hash to pass verification.
-        </p>
-        <a href="https://portal.zklink.io/bridge/" target="_blank">
-          <Button
-            className="mt-4 gradient-btn w-full rounded-full "
-            style={{ display: "flex", alignItems: "center" }}
-            disableAnimation
-            size="lg"
-            // onClick={handleAction}
-            isLoading={loading}
-            // disabled={actionBtnDisabled}
-          >
-            Deposit through zkLink Nova Portal now
-          </Button>
-        </a>
-      </div>
-    );
-  };
 
   const { mintable, minted } = useOldestFriendsStatus();
 
@@ -867,766 +621,78 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   return (
     <>
-      <Container className="hidden md:block px-4 py-6 md:px-8 md:py-8">
-        {/* <ContainerCover /> */}
-        <div className="flex items-center font-bold text-lg mb-4">
-          <span className="cursor-pointer mr-4">Deposit</span>
-          <span
-            className="cursor-pointer text-[#a0a5ad] hover:text-[#fff]"
-            onClick={() =>
-              window.open("https://portal.zklink.io/withdraw", "_blank")
-            }
-          >
-            Withdraw
-          </span>
-        </div>
-        <SelectBox className="px-6 py-6 md:px-6">
-          <div className="flex items-center gap-4">
-            <span className="font-bold">From</span>
-            <div
-              className="selector flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer"
-              onClick={() => fromModal.onOpen()}
-            >
-              <img
-                src={fromList[fromActive].icon}
-                className="w-6 h-6 rounded-full"
-              />
-              <span>{fromList[fromActive].label}</span>
-              {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
-            </div>
-            <div className="ml-auto">
-              Balance:{" "}
-              <span>{tokenFiltered[tokenActive]?.formatedBalance}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 mt-2">
-            <Input
-              ref={inputRef1}
-              classNames={{ input: "text-4xl" }}
-              size="lg"
-              // type="number"
-              placeholder="0"
-              variant={"underlined"}
-              value={String(amount)}
-              onValueChange={handleInputValue}
-              errorMessage={errorInputMsg}
-            />
-
-            <div
-              className="selector flex items-center gap-2 px-4 py-4 rounded-3xl cursor-pointer"
-              onClick={() => tokenModal.onOpen()}
-            >
-              <Avatar
-                src={tokenFiltered[tokenActive]?.icon}
-                style={{ width: 24, height: 24 }}
-              />
-              <span>{tokenFiltered[tokenActive]?.symbol}</span>
-              {tokenModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
-            </div>
-          </div>
-        </SelectBox>
-
-        <SelectBox className="mt-4 px-4 md:px-6 py-6">
-          <div className="flex items-center justify-between mb-2 points-box">
-            <div className="flex items-center">
-              <span>Nova Points</span>
-
-              <Tooltip
-                showArrow={true}
-                classNames={{
-                  content: "max-w-[300px] p-4",
-                }}
-                content="By depositing into zkLink Nova, the Nova Points you'll earn every 8 hours."
-              >
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                />
-              </Tooltip>
-              {loyalPoints > 0 && (
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "px-0 py-0 max-w-[400px]",
-                  }}
-                  content={
-                    <LoyaltyBoostTooltipContent>
-                      <p className="mb-8">
-                        Thank you for your continued support of zkLink. As our
-                        loyal user, we're delighted to offer you{" "}
-                        <span className="text-[#03D498]">{loyalPoints}</span>{" "}
-                        addtional Nova Points.{" "}
-                      </p>
-                      <a href="" target="_blank" className="text-[#03D498]">
-                        Learn more.
-                      </a>
-                    </LoyaltyBoostTooltipContent>
-                  }
-                >
-                  <LoyaltyBoostBox>Loyalty Boost</LoyaltyBoostBox>
-                </Tooltip>
-              )}
-            </div>
-            <div className="flex items-center">
-              <span className="text-white">
-                {showNoPointsTip
-                  ? 0
-                  : points < 0.01 && points > 0
-                  ? "< 0.01"
-                  : points.toFixed(2)}
-              </span>
-              {loyalPoints > 0 && (
-                <div className="ml-1">
-                  + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {networkKey && NexusEstimateArrivalTimes[networkKey] && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <span>Estimated Time of Arrival</span>
-
-              <span className="text-white">
-                ~ {NexusEstimateArrivalTimes[networkKey]} minutes
-              </span>
-            </div>
-          )}
-
-          {mintable && !minted && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <div className="flex items-center">
-                <span>zkLink's Oldest Friends</span>
-
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                  data-tooltip-id="old-fren"
-                />
-
-                <ReactTooltip
-                  id="old-fren"
-                  content="zkLink's oldest friends (previous campaign participants) taking part in the zkLink Aggregation Parade will have the opportunity to win one of the following rewards: point boosters, NFT trademarks, and Lynks."
-                  style={{
-                    fontSize: "14px",
-                    background: "#666",
-                    borderRadius: "0.5rem",
-                    maxWidth: "32rem",
-                  }}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#0BC48F] text-[14px]">1 Lucky Draw</span>
-                <img
-                  src="/img/icon-old-fren-right.svg"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-          )}
-
-          {isCheckWinner && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <div className="flex items-center">
-                <span>CoinList Participants' Rewards</span>
-
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                  data-tooltip-id="coinlist-participants"
-                />
-
-                <ReactTooltip
-                  id="coinlist-participants"
-                  content="Previous zkLink Coinlist participants taking part in the zkLink Aggregation Parade will receive 1 mystery box, with chances to win rewards up to 1000 Nova Points, trademarks NFT, and Lynks."
-                  style={{
-                    fontSize: "14px",
-                    background: "#666",
-                    borderRadius: "0.5rem",
-                    maxWidth: "30rem",
-                  }}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#0BC48F] text-[14px]">
-                  1 Mystery Box
-                </span>
-                <img
-                  src="/img/icon-old-fren-right.svg"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-          )}
-
-          {isWhitelistWinner && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <div className="flex items-center">
-                <span>Coinlist Whitelist Users</span>
-
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                  data-tooltip-id="coinlist-whitelist"
-                />
-
-                <ReactTooltip
-                  id="coinlist-whitelist"
-                  style={{
-                    fontSize: "14px",
-                    background: "#666",
-                    borderRadius: "0.5rem",
-                    maxWidth: "32rem",
-                  }}
-                  render={() => (
-                    <p>
-                      Previous zkLink Coinlist whitelist users taking part in
-                      the zkLink Aggregation Parade will receive 50 Nova Points,
-                      Equivalent to depositing{" "}
-                      <b className="font-[700] text-[#fff]">
-                        1 ETH into the Nova Network for 9 days.
-                      </b>
-                    </p>
-                  )}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#0BC48F] text-[14px]">
-                  +50 Nova Points
-                </span>
-                <img
-                  src="/img/icon-old-fren-right.svg"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-          )}
-
-          {isMemeMysteryboxReward && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <div className="flex items-center">
-                <span>NovaChadNFT Holder</span>
-
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                  data-tooltip-id="nova-chad-nft"
-                />
-
-                <ReactTooltip
-                  id="nova-chad-nft"
-                  style={{
-                    fontSize: "14px",
-                    background: "#666",
-                    borderRadius: "0.5rem",
-                    maxWidth: "20rem",
-                  }}
-                  render={() => (
-                    <p>
-                      NovaChadNFT holders will receive Mystery Box after joining
-                      the Aggregation Parade.
-                    </p>
-                  )}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#0BC48F] text-[14px]">
-                  1 Mystery Box
-                </span>
-                <img
-                  src="/img/icon-old-fren-right.svg"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* <div className="flex items-center justify-between mb-2 points-box">
-            <span>Est.fee</span>
-            <span>0.002 ETH</span>
-          </div> */}
-          {mergeSupported && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <div className="flex items-center">
-                <span>Merge Token</span>
-
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "max-w-[300px] p-4",
-                  }}
-                  content={
-                    <LoyaltyBoostTooltipContent>
-                      All supported source tokens with the same entity from
-                      different networks can be merged into a single merged
-                      token. Holding or using merged token to engage with
-                      supported dApps could receive higher multipliers.{" "}
-                      <a
-                        href="https://docs.zklink.io/how-it-works/token-merge"
-                        target="_blank"
-                        className="text-[#03D498]"
-                      >
-                        Learn more.
-                      </a>
-                    </LoyaltyBoostTooltipContent>
-                  }
-                >
-                  <img
-                    src={"/img/icon-tooltip.png"}
-                    className="w-[14px] cursor-pointer ml-1 mr-4"
-                  />
-                </Tooltip>
-                {isMergeSelected && (
-                  <div className="flex items-center justify-center bg-[#1B4C4A] h-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
-                    {mergeTokenBooster} Booster
-                  </div>
-                )}
-              </div>
-              <span>
-                <span className="text-white align-super">
-                  {isMergeSelected ? "Merge" : ""}{" "}
-                </span>
-                <Switch
-                  isSelected={isMergeSelected}
-                  onValueChange={setIsMergeSelected}
-                  classNames={{
-                    base: cn("-mr-2"),
-                    wrapper: "p-0 h-4 overflow-visible",
-                    thumb: cn(
-                      "w-6 h-6 shadow-lg bg-[#888C91]",
-                      //selected
-                      "group-data-[selected=true]:ml-6",
-                      "group-data-[selected=true]:bg-green",
-                      // pressed
-                      "group-data-[pressed=true]:w-7",
-                      "group-data-[selected]:group-data-[pressed]:ml-4"
-                    ),
-                  }}
-                ></Switch>
-              </span>
-            </div>
-          )}
-        </SelectBox>
-        <div className="mt-8">
-          {isConnected ? (
-            <Tooltip
-              classNames={{
-                content: "max-w-[300px] p-4",
-              }}
-              content={ContentForMNTDeposit}
-              isDisabled={actionBtnTooltipForMantleDisabeld}
-            >
-              <Button
-                className="gradient-btn w-full rounded-full "
-                style={{ display: "flex", alignItems: "center" }}
-                disableAnimation
-                size="lg"
-                onClick={handleAction}
-                isLoading={loading}
-                disabled={actionBtnDisabled}
-              >
-                {btnText}
-              </Button>
-              {/* <a href="https://portal.zklink.io/bridge/" target="_blank">
-                <Button
-                  className="gradient-btn w-full rounded-full "
-                  style={{ display: "flex", alignItems: "center" }}
-                  disableAnimation
-                  size="lg"
-                  // onClick={handleAction}
-                  isLoading={loading}
-                  // disabled={actionBtnDisabled}
-                >
-                  Deposit through zkLink Nova Portal now
-                </Button>
-              </a> */}
-            </Tooltip>
-          ) : (
-            <Button
-              className="gradient-btn  w-full rounded-full "
-              size="lg"
-              color="primary"
-              disableAnimation
-              onClick={() => openConnectModal?.()}
-            >
-              Connect Wallet
-            </Button>
-          )}
-          {unsupportedChainWithConnector && (
-            <p className="mt-4 text-[#C57D10] text-[14px]">
-              {unsupportedChainWithConnector}
-            </p>
-          )}
-        </div>
-        {isFirstDeposit && showNoPointsTip && (
-          <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
-            <img
-              src="/img/icon-no-points.png"
-              alt=""
-              className="w-[21px] h-[21px] mr-3"
-            />
-            <p className="text-[#C57D10] ">
-              Should you wish to participate in the Aggregation Parade, the
-              minimum deposit value in a{" "}
-              <span className="font-bold">single transaction</span> should be{" "}
-              {minDepositValue} ETH or equivalence. To participate OKX
-              Cryptopedia, there is no minimum deposit value.
-            </p>
-          </div>
-        )}
-      </Container>
-      <Container className="block md:hidden px-4 py-6 md:px-8 md:py-8 layer">
-        {/* <ContainerCover /> */}
-        <div className="flex items-center font-bold text-lg mb-4">
-          <span className="cursor-pointer mr-4">Deposit</span>
-          <span
-            className="cursor-pointer text-[#a0a5ad] hover:text-[#fff]"
-            onClick={() =>
-              window.open("https://portal.zklink.io/withdraw", "_blank")
-            }
-          >
-            Withdraw
-          </span>
-        </div>
-        <SelectBox className="px-6 py-6 md:px-6">
-          <div className="flex items-center gap-4 mb-4">
-            <span className="font-bold">From</span>
-            <div
-              className="selector h-14 flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer"
-              onClick={() => fromModal.onOpen()}
-            >
-              <img
-                src={fromList[fromActive].icon}
-                className="w-6 h-6 rounded-full"
-              />
-              <span>{fromList[fromActive].label}</span>
-              {fromModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
-            </div>
-          </div>
-          <div className="mb-4">
-            <p className="title mb-2">Assets</p>
-            <div
-              className="selector flex items-center gap-2 px-4 py-4 rounded-[1rem] cursor-pointer"
-              onClick={() => tokenModal.onOpen()}
-            >
-              <Avatar
-                src={tokenFiltered[tokenActive]?.icon}
-                style={{ width: 24, height: 24 }}
-              />
-              <span>{tokenFiltered[tokenActive]?.symbol}</span>
-              {tokenModal.isOpen ? <AiOutlineUp /> : <AiOutlineDown />}
-            </div>
-          </div>
-
-          <div className="mb-7">
-            <div className="flex items-center justify-between mb-2 ">
-              <div className="title">Amount</div>
-              <div className="title flex items-center ml-auto">
-                Balance:{" "}
-                <span>{tokenFiltered[tokenActive]?.formatedBalance}</span>
-              </div>
-            </div>
-            <div>
-              <Input
-                ref={inputRef2}
-                classNames={{
-                  input: "text-4xl",
-                  inputWrapper: ["bg-inputColor", "h-14"],
-                }}
-                size="lg"
-                // type="number"
-                placeholder="0"
-                variant="flat"
-                radius="lg"
-                value={String(amount)}
-                onValueChange={handleInputValue}
-                errorMessage={errorInputMsg}
-              />
-            </div>
-          </div>
-          <div className="flex items-center justify-between mb-4 points-box">
-            <div className="flex items-center">
-              <span className="title">Nova Points</span>
-
-              <Tooltip
-                showArrow={true}
-                classNames={{
-                  content: "max-w-[300px] p-4",
-                }}
-                content="By depositing into zkLink Nova, the Nova Points you'll earn every 8 hours."
-              >
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                />
-              </Tooltip>
-              {loyalPoints > 0 && (
-                <Tooltip
-                  showArrow={true}
-                  classNames={{
-                    content: "px-0 py-0 max-w-[400px]",
-                  }}
-                  content={
-                    <LoyaltyBoostTooltipContent>
-                      <p className="mb-8">
-                        Thank you for your continued support of zkLink. As our
-                        loyal user, we're delighted to offer you{" "}
-                        <span className="text-[#03D498]">{loyalPoints}</span>{" "}
-                        addtional Nova Points.{" "}
-                      </p>
-                      <a href="" target="_blank" className="text-[#03D498]">
-                        Learn more.
-                      </a>
-                    </LoyaltyBoostTooltipContent>
-                  }
-                >
-                  <LoyaltyBoostBox>Loyalty Boost</LoyaltyBoostBox>
-                </Tooltip>
-              )}
-            </div>
-            <div className="flex items-center">
-              <span className="text-white">
-                {showNoPointsTip
-                  ? 0
-                  : points < 0.01 && points > 0
-                  ? "< 0.01"
-                  : points.toFixed(2)}
-              </span>
-              {loyalPoints > 0 && (
-                <div className="ml-1">
-                  + <span className="text-[#03D498]">{loyalPoints}</span>{" "}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {networkKey && NexusEstimateArrivalTimes[networkKey] && (
-            <div className="flex items-center justify-between mb-2 points-box">
-              <span>Estimated Time of Arrival</span>
-              <span className="text-white">
-                ~ {NexusEstimateArrivalTimes[networkKey]} mins
-              </span>
-            </div>
-          )}
-          {/* <div className="flex items-center justify-between mb-2 points-box">
-            <span>Est.fee</span>
-            <span>0.002 ETH</span>
-          </div> */}
-          {mergeSupported && (
-            <>
-              <div className="flex items-center justify-between mb-2 points-box">
-                <div className="flex items-center">
-                  <span>Merge Token</span>
-
-                  <Tooltip
-                    showArrow={true}
-                    classNames={{
-                      content: "max-w-[300px] p-4",
-                    }}
-                    content={
-                      <LoyaltyBoostTooltipContent>
-                        All supported source tokens with the same entity from
-                        different networks can be merged into a single merged
-                        token. Holding or using merged token to engage with
-                        supported dApps could receive higher multipliers.{" "}
-                        <a
-                          href="https://docs.zklink.io/how-it-works/token-merge"
-                          target="_blank"
-                          className="text-[#03D498]"
-                        >
-                          Learn more.
-                        </a>
-                      </LoyaltyBoostTooltipContent>
-                    }
-                  >
-                    <img
-                      src={"/img/icon-tooltip.png"}
-                      className="w-[14px] cursor-pointer ml-1 mr-4"
-                    />
-                  </Tooltip>
-                </div>
-                <span className="flex justify-end w-12 gap-[0.25rem]">
-                  <span className="text-white align-super">
-                    {isMergeSelected ? "" : "Merge"}
-                  </span>
-                  <Switch
-                    isSelected={isMergeSelected}
-                    onValueChange={setIsMergeSelected}
-                    classNames={{
-                      base: cn("-mr-2"),
-                      wrapper: "p-0 h-4 overflow-visible",
-                      thumb: cn(
-                        "w-6 h-6 shadow-lg bg-green",
-                        //selected
-                        "group-data-[selected=true]:ml-6",
-                        "group-data-[selected=true]:bg-white",
-                        // pressed
-                        "group-data-[selected]:group-data-[pressed]:ml-10"
-                      ),
-                    }}
-                  ></Switch>
-                </span>
-              </div>
-              {isMergeSelected && (
-                <div className="flex">
-                  <div className="bg-[#1B4C4A] h-[28px] leading-[28px] px-4  rounded-md font-normal text-xs text-[#0BC48F]">
-                    {mergeTokenBooster} Booster
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-
-          {isCheckWinner && (
-            <div className="flex items-center justify-between gap-6 mb-2 points-box">
-              <div className="flex items-center">
-                <span>CoinList Participants' Rewards</span>
-
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                  data-tooltip-id="coinlist-participants"
-                />
-
-                <ReactTooltip
-                  id="coinlist-participants"
-                  content="Previous zkLink Coinlist participants taking part in the zkLink Aggregation Parade will receive 1 mystery box, with chances to win rewards up to 1000 Nova Points, trademarks NFT, and Lynks."
-                  style={{
-                    fontSize: "14px",
-                    background: "#666",
-                    borderRadius: "0.5rem",
-                    maxWidth: "80vw",
-                  }}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#0BC48F] text-[14px] whitespace-nowrap">
-                  1 Mystery Box
-                </span>
-                <img
-                  src="/img/icon-old-fren-right.svg"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-          )}
-
-          {isWhitelistWinner && (
-            <div className="flex items-center justify-between gap-6 mb-2 points-box">
-              <div className="flex items-center">
-                <span>Coinlist Whitelist Users</span>
-
-                <img
-                  src={"/img/icon-tooltip.png"}
-                  className="w-[14px] cursor-pointer ml-1 mr-4"
-                  data-tooltip-id="coinlist-whitelist"
-                />
-
-                <ReactTooltip
-                  id="coinlist-whitelist"
-                  style={{
-                    fontSize: "14px",
-                    background: "#666",
-                    borderRadius: "0.5rem",
-                    maxWidth: "80vw",
-                  }}
-                  render={() => (
-                    <p>
-                      Previous zkLink Coinlist whitelist users taking part in
-                      the zkLink Aggregation Parade will receive 50 Nova Points,
-                      Equivalent to depositing{" "}
-                      <b className="font-[700] text-[#fff]">
-                        1 ETH into the Nova Network for 9 days.
-                      </b>
-                    </p>
-                  )}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#0BC48F] text-[14px] whitespace-nowrap">
-                  +50 Nova Points
-                </span>
-                <img
-                  src="/img/icon-old-fren-right.svg"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-          )}
-        </SelectBox>
-        <div className="mt-8">
-          {isConnected ? (
-            <Tooltip
-              classNames={{
-                content: "max-w-[300px] p-4",
-              }}
-              content={ContentForMNTDeposit}
-              isDisabled={actionBtnTooltipForMantleDisabeld}
-            >
-              <Button
-                className="gradient-btn w-full rounded-full "
-                style={{ display: "flex", alignItems: "center" }}
-                disableAnimation
-                size="lg"
-                onClick={handleAction}
-                isLoading={loading}
-                disabled={actionBtnDisabled}
-              >
-                {btnText}
-              </Button>
-              {/* <a href="https://portal.zklink.io/bridge/" target="_blank">
-                <Button
-                  className="gradient-btn w-full rounded-full "
-                  style={{ display: "flex", alignItems: "center" }}
-                  disableAnimation
-                  size="lg"
-                  isLoading={loading}
-                  // disabled={actionBtnDisabled}
-                >
-                  Deposit through zkLink Nova Portal now
-                </Button>
-              </a> */}
-            </Tooltip>
-          ) : (
-            <Button
-              className="gradient-btn  w-full rounded-full "
-              size="lg"
-              color="primary"
-              disableAnimation
-              onClick={() => openConnectModal?.()}
-            >
-              Connect Wallet
-            </Button>
-          )}
-          {unsupportedChainWithConnector && (
-            <p className="mt-4 text-[#C57D10] text-[14px]">
-              {unsupportedChainWithConnector}
-            </p>
-          )}
-        </div>
-        {isFirstDeposit && showNoPointsTip && (
-          <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
-            <img
-              src="/img/icon-no-points.png"
-              alt=""
-              className="w-[21px] h-[21px] mr-3"
-            />
-            <p className="text-[#C57D10] ">
-              Should you wish to participate in the Aggregation Parade, the
-              minimum deposit value in a{" "}
-              <span className="font-bold">single transaction</span> should be{" "}
-              {minDepositValue} ETH or equivalence. To participate OKX
-              Cryptopedia, there is no minimum deposit value.
-            </p>
-          </div>
-        )}
-      </Container>
+      <BridgeCompPc
+        {...{
+          actionBtnDisabled,
+          actionBtnTooltipForMantleDisabeld,
+          amount,
+          btnText,
+          errorInputMsg,
+          fromActive,
+          fromModal,
+          handleAction,
+          isCheckWinner,
+          isConnected,
+          isFirstDeposit,
+          isMemeMysteryboxReward,
+          isMergeSelected,
+          isWhitelistWinner,
+          loading,
+          loyalPoints,
+          mergeSupported,
+          mergeTokenBooster,
+          minDepositValue,
+          mintable,
+          minted,
+          networkKey,
+          openConnectModal,
+          points,
+          showNoPointsTip,
+          tokenActive,
+          tokenFiltered,
+          tokenModal,
+          unsupportedChainWithConnector,
+          inputRef1,
+          handleInputValue,
+          setIsMergeSelected,
+        }}
+      />
+      <BridgeCompMobile
+        {...{
+          actionBtnDisabled,
+          actionBtnTooltipForMantleDisabeld,
+          amount,
+          btnText,
+          errorInputMsg,
+          fromActive,
+          fromModal,
+          handleAction,
+          isCheckWinner,
+          isConnected,
+          isFirstDeposit,
+          isMemeMysteryboxReward,
+          isMergeSelected,
+          isWhitelistWinner,
+          loading,
+          loyalPoints,
+          mergeSupported,
+          mergeTokenBooster,
+          minDepositValue,
+          mintable,
+          minted,
+          networkKey,
+          openConnectModal,
+          points,
+          showNoPointsTip,
+          tokenActive,
+          tokenFiltered,
+          tokenModal,
+          unsupportedChainWithConnector,
+          inputRef2,
+          handleInputValue,
+          setIsMergeSelected,
+        }}
+      />
       {isFirstDeposit && address && txhashes[address]?.[0] && (
         <div>
           <Link

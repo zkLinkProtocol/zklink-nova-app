@@ -8,17 +8,18 @@ import TotalTvlCard from "@/components/TotalTvlCard";
 import ThirdPartyBridge from "@/components/ThirdPartyBridge";
 import "./index.scss";
 import { TRADEMARK_NFT_MARKET_URL } from "@/constants";
+import NovaNetworkTVL from "@/components/NovaNetworkTVL";
+
+<NovaNetworkTVL />;
 export const BgBox = styled.div`
   position: relative;
   padding-top: 4.5rem;
   padding-bottom: 2rem;
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(
-    360deg,
-    rgba(0, 179, 255, 0.4) 0%,
-    rgba(12, 14, 17, 0.4) 100%
-  );
+  background-image: url("/img/bg-leaderboard.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 
   overflow: auto;
 
@@ -462,31 +463,27 @@ export default function Bridge() {
       </div> */}
       {/* <Banner /> */}
       <Header />
-      <div className="block lg:flex md:py-24 pt-6">
+      <div className="block lg:flex  pt-6">
         <div className="md:hidden mx-6 mb-16">
           <BridgeComponent />
           <ThirdPartyBridge />
         </div>
         <div className="px-6 pb-6 md:pl-16 lg:pl-32 lg:w-1/2">
-          <h2 className="text-[32px] md:text-4xl mt-0 font-black leading-10">
+          <h2 className="text-[32px] md:text-4xl mt-0 font-black leading-10 mt-6">
             Bridge to zkLink Nova to Earn Nova Points & $ZKL
           </h2>
           <SeasonTwo />
           <NftIntroduction />
         </div>
-        <div className="relative p-6 md:pr-16 lg:pr-32 lg:w-1/2 md:min-h-[1080px]">
+        <div className="relative p-6 md:pr-16 lg:pr-32 lg:w-1/2 ">
           <div className="hidden md:block">
             <BridgeComponent />
             <ThirdPartyBridge />
           </div>
-
-          <div className="md:absolute left-0 bottom-0 flex flex-col md:items-end w-full px-8 md:px-16 lg:px-32">
-            <FooterTvlText className="mt-4 md:mt-0 mb-[0.5rem] text-right">
-              TVL
-            </FooterTvlText>
-            <TotalTvlCard />
-          </div>
         </div>
+      </div>
+      <div className="flex flex-col px-6 pb-6 md:px-16 lg:px-32">
+        <NovaNetworkTVL />
       </div>
     </BgBox>
   );
