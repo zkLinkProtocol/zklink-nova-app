@@ -9,24 +9,14 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-  Select,
-  SelectItem,
   Tooltip,
   Tabs,
   Tab,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
 } from "@nextui-org/react";
-import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import {
-  AiOutlineCheck,
-  AiOutlineDown,
-  AiOutlineUp,
-  AiOutlineCopy,
-} from "react-icons/ai";
+import { useAccount, useSwitchChain } from "wagmi";
+import { AiOutlineCheck, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import toast from "react-hot-toast";
-import { debounce, has } from "lodash";
+import { debounce } from "lodash";
 import { useBridgeTx } from "@/hooks/useBridgeTx";
 import BigNumber from "bignumber.js";
 import { useBridgeNetworkStore } from "@/hooks/useNetwork";
@@ -37,21 +27,11 @@ import { ETH_ADDRESS } from "zksync-web3/build/src/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { checkWinnerAddress, getDepositETHThreshold } from "@/api";
 import { RootState } from "@/store";
-import {
-  setInvite,
-  setDepositStatus,
-  setDepositL1TxHash,
-} from "@/store/modules/airdrop";
+import { setDepositL1TxHash } from "@/store/modules/airdrop";
 import { parseUnits } from "viem";
 import { Token } from "@/hooks/useTokenList";
-import {
-  copyText,
-  formatTxHash,
-  getTxHashExplorerLink,
-  isSameAddress,
-} from "@/utils";
-import CopyIcon from "./CopyIcon";
-import VerifyTxHashModal from "./VerifyTxHashModal";
+import { formatTxHash, getTxHashExplorerLink, isSameAddress } from "@/utils";
+import CopyIcon from "../CopyIcon";
 import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { NexusEstimateArrivalTimes } from "@/constants";
 import FromList from "@/constants/fromChainList";
@@ -64,7 +44,7 @@ import { SourceTokenInfo, useMergeToken } from "@/hooks/useMergeToken";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
-
+import "./index.scss";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -1691,37 +1671,6 @@ export default function Bridge(props: IBridgeComponentProps) {
             </div>
           </div>
         </div>
-        // <div className="mt-8 flex flex-col text-lg bg-[#000000] bg-opacity-40 px-4 py-3 rounded-[16px]">
-        //   <div className="flex items-center justify-between font-normal text-[14px] mb-2 text-[#A0A5AD]">
-        //     <span>Latest tx hash:</span>
-        //     <span>
-        //       You can use this tx hash to verify in Aggregation Parade page
-        //     </span>
-        //   </div>
-        //   <div className="flex items-center ">
-        //     <img
-        //       src={
-        //         FromList.find(
-        //           (item) => item.rpcUrl === txhashes[address][0]?.rpcUrl
-        //         )?.icon
-        //       }
-        //       className="w-6 h-6 mr-1 rounded-full"
-        //     />
-        //     <span className="text-[12px] font-semibold">
-        //       <a
-        //         href={getTxHashExplorerLink(
-        //           txhashes[address][0]?.rpcUrl,
-        //           txhashes[address][0]?.txhash
-        //         )}
-        //         target="_blank"
-        //         className="hover:underline"
-        //       >
-        //         {formatTxHash(txhashes[address][0]?.txhash)}
-        //       </a>
-        //     </span>
-        //     <CopyIcon text={txhashes[address][0].txhash} />
-        //   </div>
-        // </div>
       )}
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -1766,18 +1715,6 @@ export default function Bridge(props: IBridgeComponentProps) {
             Choose Token
           </ModalHeader>
           <ModalBody className="pb-8">
-            {/* <div>
-              <Input
-                classNames={{ input: "text-xl" }}
-                variant="bordered"
-                radius="lg"
-                size="lg"
-                placeholder="Symbol or address"
-                startContent={
-                  <AiOutlineSearch className="text-2xl text-gray-400" />
-                }
-              />
-            </div> */}
             <p>Category</p>
             <Tabs
               aria-label="Options"

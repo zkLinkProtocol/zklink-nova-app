@@ -16,11 +16,12 @@ import AggregationParade from "./pages/AggregationParade";
 import Bridge from "@/pages/Bridge";
 import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
-import About from "./pages/About";
+import About from "./pages/About/index2";
 import UnwrapETH from "@/pages/UnwrapETH";
 import { useDispatch } from "react-redux";
 import { setInviteCode } from "./store/modules/airdrop";
 import Maintenance from "./components/Maintenance";
+import DashboardS2 from "./pages/DashboardS2";
 
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
@@ -72,6 +73,15 @@ export default function App() {
             element={
               <Suspense fallback="">
                 <Dashboard />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/dashboard2"
+            element={
+              <Suspense fallback="">
+                <DashboardS2 />
               </Suspense>
             }
           />

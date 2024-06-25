@@ -49,6 +49,7 @@ export type Invite = {
   code: string | null;
   canInviteNumber: number;
   maxInviteNumber: number;
+  userName: string;
   isLeader?: boolean;
   twitterName: string | null;
   twitterHandler: string | null;

@@ -23,14 +23,14 @@ a {
 }
 
 .inputStyle {
-  width: 50px !important;
-  height: 62px;
+  width: 66px !important;
+  height: 77px;
   margin: 0 4px;
   font-size: 24px;
   color: #fff;
-  border-radius: 12px;
-  border: 1px solid #7ba099;
-  background: none;
+  border-radius: 20px;
+  border: 1px solid var(--Green, #03d498);
+  background: rgba(255, 255, 255, 0.1);
 }
 @media only screen and (max-width: 768px) {
   .inputStyle {
