@@ -1,4 +1,5 @@
 import http from "@/utils/http";
+import { user } from "@nextui-org/react";
 import axios from "axios";
 import qs from "qs";
 
@@ -614,3 +615,6 @@ interface TvlCategoryResponse {
 
 export const getTvlCategory = (): Promise<TvlCategoryResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/tvl/category`);
+
+export const modifyUsername = (userName: string): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/modify/username`, { userName });

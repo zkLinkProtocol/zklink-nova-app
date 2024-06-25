@@ -26,6 +26,10 @@ import { config } from "@/constants/networks";
 import { formatBalance } from "@/utils";
 import { getPointsRewardsTooltips } from "@/components/Dashboard/PointsRewardsTooltips";
 import CheckinModal from "../CheckinModal";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
+import { modifyUsername } from "@/api";
+import { eventBus } from "@/utils/event-bus";
 
 const Container = styled.div`
   .nft-num {
@@ -185,6 +189,8 @@ export default () => {
     isApproving,
     publicClient,
   } = useNovaDrawNFT();
+
+  const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const nftImage = useMemo(() => {
     if (!nft) {
@@ -380,6 +386,25 @@ export default () => {
     })();
   }, [address, trademarkNFT, lynksNFT, update, publicClient, refreshBalanceId]);
 
+  const [userName, setUserName] = useState(invite?.userName ?? "");
+  const [editUsernameLoading, setEditUsernameLoading] = useState(false);
+
+  const handleUpdateUserName = useCallback(async () => {
+    console.log(userName);
+    setEditUsernameLoading(true);
+    try {
+      const res = await modifyUsername(userName);
+      if (res?.status === "0") {
+        editUsernameModal.onClose();
+        eventBus.emit("getInvite");
+      }
+    } catch (error) {
+      toast.error((error as any)?.message);
+    } finally {
+      setEditUsernameLoading(false);
+    }
+  }, [userName]);
+
   return (
     <>
       <Container>
@@ -398,14 +423,17 @@ export default () => {
           <div className="w-full">
             <div className="flex justify-between">
               <div className="flex items-center gap-[4px]">
-                <span className="username">User123456</span>
+                <span className="username">{invite?.userName}</span>
                 <img
                   src="/img/icon-edit.svg"
                   alt=""
                   width={16}
                   height={16}
                   className="cursor-pointer"
-                  onClick={editUsernameModal.onOpen}
+                  onClick={() => {
+                    setUserName(invite?.userName ?? "");
+                    editUsernameModal.onOpen();
+                  }}
                 />
               </div>
 
@@ -449,10 +477,18 @@ export default () => {
           </ModalHeader>
           <ModalBody className="px-0">
             <div>
-              <Input className="w-full" />
-              <GradientButton2 className="mt-[24px] w-full h-[48px] leading-[48px] font-[700] text-[1rem] rounded-[6px]">
+              <Input
+                className="w-full"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              <Button
+                className="gradient-btn mt-[24px] w-full h-[48px] leading-[48px] font-[700] text-[1rem] rounded-[6px]"
+                onClick={handleUpdateUserName}
+                isLoading={editUsernameLoading}
+              >
                 Save
-              </GradientButton2>
+              </Button>
               <Button
                 className="secondary-btn mt-[24px] w-full h-[48px] py-[0.5rem] font-[700] flex justify-center items-center gap-[0.38rem] text-[1rem] rounded-[6px]"
                 onClick={() => editUsernameModal.onClose()}
