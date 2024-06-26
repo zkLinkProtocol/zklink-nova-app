@@ -18,6 +18,12 @@ http.interceptors.request.use(
     if (!!apiToken && !config.url?.includes("/lrt-points")) {
       config.headers["Authorization"] = `Bearer ${apiToken}`;
     }
+
+    const proxyAddress = localStorage.getItem("PROXY_ADDRESS");
+    if (!!proxyAddress) {
+      config.headers["pa"] = proxyAddress;
+    }
+
     return config;
   },
   (error) => {
