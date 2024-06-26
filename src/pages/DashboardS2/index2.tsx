@@ -15,6 +15,7 @@ import {
 } from "@/api";
 import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
+import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 
 export type TotalTvlItem = {
   symbol: string;
@@ -370,39 +371,58 @@ export default function Dashboard() {
 
         <div className="mt-[40px]">
           <TabsCard>
-            <div className="relative bottom-[-14.5px] flex items-center gap-[12.15px]">
-              {tabs2.map((tab, index) => (
-                <div
-                  className={`tab-item flex justify-center items-center gap-[8px] ${
-                    index === tabs2Active ? "active" : ""
-                  }`}
-                  onClick={() => setTabs2Active(index)}
-                  key={index}
-                >
-                  <img
-                    src={tab.iconURL}
-                    alt=""
-                    className="w-[24px] h-[24px] block"
-                  />
-                  <span>{tab.name}</span>
-                </div>
-              ))}
+            <div className="relative bottom-[-14.5px] flex items-center justify-between">
+              <div className="flex flex items-center gap-[12.15px]">
+                {tabs2.map((tab, index) => (
+                  <div
+                    className={`tab-item flex justify-center items-center gap-[8px] ${
+                      index === tabs2Active ? "active" : ""
+                    }`}
+                    onClick={() => setTabs2Active(index)}
+                    key={index}
+                  >
+                    <img
+                      src={tab.iconURL}
+                      alt=""
+                      className="w-[24px] h-[24px] block"
+                    />
+                    <span>{tab.name}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className={`tab-item flex justify-center items-center gap-[8px] ${
+                  tabs2Active === 99 ? "active" : ""
+                }`}
+                onClick={() => setTabs2Active(99)}
+              >
+                <img
+                  src={"/img/icon-assets.svg"}
+                  alt=""
+                  className="w-[24px] h-[24px] block"
+                />
+                <span>Portfolio</span>
+              </div>
             </div>
 
             <div className="tab-content px-[31px] py-[32.5px]">
-              {tabs2Active === 0 ? (
+              {tabs2Active === 0 && (
                 <Assets
                   ethUsdPrice={ethUsdPrice}
                   supportTokens={supportTokens}
                   totalTvlList={totalTvlList}
                   accountTvlData={accountTvlData}
                 />
-              ) : (
+              )}
+              {tabs2Active !== 0 && tabs2Active !== 99 && (
                 <EcoDApps
                   tabActive={tabs2[tabs2Active]}
                   novaCategoryPoints={novaCategoryPoints}
                 />
               )}
+
+              {tabs2Active === 99 && <Portfolio />}
             </div>
           </TabsCard>
         </div>
