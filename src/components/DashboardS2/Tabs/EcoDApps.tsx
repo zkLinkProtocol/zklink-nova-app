@@ -63,6 +63,50 @@ const Container = styled.div`
   }
 `;
 
+const AllocatedBox = styled.div`
+  padding: 16px 28px;
+  min-width: 419px;
+  border-radius: 16px;
+  border: 1px solid rgba(51, 49, 49, 0);
+  background: #10131c;
+  filter: blur(0.125px);
+
+  .label {
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .value {
+    text-align: right;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .line {
+    margin: 12px auto;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+`;
+
 const List = styled.div`
   width: 100%;
 
@@ -206,6 +250,16 @@ interface EcoDAppItem {
   }[];
   idFeatured?: boolean;
 }
+
+const milestoneMap = {
+  spotdex: [
+    {
+      target: 1000000,
+      zkl: 1000000,
+      progress: 0,
+    },
+  ],
+};
 
 const EcoDApp = (props: {
   data: EcoDAppItem;
@@ -749,14 +803,17 @@ export default function EcoDApps({
             Next $ZKL Allocation Milestone: 10,000,000 $ZKL
           </div>
         </div>
-        <div className="flex items-center gap-[14px]">
-          <BlurBox className="px-[16px] py-[12px]">
-            Total Allocated Points <span className="bold">100,000</span>
-          </BlurBox>
-          <BlurBox className="px-[16px] py-[12px]">
-            Your Points <span className="bold">25</span>
-          </BlurBox>
-        </div>
+        <AllocatedBox>
+          <div className="flex items-center justify-between">
+            <span className="label">Total Allocated Points</span>
+            <span className="value">100,000</span>
+          </div>
+          <div className="line"></div>
+          <div className="flex items-center justify-between">
+            <span className="label">Your Points</span>
+            <span className="value">25</span>
+          </div>
+        </AllocatedBox>
       </div>
       <List>
         <div className="list-header flex items-center">

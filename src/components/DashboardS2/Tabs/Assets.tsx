@@ -13,7 +13,7 @@ import {
   formatNumberWithUnit,
   formatToThounds,
 } from "@/utils";
-import _, { set } from "lodash";
+import _, { max, set } from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
 import MilestoneProgress from "../MilestoneProgress";
 import numeral from "numeral";
@@ -388,10 +388,6 @@ export default function Assets(props: IAssetsTableProps) {
         obj.tokenAddress = chains.l2Address;
         const accountTvlItem = getTokenAccountTvl(chains.l2Address);
         const totalTvlItem = getTotalTvl(chains.l2Address);
-
-        console.log("accountTvlItem", accountTvlItem);
-        console.log("totalTvlItem", totalTvlItem);
-
         if (accountTvlItem) {
           obj.amount += +accountTvlItem.amount ? +accountTvlItem.amount : 0;
           obj.tvl += +accountTvlItem.tvl
@@ -463,8 +459,6 @@ export default function Assets(props: IAssetsTableProps) {
           Number(findClosestMultiplier(a.multipliers))
       );
 
-    console.log("assets list", arr);
-
     setFilterTableList(arr);
 
     // const notNovaFilters = arr.filter((item) => !item.isNova);
@@ -473,23 +467,32 @@ export default function Assets(props: IAssetsTableProps) {
     // setFilterTableList(newArr);
   }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
 
-  const [milestoneList, setMilestoneList] = useState([
+  // const milestoneZKLs = [
+  //   500000
+  // ]
+
+  const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
+    []
+  );
+
+  const milestoneData = [
     {
-      target: 1000000,
+      tvl: 0,
+      zkl: 500000,
+    },
+    {
+      tvl: 100000000,
       zkl: 1000000,
-      progress: 0,
     },
     {
-      target: 5000000,
+      tvl: 500000000,
       zkl: 3000000,
-      progress: 0,
     },
     {
-      target: 1000000000,
+      tvl: 1000000000,
       zkl: 4000000,
-      progress: 0,
     },
-  ]);
+  ];
 
   const currentTvl = useMemo(() => {
     const tvl =
@@ -501,29 +504,38 @@ export default function Assets(props: IAssetsTableProps) {
   const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
 
   useEffect(() => {
-    let arr = [...milestoneList];
-    arr.forEach((item, index) => {
-      const prevTarget = index > 0 ? arr[index - 1].target : 0;
-      if (currentTvl >= item.target) {
-        item.progress = 100;
-      } else if (currentTvl > prevTarget && currentTvl < item.target) {
-        item.progress =
-          ((currentTvl - prevTarget) / (item.target - prevTarget)) * 100;
+    const filters = milestoneData.filter((item) => currentTvl > item.tvl);
+    const currentIndex = filters.length === 0 ? 0 : filters.length - 1;
+    const nextIndex =
+      currentIndex + 1 === milestoneData.length
+        ? currentIndex
+        : currentIndex + 1;
+
+    setCurrentAllocationZKL(milestoneData[currentIndex].zkl);
+    setNextAllocationZKL(milestoneData[nextIndex].zkl);
+    setNextTargetTvl(milestoneData[nextIndex].tvl);
+  }, [currentTvl, milestoneData]);
+
+  useEffect(() => {
+    const filters = milestoneData.filter((item) => item.tvl !== 0);
+
+    const arr = filters.map((item, index) => {
+      let progress = 0;
+
+      const prevTvl = index > 0 ? filters[index - 1].tvl : 0;
+      if (currentTvl >= item.tvl) {
+        progress = 100;
+      } else if (currentTvl > prevTvl && currentTvl < item.tvl) {
+        progress = (currentTvl / item.tvl) * 100;
       } else {
-        item.progress = 0;
+        progress = 0;
       }
+
+      return `${progress.toFixed(2)}%`;
     });
 
-    const activeFilter = arr.filter((item) => item.progress > 0);
-    const activeIndex = activeFilter.length === 0 ? 0 : activeFilter.length - 1;
-    const nextIndex =
-      activeIndex === arr.length - 1 ? activeIndex : activeIndex + 1;
-
-    setCurrentAllocationZKL(arr[activeIndex].zkl);
-    setNextAllocationZKL(arr[nextIndex].zkl);
-    setNextTargetTvl(arr[nextIndex].target);
-    setMilestoneList(arr);
-  }, [currentTvl]);
+    setMilestoneProgressList(arr);
+  }, [currentTvl, milestoneData]);
 
   return (
     <Container>
@@ -564,9 +576,9 @@ export default function Assets(props: IAssetsTableProps) {
           <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
         </div>
         <div className="mt-[22px] flex items-center justify-between gap-[17px]">
-          {milestoneList.map((item, index) => (
+          {milestoneProgressList.map((item, index) => (
             <div className="w-full" key={index}>
-              <MilestoneProgress progress={`${item.progress}%`} />
+              <MilestoneProgress progress={item} />
             </div>
           ))}
         </div>
