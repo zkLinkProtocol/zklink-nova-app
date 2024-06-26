@@ -214,6 +214,11 @@ export default function Dashboard() {
       name: "Assets",
       category: "assets",
     },
+    // {
+    //   iconURL: "/img/icon-assets.svg",
+    //   name: "Boosted",
+    //   category: "boost",
+    // },
     {
       iconURL: "/img/icon-spotdex.svg",
       name: "Spot DEX",
@@ -428,6 +433,7 @@ export default function Dashboard() {
                 <EcoDApps
                   tabActive={tabs2[tabs2Active]}
                   novaCategoryPoints={novaCategoryPoints}
+                  tvlCategory={tvlCategory}
                 />
               )}
 

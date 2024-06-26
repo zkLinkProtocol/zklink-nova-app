@@ -537,6 +537,7 @@ export default function Assets(props: IAssetsTableProps) {
     setMilestoneProgressList(arr);
   }, [currentTvl]);
 
+
   return (
     <Container>
       <div className="flex justify-between items-center">
@@ -584,84 +585,82 @@ export default function Assets(props: IAssetsTableProps) {
         </div>
       </MilestoneBox>
 
-      <div>
-        <List>
-          <div className="list-header flex items-center">
-            <div className="list-header-item text-left">Token</div>
-            <div className="list-header-item text-center">Points Booster</div>
-            <div className="list-header-item text-center">Nova TVL</div>
-            <div className="list-header-item text-center">Your Deposit</div>
-            <div className="list-header-item">
-              <Input
-                data-hover={false}
-                isClearable
-                placeholder="Please enter the token symbol."
-                classNames={{
-                  base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
-                  mainWrapper: ["bg-transparent", "hover:bg-transparent"],
-                  inputWrapper: ["bg-transparent", "hover:bg-transparent"],
-                  input: ["bg-transparent", "hover:bg-transparent"],
-                }}
-                startContent={
-                  <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
-                }
-                onClear={() => {
-                  setSearchValue("");
-                }}
-                onValueChange={setSearchValue}
-              />
-            </div>
+      <List>
+        <div className="list-header flex items-center">
+          <div className="list-header-item text-left">Token</div>
+          <div className="list-header-item text-center">Points Booster</div>
+          <div className="list-header-item text-center">Nova TVL</div>
+          <div className="list-header-item text-center">Your Deposit</div>
+          <div className="list-header-item">
+            <Input
+              data-hover={false}
+              isClearable
+              placeholder="Please enter the token symbol."
+              classNames={{
+                base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
+                mainWrapper: ["bg-transparent", "hover:bg-transparent"],
+                inputWrapper: ["bg-transparent", "hover:bg-transparent"],
+                input: ["bg-transparent", "hover:bg-transparent"],
+              }}
+              startContent={
+                <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+              }
+              onClear={() => {
+                setSearchValue("");
+              }}
+              onValueChange={setSearchValue}
+            />
           </div>
-          <div className="list-content">
-            {filterTableList.map((item, index) => (
-              <div className="row mb-[24px] flex items-center" key={index}>
-                <div className="list-content-item flex items-center gap-[10px]">
-                  {item?.iconURL && (
-                    <img
-                      src={item?.iconURL}
-                      alt=""
-                      className="w-[55px] h-[56px] rounded-full block"
-                    />
+        </div>
+        <div className="list-content">
+          {filterTableList.map((item, index) => (
+            <div className="row mb-[24px] flex items-center" key={index}>
+              <div className="list-content-item flex items-center gap-[10px]">
+                {item?.iconURL && (
+                  <img
+                    src={item?.iconURL}
+                    alt=""
+                    className="w-[55px] h-[56px] rounded-full block"
+                  />
+                )}
+                <div>
+                  <div className="symbol">{item?.symbol}</div>
+                  {item?.isNova && (
+                    <div className="name mt-[5px]">Merged Token</div>
                   )}
-                  <div>
-                    <div className="symbol">{item?.symbol}</div>
-                    {item?.isNova && (
-                      <div className="name mt-[5px]">Merged Token</div>
-                    )}
-                  </div>
-                </div>
-                <div className="col-line"></div>
-                <div className="list-content-item  text-center">
-                  {item?.multipliers && Array.isArray(item.multipliers)
-                    ? findClosestMultiplier(item?.multipliers)
-                    : 0}
-                  x Boost
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  text-center">
-                  {formatNumberWithUnit(item?.totalAmount)}
-                  <span className="text-gray">
-                    ({formatNumberWithUnit(item?.totalTvl, "$")})
-                  </span>
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  text-center">
-                  {" "}
-                  {formatNumberWithUnit(item?.amount)}
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  flex justify-end items-center gap-[10px]">
-                  <span className="action">Action:</span>
-                  <span className="particpate">Participate</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </List>
-      </div>
+              <div className="col-line"></div>
+              <div className="list-content-item  text-center">
+                {item?.multipliers && Array.isArray(item.multipliers)
+                  ? findClosestMultiplier(item?.multipliers)
+                  : 0}
+                x Boost
+              </div>
+              <div className="col-line"></div>
+
+              <div className="list-content-item  text-center">
+                {formatNumberWithUnit(item?.totalAmount)}
+                <span className="text-gray">
+                  ({formatNumberWithUnit(item?.totalTvl, "$")})
+                </span>
+              </div>
+              <div className="col-line"></div>
+
+              <div className="list-content-item  text-center">
+                {" "}
+                {formatNumberWithUnit(item?.amount)}
+              </div>
+              <div className="col-line"></div>
+
+              <div className="list-content-item  flex justify-end items-center gap-[10px]">
+                <span className="action">Action:</span>
+                <span className="particpate">Participate</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </List>
     </Container>
   );
 }

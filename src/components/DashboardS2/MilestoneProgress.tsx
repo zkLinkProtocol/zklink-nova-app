@@ -24,7 +24,7 @@ export default function MilestoneProgress({
   progress,
   isDisabled,
 }: {
-  progress?: string;
+  progress?: string | number;
   isDisabled?: boolean;
 }) {
   return (

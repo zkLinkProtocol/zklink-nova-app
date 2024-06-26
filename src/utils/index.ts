@@ -366,6 +366,6 @@ export const getNovaDefaultProvider = () => {
   return new ethers.providers.JsonRpcProvider(nodeConfig[0].rpcUrl);
 };
 
-export function formatToThounds(value: number) {
+export function formatToThounds(value: number | string) {
   return numeral(value).format("0,0");
 }
