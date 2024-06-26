@@ -511,10 +511,10 @@ export default function Assets(props: IAssetsTableProps) {
         ? currentIndex
         : currentIndex + 1;
 
-    setCurrentAllocationZKL(milestoneData[currentIndex].zkl);
-    setNextAllocationZKL(milestoneData[nextIndex].zkl);
-    setNextTargetTvl(milestoneData[nextIndex].tvl);
-  }, [currentTvl, milestoneData]);
+    setCurrentAllocationZKL(milestoneData[currentIndex].zkl || 0);
+    setNextAllocationZKL(milestoneData[nextIndex].zkl || 0);
+    setNextTargetTvl(milestoneData[nextIndex].tvl || 0);
+  }, [currentTvl]);
 
   useEffect(() => {
     const filters = milestoneData.filter((item) => item.tvl !== 0);
@@ -535,7 +535,7 @@ export default function Assets(props: IAssetsTableProps) {
     });
 
     setMilestoneProgressList(arr);
-  }, [currentTvl, milestoneData]);
+  }, [currentTvl]);
 
   return (
     <Container>
