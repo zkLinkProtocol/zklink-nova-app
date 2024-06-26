@@ -1,11 +1,23 @@
 import styled from "styled-components";
-import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
+import {
+  ExplorerTvlItem,
+  SupportToken,
+  TvlCategory,
+  getExplorerTokenTvl,
+} from "@/api";
 import { AccountTvlItem, TotalTvlItem } from "@/pages/Dashboard";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input, useDisclosure } from "@nextui-org/react";
-import { findClosestMultiplier, formatNumberWithUnit } from "@/utils";
-import _ from "lodash";
+import {
+  findClosestMultiplier,
+  formatNumberWithUnit,
+  formatToThounds,
+} from "@/utils";
+import _, { set } from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
+import MilestoneProgress from "../MilestoneProgress";
+import numeral from "numeral";
+import { current } from "@reduxjs/toolkit";
 
 const BlurBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -163,6 +175,59 @@ const List = styled.div`
   }
 `;
 
+const MilestoneBox = styled.div`
+  color: rgba(251, 251, 251, 0.6);
+  font-family: Satoshi;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+`;
+
+const AllocatedBox = styled.div`
+  padding: 16px 28px;
+  min-width: 419px;
+  border-radius: 16px;
+  border: 1px solid rgba(51, 49, 49, 0);
+  background: #10131c;
+  filter: blur(0.125px);
+
+  .label {
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .value {
+    text-align: right;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .line {
+    margin: 12px auto;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+`;
+
 export type TokenAddress = {
   chain: string;
   l1Address: string;
@@ -197,10 +262,17 @@ interface IAssetsTableProps {
   totalTvlList: TotalTvlItem[];
   supportTokens: SupportToken[];
   ethUsdPrice: number;
+  tvlCategory: TvlCategory[];
 }
 
 export default function Assets(props: IAssetsTableProps) {
-  const { accountTvlData, totalTvlList, supportTokens, ethUsdPrice } = props;
+  const {
+    accountTvlData,
+    totalTvlList,
+    supportTokens,
+    ethUsdPrice,
+    tvlCategory,
+  } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
   const [tableList, setTableList] = useState<AssetsListItem[]>([]);
@@ -401,6 +473,58 @@ export default function Assets(props: IAssetsTableProps) {
     // setFilterTableList(newArr);
   }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
 
+  const [milestoneList, setMilestoneList] = useState([
+    {
+      target: 1000000,
+      zkl: 1000000,
+      progress: 0,
+    },
+    {
+      target: 5000000,
+      zkl: 3000000,
+      progress: 0,
+    },
+    {
+      target: 1000000000,
+      zkl: 4000000,
+      progress: 0,
+    },
+  ]);
+
+  const currentTvl = useMemo(() => {
+    const tvl =
+      Number(tvlCategory.find((item) => item.name === "holding")?.tvl) || 0;
+    return tvl;
+  }, [tvlCategory]);
+  const [nextTargetTvl, setNextTargetTvl] = useState(0);
+  const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
+  const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
+
+  useEffect(() => {
+    let arr = [...milestoneList];
+    arr.forEach((item, index) => {
+      const prevTarget = index > 0 ? arr[index - 1].target : 0;
+      if (currentTvl >= item.target) {
+        item.progress = 100;
+      } else if (currentTvl > prevTarget && currentTvl < item.target) {
+        item.progress =
+          ((currentTvl - prevTarget) / (item.target - prevTarget)) * 100;
+      } else {
+        item.progress = 0;
+      }
+    });
+
+    const activeFilter = arr.filter((item) => item.progress > 0);
+    const activeIndex = activeFilter.length === 0 ? 0 : activeFilter.length - 1;
+    const nextIndex =
+      activeIndex === arr.length - 1 ? activeIndex : activeIndex + 1;
+
+    setCurrentAllocationZKL(arr[activeIndex].zkl);
+    setNextAllocationZKL(arr[nextIndex].zkl);
+    setNextTargetTvl(arr[nextIndex].target);
+    setMilestoneList(arr);
+  }, [currentTvl]);
+
   return (
     <Container>
       <div className="flex justify-between items-center">
@@ -413,20 +537,41 @@ export default function Assets(props: IAssetsTableProps) {
             />
             <span>Holding $ZKL Allocation</span>
           </div>
-          <div className="holding-value mt-[16px]">5,000,000 $ZKL</div>
-          <div className="holding-desc mt-[8px]">
-            Next $ZKL Allocation Milestone: 10,000,000 $ZKL
+          <div className="holding-value mt-[16px]">
+            {formatToThounds(currentAllocationZKL)} $ZKL
+          </div>
+          <div className="holding-desc mt-[25px]">
+            Next $ZKL Allocation Milestone: {formatToThounds(nextAllocationZKL)}{" "}
+            $ZKL
           </div>
         </div>
-        <div className="flex items-center gap-[14px]">
-          <BlurBox className="px-[16px] py-[12px]">
-            Total Allocated Points <span className="bold">100,000</span>
-          </BlurBox>
-          <BlurBox className="px-[16px] py-[12px]">
-            Your Points <span className="bold">25</span>
-          </BlurBox>
-        </div>
+        <AllocatedBox>
+          <div className="flex items-center justify-between">
+            <span className="label">Total Allocated Points</span>
+            <span className="value">100,000</span>
+          </div>
+          <div className="line"></div>
+          <div className="flex items-center justify-between">
+            <span className="label">Your Points</span>
+            <span className="value">25</span>
+          </div>
+        </AllocatedBox>
       </div>
+
+      <MilestoneBox>
+        <div className="mt-[36px] flex justify-between items-center">
+          <div>Current TVL: {formatToThounds(currentTvl)}</div>
+          <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
+        </div>
+        <div className="mt-[22px] flex items-center justify-between gap-[17px]">
+          {milestoneList.map((item, index) => (
+            <div className="w-full" key={index}>
+              <MilestoneProgress progress={`${item.progress}%`} />
+            </div>
+          ))}
+        </div>
+      </MilestoneBox>
+
       <div>
         <List>
           <div className="list-header flex items-center">

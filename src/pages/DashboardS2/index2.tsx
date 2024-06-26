@@ -306,11 +306,19 @@ export default function Dashboard() {
     setNovaCategoryPoints(res?.data || []);
   };
 
+  const [tvlCategory, setTvlCategory] = useState<TvlCategory[]>([]);
+  const getTvlCategoryFunc = async () => {
+    const res = await getTvlCategory();
+    console.log("getTvlCategory", res);
+    setTvlCategory(res?.data || []);
+  };
+
   useEffect(() => {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getNovaCategoryPointsFunc();
+    getTvlCategoryFunc();
   }, [address]);
 
   return (
@@ -413,6 +421,7 @@ export default function Dashboard() {
                   supportTokens={supportTokens}
                   totalTvlList={totalTvlList}
                   accountTvlData={accountTvlData}
+                  tvlCategory={tvlCategory}
                 />
               )}
               {tabs2Active !== 0 && tabs2Active !== 99 && (

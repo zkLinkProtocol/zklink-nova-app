@@ -365,3 +365,7 @@ export const getNovaDefaultProvider = () => {
   const nodeConfig = nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
   return new ethers.providers.JsonRpcProvider(nodeConfig[0].rpcUrl);
 };
+
+export function formatToThounds(value: number) {
+  return numeral(value).format("0,0");
+}
