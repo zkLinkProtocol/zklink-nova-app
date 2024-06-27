@@ -3,11 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>test</title>
 </head>
 
 <body>
+  <input type="text" id="username">
 
+  <button onclick="onRegister()">Register</button>
+  <button onclick="onLogin()">Login</button>
+
+  <script>
+    function onRegister() {
+      const username = document.getElementById('username').value
+      window.open(
+        `https://preview.app.zklink.io/passkey.html?action=register&username=${username}`,
+        'newwindow',
+        'width=400,height=300,left=100,top=100'
+      );
+    }
+
+    function onLogin() {
+      const username = document.getElementById('username').value
+      window.open(
+        `https://preview.app.zklink.io/passkey.html?action=login`,
+        'newwindow',
+        'width=400,height=300,left=100,top=100'
+      );
+    }
+  </script>
 </body>
 
 </html>
