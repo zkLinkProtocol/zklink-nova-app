@@ -1134,7 +1134,7 @@ export default function Dashboard() {
       name: "Shoebill",
       handler: "@ShoebillFinance",
       link: "https://zklink-eth.shoebill.finance/#/",
-      booster: "Up to 10x Nova Points",
+      booster: "Up to 10x",
       iconURL: "/img/icon-shoebill.svg",
       type: "Lending",
       points: shoebillPoints,
