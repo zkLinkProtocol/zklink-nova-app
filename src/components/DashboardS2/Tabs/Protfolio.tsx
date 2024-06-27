@@ -1,10 +1,19 @@
 import styled from "styled-components";
 import { Button, Tooltip, Checkbox } from "@nextui-org/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { formatNumberWithUnit } from "@/utils";
 import SbtNft from "./PortfolioComponents/SbtNFT";
 import LynksNft from "./PortfolioComponents/LynksNFT";
 import TrademarkNFT from "./PortfolioComponents/TrademarkNFT";
+import { useAccount } from "wagmi";
+import {
+  getEigenlayerPoints,
+  getMagPiePoints,
+  getPufferPoints,
+  getRenzoPoints,
+  getRsethPoints,
+} from "@/api";
+import axios from "axios";
 const Title = styled.div`
   background: linear-gradient(180deg, #fff 0%, #bababa 100%);
   background-clip: text;
@@ -190,9 +199,197 @@ const PointsPopoverContent = () => (
   </div>
 );
 
+export interface ProjectPointsItem {
+  iconURL: string;
+  pointsName: string;
+  pointsValue: number;
+  eigenlayerName: string;
+  eigenlayerValue: number;
+  pointsTips?: string;
+  eigenlayerTips?: string;
+}
+
 export default function Portfolio() {
   const [checked, setChecked] = useState(false);
   const [filterTableList, setFilterTableList] = useState<any[]>([]);
+
+  const { address } = useAccount();
+
+  const [pufferPoints, setPufferPoints] = useState(0);
+  const getPufferPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getPufferPoints(address);
+
+    if (data && Array.isArray(data) && data.length > 0) {
+      const obj = data.find((item) => (item.address = address));
+      if (obj) {
+        setPufferPoints(+obj.points);
+      }
+    }
+  };
+
+  const [pufferEigenlayerPoints, setPufferEigenlayerPoints] = useState(0);
+  const getEigenlayerPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getEigenlayerPoints(address);
+    console.log("getEigenlayerPointsFunc", data);
+    if (data && data?.eigenlayer_points) {
+      setPufferEigenlayerPoints(+data.eigenlayer_points);
+    }
+  };
+
+  const [renzoPoints, setRenzoPoints] = useState(0);
+  const [renzoEigenLayerPoints, setRenzoEigenLayerPoints] = useState(0);
+  const getRenzoPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getRenzoPoints(address);
+
+    if (data && Array.isArray(data) && data.length > 0) {
+      setRenzoPoints(
+        data.reduce((prev, item) => prev + +item.points.renzoPoints, 0)
+      );
+
+      setRenzoEigenLayerPoints(
+        data.reduce((prev, item) => prev + +item.points.eigenLayerPoints, 0)
+      );
+    }
+  };
+
+  const [magpiePointsData, setMagpiePointsData] = useState<{
+    points: number;
+    layerPoints: number;
+  }>({
+    points: 0,
+    layerPoints: 0,
+  });
+
+  const getMagpiePointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getMagPiePoints(address);
+    if (data && Array.isArray(data) && data.length > 0) {
+      setMagpiePointsData({
+        points: data.reduce(
+          (prev, cur) => prev + Number(cur.points.eigenpiePoints),
+          0
+        ),
+        layerPoints: data.reduce(
+          (prev, cur) => prev + Number(cur.points.eigenLayerPoints),
+          0
+        ),
+      });
+    }
+  };
+
+  const [kelpMiles, setKelpMiles] = useState(0);
+  const [kelpEigenlayerPoints, setKelpEigenlayerPoints] = useState(0);
+
+  const getRsethPointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getRsethPoints(address);
+
+    const kelpMiles = data.reduce(
+      (prev, item) => prev + Number(item.points.kelpMiles || 0),
+      0
+    );
+    const elPoints = data.reduce(
+      (prev, item) => prev + Number(item.points.elPoints || 0),
+      0
+    );
+    setKelpMiles(kelpMiles);
+    setKelpEigenlayerPoints(elPoints);
+  };
+
+  const [bedrockPoints, setBedrockPoints] = useState(0);
+  const [bedrockEigenlayerPoints, setBedrockEigenlayerPoints] = useState(0);
+  const getBedrockPointsFunc = async () => {
+    const res = await axios.get(
+      `https://points.magic.top/third_protocol/get_userpoint_by_contract_address/0xAd16eDCF7DEB7e90096A259c81269d811544B6B6/${address}`,
+      {
+        headers: {
+          accept: "application/json",
+          "x-api-key":
+            "E9XFnNGAthUbj6RhqZ2TVYbSJ4VgfLDs3GfZusYBSpJeGcHdnCa5ztY9N2qdYYC5D4fgZUnPtwNRC4RMvGHR6jzmMhvNjUAzFEyJRhYRS5D8tQseatv2autYMaCKtQJ4",
+        },
+      }
+    );
+
+    const { data, code } = res?.data;
+
+    console.log("getBedrockPointsFunc", data);
+    if (code === 200 && data) {
+      setBedrockPoints(Number(data?.totalPoint) || 0);
+      setBedrockEigenlayerPoints(Number(data?.totalEigenPodPoint) || 0);
+    }
+  };
+
+  const projectPointsList = useMemo(() => {
+    const arr: ProjectPointsItem[] = [
+      {
+        iconURL: "/img/icon-puffer.svg",
+        pointsName: "Puffer Points",
+        eigenlayerName: "Puffer",
+        pointsValue: pufferPoints,
+        eigenlayerValue: pufferEigenlayerPoints,
+        pointsTips:
+          "Your Puffer Points will be visible one hour after you deposit your pufETH.",
+        eigenlayerTips:
+          "zkLink Nova utilizes the puffer API to showcase puffer Eigenlayer Points. According to Puffer, new users who join puffer after February 9th will not receive Eigenlayer points.",
+      },
+      {
+        iconURL: "/img/icon-renzo.svg",
+        pointsName: "ezPoints",
+        eigenlayerName: "Renzo",
+        pointsValue: renzoPoints,
+        eigenlayerValue: renzoEigenLayerPoints,
+        pointsTips:
+          "Your ezPoints will be visible one hour after you deposit your ezETH.",
+      },
+      {
+        iconURL: "/img/icon-eigenpie.svg",
+        pointsName: "EigenPie Points",
+        eigenlayerName: "EigenPie",
+        pointsValue: magpiePointsData.points,
+        eigenlayerValue: magpiePointsData.layerPoints,
+        pointsTips:
+          "Your EngenPie Points will be visible one hour after you deposit your mxETH",
+      },
+      {
+        iconURL: "/img/icon-kelp.svg",
+        pointsName: "Kelp Miles",
+        eigenlayerName: "KelpDao",
+        pointsValue: kelpMiles,
+        eigenlayerValue: kelpEigenlayerPoints,
+      },
+      {
+        iconURL: "/img/icon-bedrock.svg",
+        pointsName: "Bedrock Diamonds",
+        eigenlayerName: "Bedrock",
+        pointsValue: bedrockPoints,
+        eigenlayerValue: bedrockEigenlayerPoints,
+      },
+    ];
+
+    return arr;
+  }, [
+    pufferPoints,
+    pufferEigenlayerPoints,
+    renzoPoints,
+    renzoEigenLayerPoints,
+    magpiePointsData,
+    kelpMiles,
+    kelpEigenlayerPoints,
+    bedrockPoints,
+    bedrockEigenlayerPoints,
+  ]);
+
+  useEffect(() => {
+    getPufferPointsFunc();
+    getEigenlayerPointsFunc();
+    getRenzoPointsFunc();
+    getMagpiePointsFunc();
+    getRsethPointsFunc();
+    getBedrockPointsFunc();
+  }, [address]);
 
   useEffect(() => {
     setFilterTableList(
@@ -255,7 +452,7 @@ export default function Portfolio() {
       </div>
       <List>
         <div className="list-content">
-          {filterTableList.map((item, index) => (
+          {projectPointsList.map((item, index) => (
             <div className="row mb-[24px] flex items-center" key={index}>
               <div className="list-content-item flex col-2 items-center gap-[10px]">
                 {item?.iconURL && (
@@ -266,26 +463,26 @@ export default function Portfolio() {
                   />
                 )}
                 <div>
-                  <div className="symbol">
-                    <span className="mr-1">{item?.symbol}</span>
+                  <div className="symbol flex items-center">
+                    <span className="mr-1">{item?.eigenlayerName}</span>
                     <img src="img/icon-square-link.svg"></img>
                   </div>
-                  {item?.twitter && (
+                  {/* {item?.twitter && (
                     <div className="name mt-[5px]">{item.twitter}</div>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="col-line"></div>
 
               <div className="list-content-item flex col-3 flex-col   text-center">
-                <span className="text-gray mb-4">ezPoints</span>
-                <span>{formatNumberWithUnit(item?.ezPoints)}</span>
+                <span className="text-gray mb-4">{item.pointsName}</span>
+                <span>{formatNumberWithUnit(item?.pointsValue)}</span>
               </div>
               <div className="col-line"></div>
 
               <div className="list-content-item flex col-3 flex-col  text-center">
-                <span className="text-gray mb-4">Renzo Eigenlayer Points</span>
-                <span>{formatNumberWithUnit(item?.eigenlayerPoints)}</span>
+                <span className="text-gray mb-4">{item.eigenlayerName} Eigenlayer Points</span>
+                <span>{formatNumberWithUnit(item?.eigenlayerValue)}</span>
               </div>
               <div className="col-line"></div>
 
