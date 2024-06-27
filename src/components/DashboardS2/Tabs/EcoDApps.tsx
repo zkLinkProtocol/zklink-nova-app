@@ -1,6 +1,6 @@
-import { NovaCategoryPoints } from "@/api";
+import { NovaCategoryPoints, TvlCategory } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
-import { formatNumberWithUnit } from "@/utils";
+import { formatNumberWithUnit, formatToThounds } from "@/utils";
 import {
   Button,
   Modal,
@@ -9,8 +9,18 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import MilestoneProgress from "../MilestoneProgress";
+
+const MilestoneBox = styled.div`
+  color: rgba(251, 251, 251, 0.6);
+  font-family: Satoshi;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+`;
 
 const BlurBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -60,6 +70,50 @@ const Container = styled.div`
     font-weight: 700;
     line-height: normal;
     text-transform: capitalize;
+  }
+`;
+
+const AllocatedBox = styled.div`
+  padding: 16px 28px;
+  min-width: 419px;
+  border-radius: 16px;
+  border: 1px solid rgba(51, 49, 49, 0);
+  background: #10131c;
+  filter: blur(0.125px);
+
+  .label {
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .value {
+    text-align: right;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .line {
+    margin: 12px auto;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
   }
 `;
 
@@ -207,6 +261,88 @@ interface EcoDAppItem {
   idFeatured?: boolean;
 }
 
+const milestoneMap: {
+  [key: string]: {
+    zkl: number;
+    tvl: number;
+  }[];
+} = {
+  spotdex: [
+    {
+      tvl: 0,
+      zkl: 100000,
+    },
+    {
+      tvl: 5000000,
+      zkl: 500000,
+    },
+    {
+      tvl: 25000000,
+      zkl: 1000000,
+    },
+    {
+      tvl: 50000000,
+      zkl: 2000000,
+    },
+  ],
+  perpdex: [
+    {
+      tvl: 0,
+      zkl: 100000,
+    },
+    {
+      tvl: 100000000,
+      zkl: 500000,
+    },
+    {
+      tvl: 500000000,
+      zkl: 1000000,
+    },
+    {
+      tvl: 2000000,
+      zkl: 2000000,
+    },
+  ],
+  lending: [
+    {
+      tvl: 0,
+      zkl: 100000,
+    },
+    {
+      tvl: 10000000,
+      zkl: 100000,
+    },
+    {
+      tvl: 50000000,
+      zkl: 350000,
+    },
+    {
+      tvl: 200000000,
+      zkl: 700000,
+    },
+  ],
+};
+
+const milestoneNoProgressMap: {
+  [key: string]: {
+    zkl: number;
+    max: number;
+  };
+} = {
+  gamefi: {
+    zkl: 10000,
+    max: 1000000,
+  },
+  other: {
+    zkl: 50000,
+    max: 500000,
+  },
+  boost: {
+    zkl: 50000,
+    max: 500000,
+  },
+};
+
 const EcoDApp = (props: {
   data: EcoDAppItem;
   handleLink: (link: string) => void;
@@ -304,6 +440,7 @@ const EcoDApp = (props: {
 export default function EcoDApps({
   tabActive,
   novaCategoryPoints,
+  tvlCategory,
 }: {
   tabActive?: {
     category: string;
@@ -311,9 +448,9 @@ export default function EcoDApps({
     iconURL: string;
   };
   novaCategoryPoints: NovaCategoryPoints[];
+  tvlCategory: TvlCategory[];
 }) {
   const geNovaCategoryPointsByProject = (project: string) => {
-    console.log("novaCategoryPoints", novaCategoryPoints);
     const obj = novaCategoryPoints.find((item) => item.project === project);
     // const obj = {
     //   ...findObj,
@@ -708,8 +845,6 @@ export default function EcoDApps({
       },
     ];
 
-    console.log("tabActive", tabActive, arr);
-
     return tabActive
       ? arr.filter((item) => item?.category === tabActive.category)
       : arr;
@@ -732,6 +867,88 @@ export default function EcoDApps({
     warningModal.onOpen();
   };
 
+  const currentTvl = useMemo(() => {
+    console.log("tvlCategory", tvlCategory, tabActive?.category);
+    const tvl =
+      tvlCategory?.find((item) => item.name === tabActive?.category)?.tvl || 0;
+
+    console.log("tvl", tvl);
+    return tvl;
+  }, [tvlCategory, tabActive]);
+
+  const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
+    []
+  );
+
+  const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
+  const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
+  const [nextTargetTvl, setNextTargetTvl] = useState(0);
+  const [maxZKL, setMaxZKL] = useState(0);
+
+  const isNoProgress = useMemo(() => {
+    if (
+      tabActive?.category === "gamefi" ||
+      tabActive?.category === "other" ||
+      tabActive?.category === "boost"
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [tabActive]);
+
+  useEffect(() => {
+    if (!tabActive) return;
+    console.log("tabActive", tabActive);
+
+    if (tabActive?.category && isNoProgress) {
+      setCurrentAllocationZKL(
+        milestoneNoProgressMap[tabActive?.category].zkl || 0
+      );
+      setMaxZKL(milestoneNoProgressMap[tabActive?.category].max || 0);
+    } else {
+      const milestoneData = milestoneMap[tabActive?.category];
+      console.log("milestoneData", milestoneData);
+
+      if (milestoneData) {
+        const currentTvlNum = Number(currentTvl);
+
+        const progressFilters = milestoneData.filter((item) => item.tvl !== 0);
+
+        const arr = progressFilters.map((item, index) => {
+          let progress = 0;
+
+          const prevTvl = index > 0 ? progressFilters[index - 1].tvl : 0;
+          if (currentTvlNum >= item.tvl) {
+            progress = 100;
+          } else if (currentTvlNum > prevTvl && currentTvlNum < item.tvl) {
+            progress = (currentTvlNum / item.tvl) * 100;
+          } else {
+            progress = 0;
+          }
+
+          return `${progress.toFixed(2)}%`;
+        });
+
+        const activeFilters = milestoneData.filter(
+          (item) => currentTvlNum > item.tvl
+        );
+        const currentIndex =
+          activeFilters.length === 0 ? 0 : activeFilters.length - 1;
+        const nextIndex =
+          currentIndex + 1 === milestoneData.length
+            ? currentIndex
+            : currentIndex + 1;
+
+        setCurrentAllocationZKL(milestoneData[currentIndex].zkl || 0);
+        setNextAllocationZKL(milestoneData[nextIndex].zkl || 0);
+        setNextTargetTvl(milestoneData[nextIndex].tvl || 0);
+
+        setMilestoneProgressList(arr);
+      }
+    }
+  }, [tabActive?.category, isNoProgress, currentTvl]);
+
   return (
     <Container>
       <div className="flex justify-between items-center">
@@ -744,20 +961,52 @@ export default function EcoDApps({
             />
             <span>{tabActive?.name} $ZKL Allocation</span>
           </div>
-          <div className="holding-value mt-[16px]">5,000,000 $ZKL</div>
+          <div className="holding-value mt-[16px]">
+            {formatToThounds(currentAllocationZKL)} $ZKL
+          </div>
           <div className="holding-desc mt-[8px]">
-            Next $ZKL Allocation Milestone: 10,000,000 $ZKL
+            Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
           </div>
         </div>
-        <div className="flex items-center gap-[14px]">
-          <BlurBox className="px-[16px] py-[12px]">
-            Total Allocated Points <span className="bold">100,000</span>
-          </BlurBox>
-          <BlurBox className="px-[16px] py-[12px]">
-            Your Points <span className="bold">25</span>
-          </BlurBox>
-        </div>
+        <AllocatedBox>
+          <div className="flex items-center justify-between">
+            <span className="label">Total Allocated Points</span>
+            <span className="value">100,000</span>
+          </div>
+          <div className="line"></div>
+          <div className="flex items-center justify-between">
+            <span className="label">Your Points</span>
+            <span className="value">25</span>
+          </div>
+        </AllocatedBox>
       </div>
+      <MilestoneBox>
+        <div className="mt-[36px] flex justify-between items-center">
+          {isNoProgress ? (
+            <div>Max $ZKL Allocation: {formatToThounds(maxZKL)} $ZKL</div>
+          ) : (
+            <>
+              <div>Current TVL: {currentTvl}</div>
+              <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
+            </>
+          )}
+        </div>
+
+        {isNoProgress ? (
+          <div className="w-full mt-[22px]">
+            <MilestoneProgress progress={"0%"} isDisabled={true} />
+          </div>
+        ) : (
+          <div className="mt-[22px] flex items-center justify-between gap-[17px]">
+            {milestoneProgressList.map((item, index) => (
+              <div className="w-full" key={index}>
+                <MilestoneProgress progress={item} />
+              </div>
+            ))}
+          </div>
+        )}
+      </MilestoneBox>
+
       <List>
         <div className="list-header flex items-center">
           <div className="list-header-item text-left">Protocol</div>

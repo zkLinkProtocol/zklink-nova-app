@@ -48,37 +48,35 @@ const CardBox = styled.div`
   border: 2.011px solid #635f5f;
   background: #000811;
 
-  .prize-pool-label {
+  .prize-title {
     color: #fff;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 110%; /* 26.4px */
+  }
+
+  .prize-desc {
+    color: rgba(251, 251, 251, 0.6);
     font-family: Satoshi;
     font-size: 16px;
     font-style: normal;
-    font-weight: 900;
-    line-height: 110%; /* 17.6px */
+    font-weight: 400;
+    line-height: 125%;
   }
-
-  .price-pool-value {
+  .prize-value {
     text-align: right;
     font-family: Satoshi;
-    font-size: 56px;
+    font-size: 84px;
     font-style: normal;
     font-weight: 900;
-    line-height: 64px;
+    line-height: normal;
     background: linear-gradient(180deg, #fff 0%, #bababa 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-
-  .price-pool-line {
-    width: 673px;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(251, 251, 251, 0.6) 51.5%,
-      rgba(255, 255, 255, 0) 100%
-    );
+    white-space: nowrap;
   }
 `;
 
@@ -214,6 +212,11 @@ export default function Dashboard() {
       name: "Assets",
       category: "assets",
     },
+    // {
+    //   iconURL: "/img/icon-assets.svg",
+    //   name: "Boosted",
+    //   category: "boost",
+    // },
     {
       iconURL: "/img/icon-spotdex.svg",
       name: "Spot DEX",
@@ -306,36 +309,41 @@ export default function Dashboard() {
     setNovaCategoryPoints(res?.data || []);
   };
 
+  const [tvlCategory, setTvlCategory] = useState<TvlCategory[]>([]);
+  const getTvlCategoryFunc = async () => {
+    const res = await getTvlCategory();
+    console.log("getTvlCategory", res);
+    setTvlCategory(res?.data || []);
+  };
+
   useEffect(() => {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getNovaCategoryPointsFunc();
+    getTvlCategoryFunc();
   }, [address]);
 
   return (
     <Container>
-      <div className="mt-[29.6px] flex justify-center gap-[23.18px]">
-        <CardBox className="w-[492px] h-[180px]"></CardBox>
-        <CardBox className="w-[737px] h-[180px]">
-          <div className="flex justify-between items-center">
+      <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
+        <CardBox className="w-[full] h-[180px] flex justify-between items-center gap-[61px]">
+          <div>
             <div className="flex items-center gap-[10px]">
               <img
                 src="/img/icon-dollar.svg"
                 alt=""
                 className="w-[24px] h-[24px]"
               />
-              <span>Prize Pool</span>
+              <span className="prize-title">Prize Pool</span>
             </div>
-            <div className="price-pool-value">30,000,000 $ZKL</div>
+            <div className="prize-desc mt-[19px]">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt
+            </div>
           </div>
-          <div className="price-pool-line my-[20px] mx-auto"></div>
-          <div className="flex justify-between items-center">
-            <span>For a more detailed breakdown</span>
-            <BlurButton className="px-[16px] h-[34px] leading-[34px]">
-              View Details
-            </BlurButton>
-          </div>
+
+          <div className="prize-value">30,000,000 $ZKL</div>
         </CardBox>
       </div>
 
@@ -413,12 +421,14 @@ export default function Dashboard() {
                   supportTokens={supportTokens}
                   totalTvlList={totalTvlList}
                   accountTvlData={accountTvlData}
+                  tvlCategory={tvlCategory}
                 />
               )}
               {tabs2Active !== 0 && tabs2Active !== 99 && (
                 <EcoDApps
                   tabActive={tabs2[tabs2Active]}
                   novaCategoryPoints={novaCategoryPoints}
+                  tvlCategory={tvlCategory}
                 />
               )}
 
