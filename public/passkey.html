@@ -13,32 +13,75 @@
   <button onclick="login()">Login</button>
 
 
-  <script type="module">
-    import { client } from 'https://unpkg.com/@passwordless-id/webauthn@1.6.1/dist/webauthn.min.js'
+  <script>
 
-    window.register = async function () {
-      console.log('Registering...')
-      try {
-        const username = document.getElementById('username').value
-        console.log('username', username)
-        let res = await client.register(username, 'random-challenge-base64-encoded')
-        alert(JSON.stringify(res))
+    // GOVsRuhMQWNoScmh_cK02QyQwTolHSUSlX5ciH242Y4
+    async function register() {
+      const username = document.getElementById('username').value
+      const options = {
+        "challenge": "gVQ2n5FCAcksuEefCEgQRKJB_xfMF4rJMinTXSP72E8",
+        "rp": {
+          "name": "Passkey Example",
+          "id": "preview.app.zklink.io"
+        },
+        "user": {
+          "id": "GOVsRuhMQWNoScmh_cK02QyQwTolHSUSlX5c212222222",
+          "name": username,
+          "displayName": username + " Display Name"
+        },
+        "pubKeyCredParams": [
+          {
+            "alg": -7,
+            "type": "public-key"
+          }
+        ],
+        "timeout": 60000,
+        "attestation": "none",
+        "excludeCredentials": [
+        ],
+        "authenticatorSelection": {
+          "authenticatorAttachment": "platform",
+          "requireResidentKey": true,
+          "residentKey": "required"
+        },
+        "extensions": {
+          "credProps": true
+        }
       }
-      catch (e) {
-        alert(e)
-      }
+
+      const encoder = new TextEncoder();
+
+      options.challenge = encoder.encode(options.challenge);
+      options.user.id = encoder.encode(options.user.id);
+
+      // 创建Credential,其中Private Key存储在操作系统的密钥管理器中,JavaScript不能获取Private Key:
+      const cred = await navigator.credentials.create({
+        publicKey: options
+      });
+      console.log(cred);
     }
 
-    window.login = async function () {
-      console.log('Authenticating...')
-      try {
-        let res = await client.authenticate([], 'random-challenge-base64-encoded')
-        alert(JSON.stringify(res))
+
+    async function login() {
+      const options = {
+        "challenge": "x1wRuShyI4k7BqYJi60kVk-clJWsPnBGgh_7z-W9QYk",
+        "allowCredentials": [],
+        "timeout": 60000,
+        "rpId": "preview.app.zklink.io"
       }
-      catch (e) {
-        alert(e)
-      }
+
+      const encoder = new TextEncoder();
+
+      options.challenge = encoder.encode(options.challenge);
+      const cred = await navigator.credentials.get({
+        publicKey: options
+      });
+      console.log(cred);
     }
+
+
+
+
 
   </script>
 </body>
