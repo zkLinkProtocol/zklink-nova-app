@@ -13,11 +13,26 @@
   <button onclick="login()">Login</button>
 
 
+
+
   <script>
+
+    const params = new URLSearchParams(window.location.search);
+
+
+    const action = params.get('action');
+    const username = params.get('username');
+
+
+    if (action === 'register') {
+      register();
+    } else if (action === 'login') {
+      login();
+    }
 
     // GOVsRuhMQWNoScmh_cK02QyQwTolHSUSlX5ciH242Y4
     async function register() {
-      const username = document.getElementById('username').value
+      // const username = document.getElementById('username').value
       const options = {
         "challenge": "gVQ2n5FCAcksuEefCEgQRKJB_xfMF4rJMinTXSP72E8",
         "rp": {
@@ -77,6 +92,7 @@
         publicKey: options
       });
       console.log(cred);
+
     }
 
 
