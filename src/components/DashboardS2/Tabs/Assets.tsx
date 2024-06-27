@@ -260,7 +260,7 @@ interface IAssetsTableProps {
   totalTvlList: TotalTvlItem[];
   supportTokens: SupportToken[];
   ethUsdPrice: number;
-  tvlCategory: TvlCategory[];
+  currentTvl: number;
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -269,7 +269,7 @@ export default function Assets(props: IAssetsTableProps) {
     totalTvlList,
     supportTokens,
     ethUsdPrice,
-    tvlCategory,
+    currentTvl,
   } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
@@ -492,11 +492,6 @@ export default function Assets(props: IAssetsTableProps) {
     },
   ];
 
-  const currentTvl = useMemo(() => {
-    const tvl =
-      Number(tvlCategory.find((item) => item.name === "holding")?.tvl) || 0;
-    return tvl;
-  }, [tvlCategory]);
   const [nextTargetTvl, setNextTargetTvl] = useState(0);
   const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
   const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
@@ -534,7 +529,6 @@ export default function Assets(props: IAssetsTableProps) {
 
     setMilestoneProgressList(arr);
   }, [currentTvl]);
-
 
   return (
     <Container>

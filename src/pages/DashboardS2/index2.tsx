@@ -5,6 +5,7 @@ import {
   NovaCategoryPoints,
   SupportToken,
   TvlCategory,
+  TvlCategoryMilestone,
   getAccountTvl,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
@@ -12,6 +13,7 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getTvlCategory,
+  getTvlCategoryMilestone,
 } from "@/api";
 import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
@@ -212,11 +214,11 @@ export default function Dashboard() {
       name: "Assets",
       category: "assets",
     },
-    // {
-    //   iconURL: "/img/icon-assets.svg",
-    //   name: "Boosted",
-    //   category: "boost",
-    // },
+    {
+      iconURL: "/img/icon-boosted.svg",
+      name: "Boosted",
+      category: "nativeboost",
+    },
     {
       iconURL: "/img/icon-spotdex.svg",
       name: "Spot DEX",
@@ -250,6 +252,22 @@ export default function Dashboard() {
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [accountTvlData, setAccountTvlData] = useState<AccountTvlItem[]>([]);
+
+  const [totalTvl, setTotalTvl] = useState(0);
+  const getTotalTvlFunc = async () => {
+    const res = await getExplorerTokenTvl(false);
+
+    let num = 0;
+    if (res.length > 0) {
+      num = +parseInt(res[0].tvl);
+    }
+
+    setTotalTvl(num);
+  };
+
+  useEffect(() => {
+    getTotalTvlFunc();
+  }, []);
 
   const getAccountTvlFunc = async () => {
     let usdPrice = 0;
@@ -316,12 +334,22 @@ export default function Dashboard() {
     setTvlCategory(res?.data || []);
   };
 
+  const [tvlCategoryMilestone, setTvlCategoryMilestone] = useState<
+    TvlCategoryMilestone[]
+  >([]);
+  const getTvlCategoryMilestoneFunc = async () => {
+    const res = await getTvlCategoryMilestone();
+    console.log("getTvlCategory", res);
+    setTvlCategoryMilestone(res?.data || []);
+  };
+
   useEffect(() => {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getNovaCategoryPointsFunc();
     getTvlCategoryFunc();
+    getTvlCategoryMilestoneFunc();
   }, [address]);
 
   return (
@@ -421,14 +449,14 @@ export default function Dashboard() {
                   supportTokens={supportTokens}
                   totalTvlList={totalTvlList}
                   accountTvlData={accountTvlData}
-                  tvlCategory={tvlCategory}
+                  currentTvl={totalTvl}
                 />
               )}
               {tabs2Active !== 0 && tabs2Active !== 99 && (
                 <EcoDApps
                   tabActive={tabs2[tabs2Active]}
                   novaCategoryPoints={novaCategoryPoints}
-                  tvlCategory={tvlCategory}
+                  tvlCategoryMilestone={tvlCategoryMilestone}
                 />
               )}
 

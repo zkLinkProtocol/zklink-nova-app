@@ -583,7 +583,13 @@ export const drawMystery3 = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
 
 export interface NovaCategoryPoints {
-  category: "spotdex" | "perpdex" | "lending" | "gamefi" | "other";
+  category:
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
   project: string;
   holdingPoints: number;
   refPoints: number;
@@ -615,6 +621,22 @@ interface TvlCategoryResponse {
 
 export const getTvlCategory = (): Promise<TvlCategoryResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/tvl/category`);
+
+export interface TvlCategoryMilestone {
+  name: string;
+  data: string;
+  type: string;
+}
+
+interface TvlCategoryMilestoneResponse {
+  errno: number;
+  errmsg: string;
+  data: TvlCategoryMilestone[];
+}
+
+export const getTvlCategoryMilestone =
+  (): Promise<TvlCategoryMilestoneResponse> =>
+    http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone`);
 
 export const modifyUsername = (userName: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/invite/modify/username`, { userName });

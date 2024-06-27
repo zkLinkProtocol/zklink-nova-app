@@ -1,4 +1,4 @@
-import { NovaCategoryPoints, TvlCategory } from "@/api";
+import { NovaCategoryPoints, TvlCategory, TvlCategoryMilestone } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit, formatToThounds } from "@/utils";
 import {
@@ -299,7 +299,7 @@ const milestoneMap: {
     },
     {
       tvl: 50000000,
-      zkl: 2000000,
+      zkl: 1500000,
     },
   ],
   perpdex: [
@@ -316,7 +316,7 @@ const milestoneMap: {
       zkl: 1000000,
     },
     {
-      tvl: 2000000,
+      tvl: 2000000000,
       zkl: 2000000,
     },
   ],
@@ -354,7 +354,7 @@ const milestoneNoProgressMap: {
     zkl: 50000,
     max: 500000,
   },
-  boost: {
+  nativeboost: {
     zkl: 50000,
     max: 500000,
   },
@@ -461,7 +461,7 @@ const EcoDApp = (props: {
 export default function EcoDApps({
   tabActive,
   novaCategoryPoints,
-  tvlCategory,
+  tvlCategoryMilestone,
 }: {
   tabActive?: {
     category: string;
@@ -469,7 +469,7 @@ export default function EcoDApps({
     iconURL: string;
   };
   novaCategoryPoints: NovaCategoryPoints[];
-  tvlCategory: TvlCategory[];
+  tvlCategoryMilestone: TvlCategoryMilestone[];
 }) {
   const geNovaCategoryPointsByProject = (project: string) => {
     const obj = novaCategoryPoints.find((item) => item.project === project);
@@ -504,7 +504,7 @@ export default function EcoDApps({
 
     const arr: EcoDAppItem[] = [
       {
-        category: novaswap?.category || "spotdex",
+        category: novaswap?.category || "nativeboost",
         iconURL: "/img/icon-novaswap.svg",
         name: "Novaswap",
         link: "https://novaswap.fi/",
@@ -889,13 +889,14 @@ export default function EcoDApps({
   };
 
   const currentTvl = useMemo(() => {
-    console.log("tvlCategory", tvlCategory, tabActive?.category);
+    console.log("tvlCategory", tvlCategoryMilestone, tabActive?.category);
     const tvl =
-      tvlCategory?.find((item) => item.name === tabActive?.category)?.tvl || 0;
+      tvlCategoryMilestone?.find((item) => item.name === tabActive?.category)
+        ?.data || 0;
 
     console.log("tvl", tvl);
     return tvl;
-  }, [tvlCategory, tabActive]);
+  }, [tvlCategoryMilestone, tabActive]);
 
   const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
     []
@@ -910,7 +911,7 @@ export default function EcoDApps({
     if (
       tabActive?.category === "gamefi" ||
       tabActive?.category === "other" ||
-      tabActive?.category === "boost"
+      tabActive?.category === "nativeboost"
     ) {
       return true;
     } else {
@@ -1009,7 +1010,7 @@ export default function EcoDApps({
             <div>Max $ZKL Allocation: {formatToThounds(maxZKL)} $ZKL</div>
           ) : (
             <>
-              <div>Current TVL: {currentTvl}</div>
+              <div>Current TVL: {formatToThounds(currentTvl)}</div>
               <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
             </>
           )}
