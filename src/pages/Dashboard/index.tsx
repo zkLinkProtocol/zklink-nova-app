@@ -189,10 +189,10 @@ export default function Dashboard() {
     logxNovaPoints,
     novaSwapNovaPoints,
     eddyFinanceNovaPoints,
-    pointsDetail,
     rubicNovaPoints,
     zkdxNovaPoints,
     wagmiNovaPoints,
+    shoebillNovaPoints
   } = useNovaPoints();
 
   const navigatorTo = useNavigate();
@@ -1125,17 +1125,58 @@ export default function Dashboard() {
       ],
     };
 
+    const shoebillPoints = [{
+      name: "Nova Points",
+      value: formatNumberWithUnit(shoebillNovaPoints),
+    }];
+
+    const shoebill: EcoDAppsProps = {
+      name: "Shoebill",
+      handler: "@ShoebillFinance",
+      link: "https://zklink-eth.shoebill.finance/#/",
+      booster: "Up to 10x Nova Points",
+      iconURL: "/img/icon-shoebill.svg",
+      type: "Lending",
+      points: shoebillPoints,
+      earned: `${shoebillPoints.length} ${
+        shoebillPoints.length > 1 ? "Types" : "Type"
+      } of Point`,
+      boosterTooltips: (
+        <div>
+          <p>10x for ETH</p>
+          <p>4x for other supported token</p>
+        </div>
+      ),
+      details: [
+        {
+          status: "Live",
+          tagLabel: "Booster",
+          tag: "Up to 10x",
+          tagTooltips: (
+            <div>
+              <p>10x for ETH</p>
+              <p>4x for other supported token</p>
+            </div>
+          ),
+          description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+          actionType: "Provide Liquidity",
+          actionLink: "https://zklink-eth.shoebill.finance/#/",
+        },
+      ],
+    };
+
     const arr: EcoDAppsProps[] = [
       novaSwap,
       layerbank,
       logx,
-      aqua,
+      shoebill,
       wagmi,
       izumi,
       zkdx,
       // owlto,
       eddyFinance,
       allspark,
+      aqua,
       rubic,
       interport,
       orbiter,
