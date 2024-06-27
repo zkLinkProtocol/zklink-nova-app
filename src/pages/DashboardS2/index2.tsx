@@ -1,10 +1,12 @@
 import Assets from "@/components/DashboardS2/Tabs/Assets";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   NovaCategoryPoints,
   SupportToken,
   TvlCategory,
+  TvlCategoryMilestone,
+  getAccountPoint,
   getAccountTvl,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
@@ -12,9 +14,11 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getTvlCategory,
+  getTvlCategoryMilestone,
 } from "@/api";
 import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
+import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 
 export type TotalTvlItem = {
   symbol: string;
@@ -47,37 +51,35 @@ const CardBox = styled.div`
   border: 2.011px solid #635f5f;
   background: #000811;
 
-  .prize-pool-label {
+  .prize-title {
     color: #fff;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 110%; /* 26.4px */
+  }
+
+  .prize-desc {
+    color: rgba(251, 251, 251, 0.6);
     font-family: Satoshi;
     font-size: 16px;
     font-style: normal;
-    font-weight: 900;
-    line-height: 110%; /* 17.6px */
+    font-weight: 400;
+    line-height: 125%;
   }
-
-  .price-pool-value {
+  .prize-value {
     text-align: right;
     font-family: Satoshi;
-    font-size: 56px;
+    font-size: 84px;
     font-style: normal;
     font-weight: 900;
-    line-height: 64px;
+    line-height: normal;
     background: linear-gradient(180deg, #fff 0%, #bababa 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-
-  .price-pool-line {
-    width: 673px;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(251, 251, 251, 0.6) 51.5%,
-      rgba(255, 255, 255, 0) 100%
-    );
+    white-space: nowrap;
   }
 `;
 
@@ -214,6 +216,11 @@ export default function Dashboard() {
       category: "assets",
     },
     {
+      iconURL: "/img/icon-boosted.svg",
+      name: "Boosted",
+      category: "nativeboost",
+    },
+    {
       iconURL: "/img/icon-spotdex.svg",
       name: "Spot DEX",
       category: "spotdex",
@@ -246,6 +253,22 @@ export default function Dashboard() {
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [accountTvlData, setAccountTvlData] = useState<AccountTvlItem[]>([]);
+
+  const [totalTvl, setTotalTvl] = useState(0);
+  const getTotalTvlFunc = async () => {
+    const res = await getExplorerTokenTvl(false);
+
+    let num = 0;
+    if (res.length > 0) {
+      num = +parseInt(res[0].tvl);
+    }
+
+    setTotalTvl(num);
+  };
+
+  useEffect(() => {
+    getTotalTvlFunc();
+  }, []);
 
   const getAccountTvlFunc = async () => {
     let usdPrice = 0;
@@ -305,36 +328,137 @@ export default function Dashboard() {
     setNovaCategoryPoints(res?.data || []);
   };
 
+  const [tvlCategory, setTvlCategory] = useState<TvlCategory[]>([]);
+  const getTvlCategoryFunc = async () => {
+    const res = await getTvlCategory();
+    console.log("getTvlCategory", res);
+    setTvlCategory(res?.data || []);
+  };
+
+  const [tvlCategoryMilestone, setTvlCategoryMilestone] = useState<
+    TvlCategoryMilestone[]
+  >([]);
+  const getTvlCategoryMilestoneFunc = async () => {
+    const res = await getTvlCategoryMilestone();
+    console.log("getTvlCategory", res);
+    setTvlCategoryMilestone(res?.data || []);
+  };
+
+  const [novaPoints, setNovaPoints] = useState(0);
+  const getAccountPointFunc = async () => {
+    if (!address) {
+      setNovaPoints(0);
+      return;
+    }
+    const { result } = await getAccountPoint(address);
+    setNovaPoints(Number(result?.novaPoint) || 0);
+  };
+
+  const holdingPointsMap: {
+    [key: string]: number;
+  } = useMemo(() => {
+    const nativeboost = novaCategoryPoints
+      .filter((item) => item.category === "nativeboost")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const spotdex = novaCategoryPoints
+      .filter((item) => item.category === "spotdex")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const perpdex = novaCategoryPoints
+      .filter((item) => item.category === "perpdex")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const lending = novaCategoryPoints
+      .filter((item) => item.category === "lending")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const gamefi = novaCategoryPoints
+      .filter((item) => item.category === "gamefi")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const other = novaCategoryPoints
+      .filter((item) => item.category === "other")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    return {
+      nativeboost,
+      spotdex,
+      perpdex,
+      lending,
+      gamefi,
+      other,
+    };
+  }, [novaCategoryPoints]);
+
+  const holdingPoints = useMemo(() => {
+    const category = tabs2[tabs2Active]?.category;
+    return holdingPointsMap[category] || 0;
+  }, [holdingPointsMap, tabs2Active]);
+
+  const novaPointsList = useMemo(() => {
+    return [
+      {
+        name: "Assets Points",
+        points: novaPoints,
+      },
+      {
+        name: "Spot DEX Points",
+        points: holdingPointsMap.spotdex,
+      },
+      {
+        name: "Native Boost Points",
+        points: holdingPointsMap.nativeboost,
+      },
+      {
+        name: "Perp DEX Points",
+        points: holdingPointsMap.perpdex,
+      },
+      {
+        name: "Lending Points",
+        points: holdingPointsMap.lending,
+      },
+      {
+        name: "GameFi Points",
+        points: holdingPointsMap.gamefi,
+      },
+      {
+        name: "Others Points",
+        points: holdingPointsMap.other,
+      },
+    ];
+  }, [holdingPointsMap, novaPoints]);
+
   useEffect(() => {
+    getAccountPointFunc();
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getNovaCategoryPointsFunc();
+    getTvlCategoryFunc();
+    getTvlCategoryMilestoneFunc();
   }, [address]);
 
   return (
     <Container>
-      <div className="mt-[29.6px] flex justify-center gap-[23.18px]">
-        <CardBox className="w-[492px] h-[180px]"></CardBox>
-        <CardBox className="w-[737px] h-[180px]">
-          <div className="flex justify-between items-center">
+      <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
+        <CardBox className="w-[full] h-[180px] flex justify-between items-center gap-[61px]">
+          <div>
             <div className="flex items-center gap-[10px]">
               <img
                 src="/img/icon-dollar.svg"
                 alt=""
                 className="w-[24px] h-[24px]"
               />
-              <span>Prize Pool</span>
+              <span className="prize-title">Prize Pool</span>
             </div>
-            <div className="price-pool-value">30,000,000 $ZKL</div>
+            <div className="prize-desc mt-[19px]">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt
+            </div>
           </div>
-          <div className="price-pool-line my-[20px] mx-auto"></div>
-          <div className="flex justify-between items-center">
-            <span>For a more detailed breakdown</span>
-            <BlurButton className="px-[16px] h-[34px] leading-[34px]">
-              View Details
-            </BlurButton>
-          </div>
+
+          <div className="prize-value">30,000,000 $ZKL</div>
         </CardBox>
       </div>
 
@@ -370,39 +494,62 @@ export default function Dashboard() {
 
         <div className="mt-[40px]">
           <TabsCard>
-            <div className="relative bottom-[-14.5px] flex items-center gap-[12.15px]">
-              {tabs2.map((tab, index) => (
-                <div
-                  className={`tab-item flex justify-center items-center gap-[8px] ${
-                    index === tabs2Active ? "active" : ""
-                  }`}
-                  onClick={() => setTabs2Active(index)}
-                  key={index}
-                >
-                  <img
-                    src={tab.iconURL}
-                    alt=""
-                    className="w-[24px] h-[24px] block"
-                  />
-                  <span>{tab.name}</span>
-                </div>
-              ))}
+            <div className="relative bottom-[-14.5px] flex items-center justify-between">
+              <div className="flex flex items-center gap-[12.15px]">
+                {tabs2.map((tab, index) => (
+                  <div
+                    className={`tab-item flex justify-center items-center gap-[8px] ${
+                      index === tabs2Active ? "active" : ""
+                    }`}
+                    onClick={() => setTabs2Active(index)}
+                    key={index}
+                  >
+                    <img
+                      src={tab.iconURL}
+                      alt=""
+                      className="w-[24px] h-[24px] block"
+                    />
+                    <span>{tab.name}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className={`tab-item flex justify-center items-center gap-[8px] ${
+                  tabs2Active === 99 ? "active" : ""
+                }`}
+                onClick={() => setTabs2Active(99)}
+              >
+                <img
+                  src={"/img/icon-assets.svg"}
+                  alt=""
+                  className="w-[24px] h-[24px] block"
+                />
+                <span>Portfolio</span>
+              </div>
             </div>
 
             <div className="tab-content px-[31px] py-[32.5px]">
-              {tabs2Active === 0 ? (
+              {tabs2Active === 0 && (
                 <Assets
                   ethUsdPrice={ethUsdPrice}
                   supportTokens={supportTokens}
                   totalTvlList={totalTvlList}
                   accountTvlData={accountTvlData}
+                  currentTvl={totalTvl}
+                  holdingPoints={novaPoints}
                 />
-              ) : (
+              )}
+              {tabs2Active !== 0 && tabs2Active !== 99 && (
                 <EcoDApps
                   tabActive={tabs2[tabs2Active]}
                   novaCategoryPoints={novaCategoryPoints}
+                  tvlCategoryMilestone={tvlCategoryMilestone}
+                  holdingPoints={holdingPoints}
                 />
               )}
+
+              {tabs2Active === 99 && <Portfolio novaPointsList={novaPointsList} />}
             </div>
           </TabsCard>
         </div>

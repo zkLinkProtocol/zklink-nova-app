@@ -1,11 +1,21 @@
 import styled from "styled-components";
-import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
+import {
+  ExplorerTvlItem,
+  SupportToken,
+  TvlCategory,
+  getExplorerTokenTvl,
+} from "@/api";
 import { AccountTvlItem, TotalTvlItem } from "@/pages/Dashboard";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input, useDisclosure } from "@nextui-org/react";
-import { findClosestMultiplier, formatNumberWithUnit } from "@/utils";
-import _ from "lodash";
+import {
+  findClosestMultiplier,
+  formatNumberWithUnit,
+  formatToThounds,
+} from "@/utils";
+import _, { max, set } from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
+import MilestoneProgress from "../MilestoneProgress";
 
 const BlurBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -163,6 +173,59 @@ const List = styled.div`
   }
 `;
 
+const MilestoneBox = styled.div`
+  color: rgba(251, 251, 251, 0.6);
+  font-family: Satoshi;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+`;
+
+const AllocatedBox = styled.div`
+  padding: 16px 28px;
+  min-width: 419px;
+  border-radius: 16px;
+  border: 1px solid rgba(51, 49, 49, 0);
+  background: #10131c;
+  filter: blur(0.125px);
+
+  .label {
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .value {
+    text-align: right;
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .line {
+    margin: 12px auto;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+`;
+
 export type TokenAddress = {
   chain: string;
   l1Address: string;
@@ -197,10 +260,19 @@ interface IAssetsTableProps {
   totalTvlList: TotalTvlItem[];
   supportTokens: SupportToken[];
   ethUsdPrice: number;
+  currentTvl: number;
+  holdingPoints: number;
 }
 
 export default function Assets(props: IAssetsTableProps) {
-  const { accountTvlData, totalTvlList, supportTokens, ethUsdPrice } = props;
+  const {
+    accountTvlData,
+    totalTvlList,
+    supportTokens,
+    ethUsdPrice,
+    currentTvl,
+    holdingPoints,
+  } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
   const [tableList, setTableList] = useState<AssetsListItem[]>([]);
@@ -316,10 +388,6 @@ export default function Assets(props: IAssetsTableProps) {
         obj.tokenAddress = chains.l2Address;
         const accountTvlItem = getTokenAccountTvl(chains.l2Address);
         const totalTvlItem = getTotalTvl(chains.l2Address);
-
-        console.log("accountTvlItem", accountTvlItem);
-        console.log("totalTvlItem", totalTvlItem);
-
         if (accountTvlItem) {
           obj.amount += +accountTvlItem.amount ? +accountTvlItem.amount : 0;
           obj.tvl += +accountTvlItem.tvl
@@ -391,8 +459,6 @@ export default function Assets(props: IAssetsTableProps) {
           Number(findClosestMultiplier(a.multipliers))
       );
 
-    console.log("assets list", arr);
-
     setFilterTableList(arr);
 
     // const notNovaFilters = arr.filter((item) => !item.isNova);
@@ -400,6 +466,71 @@ export default function Assets(props: IAssetsTableProps) {
     // const newArr = [...novaFilters, ...notNovaFilters];
     // setFilterTableList(newArr);
   }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
+
+  // const milestoneZKLs = [
+  //   500000
+  // ]
+
+  const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
+    []
+  );
+
+  const milestoneData = [
+    {
+      tvl: 0,
+      zkl: 500000,
+    },
+    {
+      tvl: 100000000,
+      zkl: 1000000,
+    },
+    {
+      tvl: 500000000,
+      zkl: 3000000,
+    },
+    {
+      tvl: 1000000000,
+      zkl: 4000000,
+    },
+  ];
+
+  const [nextTargetTvl, setNextTargetTvl] = useState(0);
+  const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
+  const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
+
+  useEffect(() => {
+    const filters = milestoneData.filter((item) => currentTvl > item.tvl);
+    const currentIndex = filters.length === 0 ? 0 : filters.length - 1;
+    const nextIndex =
+      currentIndex + 1 === milestoneData.length
+        ? currentIndex
+        : currentIndex + 1;
+
+    setCurrentAllocationZKL(milestoneData[currentIndex].zkl || 0);
+    setNextAllocationZKL(milestoneData[nextIndex].zkl || 0);
+    setNextTargetTvl(milestoneData[nextIndex].tvl || 0);
+  }, [currentTvl]);
+
+  useEffect(() => {
+    const filters = milestoneData.filter((item) => item.tvl !== 0);
+
+    const arr = filters.map((item, index) => {
+      let progress = 0;
+
+      const prevTvl = index > 0 ? filters[index - 1].tvl : 0;
+      if (currentTvl >= item.tvl) {
+        progress = 100;
+      } else if (currentTvl > prevTvl && currentTvl < item.tvl) {
+        progress = (currentTvl / item.tvl) * 100;
+      } else {
+        progress = 0;
+      }
+
+      return `${progress.toFixed(2)}%`;
+    });
+
+    setMilestoneProgressList(arr);
+  }, [currentTvl]);
 
   return (
     <Container>
@@ -413,98 +544,117 @@ export default function Assets(props: IAssetsTableProps) {
             />
             <span>Holding $ZKL Allocation</span>
           </div>
-          <div className="holding-value mt-[16px]">5,000,000 $ZKL</div>
-          <div className="holding-desc mt-[8px]">
-            Next $ZKL Allocation Milestone: 10,000,000 $ZKL
+          <div className="holding-value mt-[16px]">
+            {formatToThounds(currentAllocationZKL)} $ZKL
+          </div>
+          <div className="holding-desc mt-[25px]">
+            Next $ZKL Allocation Milestone: {formatToThounds(nextAllocationZKL)}{" "}
+            $ZKL
           </div>
         </div>
-        <div className="flex items-center gap-[14px]">
-          <BlurBox className="px-[16px] py-[12px]">
-            Total Allocated Points <span className="bold">100,000</span>
-          </BlurBox>
-          <BlurBox className="px-[16px] py-[12px]">
-            Your Points <span className="bold">25</span>
-          </BlurBox>
-        </div>
+        <AllocatedBox>
+          <div className="flex items-center justify-between">
+            <span className="label">Total Allocated Points</span>
+            <span className="value">0</span>
+          </div>
+          <div className="line"></div>
+          <div className="flex items-center justify-between">
+            <span className="label">Your Points</span>
+            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
+          </div>
+        </AllocatedBox>
       </div>
-      <div>
-        <List>
-          <div className="list-header flex items-center">
-            <div className="list-header-item text-left">Token</div>
-            <div className="list-header-item text-center">Points Booster</div>
-            <div className="list-header-item text-center">Nova TVL</div>
-            <div className="list-header-item text-center">Your Deposit</div>
-            <div className="list-header-item">
-              <Input
-                data-hover={false}
-                isClearable
-                placeholder="Please enter the token symbol."
-                classNames={{
-                  base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
-                  mainWrapper: ["bg-transparent", "hover:bg-transparent"],
-                  inputWrapper: ["bg-transparent", "hover:bg-transparent"],
-                  input: ["bg-transparent", "hover:bg-transparent"],
-                }}
-                startContent={
-                  <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
-                }
-                onClear={() => {
-                  setSearchValue("");
-                }}
-                onValueChange={setSearchValue}
-              />
+
+      <MilestoneBox>
+        <div className="mt-[36px] flex justify-between items-center">
+          <div>Current TVL: {formatToThounds(currentTvl)}</div>
+          <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
+        </div>
+        <div className="mt-[22px] flex items-center justify-between gap-[17px]">
+          {milestoneProgressList.map((item, index) => (
+            <div className="w-full" key={index}>
+              <MilestoneProgress progress={item} />
             </div>
+          ))}
+        </div>
+      </MilestoneBox>
+
+      <List>
+        <div className="list-header flex items-center">
+          <div className="list-header-item text-left">Token</div>
+          <div className="list-header-item text-center">Points Booster</div>
+          <div className="list-header-item text-center">Nova TVL</div>
+          <div className="list-header-item text-center">Your Deposit</div>
+          <div className="list-header-item">
+            <Input
+              data-hover={false}
+              isClearable
+              placeholder="Please enter the token symbol."
+              classNames={{
+                base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
+                mainWrapper: ["bg-transparent", "hover:bg-transparent"],
+                inputWrapper: ["bg-transparent", "hover:bg-transparent"],
+                input: ["bg-transparent", "hover:bg-transparent"],
+              }}
+              startContent={
+                <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+              }
+              onClear={() => {
+                setSearchValue("");
+              }}
+              onValueChange={setSearchValue}
+            />
           </div>
-          <div className="list-content">
-            {filterTableList.map((item, index) => (
-              <div className="row mb-[24px] flex items-center" key={index}>
-                <div className="list-content-item flex items-center gap-[10px]">
-                  {item?.iconURL && (
-                    <img
-                      src={item?.iconURL}
-                      alt=""
-                      className="w-[55px] h-[56px] rounded-full block"
-                    />
+        </div>
+        <div className="list-content">
+          {filterTableList.map((item, index) => (
+            <div className="row mb-[24px] flex items-center" key={index}>
+              <div className="list-content-item flex items-center gap-[10px]">
+                {item?.iconURL && (
+                  <img
+                    src={item?.iconURL}
+                    alt=""
+                    className="w-[55px] h-[56px] rounded-full block"
+                  />
+                )}
+                <div>
+                  <div className="symbol">{item?.symbol}</div>
+                  {item?.isNova && (
+                    <div className="name mt-[5px]">Merged Token</div>
                   )}
-                  <div>
-                    <div className="symbol">{item?.symbol}</div>
-                    {item?.isNova && (
-                      <div className="name mt-[5px]">Merged Token</div>
-                    )}
-                  </div>
-                </div>
-                <div className="col-line"></div>
-                <div className="list-content-item  text-center">
-                  {item?.multipliers && Array.isArray(item.multipliers)
-                    ? findClosestMultiplier(item?.multipliers)
-                    : 0}
-                  x Boost
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  text-center">
-                  {formatNumberWithUnit(item?.totalAmount)}
-                  <span className="text-gray">
-                    ({formatNumberWithUnit(item?.totalTvl, "$")})
-                  </span>
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  text-center">
-                  {" "}
-                  {formatNumberWithUnit(item?.amount)}
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  flex justify-end items-center gap-[10px]">
-                  <span className="action">Action:</span>
-                  <span className="particpate">Participate</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </List>
-      </div>
+              <div className="col-line"></div>
+              <div className="list-content-item  text-center">
+                {item?.multipliers && Array.isArray(item.multipliers)
+                  ? findClosestMultiplier(item?.multipliers)
+                  : 0}
+                x Boost
+              </div>
+              <div className="col-line"></div>
+
+              <div className="list-content-item  text-center">
+                {formatNumberWithUnit(item?.totalAmount)}
+                <span className="text-gray">
+                  ({formatNumberWithUnit(item?.totalTvl, "$")})
+                </span>
+              </div>
+              <div className="col-line"></div>
+
+              <div className="list-content-item  text-center">
+                {" "}
+                {formatNumberWithUnit(item?.amount)}
+              </div>
+              <div className="col-line"></div>
+
+              <div className="list-content-item  flex justify-end items-center gap-[10px]">
+                <span className="action">Action:</span>
+                <span className="particpate">Participate</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </List>
     </Container>
   );
 }
