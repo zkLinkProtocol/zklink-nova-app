@@ -261,7 +261,12 @@ interface EcoDAppItem {
   idFeatured?: boolean;
 }
 
-const milestoneMap = {
+const milestoneMap: {
+  [key: string]: {
+    zkl: number;
+    tvl: number;
+  }[];
+} = {
   spotdex: [
     {
       tvl: 0,
@@ -280,7 +285,7 @@ const milestoneMap = {
       zkl: 2000000,
     },
   ],
-  prepdex: [
+  perpdex: [
     {
       tvl: 0,
       zkl: 100000,
@@ -871,7 +876,13 @@ export default function EcoDApps({
     return tvl;
   }, [tvlCategory, tabActive]);
 
-  const [currentTVL, setCurrentTVL] = useState(0);
+  const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
+    []
+  );
+
+  const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
+  const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
+  const [nextTargetTvl, setNextTargetTvl] = useState(0);
   const [maxZKL, setMaxZKL] = useState(0);
 
   const isNoProgress = useMemo(() => {
@@ -887,19 +898,56 @@ export default function EcoDApps({
   }, [tabActive]);
 
   useEffect(() => {
-    if (
-      // tabActive?.category === "gamefi" ||
-      // tabActive?.category === "other" ||
-      // tabActive?.category === "boost"
-      tabActive?.category &&
-      isNoProgress
-    ) {
-      console.log("tabActive", tabActive);
+    if (!tabActive) return;
+    console.log("tabActive", tabActive);
 
-      setCurrentTVL(milestoneNoProgressMap[tabActive?.category].zkl || 0);
+    if (tabActive?.category && isNoProgress) {
+      setCurrentAllocationZKL(
+        milestoneNoProgressMap[tabActive?.category].zkl || 0
+      );
       setMaxZKL(milestoneNoProgressMap[tabActive?.category].max || 0);
+    } else {
+      const milestoneData = milestoneMap[tabActive?.category];
+      console.log("milestoneData", milestoneData);
+
+      if (milestoneData) {
+        const currentTvlNum = Number(currentTvl);
+
+        const progressFilters = milestoneData.filter((item) => item.tvl !== 0);
+
+        const arr = progressFilters.map((item, index) => {
+          let progress = 0;
+
+          const prevTvl = index > 0 ? progressFilters[index - 1].tvl : 0;
+          if (currentTvlNum >= item.tvl) {
+            progress = 100;
+          } else if (currentTvlNum > prevTvl && currentTvlNum < item.tvl) {
+            progress = (currentTvlNum / item.tvl) * 100;
+          } else {
+            progress = 0;
+          }
+
+          return `${progress.toFixed(2)}%`;
+        });
+
+        const activeFilters = milestoneData.filter(
+          (item) => currentTvlNum > item.tvl
+        );
+        const currentIndex =
+          activeFilters.length === 0 ? 0 : activeFilters.length - 1;
+        const nextIndex =
+          currentIndex + 1 === milestoneData.length
+            ? currentIndex
+            : currentIndex + 1;
+
+        setCurrentAllocationZKL(milestoneData[currentIndex].zkl || 0);
+        setNextAllocationZKL(milestoneData[nextIndex].zkl || 0);
+        setNextTargetTvl(milestoneData[nextIndex].tvl || 0);
+
+        setMilestoneProgressList(arr);
+      }
     }
-  }, [tabActive, isNoProgress]);
+  }, [tabActive?.category, isNoProgress, currentTvl]);
 
   return (
     <Container>
@@ -914,10 +962,10 @@ export default function EcoDApps({
             <span>{tabActive?.name} $ZKL Allocation</span>
           </div>
           <div className="holding-value mt-[16px]">
-            {formatToThounds(currentTVL)} $ZKL
+            {formatToThounds(currentAllocationZKL)} $ZKL
           </div>
           <div className="holding-desc mt-[8px]">
-            Next $ZKL Allocation Milestone: 10,000,000 $ZKL
+            Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
           </div>
         </div>
         <AllocatedBox>
@@ -937,22 +985,26 @@ export default function EcoDApps({
           {isNoProgress ? (
             <div>Max $ZKL Allocation: {formatToThounds(maxZKL)} $ZKL</div>
           ) : (
-            <div>Current TVL: {currentTvl}</div>
+            <>
+              <div>Current TVL: {currentTvl}</div>
+              <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
+            </>
           )}
-          {/* <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div> */}
         </div>
 
-        <div className="w-full mt-[22px]">
-          <MilestoneProgress progress={"0%"} isDisabled={true} />
-        </div>
-
-        {/* <div className="mt-[22px] flex items-center justify-between gap-[17px]">
-          {milestoneProgressList.map((item, index) => (
-            <div className="w-full" key={index}>
-              <MilestoneProgress progress={item} />
-            </div>
-          ))}
-        </div> */}
+        {isNoProgress ? (
+          <div className="w-full mt-[22px]">
+            <MilestoneProgress progress={"0%"} isDisabled={true} />
+          </div>
+        ) : (
+          <div className="mt-[22px] flex items-center justify-between gap-[17px]">
+            {milestoneProgressList.map((item, index) => (
+              <div className="w-full" key={index}>
+                <MilestoneProgress progress={item} />
+              </div>
+            ))}
+          </div>
+        )}
       </MilestoneBox>
 
       <List>

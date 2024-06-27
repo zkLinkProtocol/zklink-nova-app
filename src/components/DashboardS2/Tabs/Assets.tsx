@@ -16,8 +16,6 @@ import {
 import _, { max, set } from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
 import MilestoneProgress from "../MilestoneProgress";
-import numeral from "numeral";
-import { current } from "@reduxjs/toolkit";
 
 const BlurBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
