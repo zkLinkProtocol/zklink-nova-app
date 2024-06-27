@@ -2,12 +2,10 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { BlurBox } from "@/styles/common";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
-import { Button } from "@nextui-org/react";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
-import { CategoryListItem, getCategoryList } from "@/api";
+import { getCategoryList } from "@/api";
 import { formatNumberWithUnit } from "@/utils";
 import { useAccount } from "wagmi";
-import { set } from "lodash";
 // import { TableBoxs } from "@/styles/common";
 
 const BgBox = styled.div`
