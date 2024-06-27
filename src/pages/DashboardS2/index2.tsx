@@ -396,6 +396,39 @@ export default function Dashboard() {
     return holdingPointsMap[category] || 0;
   }, [holdingPointsMap, tabs2Active]);
 
+  const novaPointsList = useMemo(() => {
+    return [
+      {
+        name: "Assets Points",
+        points: novaPoints,
+      },
+      {
+        name: "Spot DEX Points",
+        points: holdingPointsMap.spotdex,
+      },
+      {
+        name: "Native Boost Points",
+        points: holdingPointsMap.nativeboost,
+      },
+      {
+        name: "Perp DEX Points",
+        points: holdingPointsMap.perpdex,
+      },
+      {
+        name: "Lending Points",
+        points: holdingPointsMap.lending,
+      },
+      {
+        name: "GameFi Points",
+        points: holdingPointsMap.gamefi,
+      },
+      {
+        name: "Others Points",
+        points: holdingPointsMap.other,
+      },
+    ];
+  }, [holdingPointsMap, novaPoints]);
+
   useEffect(() => {
     getAccountPointFunc();
     getAccountTvlFunc();
@@ -516,7 +549,7 @@ export default function Dashboard() {
                 />
               )}
 
-              {tabs2Active === 99 && <Portfolio />}
+              {tabs2Active === 99 && <Portfolio novaPointsList={novaPointsList} />}
             </div>
           </TabsCard>
         </div>

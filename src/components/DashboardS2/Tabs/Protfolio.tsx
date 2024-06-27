@@ -209,7 +209,14 @@ export interface ProjectPointsItem {
   eigenlayerTips?: string;
 }
 
-export default function Portfolio() {
+export default function Portfolio({
+  novaPointsList,
+}: {
+  novaPointsList: {
+    name: string;
+    points: number;
+  }[];
+}) {
   const [checked, setChecked] = useState(false);
   const [filterTableList, setFilterTableList] = useState<any[]>([]);
 
@@ -413,13 +420,13 @@ export default function Portfolio() {
           Check Referral Status
         </div>
       </div>
-      <div className="flex items-center justify-between mt-5">
-        {new Array(4).fill(undefined).map((_, index) => (
+      <div className="flex flex-wrap items-center gap-[24px] mt-5">
+        {novaPointsList.map((item, index) => (
           <div
             key={index}
             className="flex flex-col items-center w-[275px] bg-[#1B1D20] pt-9 py-12"
           >
-            <p className="text-white text-[16px]">Asset Points</p>
+            <p className="text-white text-[16px]">{item.name}</p>
             <div className="points-divide my-8"></div>
             <Tooltip
               classNames={{
@@ -428,7 +435,9 @@ export default function Portfolio() {
               }}
               content={<PointsPopoverContent />}
             >
-              <p className="points-value">24.2K</p>
+              <p className="points-value">
+                {formatNumberWithUnit(item.points)}
+              </p>
             </Tooltip>
             <Button className="btn-earn-more" onClick={handleEarnMore}>
               <img src="/img/icon-wallet-white-2.svg" alt="" />
@@ -481,7 +490,9 @@ export default function Portfolio() {
               <div className="col-line"></div>
 
               <div className="list-content-item flex col-3 flex-col  text-center">
-                <span className="text-gray mb-4">{item.eigenlayerName} Eigenlayer Points</span>
+                <span className="text-gray mb-4">
+                  {item.eigenlayerName} Eigenlayer Points
+                </span>
                 <span>{formatNumberWithUnit(item?.eigenlayerValue)}</span>
               </div>
               <div className="col-line"></div>
