@@ -462,6 +462,7 @@ export default function EcoDApps({
   tabActive,
   novaCategoryPoints,
   tvlCategoryMilestone,
+  holdingPoints,
 }: {
   tabActive?: {
     category: string;
@@ -470,6 +471,7 @@ export default function EcoDApps({
   };
   novaCategoryPoints: NovaCategoryPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
+  holdingPoints: number;
 }) {
   const geNovaCategoryPointsByProject = (project: string) => {
     const obj = novaCategoryPoints.find((item) => item.project === project);
@@ -995,12 +997,12 @@ export default function EcoDApps({
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Total Allocated Points</span>
-            <span className="value">100,000</span>
+            <span className="value">0</span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Points</span>
-            <span className="value">25</span>
+            <span className="value">{holdingPoints}</span>
           </div>
         </AllocatedBox>
       </div>

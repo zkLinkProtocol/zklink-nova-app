@@ -261,6 +261,7 @@ interface IAssetsTableProps {
   supportTokens: SupportToken[];
   ethUsdPrice: number;
   currentTvl: number;
+  holdingPoints: number;
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -270,6 +271,7 @@ export default function Assets(props: IAssetsTableProps) {
     supportTokens,
     ethUsdPrice,
     currentTvl,
+    holdingPoints,
   } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
@@ -553,12 +555,12 @@ export default function Assets(props: IAssetsTableProps) {
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Total Allocated Points</span>
-            <span className="value">100,000</span>
+            <span className="value">0</span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Points</span>
-            <span className="value">25</span>
+            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
           </div>
         </AllocatedBox>
       </div>
