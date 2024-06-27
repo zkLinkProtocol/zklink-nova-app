@@ -212,6 +212,18 @@ const List = styled.div`
     );
   }
 
+  .row-line {
+    width: 100%;
+    height: 1px;
+    opacity: 0.3;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
   .list-header-item,
   .list-content-item {
     width: 20%;
@@ -222,14 +234,14 @@ const List = styled.div`
   }
 `;
 
-const DetailTable = styled.table`
+const DetailBox = styled.div`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
   letter-spacing: -0.08px;
   font-family: "Chakra Petch";
-  background: #011a24;
+  /* background: #011a24; */
   .detail-label {
     margin-bottom: 12px;
     color: rgba(255, 255, 255, 0.5);
@@ -237,8 +249,13 @@ const DetailTable = styled.table`
   .detail-value {
     color: #fff;
   }
-  td {
-    padding: 24px;
+
+  .detail-row {
+    border-radius: 16px;
+    background: #0d0f14;
+    .detail-item {
+      padding: 24px;
+    }
   }
 `;
 
@@ -351,8 +368,8 @@ const EcoDApp = (props: {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="mb-[24px]">
-      <div className="row flex items-center cursor-pointer">
+    <div className="row mb-[24px] overflow-hidden">
+      <div className="flex items-center cursor-pointer">
         <div className="list-content-item flex items-center gap-[10px]">
           <img
             src={data.iconURL}
@@ -400,19 +417,23 @@ const EcoDApp = (props: {
           </div>
         </div>
       </div>
+      <div className="row-line"></div>
       {isOpen && (
-        <DetailTable className="w-full mt-[5px]">
+        <DetailBox className="w-full mt-[5px] pt-[16px] px-[28px]">
           {data.details.map((detail, index) => (
-            <tr key={index}>
-              <td className="detail-td">
+            <div
+              className="detail-row mb-[16px] flex items-center justify-between"
+              key={index}
+            >
+              <div className="detail-item">
                 <div className="detail-label">Booster</div>
                 <div className="detail-value">{detail.booster}</div>
-              </td>
-              <td className="detail-td">
+              </div>
+              <div className="detail-item">
                 <div className="detail-label">Description</div>
                 <div className="detail-value">{detail.description}</div>
-              </td>
-              <td className="detail-td text-right">
+              </div>
+              <div className="detail-item text-right">
                 <div className="detail-label">Action</div>
                 <div className="detail-value flex justify-end items-center gap-[4px]">
                   <div
@@ -428,10 +449,10 @@ const EcoDApp = (props: {
                     height={20}
                   />
                 </div>
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </DetailTable>
+        </DetailBox>
       )}
     </div>
   );
