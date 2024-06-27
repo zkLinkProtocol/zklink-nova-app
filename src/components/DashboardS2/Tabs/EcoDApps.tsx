@@ -951,7 +951,7 @@ export default function EcoDApps({
 
   return (
     <Container>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between">
         <div>
           <div className="holding-title flex items-center gap-[4px]">
             <img
@@ -964,9 +964,11 @@ export default function EcoDApps({
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL
           </div>
-          <div className="holding-desc mt-[8px]">
-            Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
-          </div>
+          {!isNoProgress && (
+            <div className="holding-desc mt-[8px]">
+              Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
+            </div>
+          )}
         </div>
         <AllocatedBox>
           <div className="flex items-center justify-between">
