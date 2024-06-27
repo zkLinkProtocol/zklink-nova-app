@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+  <input type="text" id="username">
+
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+
+
+  <script type="module">
+    import { client } from 'https://unpkg.com/@passwordless-id/webauthn@1.6.1/dist/webauthn.min.js'
+
+    window.register = async function () {
+      console.log('Registering...')
+      try {
+        const username = document.getElementById('username').value
+        console.log('username', username)
+        let res = await client.register(username, 'random-challenge-base64-encoded')
+        alert(JSON.stringify(res))
+      }
+      catch (e) {
+        alert(e)
+      }
+    }
+
+    window.login = async function () {
+      console.log('Authenticating...')
+      try {
+        let res = await client.authenticate([], 'random-challenge-base64-encoded')
+        alert(JSON.stringify(res))
+      }
+      catch (e) {
+        alert(e)
+      }
+    }
+
+  </script>
+</body>
+
+</html>
