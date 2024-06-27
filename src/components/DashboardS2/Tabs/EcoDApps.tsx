@@ -1,4 +1,4 @@
-import { NovaCategoryPoints, TvlCategory } from "@/api";
+import { NovaCategoryPoints, TvlCategory, TvlCategoryMilestone } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit, formatToThounds } from "@/utils";
 import {
@@ -212,6 +212,18 @@ const List = styled.div`
     );
   }
 
+  .row-line {
+    width: 100%;
+    height: 1px;
+    opacity: 0.3;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
   .list-header-item,
   .list-content-item {
     width: 20%;
@@ -222,14 +234,14 @@ const List = styled.div`
   }
 `;
 
-const DetailTable = styled.table`
+const DetailBox = styled.div`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
   letter-spacing: -0.08px;
   font-family: "Chakra Petch";
-  background: #011a24;
+  /* background: #011a24; */
   .detail-label {
     margin-bottom: 12px;
     color: rgba(255, 255, 255, 0.5);
@@ -237,8 +249,13 @@ const DetailTable = styled.table`
   .detail-value {
     color: #fff;
   }
-  td {
-    padding: 24px;
+
+  .detail-row {
+    border-radius: 16px;
+    background: #0d0f14;
+    .detail-item {
+      padding: 24px;
+    }
   }
 `;
 
@@ -282,7 +299,7 @@ const milestoneMap: {
     },
     {
       tvl: 50000000,
-      zkl: 2000000,
+      zkl: 1500000,
     },
   ],
   perpdex: [
@@ -299,7 +316,7 @@ const milestoneMap: {
       zkl: 1000000,
     },
     {
-      tvl: 2000000,
+      tvl: 2000000000,
       zkl: 2000000,
     },
   ],
@@ -337,7 +354,7 @@ const milestoneNoProgressMap: {
     zkl: 50000,
     max: 500000,
   },
-  boost: {
+  nativeboost: {
     zkl: 50000,
     max: 500000,
   },
@@ -351,8 +368,8 @@ const EcoDApp = (props: {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="mb-[24px]">
-      <div className="row flex items-center cursor-pointer">
+    <div className="row mb-[24px] overflow-hidden">
+      <div className="flex items-center cursor-pointer">
         <div className="list-content-item flex items-center gap-[10px]">
           <img
             src={data.iconURL}
@@ -400,19 +417,23 @@ const EcoDApp = (props: {
           </div>
         </div>
       </div>
+      <div className="row-line"></div>
       {isOpen && (
-        <DetailTable className="w-full mt-[5px]">
+        <DetailBox className="w-full mt-[5px] pt-[16px] px-[28px]">
           {data.details.map((detail, index) => (
-            <tr key={index}>
-              <td className="detail-td">
+            <div
+              className="detail-row mb-[16px] flex items-center justify-between"
+              key={index}
+            >
+              <div className="detail-item">
                 <div className="detail-label">Booster</div>
                 <div className="detail-value">{detail.booster}</div>
-              </td>
-              <td className="detail-td">
+              </div>
+              <div className="detail-item">
                 <div className="detail-label">Description</div>
                 <div className="detail-value">{detail.description}</div>
-              </td>
-              <td className="detail-td text-right">
+              </div>
+              <div className="detail-item text-right">
                 <div className="detail-label">Action</div>
                 <div className="detail-value flex justify-end items-center gap-[4px]">
                   <div
@@ -428,10 +449,10 @@ const EcoDApp = (props: {
                     height={20}
                   />
                 </div>
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </DetailTable>
+        </DetailBox>
       )}
     </div>
   );
@@ -440,7 +461,8 @@ const EcoDApp = (props: {
 export default function EcoDApps({
   tabActive,
   novaCategoryPoints,
-  tvlCategory,
+  tvlCategoryMilestone,
+  holdingPoints,
 }: {
   tabActive?: {
     category: string;
@@ -448,7 +470,8 @@ export default function EcoDApps({
     iconURL: string;
   };
   novaCategoryPoints: NovaCategoryPoints[];
-  tvlCategory: TvlCategory[];
+  tvlCategoryMilestone: TvlCategoryMilestone[];
+  holdingPoints: number;
 }) {
   const geNovaCategoryPointsByProject = (project: string) => {
     const obj = novaCategoryPoints.find((item) => item.project === project);
@@ -483,7 +506,7 @@ export default function EcoDApps({
 
     const arr: EcoDAppItem[] = [
       {
-        category: novaswap?.category || "spotdex",
+        category: novaswap?.category || "nativeboost",
         iconURL: "/img/icon-novaswap.svg",
         name: "Novaswap",
         link: "https://novaswap.fi/",
@@ -868,13 +891,14 @@ export default function EcoDApps({
   };
 
   const currentTvl = useMemo(() => {
-    console.log("tvlCategory", tvlCategory, tabActive?.category);
+    console.log("tvlCategory", tvlCategoryMilestone, tabActive?.category);
     const tvl =
-      tvlCategory?.find((item) => item.name === tabActive?.category)?.tvl || 0;
+      tvlCategoryMilestone?.find((item) => item.name === tabActive?.category)
+        ?.data || 0;
 
     console.log("tvl", tvl);
     return tvl;
-  }, [tvlCategory, tabActive]);
+  }, [tvlCategoryMilestone, tabActive]);
 
   const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
     []
@@ -889,7 +913,7 @@ export default function EcoDApps({
     if (
       tabActive?.category === "gamefi" ||
       tabActive?.category === "other" ||
-      tabActive?.category === "boost"
+      tabActive?.category === "nativeboost"
     ) {
       return true;
     } else {
@@ -951,7 +975,7 @@ export default function EcoDApps({
 
   return (
     <Container>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between">
         <div>
           <div className="holding-title flex items-center gap-[4px]">
             <img
@@ -964,19 +988,21 @@ export default function EcoDApps({
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL
           </div>
-          <div className="holding-desc mt-[8px]">
-            Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
-          </div>
+          {!isNoProgress && (
+            <div className="holding-desc mt-[8px]">
+              Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
+            </div>
+          )}
         </div>
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Total Allocated Points</span>
-            <span className="value">100,000</span>
+            <span className="value">0</span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Points</span>
-            <span className="value">25</span>
+            <span className="value">{holdingPoints}</span>
           </div>
         </AllocatedBox>
       </div>
@@ -986,7 +1012,7 @@ export default function EcoDApps({
             <div>Max $ZKL Allocation: {formatToThounds(maxZKL)} $ZKL</div>
           ) : (
             <>
-              <div>Current TVL: {currentTvl}</div>
+              <div>Current TVL: {formatToThounds(currentTvl)}</div>
               <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
             </>
           )}

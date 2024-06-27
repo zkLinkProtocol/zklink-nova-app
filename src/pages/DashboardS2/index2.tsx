@@ -1,10 +1,12 @@
 import Assets from "@/components/DashboardS2/Tabs/Assets";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   NovaCategoryPoints,
   SupportToken,
   TvlCategory,
+  TvlCategoryMilestone,
+  getAccountPoint,
   getAccountTvl,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
@@ -12,6 +14,7 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getTvlCategory,
+  getTvlCategoryMilestone,
 } from "@/api";
 import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
@@ -212,11 +215,11 @@ export default function Dashboard() {
       name: "Assets",
       category: "assets",
     },
-    // {
-    //   iconURL: "/img/icon-assets.svg",
-    //   name: "Boosted",
-    //   category: "boost",
-    // },
+    {
+      iconURL: "/img/icon-boosted.svg",
+      name: "Boosted",
+      category: "nativeboost",
+    },
     {
       iconURL: "/img/icon-spotdex.svg",
       name: "Spot DEX",
@@ -250,6 +253,22 @@ export default function Dashboard() {
   const [supportTokens, setSupportTokens] = useState<SupportToken[]>([]);
   const [totalTvlList, setTotalTvlList] = useState<TotalTvlItem[]>([]);
   const [accountTvlData, setAccountTvlData] = useState<AccountTvlItem[]>([]);
+
+  const [totalTvl, setTotalTvl] = useState(0);
+  const getTotalTvlFunc = async () => {
+    const res = await getExplorerTokenTvl(false);
+
+    let num = 0;
+    if (res.length > 0) {
+      num = +parseInt(res[0].tvl);
+    }
+
+    setTotalTvl(num);
+  };
+
+  useEffect(() => {
+    getTotalTvlFunc();
+  }, []);
 
   const getAccountTvlFunc = async () => {
     let usdPrice = 0;
@@ -316,12 +335,108 @@ export default function Dashboard() {
     setTvlCategory(res?.data || []);
   };
 
+  const [tvlCategoryMilestone, setTvlCategoryMilestone] = useState<
+    TvlCategoryMilestone[]
+  >([]);
+  const getTvlCategoryMilestoneFunc = async () => {
+    const res = await getTvlCategoryMilestone();
+    console.log("getTvlCategory", res);
+    setTvlCategoryMilestone(res?.data || []);
+  };
+
+  const [novaPoints, setNovaPoints] = useState(0);
+  const getAccountPointFunc = async () => {
+    if (!address) {
+      setNovaPoints(0);
+      return;
+    }
+    const { result } = await getAccountPoint(address);
+    setNovaPoints(Number(result?.novaPoint) || 0);
+  };
+
+  const holdingPointsMap: {
+    [key: string]: number;
+  } = useMemo(() => {
+    const nativeboost = novaCategoryPoints
+      .filter((item) => item.category === "nativeboost")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const spotdex = novaCategoryPoints
+      .filter((item) => item.category === "spotdex")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const perpdex = novaCategoryPoints
+      .filter((item) => item.category === "perpdex")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const lending = novaCategoryPoints
+      .filter((item) => item.category === "lending")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const gamefi = novaCategoryPoints
+      .filter((item) => item.category === "gamefi")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    const other = novaCategoryPoints
+      .filter((item) => item.category === "other")
+      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+
+    return {
+      nativeboost,
+      spotdex,
+      perpdex,
+      lending,
+      gamefi,
+      other,
+    };
+  }, [novaCategoryPoints]);
+
+  const holdingPoints = useMemo(() => {
+    const category = tabs2[tabs2Active]?.category;
+    return holdingPointsMap[category] || 0;
+  }, [holdingPointsMap, tabs2Active]);
+
+  const novaPointsList = useMemo(() => {
+    return [
+      {
+        name: "Assets Points",
+        points: novaPoints,
+      },
+      {
+        name: "Spot DEX Points",
+        points: holdingPointsMap.spotdex,
+      },
+      {
+        name: "Native Boost Points",
+        points: holdingPointsMap.nativeboost,
+      },
+      {
+        name: "Perp DEX Points",
+        points: holdingPointsMap.perpdex,
+      },
+      {
+        name: "Lending Points",
+        points: holdingPointsMap.lending,
+      },
+      {
+        name: "GameFi Points",
+        points: holdingPointsMap.gamefi,
+      },
+      {
+        name: "Others Points",
+        points: holdingPointsMap.other,
+      },
+    ];
+  }, [holdingPointsMap, novaPoints]);
+
   useEffect(() => {
+    getAccountPointFunc();
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getNovaCategoryPointsFunc();
     getTvlCategoryFunc();
+    getTvlCategoryMilestoneFunc();
   }, [address]);
 
   return (
@@ -421,18 +536,20 @@ export default function Dashboard() {
                   supportTokens={supportTokens}
                   totalTvlList={totalTvlList}
                   accountTvlData={accountTvlData}
-                  tvlCategory={tvlCategory}
+                  currentTvl={totalTvl}
+                  holdingPoints={novaPoints}
                 />
               )}
               {tabs2Active !== 0 && tabs2Active !== 99 && (
                 <EcoDApps
                   tabActive={tabs2[tabs2Active]}
                   novaCategoryPoints={novaCategoryPoints}
-                  tvlCategory={tvlCategory}
+                  tvlCategoryMilestone={tvlCategoryMilestone}
+                  holdingPoints={holdingPoints}
                 />
               )}
 
-              {tabs2Active === 99 && <Portfolio />}
+              {tabs2Active === 99 && <Portfolio novaPointsList={novaPointsList} />}
             </div>
           </TabsCard>
         </div>

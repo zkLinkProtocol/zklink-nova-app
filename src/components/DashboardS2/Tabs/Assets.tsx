@@ -260,7 +260,8 @@ interface IAssetsTableProps {
   totalTvlList: TotalTvlItem[];
   supportTokens: SupportToken[];
   ethUsdPrice: number;
-  tvlCategory: TvlCategory[];
+  currentTvl: number;
+  holdingPoints: number;
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -269,7 +270,8 @@ export default function Assets(props: IAssetsTableProps) {
     totalTvlList,
     supportTokens,
     ethUsdPrice,
-    tvlCategory,
+    currentTvl,
+    holdingPoints,
   } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
@@ -492,11 +494,6 @@ export default function Assets(props: IAssetsTableProps) {
     },
   ];
 
-  const currentTvl = useMemo(() => {
-    const tvl =
-      Number(tvlCategory.find((item) => item.name === "holding")?.tvl) || 0;
-    return tvl;
-  }, [tvlCategory]);
   const [nextTargetTvl, setNextTargetTvl] = useState(0);
   const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
   const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
@@ -535,7 +532,6 @@ export default function Assets(props: IAssetsTableProps) {
     setMilestoneProgressList(arr);
   }, [currentTvl]);
 
-
   return (
     <Container>
       <div className="flex justify-between items-center">
@@ -559,12 +555,12 @@ export default function Assets(props: IAssetsTableProps) {
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Total Allocated Points</span>
-            <span className="value">100,000</span>
+            <span className="value">0</span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Points</span>
-            <span className="value">25</span>
+            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
           </div>
         </AllocatedBox>
       </div>
