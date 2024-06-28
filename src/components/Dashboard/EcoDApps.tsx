@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import { ReactNode, useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { formatNumberWithUnit } from "@/utils";
 
 const Tag = styled.span`
   border-radius: 0.375rem;
@@ -80,6 +81,7 @@ export interface EcoDAppsProps {
     descriptionTips?: string;
     actionType: string;
     actionLink?: string;
+    multiplierOrReward?: string;
   }[];
 }
 

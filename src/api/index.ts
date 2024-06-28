@@ -504,6 +504,20 @@ export const getRsethPoints = (address: string): Promise<RsethPointsResponse> =>
     params: { address },
   });
 
+export const getUserTvl = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/user/tvl`, {
+    params: { address },
+  });
+
+export const bindTwitter = (
+  address: string,
+  accessToken: string
+): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/bind/twitter`, {
+    address,
+    accessToken,
+  });
+};
 export interface NovaProjectPoints {
   errno: number;
   errmsg: string;
@@ -554,16 +568,6 @@ export const getMemeMysteryboxReward = (address: string): Promise<Response> =>
   http.get(`${BASE_URL_API}/meme/meme/mysterybox/reward`, {
     params: { address },
   });
-
-export const bindTwitter = (
-  address: string,
-  accessToken: string
-): Promise<Response> => {
-  return http.post(`${BASE_URL_API}/invite/bind/twitter`, {
-    address,
-    accessToken,
-  });
-};
 
 export const authLogin = (data: {
   address: string;

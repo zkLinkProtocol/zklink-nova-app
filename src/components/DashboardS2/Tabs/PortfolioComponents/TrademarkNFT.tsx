@@ -130,8 +130,14 @@ export default function TrademarkNFT() {
           </div>
           <div className="action flex col-2 justify-center items-center gap-[10px]">
             <span className="action-label">Action:</span>
-            <span className="particpate">Acquire now</span>
-            <img src="img/icon-square-link-color.svg" alt="" />
+            <a
+              href="https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-trademark-nfts"
+              target="_blank"
+              className="flex items-center gap-[10px]"
+            >
+              <span className="particpate">Buy from OKX</span>
+              <img src="img/icon-square-link-color.svg" alt="" />
+            </a>
           </div>
         </Item>
       ))}

@@ -1,18 +1,25 @@
-
 import { NftContainer } from "./SbtNFT";
-import { Button } from "@nextui-org/react";
+import { Button, useDisclosure } from "@nextui-org/react";
 import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
-import { useState, useEffect } from "react";
+import useNovaDrawNFT from "@/hooks/useNovaNFT";
+import useSbtNft from "@/hooks/useNFT";
 import { useAccount } from "wagmi";
-
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { Abi } from "viem";
+import SbtUpgradeModal from "@/components/Dashboard/NovaCharacterComponents/SbtUpgradeModal";
 export default function SbtNFT() {
   const { address } = useAccount();
   const [lynksBalance, setLynksBalance] = useState(0);
+  const { trademarkNFT, lynksNFT, publicClient } = useNovaDrawNFT();
   const { getLynksNFT } = useNovaNFT();
+  const { nft, loading: mintLoading, fetchLoading } = useSbtNft();
+
+  const upgradeModal = useDisclosure();
+  const [upgradable, setUpgradable] = useState(false);
 
   useEffect(() => {
     (async () => {
-      if (address) {
+      if (address && trademarkNFT) {
         const lynksBalances = await getLynksNFT(address);
         if (lynksBalances) {
           const balance = lynksBalances.reduce(
@@ -21,9 +28,42 @@ export default function SbtNFT() {
           );
           setLynksBalance(balance);
         }
+        const trademarkBalancesCall = await publicClient?.multicall({
+          contracts: [1, 2, 3, 4].map((item) => ({
+            address: trademarkNFT.address,
+            abi: trademarkNFT.abi as Abi,
+            functionName: "balanceOf",
+            args: [address, item],
+          })),
+        });
+        const trademarkBalances =
+          trademarkBalancesCall?.map(
+            (item) => Number(item.result?.toString()) ?? 0
+          ) ?? [];
+        console.log("trademarkBalances: ", trademarkBalances);
+        if (
+          // Number(lynksBalance) === 0 &&
+          trademarkBalances[0] > 0 &&
+          trademarkBalances[1] > 0 &&
+          trademarkBalances[2] > 0 &&
+          trademarkBalances[3] > 0
+        ) {
+          setUpgradable(true);
+        } else {
+          setUpgradable(false);
+        }
       }
     })();
-  }, [address, getLynksNFT]);
+  }, [address, getLynksNFT, publicClient, trademarkNFT]);
+
+  const handleMintNow = useCallback(() => {
+    if (fetchLoading) {
+      return;
+    }
+    if (upgradable) {
+      upgradeModal.onOpen();
+    }
+  }, [fetchLoading, upgradable, upgradeModal]);
   return (
     <NftContainer>
       <div className="nft-image">
@@ -38,11 +78,24 @@ export default function SbtNFT() {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor
         </p>
-        <Button className="btn-mint mt-auto">
+        <Button
+          className="btn-mint mt-auto"
+          onClick={() =>
+            window.open(
+              "https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-lynks",
+              "_blank"
+            )
+          }
+        >
           <img src="img/icon-wallet-white-2.svg" alt="" />
-          <span>Start Minting Now</span>
+          <span>Trade on OKX</span>
         </Button>
       </div>
+      <SbtUpgradeModal
+        nft={nft}
+        mintLoading={mintLoading}
+        upgradeModal={upgradeModal}
+      />
     </NftContainer>
   );
 }

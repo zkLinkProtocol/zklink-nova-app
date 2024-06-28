@@ -103,3 +103,12 @@
 .bg-transparent {
   background: transparent !important;
 }
+
+.link-underline {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-underline:hover {
+  text-decoration: underline;
+}

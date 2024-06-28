@@ -2,6 +2,9 @@ import styled from "styled-components";
 import DailyBox, { BoxType } from "./DailyBox";
 import { useDisclosure } from "@nextui-org/react";
 import InviteBoxModal from "./InviteBoxModal";
+import { useCallback, useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { getRemainDrawCount } from "@/api";
 
 const Container = styled.div`
   border-radius: 12px;
@@ -108,6 +111,23 @@ const BoxList = [
 ];
 export default function DailyRoulette() {
   const openBoxModal = useDisclosure();
+  const { address } = useAccount();
+
+  const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
+  const [drawedNftId, setDrawedNftId] = useState<number | undefined>();
+  const [update, setUpdate] = useState(0);
+
+  useEffect(() => {
+    if (address) {
+      getRemainDrawCount(address).then((res) => {
+        console.log("remain draw count: ", res);
+        const { remainNumber, tokenId } = res.result;
+        tokenId && setDrawedNftId(Number(tokenId));
+        setRemainDrawCount(remainNumber);
+      });
+    }
+  }, [address, update]);
+
   return (
     <Container>
       <div className="flex items-center justify-between">
@@ -116,9 +136,9 @@ export default function DailyRoulette() {
           <p className="title">Daily Roulette</p>
           <div className="title-desc">Determined by the consecutive days</div>
         </div>
-        <div className="invite-box" onClick={() => openBoxModal.onOpen()}>
+        <div className="invite-box" onClick={openBoxModal.onOpen}>
           <img src="img/s2/icon-invite-box.svg" alt="" className="mr-2" />
-          <span>Invite Box</span>
+          <span>Check Invite Box {remainDrawCount}</span>
         </div>
       </div>
       <div className="flex items-center justify-between mt-[30px]">
@@ -126,7 +146,13 @@ export default function DailyRoulette() {
           <DailyBox {...item} index={index + 1} key={index} />
         ))}
       </div>
-      <InviteBoxModal modalInstance={openBoxModal} />
+      <InviteBoxModal
+        modalInstance={openBoxModal}
+        remainDrawCount={remainDrawCount}
+        drawedNftId={drawedNftId}
+        setDrawedNftId={setDrawedNftId}
+        setUpdate={setUpdate}
+      />
     </Container>
   );
 }

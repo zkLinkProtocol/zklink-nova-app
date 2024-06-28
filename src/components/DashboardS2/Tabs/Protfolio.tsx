@@ -14,6 +14,7 @@ import {
   getRsethPoints,
 } from "@/api";
 import axios from "axios";
+import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 const Title = styled.div`
   background: linear-gradient(180deg, #fff 0%, #bababa 100%);
   background-clip: text;
@@ -69,7 +70,7 @@ const Container = styled.div`
   .points-value {
     text-align: center;
     font-family: Satoshi;
-    font-size: 56px;
+    font-size: 47px;
     font-style: normal;
     font-weight: 900;
     line-height: normal;
@@ -77,12 +78,13 @@ const Container = styled.div`
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 36px;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
   .btn-earn-more {
     display: flex;
-    width: 200px;
-    height: 47px;
+    width: 150px;
+    height: 30px;
     padding: 7.5px 40px;
     justify-content: center;
     align-items: center;
@@ -182,25 +184,49 @@ const List = styled.div`
   }
 `;
 
-const PointsPopoverContent = () => (
-  <div className="w-full">
-    <div className="flex items-center justify-between mb-5">
-      <span>Earned by Holding</span>
-      <span>1.26k </span>
+const NovaPointsBox = styled.div`
+  background: url("/img/s2/bg-nova-points.png") no-repeat;
+  background-position: center -30px;
+  background-size: 440px auto;
+`;
+
+const PointsBox = styled.div`
+  padding: 4px 28px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
+`;
+
+const PointsPopoverContent = (props: {
+  data: {
+    name: string;
+    points: number;
+  }[];
+}) => {
+  const { data } = props;
+  return (
+    <div className="w-full">
+      {data.map((item, index) => (
+        <div
+          className={`flex items-center justify-between ${
+            index !== 0 ? "mt-5" : ""
+          }`}
+          key={index}
+        >
+          <span>{item.name}</span>
+          <span>{formatNumberWithUnit(item.points)}</span>
+        </div>
+      ))}
     </div>
-    <div className="flex items-center justify-between mb-5">
-      <span>Earned by Holding</span>
-      <span>1.26k </span>
-    </div>
-    <div className="flex items-center justify-between ">
-      <span>Earned by Holding</span>
-      <span>1.26k </span>
-    </div>
-  </div>
-);
+  );
+};
 
 export interface ProjectPointsItem {
   iconURL: string;
+  link: string;
   pointsName: string;
   pointsValue: number;
   eigenlayerName: string;
@@ -211,15 +237,12 @@ export interface ProjectPointsItem {
 
 export default function Portfolio({
   novaPointsList,
+  handleTabChange,
 }: {
-  novaPointsList: {
-    name: string;
-    points: number;
-  }[];
+  novaPointsList: NovaPointsListItem[];
+  handleTabChange: (index: number) => void;
 }) {
   const [checked, setChecked] = useState(false);
-  const [filterTableList, setFilterTableList] = useState<any[]>([]);
-
   const { address } = useAccount();
 
   const [pufferPoints, setPufferPoints] = useState(0);
@@ -333,6 +356,7 @@ export default function Portfolio({
     const arr: ProjectPointsItem[] = [
       {
         iconURL: "/img/icon-puffer.svg",
+        link: "https://www.puffer.fi/",
         pointsName: "Puffer Points",
         eigenlayerName: "Puffer",
         pointsValue: pufferPoints,
@@ -344,6 +368,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-renzo.svg",
+        link: "https://app.renzoprotocol.com/restake",
         pointsName: "ezPoints",
         eigenlayerName: "Renzo",
         pointsValue: renzoPoints,
@@ -353,6 +378,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-eigenpie.svg",
+        link: "https://www.eigenlayer.magpiexyz.io/restake",
         pointsName: "EigenPie Points",
         eigenlayerName: "EigenPie",
         pointsValue: magpiePointsData.points,
@@ -362,6 +388,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-kelp.svg",
+        link: " https://kelpdao.xyz/restake/",
         pointsName: "Kelp Miles",
         eigenlayerName: "KelpDao",
         pointsValue: kelpMiles,
@@ -369,6 +396,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-bedrock.svg",
+        link: "https://www.bedrock.technology/",
         pointsName: "Bedrock Diamonds",
         eigenlayerName: "Bedrock",
         pointsValue: bedrockPoints,
@@ -376,7 +404,10 @@ export default function Portfolio({
       },
     ];
 
-    return arr;
+    const list = checked ? arr.filter((item) => item.pointsValue >= 0.01) : arr;
+    console.log(checked, arr, "checked");
+
+    return list;
   }, [
     pufferPoints,
     pufferEigenlayerPoints,
@@ -387,6 +418,7 @@ export default function Portfolio({
     kelpEigenlayerPoints,
     bedrockPoints,
     bedrockEigenlayerPoints,
+    checked,
   ]);
 
   useEffect(() => {
@@ -398,20 +430,8 @@ export default function Portfolio({
     getBedrockPointsFunc();
   }, [address]);
 
-  useEffect(() => {
-    setFilterTableList(
-      new Array(5).fill({
-        iconURL: "",
-        name: "Renzo",
-        twitter: "@Renzo.fi",
-        ezPoints: 100,
-        eigenlayerPoints: 2000.2,
-      })
-    );
-  }, []);
-
   const handleViewMore = () => {};
-  const handleEarnMore = () => {};
+
   return (
     <Container>
       <div className="flex items-center justify-between">
@@ -420,37 +440,47 @@ export default function Portfolio({
           Check Referral Status
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-[24px] mt-5">
+      <div className="flex flex-wrap items-center mt-5">
         {novaPointsList.map((item, index) => (
-          <div
+          <NovaPointsBox
             key={index}
-            className="flex flex-col items-center w-[275px] bg-[#1B1D20] pt-9 py-12"
+            className="flex flex-col items-center w-[295px] h-[298px] bg-[#1B1D20] "
           >
-            <p className="text-white text-[16px]">{item.name}</p>
-            <div className="points-divide my-8"></div>
+            <p className="mt-[150px] text-white text-[16px]">{item.name}</p>
+            {/* <div className="points-divide my-8"></div> */}
             <Tooltip
               classNames={{
                 content:
                   "w-[300px] rounded-lg bg-[#151923] text-white px-4 py-5",
               }}
-              content={<PointsPopoverContent />}
+              content={<PointsPopoverContent data={item.earnedBy} />}
             >
               <p className="points-value">
                 {formatNumberWithUnit(item.points)}
               </p>
             </Tooltip>
-            <Button className="btn-earn-more" onClick={handleEarnMore}>
-              <img src="/img/icon-wallet-white-2.svg" alt="" />
-              <span>Earn More</span>
-            </Button>
-          </div>
+            <div className="flex justify-center">
+              <Button
+                className="btn-earn-more"
+                onClick={() => handleTabChange(index)}
+              >
+                <img
+                  src="/img/icon-wallet-white-2.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                />
+                <span className="font-[900] text-[14px]">Earn More</span>
+              </Button>
+            </div>
+          </NovaPointsBox>
         ))}
       </div>
       <div className="divide my-12"></div>
-      <div className="flex items-center justify-between">
+      <div className="mb-[18px] flex items-center justify-between">
         <Title>Your Project Points</Title>
         <div className="view-more" onClick={handleViewMore}>
-          <span className="mr-2 text-[#FbFbFb]/[0.6]">{`View Points < 0.1`}</span>
+          <span className="mr-2 text-[#FbFbFb]/[0.6]">{`Hide Points < 0.1`}</span>
           <Checkbox
             defaultSelected
             radius="none"
@@ -474,33 +504,35 @@ export default function Portfolio({
                 <div>
                   <div className="symbol flex items-center">
                     <span className="mr-1">{item?.eigenlayerName}</span>
-                    <img src="img/icon-square-link.svg"></img>
                   </div>
-                  {/* {item?.twitter && (
-                    <div className="name mt-[5px]">{item.twitter}</div>
-                  )} */}
                 </div>
               </div>
               <div className="col-line"></div>
 
-              <div className="list-content-item flex col-3 flex-col   text-center">
-                <span className="text-gray mb-4">{item.pointsName}</span>
-                <span>{formatNumberWithUnit(item?.pointsValue)}</span>
+              <div className="list-content-item flex col-3 flex items-center gap-[12px] text-center">
+                <span className="text-gray">{item.pointsName}</span>
+                <PointsBox>{formatNumberWithUnit(item?.pointsValue)}</PointsBox>
               </div>
               <div className="col-line"></div>
 
-              <div className="list-content-item flex col-3 flex-col  text-center">
-                <span className="text-gray mb-4">
+              <div className="list-content-item flex col-3 flex items-center gap-[12px] text-center">
+                <span className="text-gray">
                   {item.eigenlayerName} Eigenlayer Points
                 </span>
-                <span>{formatNumberWithUnit(item?.eigenlayerValue)}</span>
+                <PointsBox>
+                  {formatNumberWithUnit(item?.eigenlayerValue)}
+                </PointsBox>
               </div>
               <div className="col-line"></div>
 
-              <div className="list-content-item  flex col-2 justify-center items-center gap-[10px]">
+              <a
+                className="list-content-item  flex col-2 justify-center items-center gap-[10px]"
+                href={item.link}
+                target="_blank"
+              >
                 <span className="particpate">Participate</span>
-                <img src="img/icon-square-link-color.svg" alt="" />
-              </div>
+                <img src="img/icon-link-arrow.svg" alt="" />
+              </a>
             </div>
           ))}
         </div>
