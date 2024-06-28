@@ -755,6 +755,8 @@ export default function NovaCharacter() {
     getEcoRemainCount();
   }, [address]);
 
+  
+
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -821,35 +823,7 @@ export default function NovaCharacter() {
             </div>
           </Tooltip>
         </div>
-        {/* <div className="w-full">
-          <Button
-            className="gradient-btn py-[1rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem] w-full"
-            onClick={handleOpenEcoBox}
-            disabled={!ecoBoxCount || !nft}
-            data-tooltip-id="eco-box-tooltip"
-          >
-            Open Your Eco Box ({ecoBoxCount}){" "}
-            <img
-              src="/img/icon-info.svg"
-              className="w-[0.875rem] h-[0.875rem]"
-            />
-          </Button>
 
-          <ReactTooltip
-            id="eco-box-tooltip"
-            place="top"
-            style={{
-              maxWidth: "25rem",
-              fontSize: "0.875rem",
-              lineHeight: "1.375rem",
-              borderRadius: "0.5rem",
-              background: "#666",
-              fontFamily: "Satoshi",
-              fontWeight: "400",
-            }}
-            content="Every day, the top 500 users who accumulate the most Nova Points by interacting with Nova ecosystem dApps have the opportunity to draw an Eco Box, which contain Nova Points, Trademarks NFT and Lynks. Please mint SBT first."
-          />
-        </div> */}
         {mintable && !minted && (
           <div className="w-full">
             <Button

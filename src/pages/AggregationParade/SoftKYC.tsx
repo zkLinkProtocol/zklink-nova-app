@@ -752,7 +752,7 @@ export default function SoftKYC() {
       </div>
 
       {/* Total tvl */}
-      <NovaNetworkTVL name='TVL' />
+      <NovaNetworkTVL name="TVL" />
 
       {/* Verify deposit modal */}
       <Modal

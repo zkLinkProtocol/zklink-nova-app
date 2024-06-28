@@ -23,6 +23,7 @@ import {
   getRsethPoints,
   getRemainMysteryboxDrawCount,
   getRemainMysteryboxDrawCountV2,
+  getNovaProjectPoints,
 } from "@/api";
 import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,6 +54,7 @@ import TwitterVerify from "@/components/Dashboard/TwitterVerify";
 import axios from "axios";
 import NovaDropLink from "@/components/Dashboard/NovaDropLink";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
+import { eventBus } from "@/utils/event-bus";
 
 const TabsBox = styled.div`
   .tab-item {
@@ -1231,6 +1233,10 @@ export default function Dashboard() {
       </div> */}
 
       <Banner />
+
+      {/* <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
+        <Banner />
+      </div> */}
 
       {/* <div className="md:pl-[4.75rem] md:pr-[6rem] px-[1rem]">
         <Banner />

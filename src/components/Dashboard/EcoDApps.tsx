@@ -81,6 +81,7 @@ export interface EcoDAppsProps {
     descriptionTips?: string;
     actionType: string;
     actionLink?: string;
+    multiplierOrReward?: string;
   }[];
 }
 

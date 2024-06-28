@@ -135,7 +135,7 @@ export default function SbtNFT() {
           onClick={handleMintNow}
         >
           <img src="img/icon-wallet-white-2.svg" alt="" />
-          <span>Start Minting Now</span>
+          <span>Mint Now</span>
         </Button>
       </div>
       <SbtMintModal mintModal={mintModal} />
