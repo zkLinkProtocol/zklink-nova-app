@@ -1,21 +1,23 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BlurBox } from "@/styles/common";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
-import { Button } from "@nextui-org/react";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
+import { getCategoryList } from "@/api";
+import { formatNumberWithUnit } from "@/utils";
+import { useAccount } from "wagmi";
 // import { TableBoxs } from "@/styles/common";
 
 const BgBox = styled.div`
   position: relative;
   padding-top: 92px;
   width: 100%;
-  /* max-height: 1878px; */
+  max-height: 100vh;
   overflow: auto;
   background-image: url("/img/bg-leaderboard.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: 50%;
+  background-position: top center;
 `;
 
 const Title = styled.div`
@@ -176,17 +178,58 @@ const Table = styled.table`
   }
 `;
 
+interface ListItem {
+  username: string;
+  address: string;
+  totalPoint: string;
+  rank: number;
+}
+
 export default function Leaderboard() {
   const tabs = [
-    { name: "Holding" },
-    { name: "Spot Dex" },
-    { name: "Perp Dex" },
-    { name: "Lending" },
-    { name: "GameFi" },
-    { name: "Other" },
+    { name: "Holding", category: "holding" },
+    { name: "Spot Dex", category: "spotdex" },
+    { name: "Perp Dex", category: "perpdex" },
+    { name: "Lending", category: "lending" },
+    { name: "GameFi", category: "gamefi" },
+    { name: "Other", category: "other" },
   ];
 
+  const { address } = useAccount();
   const [tabActive, setTabActive] = useState(0);
+
+  const [categoryList, setCategoryList] = useState<ListItem[]>([]);
+  const getCategoryListFunc = async (category: string) => {
+    const res = await getCategoryList(category);
+
+    let self: ListItem | null = null;
+
+    const arr = res?.data.map((item, index) => {
+      if (item.address === address) {
+        self = { ...item, rank: index + 1 };
+      }
+
+      return {
+        rank: index + 1,
+        ...item,
+      };
+    });
+
+    if (self) {
+      arr.unshift(self);
+    }
+
+    setCategoryList(arr);
+  };
+
+  const handleTabClick = (index: number) => {
+    setTabActive(index);
+    // setCategoryList([]);
+  };
+
+  useEffect(() => {
+    getCategoryListFunc(tabs[tabActive].category);
+  }, [address, tabActive]);
 
   return (
     <BgBox>
@@ -224,7 +267,7 @@ export default function Leaderboard() {
               <span
                 key={index}
                 className={`tab-item ${index === tabActive ? "active" : ""}`}
-                onClick={() => setTabActive(index)}
+                onClick={() => handleTabClick(index)}
               >
                 {tab.name}
               </span>
@@ -240,14 +283,15 @@ export default function Leaderboard() {
                 <th className="points">DEX POINTS</th>
               </tr>
             </thead>
+
             <tbody>
-              {new Array(10).fill("").map((_, index) =>
-                index === 0 ? (
-                  <tr className={index === 0 ? "self" : ""}>
-                    <td className="rank">{index + 1}</td>
+              {categoryList.map((item, index) =>
+                address === item.address ? (
+                  <tr className={"self"}>
+                    <td className="rank">{item.rank}</td>
                     <td>
                       <div className="flex items-center gap-[7px]">
-                        <span>James Lee</span>
+                        <span>{item.username}</span>
                         <BlurBox className="px-[12px] py-[6px]">You</BlurBox>
                       </div>
                     </td>
@@ -255,16 +299,18 @@ export default function Leaderboard() {
                   </tr>
                 ) : (
                   <tr>
-                    <td className="rank">{index + 1}</td>
-                    <td>James Lee</td>
-                    <td className="points">100,000.00</td>
+                    <td className="rank">{item.rank}</td>
+                    <td>{item.username}</td>
+                    <td className="points">
+                      {formatNumberWithUnit(item.totalPoint)}
+                    </td>
                   </tr>
                 )
               )}
             </tbody>
           </Table>
         </div>
-        <div className="mt-[26px] flex justify-center">
+        {/* <div className="mt-[26px] flex justify-center">
           <Button className="text-center text-[16px] leading-[52px] w-[125px] h-[52px] bg-[#03D498] rounded-[100px] text-[#030D19] flex items-center gap-[10px]">
             <span>Load More</span>
             <img
@@ -274,7 +320,7 @@ export default function Leaderboard() {
               height={10}
             />
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <NovaNetworkTVL />

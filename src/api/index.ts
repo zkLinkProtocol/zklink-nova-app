@@ -644,3 +644,18 @@ export const getTvlCategoryMilestone =
 
 export const modifyUsername = (userName: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/invite/modify/username`, { userName });
+
+export interface CategoryListItem {
+  username: string;
+  address: string;
+  totalPoint: string;
+}
+
+interface CategoryListResponse {
+  errno: number;
+  errmsg: string;
+  data: CategoryListItem[];
+}
+
+export const getCategoryList = (category: string): Promise<CategoryListResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`);

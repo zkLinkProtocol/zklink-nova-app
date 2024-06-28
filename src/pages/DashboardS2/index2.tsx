@@ -19,7 +19,7 @@ import {
 import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
 import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
-
+import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -463,6 +463,7 @@ export default function Dashboard() {
       </div>
 
       <div className="mx-auto max-w-[1246px]">
+        <DailyRoulette />
         <div className="mt-[40px] flex justify-between items-center">
           <Tabs className="flex items-center gap-[40px]">
             {tabs1.map((tab, index) => (
