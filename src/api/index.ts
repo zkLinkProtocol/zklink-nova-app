@@ -1,4 +1,5 @@
 import http from "@/utils/http";
+import { user } from "@nextui-org/react";
 import axios from "axios";
 import qs from "qs";
 
@@ -580,3 +581,77 @@ export const getMystery3Reamin = (address: string): Promise<Response> =>
 
 export const drawMystery3 = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
+
+export interface NovaCategoryPoints {
+  category:
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
+  project: string;
+  holdingPoints: number;
+  refPoints: number;
+}
+
+interface NovaCategoryResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryPoints[];
+}
+
+export const getNovaCategoryPoints = (
+  address: string
+): Promise<NovaCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`, {
+    params: { address },
+  });
+
+export interface TvlCategory {
+  name: string;
+  tvl: string;
+}
+
+interface TvlCategoryResponse {
+  errno: number;
+  errmsg: string;
+  data: TvlCategory[];
+}
+
+export const getTvlCategory = (): Promise<TvlCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/tvl/category`);
+
+export interface TvlCategoryMilestone {
+  name: string;
+  data: string;
+  type: string;
+}
+
+interface TvlCategoryMilestoneResponse {
+  errno: number;
+  errmsg: string;
+  data: TvlCategoryMilestone[];
+}
+
+export const getTvlCategoryMilestone =
+  (): Promise<TvlCategoryMilestoneResponse> =>
+    http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone`);
+
+export const modifyUsername = (userName: string): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/modify/username`, { userName });
+
+export interface CategoryListItem {
+  username: string;
+  address: string;
+  totalPoint: string;
+}
+
+interface CategoryListResponse {
+  errno: number;
+  errmsg: string;
+  data: CategoryListItem[];
+}
+
+export const getCategoryList = (category: string): Promise<CategoryListResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`);

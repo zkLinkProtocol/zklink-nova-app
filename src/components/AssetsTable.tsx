@@ -17,7 +17,8 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import BridgeComponent, { TokenYieldBox } from "@/components/Bridge";
+import BridgeComponent from "@/components/Bridge";
+import { TokenYieldBox } from "@/components/Bridge/Components";
 import { findClosestMultiplier, formatNumberWithUnit } from "@/utils";
 import _ from "lodash";
 import { ExplorerTvlItem, SupportToken, getExplorerTokenTvl } from "@/api";
