@@ -464,7 +464,7 @@ export default function Dashboard() {
 
       <div className="mx-auto max-w-[1246px]">
         <DailyRoulette />
-        <div className="mt-[40px] flex justify-between items-center">
+        {/* <div className="mt-[40px] flex justify-between items-center">
           <Tabs className="flex items-center gap-[40px]">
             {tabs1.map((tab, index) => (
               <div
@@ -489,9 +489,9 @@ export default function Dashboard() {
               alt=""
               className="mt-[4px] w-[24px] h-[24px] block"
             />
-            <span>Check In Box</span>
+            <span>Check Invite Box 1</span>
           </GreenButton>
-        </div>
+        </div> */}
 
         <div className="mt-[40px]">
           <TabsCard>
@@ -550,7 +550,12 @@ export default function Dashboard() {
                 />
               )}
 
-              {tabs2Active === 99 && <Portfolio novaPointsList={novaPointsList} />}
+              {tabs2Active === 99 && (
+                <Portfolio
+                  novaPointsList={novaPointsList}
+                  handleTabChange={setTabs2Active}
+                />
+              )}
             </div>
           </TabsCard>
         </div>

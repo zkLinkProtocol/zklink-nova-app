@@ -69,7 +69,7 @@ const Container = styled.div`
   .points-value {
     text-align: center;
     font-family: Satoshi;
-    font-size: 56px;
+    font-size: 47px;
     font-style: normal;
     font-weight: 900;
     line-height: normal;
@@ -77,12 +77,13 @@ const Container = styled.div`
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 36px;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
   .btn-earn-more {
     display: flex;
-    width: 200px;
-    height: 47px;
+    width: 150px;
+    height: 30px;
     padding: 7.5px 40px;
     justify-content: center;
     align-items: center;
@@ -182,6 +183,12 @@ const List = styled.div`
   }
 `;
 
+const NovaPointsBox = styled.div`
+  background: url("/img/s2/bg-nova-points.png") no-repeat;
+  background-position: center -30px;
+  background-size: 440px auto;
+`;
+
 const PointsPopoverContent = () => (
   <div className="w-full">
     <div className="flex items-center justify-between mb-5">
@@ -211,11 +218,13 @@ export interface ProjectPointsItem {
 
 export default function Portfolio({
   novaPointsList,
+  handleTabChange,
 }: {
   novaPointsList: {
     name: string;
     points: number;
   }[];
+  handleTabChange: (index: number) => void;
 }) {
   const [checked, setChecked] = useState(false);
   const [filterTableList, setFilterTableList] = useState<any[]>([]);
@@ -411,7 +420,7 @@ export default function Portfolio({
   }, []);
 
   const handleViewMore = () => {};
-  const handleEarnMore = () => {};
+
   return (
     <Container>
       <div className="flex items-center justify-between">
@@ -420,14 +429,14 @@ export default function Portfolio({
           Check Referral Status
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-[24px] mt-5">
+      <div className="flex flex-wrap items-center mt-5">
         {novaPointsList.map((item, index) => (
-          <div
+          <NovaPointsBox
             key={index}
-            className="flex flex-col items-center w-[275px] bg-[#1B1D20] pt-9 py-12"
+            className="flex flex-col items-center w-[295px] h-[298px] bg-[#1B1D20] "
           >
-            <p className="text-white text-[16px]">{item.name}</p>
-            <div className="points-divide my-8"></div>
+            <p className="mt-[150px] text-white text-[16px]">{item.name}</p>
+            {/* <div className="points-divide my-8"></div> */}
             <Tooltip
               classNames={{
                 content:
@@ -439,11 +448,21 @@ export default function Portfolio({
                 {formatNumberWithUnit(item.points)}
               </p>
             </Tooltip>
-            <Button className="btn-earn-more" onClick={handleEarnMore}>
-              <img src="/img/icon-wallet-white-2.svg" alt="" />
-              <span>Earn More</span>
-            </Button>
-          </div>
+            <div className="flex justify-center">
+              <Button
+                className="btn-earn-more"
+                onClick={() => handleTabChange(index)}
+              >
+                <img
+                  src="/img/icon-wallet-white-2.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                />
+                <span className="font-[900] text-[14px]">Earn More</span>
+              </Button>
+            </div>
+          </NovaPointsBox>
         ))}
       </div>
       <div className="divide my-12"></div>
