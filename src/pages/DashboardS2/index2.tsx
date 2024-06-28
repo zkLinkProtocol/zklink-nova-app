@@ -56,7 +56,7 @@ const CardBox = styled.div`
   border: 2px solid transparent;
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
-  background-image: linear-gradient(to right, #282828, #000000),
+  background-image: linear-gradient(to bottom, #000000, #282828),
     linear-gradient(
       175deg,
       #fb2450 1%,
