@@ -13,18 +13,18 @@ const IMAGE_WIDTH = 120;
 const HALF_WIDTH = IMAGE_WIDTH / 2;
 const PrizeItems = [
   {
-    name: "Nova +50 Booster",
-    img: "/img/img-point-booster-v2-1.png",
+    name: "Nova +1 Booster",
+    img: "/img/img-point-plus-1.png",
     tooltipId: 50,
   },
   {
-    name: "Nova +100 Booster",
-    img: "/img/img-point-booster-v2-2.png",
+    name: "Nova +50 Booster",
+    img: "/img/img-point-plus-10.png",
     tooltipId: 100,
   },
   {
-    name: "Nova +200 Booster",
-    img: "/img/img-point-booster-v2-3.png",
+    name: "Nova +50 Booster",
+    img: "/img/img-point-plus-50.png",
     tooltipId: 200,
   },
   { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
@@ -74,6 +74,7 @@ const Marquee = forwardRef<Ref, IProps>((props, ref) => {
       };
       const startAnimation = () => {
         if (step >= totalTranslate) {
+          marqueeRef.current.style.transition = "none";
           stopAnimation();
           onDrawEnd?.();
           return;
@@ -90,12 +91,15 @@ const Marquee = forwardRef<Ref, IProps>((props, ref) => {
         let translate = 0;
         if (translateStep === 0) {
           translate = InitialTranslate;
+          marqueeRef.current.style.transition = "none";
         } else {
           translate = lastTranslate - IMAGE_WIDTH;
+          marqueeRef.current.style.transition = "transform 0.1s linear";
         }
         lastTranslate = translate;
 
         marqueeRef.current.style.transform = `translateX(${translate}px)`;
+
         timeout = setTimeout(startAnimation, speed * 100);
       };
       startAnimation();
