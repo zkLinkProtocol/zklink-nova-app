@@ -21,7 +21,6 @@ import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
 import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
-import { get } from "lodash";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Decimal from "decimal.js";
@@ -52,14 +51,26 @@ const Container = styled.div`
 
 const CardBox = styled.div`
   padding: 23px 32px;
-  border-radius: 24.133px;
-  border: 2.011px solid #635f5f;
-  background: #000811;
+  /* background: #000811; */
+  border-radius: 24px;
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(
+      175deg,
+      #fb2450 1%,
+      #fbc82e,
+      #6eee3f,
+      #5889f3,
+      #5095f1,
+      #b10af4
+    );
 
   .prize-title {
     color: #fff;
     font-family: Satoshi;
-    font-size: 24px;
+    font-size: 44px;
     font-style: normal;
     font-weight: 900;
     line-height: 110%; /* 26.4px */
@@ -158,7 +169,8 @@ const GreenButton = styled.span`
 
 const TabsCard = styled.div`
   .tab-item {
-    padding: 12px 14px 44px;
+    /* margin-bottom: -24px; */
+    padding: 12px 14px 24px;
     color: rgba(251, 251, 251, 0.6);
     text-align: center;
     font-family: Satoshi;
@@ -179,23 +191,78 @@ const TabsCard = styled.div`
     cursor: pointer;
 
     &.active {
+      position: relative;
       color: #fff;
       opacity: 1;
-      background: linear-gradient(
+      /* background: linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.1) 0%,
         rgba(145, 145, 145, 0.1) 40.05%,
         rgba(19, 19, 19, 0.1) 100%
-      );
+      ); */
+      border: 2px solid transparent;
+      border-bottom: 0;
+      background-clip: padding-box, border-box;
+      background-origin: padding-box, border-box;
+      background-image: linear-gradient(to right, #282828, #282828),
+        linear-gradient(
+          100deg,
+          #fb2450 1%,
+          #fbc82e,
+          #6eee3f,
+          #5889f3,
+          #5095f1,
+          #b10af4
+        );
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: -2px;
+        left: 0px;
+        right: 0px;
+        /* width: 100%; */
+        background: #282828;
+        height: 4px;
+        z-index: 3;
+      }
     }
   }
 
   .tab-content {
+    position: relative;
+    margin-top: -2px;
     min-height: 965.435px;
     border-radius: 24px;
-    border: 2px solid #635f5f;
-    background: #000811;
+    border: 2px solid transparent;
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    background-image: linear-gradient(to bottom, #282828, #000000),
+      linear-gradient(
+        100deg,
+        #fb2450 1%,
+        #fbc82e,
+        #6eee3f,
+        #5889f3,
+        #5095f1,
+        #b10af4
+      );
   }
+`;
+
+const ReawardBox = styled.div`
+  background: linear-gradient(0deg, #040507 0%, #181d28 100%);
+`;
+
+const PrizeLine = styled.div`
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(251, 251, 251, 0.6) 51.5%,
+    rgba(255, 255, 255, 0) 100%
+  );
 `;
 
 export interface NovaPointsListItem {
@@ -522,23 +589,55 @@ export default function Dashboard() {
   return (
     <Container>
       <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
-        <CardBox className="w-[full] h-[180px] flex justify-between items-center gap-[61px]">
-          <div>
+        <CardBox className="relative w-[full]">
+          <div className="absolute bottom-[36px] left-[36px] max-w-[624px]">
             <div className="flex items-center gap-[10px]">
-              <img
+              {/* <img
                 src="/img/icon-dollar.svg"
                 alt=""
                 className="w-[24px] h-[24px]"
-              />
+              /> */}
               <span className="prize-title">Prize Pool</span>
+            </div>
+            <div className="my-[16px]">
+              <PrizeLine className="w-[624px] " />
             </div>
             <div className="prize-desc mt-[19px]">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
             </div>
           </div>
 
-          <div className="prize-value">30,000,000 $ZKL</div>
+          <div>
+            <div className="prize-value">
+              <div>30,000,000</div>
+              <div>$ZKL</div>
+            </div>
+          </div>
+          <div className="text-right text-[16px]">
+            <p className="mt-[49px]">
+              Rewards gathered so far from there companies
+            </p>
+            <div className="my-[12px] flex justify-end">
+              <PrizeLine className="w-[415px] " />
+            </div>
+            <div className="flex justify-end gap-[16px]">
+              {new Array(4).fill("").map((_, index) => (
+                <ReawardBox
+                  className="w-[44px] h-[44px] flex items-center justify-center rounded-full"
+                  key={index}
+                >
+                  <img
+                    src={`/img/icon-rewards-${index + 1}.svg`}
+                    alt=""
+                    className="w-[18px] h-[18px] block"
+                  />
+                </ReawardBox>
+              ))}
+            </div>
+          </div>
         </CardBox>
       </div>
 
@@ -574,8 +673,8 @@ export default function Dashboard() {
         </div> */}
 
         <div className="mt-[40px]">
-          <TabsCard>
-            <div className="relative bottom-[-14.5px] flex items-center justify-between">
+          <TabsCard className="pb-[40px]">
+            <div className="relative flex items-center justify-between">
               <div className="flex flex items-center gap-[12.15px]">
                 {tabs2.map((tab, index) => (
                   <div
@@ -610,7 +709,14 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="tab-content px-[31px] py-[32.5px]">
+            <div
+              className="tab-content px-[31px] py-[32.5px]"
+              style={{
+                borderRadius: `${tabs2Active === 0 ? "0" : "24px"} ${
+                  tabs2Active === 99 ? "0" : "24px"
+                } 24px 24px`,
+              }}
+            >
               {tabs2Active === 0 && (
                 <Assets
                   ethUsdPrice={ethUsdPrice}
