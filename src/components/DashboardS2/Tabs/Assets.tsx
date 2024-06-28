@@ -7,7 +7,18 @@ import {
 } from "@/api";
 import { AccountTvlItem, TotalTvlItem } from "@/pages/Dashboard";
 import { useEffect, useMemo, useState } from "react";
-import { Input, useDisclosure } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 import {
   findClosestMultiplier,
   formatNumberWithUnit,
@@ -16,6 +27,7 @@ import {
 import _, { max, set } from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
 import MilestoneProgress from "../MilestoneProgress";
+import BridgeComponent from "@/components/Bridge";
 
 const BlurBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -66,6 +78,24 @@ const Container = styled.div`
     line-height: normal;
     text-transform: capitalize;
   }
+  .search-input {
+    border-radius: 8px;
+    border: 1px solid rgb(51, 49, 49);
+    background: #10131c;
+    filter: blur(0.125px);
+  }
+`;
+
+const DropdownLine = styled.div`
+  width: 100%;
+  height: 1px;
+  opacity: 0.75;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(251, 251, 251, 0.6) 51.5%,
+    rgba(255, 255, 255, 0) 100%
+  );
 `;
 
 const List = styled.div`
@@ -224,6 +254,16 @@ const AllocatedBox = styled.div`
       rgba(255, 255, 255, 0) 100%
     );
   }
+`;
+
+const GradientBox = styled.div`
+  padding: 4px 28px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
 `;
 
 export type TokenAddress = {
@@ -533,128 +573,204 @@ export default function Assets(props: IAssetsTableProps) {
   }, [currentTvl]);
 
   return (
-    <Container>
-      <div className="flex justify-between items-center">
-        <div>
-          <div className="holding-title flex items-center gap-[4px]">
-            <img
-              src="/img/icon-assets.svg"
-              alt=""
-              className="w-[16px] h-[16px]"
-            />
-            <span>Holding $ZKL Allocation</span>
-          </div>
-          <div className="holding-value mt-[16px]">
-            {formatToThounds(currentAllocationZKL)} $ZKL
-          </div>
-          <div className="holding-desc mt-[25px]">
-            Next $ZKL Allocation Milestone: {formatToThounds(nextAllocationZKL)}{" "}
-            $ZKL
-          </div>
-        </div>
-        <AllocatedBox>
-          <div className="flex items-center justify-between">
-            <span className="label">Total Allocated Points</span>
-            <span className="value">0</span>
-          </div>
-          <div className="line"></div>
-          <div className="flex items-center justify-between">
-            <span className="label">Your Points</span>
-            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
-          </div>
-        </AllocatedBox>
-      </div>
-
-      <MilestoneBox>
-        <div className="mt-[36px] flex justify-between items-center">
-          <div>Current TVL: {formatToThounds(currentTvl)}</div>
-          <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
-        </div>
-        <div className="mt-[22px] flex items-center justify-between gap-[17px]">
-          {milestoneProgressList.map((item, index) => (
-            <div className="w-full" key={index}>
-              <MilestoneProgress progress={item} />
+    <>
+      <Container>
+        <div className="flex justify-between items-center">
+          <div>
+            <div className="holding-title flex items-center gap-[4px]">
+              <img
+                src="/img/icon-assets.svg"
+                alt=""
+                className="w-[16px] h-[16px]"
+              />
+              <span>Holding $ZKL Allocation</span>
             </div>
-          ))}
-        </div>
-      </MilestoneBox>
-
-      <List>
-        <div className="list-header flex items-center">
-          <div className="list-header-item text-left">Token</div>
-          <div className="list-header-item text-center">Points Booster</div>
-          <div className="list-header-item text-center">Nova TVL</div>
-          <div className="list-header-item text-center">Your Deposit</div>
-          <div className="list-header-item">
-            <Input
-              data-hover={false}
-              isClearable
-              placeholder="Please enter the token symbol."
-              classNames={{
-                base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
-                mainWrapper: ["bg-transparent", "hover:bg-transparent"],
-                inputWrapper: ["bg-transparent", "hover:bg-transparent"],
-                input: ["bg-transparent", "hover:bg-transparent"],
-              }}
-              startContent={
-                <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
-              }
-              onClear={() => {
-                setSearchValue("");
-              }}
-              onValueChange={setSearchValue}
-            />
+            <div className="holding-value mt-[16px]">
+              {formatToThounds(currentAllocationZKL)} $ZKL
+            </div>
+            <div className="holding-desc mt-[25px]">
+              Next $ZKL Allocation Milestone:{" "}
+              {formatToThounds(nextAllocationZKL)} $ZKL
+            </div>
           </div>
+          <AllocatedBox>
+            <div className="flex items-center justify-between">
+              <span className="label">Total Allocated Points</span>
+              <span className="value">0</span>
+            </div>
+            <div className="line"></div>
+            <div className="flex items-center justify-between">
+              <span className="label">Your Points</span>
+              <span className="value">
+                {formatNumberWithUnit(holdingPoints)}
+              </span>
+            </div>
+          </AllocatedBox>
         </div>
-        <div className="list-content">
-          {filterTableList.map((item, index) => (
-            <div className="row mb-[24px] flex items-center" key={index}>
-              <div className="list-content-item flex items-center gap-[10px]">
-                {item?.iconURL && (
-                  <img
-                    src={item?.iconURL}
-                    alt=""
-                    className="w-[55px] h-[56px] rounded-full block"
-                  />
-                )}
-                <div>
-                  <div className="symbol">{item?.symbol}</div>
-                  {item?.isNova && (
-                    <div className="name mt-[5px]">Merged Token</div>
+
+        <MilestoneBox>
+          <div className="mt-[36px] flex justify-between items-center">
+            <div>Current TVL: {formatToThounds(currentTvl)}</div>
+            <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
+          </div>
+          <div className="mt-[22px] flex items-center justify-between gap-[17px]">
+            {milestoneProgressList.map((item, index) => (
+              <div className="w-full" key={index}>
+                <MilestoneProgress progress={item} />
+              </div>
+            ))}
+          </div>
+        </MilestoneBox>
+
+        <List>
+          <div className="list-header flex items-center">
+            <div className="list-header-item text-left">Token</div>
+            <div className="list-header-item text-center">Points Booster</div>
+            <div className="list-header-item text-center">Nova TVL</div>
+            <div className="list-header-item text-center">Your Deposit</div>
+            <div className="list-header-item">
+              <Input
+                data-hover={false}
+                isClearable
+                placeholder="Please enter the token symbol."
+                className="search-input"
+                classNames={{
+                  base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
+                  mainWrapper: ["bg-transparent", "hover:bg-transparent"],
+                  inputWrapper: ["bg-transparent", "hover:bg-transparent"],
+                  input: ["bg-transparent", "hover:bg-transparent"],
+                }}
+                startContent={
+                  <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+                }
+                onClear={() => {
+                  setSearchValue("");
+                }}
+                onValueChange={setSearchValue}
+              />
+            </div>
+          </div>
+          <div className="list-content">
+            {filterTableList.map((item, index) => (
+              <div className="row mb-[24px] flex items-center" key={index}>
+                <div className="list-content-item flex items-center gap-[10px]">
+                  {item?.iconURL && (
+                    <img
+                      src={item?.iconURL}
+                      alt=""
+                      className="w-[55px] h-[56px] rounded-full block"
+                    />
+                  )}
+                  <div>
+                    <div className="symbol">{item?.symbol}</div>
+                    {item?.isNova && (
+                      <div className="name mt-[5px]">Merged Token</div>
+                    )}
+                  </div>
+                </div>
+                <div className="col-line"></div>
+                <div className="list-content-item flex items-center justify-center text-center">
+                  <GradientBox>
+                    {item?.multipliers && Array.isArray(item.multipliers)
+                      ? findClosestMultiplier(item?.multipliers)
+                      : 0}
+                    x Boost
+                  </GradientBox>
+                </div>
+                <div className="col-line"></div>
+
+                <div className="list-content-item  text-center">
+                  {formatNumberWithUnit(item?.totalAmount)}
+                  <span className="text-gray">
+                    ({formatNumberWithUnit(item?.totalTvl, "$")})
+                  </span>
+                </div>
+                <div className="col-line"></div>
+
+                <div className="list-content-item  text-center">
+                  {" "}
+                  {formatNumberWithUnit(item?.amount)}
+                </div>
+                <div className="col-line"></div>
+
+                <div className="list-content-item  flex justify-end items-center gap-[10px]">
+                  <span className="action">Action:</span>
+                  {item?.isNova ? (
+                    <Dropdown className="bg-[#000811] py-[20px]">
+                      <DropdownTrigger>
+                        <span className="particpate cursor-pointer">
+                          Particpate
+                        </span>
+                      </DropdownTrigger>
+                      <DropdownMenu
+                        aria-label="ACME features"
+                        className="w-[10rem]"
+                        itemClasses={{
+                          base: "gap-4",
+                        }}
+                      >
+                        <DropdownItem key="bridge">
+                          <div
+                            className="flex justify-between items-center"
+                            onClick={() => {
+                              console.log("item: ", item);
+                              handleBridgeMore(item?.symbol);
+                            }}
+                          >
+                            Bridge Now
+                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
+                          </div>
+                        </DropdownItem>
+
+                        <DropdownItem key="merge">
+                          <div
+                            className="flex justify-between items-center"
+                            onClick={() => {
+                              window.open("https://zklink.io/merge", "_blank");
+                            }}
+                          >
+                            Merge Now
+                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
+                          </div>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  ) : (
+                    <span
+                      className="particpate cursor-pointer"
+                      onClick={() => {
+                        console.log("item: ", item);
+                        handleBridgeMore(item?.symbol);
+                      }}
+                    >
+                      Bridge Now
+                    </span>
                   )}
                 </div>
               </div>
-              <div className="col-line"></div>
-              <div className="list-content-item  text-center">
-                {item?.multipliers && Array.isArray(item.multipliers)
-                  ? findClosestMultiplier(item?.multipliers)
-                  : 0}
-                x Boost
-              </div>
-              <div className="col-line"></div>
+            ))}
+          </div>
+        </List>
+      </Container>
 
-              <div className="list-content-item  text-center">
-                {formatNumberWithUnit(item?.totalAmount)}
-                <span className="text-gray">
-                  ({formatNumberWithUnit(item?.totalTvl, "$")})
-                </span>
-              </div>
-              <div className="col-line"></div>
-
-              <div className="list-content-item  text-center">
-                {" "}
-                {formatNumberWithUnit(item?.amount)}
-              </div>
-              <div className="col-line"></div>
-
-              <div className="list-content-item  flex justify-end items-center gap-[10px]">
-                <span className="action">Action:</span>
-                <span className="particpate">Participate</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </List>
-    </Container>
+      <Modal
+        classNames={{ closeButton: "text-[1.5rem]" }}
+        style={{ minHeight: "600px" }}
+        size="2xl"
+        isOpen={bridgeModal.isOpen}
+        onOpenChange={bridgeModal.onOpenChange}
+      >
+        <ModalContent className="mb-[3.75rem]">
+          {(onClose) => (
+            <>
+              <ModalHeader>Bridge</ModalHeader>
+              <ModalBody className="pb-8">
+                <BridgeComponent bridgeToken={bridgeToken} onClose={onClose} />
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

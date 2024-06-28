@@ -138,7 +138,7 @@ export default function DailyRoulette() {
         </div>
         <div className="invite-box" onClick={openBoxModal.onOpen}>
           <img src="img/s2/icon-invite-box.svg" alt="" className="mr-2" />
-          <span>Check Invite Box {remainDrawCount}</span>
+          <span>Invite Box ({remainDrawCount})</span>
         </div>
       </div>
       <div className="flex items-center justify-between mt-[30px]">
