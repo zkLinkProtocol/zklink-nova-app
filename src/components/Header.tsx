@@ -635,7 +635,7 @@ export default function Header() {
                 Deposit History
               </Button>
             )} */}
-            <ReferralModal />
+            {address && <ReferralModal />}
             {/* <Button onClick={onDisconnect}>disconnect</Button> */}
 
             {isConnected && address ? (
