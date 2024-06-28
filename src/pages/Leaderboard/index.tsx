@@ -249,13 +249,13 @@ export default function Leaderboard() {
             </Description>
           </div>
           <Epoch className="flex items-center whitespace-nowrap">
-            <div className="epoch-btn left flex items-center justify-center">
+            <div className="epoch-btn left flex items-center justify-center opacity-40 cursor-not-allowed">
               <AiFillCaretLeft />
             </div>
             <div className="epoch-text px-[20px] flex items-center justify-center">
               Epoch One
             </div>
-            <div className="epoch-btn right flex items-center justify-center">
+            <div className="epoch-btn right flex items-center justify-center opacity-40 cursor-not-allowed">
               <AiFillCaretRight />
             </div>
           </Epoch>
