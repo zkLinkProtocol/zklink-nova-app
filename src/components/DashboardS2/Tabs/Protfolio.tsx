@@ -538,7 +538,7 @@ export default function Portfolio({
         </div>
       </List>
       <div className="divide my-12"></div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-5">
         <Title>Your Nova NFT</Title>
         <div className="view-more" onClick={handleViewMore}>
           <span className="mr-2 text-[#FbFbFb]/[0.6]">View More Details</span>

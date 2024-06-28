@@ -47,7 +47,7 @@ import toast from "react-hot-toast";
 import { eventBus } from "@/utils/event-bus";
 import { AiOutlineDown } from "react-icons/ai";
 import useSignature from "@/hooks/useSignature";
-
+import ReferralModal from "./ReferralModal";
 const Container = styled.div`
   .navbar {
     /* height: 92px; */
@@ -436,10 +436,7 @@ export default function Header() {
             <div>Mainnet Live</div>
           </NavNet> */}
           {/* <NavBox> */}
-          <NavbarContent
-            className="hidden md:flex"
-            justify="center"
-          >
+          <NavbarContent className="hidden md:flex" justify="center">
             <NavbarItem>
               <NavLink to="/aggregation-parade" className="nav-link">
                 Aggregation Parade
@@ -623,7 +620,7 @@ export default function Header() {
                 className="w-[1.25rem] h-[1.25rem]"
               />
             </a> */}
-            {address && !depositStatus && (
+            {/* {address && !depositStatus && (
               <Button
                 className="hidden md:block border-solid border-1 border-[#03D498] text-[#03D498] bg-transparent font-bold"
                 onClick={() =>
@@ -637,8 +634,8 @@ export default function Header() {
               >
                 Deposit History
               </Button>
-            )}
-
+            )} */}
+            <ReferralModal />
             {/* <Button onClick={onDisconnect}>disconnect</Button> */}
 
             {isConnected && address ? (
