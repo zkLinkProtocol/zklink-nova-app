@@ -190,6 +190,16 @@ const NovaPointsBox = styled.div`
   background-size: 440px auto;
 `;
 
+const PointsBox = styled.div`
+  padding: 4px 28px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
+`;
+
 const PointsPopoverContent = (props: {
   data: {
     name: string;
@@ -216,6 +226,7 @@ const PointsPopoverContent = (props: {
 
 export interface ProjectPointsItem {
   iconURL: string;
+  link: string;
   pointsName: string;
   pointsValue: number;
   eigenlayerName: string;
@@ -345,6 +356,7 @@ export default function Portfolio({
     const arr: ProjectPointsItem[] = [
       {
         iconURL: "/img/icon-puffer.svg",
+        link: "https://www.puffer.fi/",
         pointsName: "Puffer Points",
         eigenlayerName: "Puffer",
         pointsValue: pufferPoints,
@@ -356,6 +368,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-renzo.svg",
+        link: "https://app.renzoprotocol.com/restake",
         pointsName: "ezPoints",
         eigenlayerName: "Renzo",
         pointsValue: renzoPoints,
@@ -365,6 +378,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-eigenpie.svg",
+        link: "https://www.eigenlayer.magpiexyz.io/restake",
         pointsName: "EigenPie Points",
         eigenlayerName: "EigenPie",
         pointsValue: magpiePointsData.points,
@@ -374,6 +388,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-kelp.svg",
+        link: " https://kelpdao.xyz/restake/",
         pointsName: "Kelp Miles",
         eigenlayerName: "KelpDao",
         pointsValue: kelpMiles,
@@ -381,6 +396,7 @@ export default function Portfolio({
       },
       {
         iconURL: "/img/icon-bedrock.svg",
+        link: "https://www.bedrock.technology/",
         pointsName: "Bedrock Diamonds",
         eigenlayerName: "Bedrock",
         pointsValue: bedrockPoints,
@@ -388,7 +404,10 @@ export default function Portfolio({
       },
     ];
 
-    return arr;
+    const list = checked ? arr.filter((item) => item.pointsValue >= 0.01) : arr;
+    console.log(checked, arr, "checked");
+
+    return list;
   }, [
     pufferPoints,
     pufferEigenlayerPoints,
@@ -399,6 +418,7 @@ export default function Portfolio({
     kelpEigenlayerPoints,
     bedrockPoints,
     bedrockEigenlayerPoints,
+    checked,
   ]);
 
   useEffect(() => {
@@ -457,10 +477,10 @@ export default function Portfolio({
         ))}
       </div>
       <div className="divide my-12"></div>
-      <div className="flex items-center justify-between">
+      <div className="mb-[18px] flex items-center justify-between">
         <Title>Your Project Points</Title>
         <div className="view-more" onClick={handleViewMore}>
-          <span className="mr-2 text-[#FbFbFb]/[0.6]">{`View Points < 0.1`}</span>
+          <span className="mr-2 text-[#FbFbFb]/[0.6]">{`Hide Points < 0.1`}</span>
           <Checkbox
             defaultSelected
             radius="none"
@@ -484,33 +504,35 @@ export default function Portfolio({
                 <div>
                   <div className="symbol flex items-center">
                     <span className="mr-1">{item?.eigenlayerName}</span>
-                    <img src="img/icon-square-link.svg"></img>
                   </div>
-                  {/* {item?.twitter && (
-                    <div className="name mt-[5px]">{item.twitter}</div>
-                  )} */}
                 </div>
               </div>
               <div className="col-line"></div>
 
-              <div className="list-content-item flex col-3 flex-col   text-center">
-                <span className="text-gray mb-4">{item.pointsName}</span>
-                <span>{formatNumberWithUnit(item?.pointsValue)}</span>
+              <div className="list-content-item flex col-3 flex items-center gap-[12px] text-center">
+                <span className="text-gray">{item.pointsName}</span>
+                <PointsBox>{formatNumberWithUnit(item?.pointsValue)}</PointsBox>
               </div>
               <div className="col-line"></div>
 
-              <div className="list-content-item flex col-3 flex-col  text-center">
-                <span className="text-gray mb-4">
+              <div className="list-content-item flex col-3 flex items-center gap-[12px] text-center">
+                <span className="text-gray">
                   {item.eigenlayerName} Eigenlayer Points
                 </span>
-                <span>{formatNumberWithUnit(item?.eigenlayerValue)}</span>
+                <PointsBox>
+                  {formatNumberWithUnit(item?.eigenlayerValue)}
+                </PointsBox>
               </div>
               <div className="col-line"></div>
 
-              <div className="list-content-item  flex col-2 justify-center items-center gap-[10px]">
+              <a
+                className="list-content-item  flex col-2 justify-center items-center gap-[10px]"
+                href={item.link}
+                target="_blank"
+              >
                 <span className="particpate">Participate</span>
-                <img src="img/icon-square-link-color.svg" alt="" />
-              </div>
+                <img src="img/icon-link-arrow.svg" alt="" />
+              </a>
             </div>
           ))}
         </div>

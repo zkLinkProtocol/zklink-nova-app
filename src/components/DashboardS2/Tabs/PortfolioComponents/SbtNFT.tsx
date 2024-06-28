@@ -137,7 +137,7 @@ export default function SbtNFT() {
         </p>
         <Button className="btn-mint mt-auto">
           <img src="img/icon-wallet-white-2.svg" alt="" />
-          <span>Start Minting Now</span>
+          <span>Mint Now</span>
         </Button>
       </div>
     </NftContainer>
