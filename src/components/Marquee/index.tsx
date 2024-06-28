@@ -102,10 +102,6 @@ const Marquee = forwardRef<Ref, IProps>((props, ref) => {
     });
   };
 
-  const handleOpenCase = () => {
-    start(6);
-  };
-
   useEffect(() => {
     if (marqueeRef.current) {
       marqueeRef.current.style.transform = `translateX(${
@@ -127,10 +123,6 @@ const Marquee = forwardRef<Ref, IProps>((props, ref) => {
         ))}
 
         {/* Add more images here */}
-      </div>
-      <div className="flex items-center gap-5">
-        <button onClick={handleOpenCase}>Start</button>
-        <button onClick={() => setIsOpening(false)}>Stop</button>
       </div>
     </div>
   );
