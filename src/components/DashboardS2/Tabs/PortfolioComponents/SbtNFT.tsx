@@ -1,15 +1,12 @@
 import useNovaNFT, { NOVA_NFT_TYPE } from "@/hooks/useNFT";
 import styled from "styled-components";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { Abi } from "viem";
-import useNovaDrawNFT, {
-  MysteryboxOpenParams,
-  TrademarkMintParams,
-} from "@/hooks/useNovaNFT";
+import useNovaDrawNFT from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
-import { Button } from "@nextui-org/react";
-
+import { Button, useDisclosure } from "@nextui-org/react";
+import SbtMintModal from "@/components/Dashboard/NovaCharacterComponents/SbtMintModal";
 export const NftContainer = styled.div`
   flex: 1;
   border-radius: 24px;
@@ -48,28 +45,16 @@ export const NftContainer = styled.div`
 `;
 
 export default function SbtNFT() {
-  const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
+  const { nft, loading: mintLoading, fetchLoading } = useNovaNFT();
   const [lynksBalance, setLynksBalance] = useState(0);
   const [checkingTrademarkUpgradable, setCheckingTrademarkUpgradable] =
     useState(false);
   const [upgradable, setUpgradable] = useState(false);
   const [update, setUpdate] = useState(0);
-  const { refreshBalanceId, updateRefreshBalanceId } = useMintStatus();
-
+  const { refreshBalanceId } = useMintStatus();
+  const mintModal = useDisclosure();
   const { address, chainId } = useAccount();
-  const {
-    trademarkNFT,
-    sendTrademarkMintTx,
-    sendOldestFriendsTrademarkMintTx,
-    sendEcoBoxMintTx,
-    lynksNFT,
-    isTrademarkApproved,
-    sendTrademarkApproveTx,
-    sendUpgradeSBTTx,
-    isApproving,
-    publicClient,
-    sendMysteryOpenMintTxV2,
-  } = useNovaDrawNFT();
+  const { trademarkNFT, lynksNFT, publicClient } = useNovaDrawNFT();
 
   useEffect(() => {
     (async () => {
@@ -123,6 +108,14 @@ export default function SbtNFT() {
     }
   }, [nft, lynksBalance]);
 
+  const handleMintNow = useCallback(() => {
+    if (fetchLoading) {
+      return;
+    } else if (!nft) {
+      mintModal.onOpen();
+    }
+  }, [mintModal, nft, fetchLoading]);
+
   return (
     <NftContainer>
       <div className="nft-image">
@@ -135,11 +128,17 @@ export default function SbtNFT() {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor
         </p>
-        <Button className="btn-mint mt-auto">
+        <Button
+          className="btn-mint mt-auto"
+          isDisabled={!!nft}
+          isLoading={fetchLoading || mintLoading}
+          onClick={handleMintNow}
+        >
           <img src="img/icon-wallet-white-2.svg" alt="" />
           <span>Start Minting Now</span>
         </Button>
       </div>
+      <SbtMintModal mintModal={mintModal} />
     </NftContainer>
   );
 }

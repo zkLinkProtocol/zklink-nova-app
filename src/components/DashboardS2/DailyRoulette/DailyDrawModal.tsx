@@ -31,7 +31,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <Modal
+    <ModalContainer
       isDismissable={false}
       classNames={{ closeButton: "text-[1.5rem]" }}
       size="md"
@@ -42,12 +42,12 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
         {() => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Open your Invite Box
+              Daily Roulette
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col items-center">
-                <p>Daily Roulette</p>
-                <p className="text-white font-chakra text-[14px] mt-4 text-center">
+                <Divide />
+                <p className="text-neutral font-chakra text-[14px] mt-4 ">
                   On a daily basis, each user has x times of opportunity to
                   participate in a Roulette game on the campaign page. Users
                   have the probability to win trademarks and Lynks. The minimum
@@ -55,23 +55,57 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                 </p>
               </div>
               <Marquee ref={drawRef} onDrawEnd={handleDrawEnd} />
+              <SpinPointer>
+                <img src="/img/s2/icon-daily-spin-pointer.png" alt="" />
+              </SpinPointer>
             </ModalBody>
             <ModalFooter>
               <div className="flex flex-col w-full">
-                <Button
-                  className="w-full gradient-btn mb-3"
-                  onClick={handleSpin}
-                  isLoading={spinging}
-                >
-                  Spin
-                </Button>
+                <SpinButton onClick={handleSpin} isLoading={spinging}>
+                  <img src="/img/s2/icon-spin.svg" alt="" />
+                  <span>Spin Your Daily Roulette</span>
+                </SpinButton>
               </div>
             </ModalFooter>
           </>
         )}
       </ModalContent>
-    </Modal>
+    </ModalContainer>
   );
 };
 
+const Divide = styled.div`
+  opacity: 0.75;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(251, 251, 251, 0.6) 51.5%,
+    rgba(255, 255, 255, 0) 100%
+  );
+`;
+const SpinButton = styled(Button)`
+  border-radius: 73.785px;
+  background: #1d4138;
+  box-shadow: 0px 2.306px 18.446px 0px rgba(0, 0, 0, 0.15),
+    0px 0px 13.835px 0px rgba(255, 255, 255, 0.75) inset;
+  height: 54px;
+  gap: 8px;
+`;
+
+const SpinPointer = styled.div`
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  right: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: -1;
+`;
+const ModalContainer = styled(Modal)`
+  background: url("img/s2/bg-spin-container.svg") no-repeat;
+  background-size: cover;
+  width: 400px;
+`;
 export default DailyDrawModal;
