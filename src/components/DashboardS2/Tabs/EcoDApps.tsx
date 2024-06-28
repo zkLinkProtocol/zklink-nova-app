@@ -73,6 +73,17 @@ const Container = styled.div`
   }
 `;
 
+const IconBox = styled.div`
+  position: relative;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
+`;
+
 const AllocatedBox = styled.div`
   padding: 16px 28px;
   min-width: 419px;
@@ -234,6 +245,16 @@ const List = styled.div`
   }
 `;
 
+const GradientBox = styled.div`
+  padding: 4px 28px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
+`;
+
 const DetailBox = styled.div`
   font-size: 16px;
   font-style: normal;
@@ -388,16 +409,26 @@ const EcoDApp = (props: {
           </div>
         </div>
         <div className="col-line"></div>
-        <div className="list-content-item text-center">
+        <div className="list-content-item text-center flex items-center justify-center">
           Up to {data.rewards}
         </div>
         <div className="col-line"></div>
 
-        <div className="list-content-item text-center flex items-center justify-center">
-          <span className="w-[32px] h-[32px] rounded-full bg-[#7C3434]"></span>
-          <span className="w-[32px] h-[32px] rounded-full bg-[#777D29]"></span>
-          <span className="w-[32px] h-[32px] rounded-full bg-[#3C7F53]"></span>
-          <span className="w-[32px] h-[32px] rounded-full bg-[#777]"></span>
+        <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
+          {new Array(4).fill("").map((_, index) => (
+            <IconBox
+              className="min-w-[42px]"
+              key={index}
+              // style={{
+              //   left: `-${index * 16}px`,
+              // }}
+            >
+              <img
+                src={`/img/icon-rewards-${index + 1}.svg`}
+                className="w-[32px] h-[32px] rounded-full"
+              />
+            </IconBox>
+          ))}
         </div>
         <div className="col-line"></div>
 
@@ -988,9 +1019,13 @@ export default function EcoDApps({
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL
           </div>
-          {!isNoProgress && (
+          {!isNoProgress ? (
             <div className="holding-desc mt-[8px]">
               Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
+            </div>
+          ) : (
+            <div className="holding-desc mt-[8px]">
+              <div>Max $ZKL Allocation: {formatToThounds(maxZKL)} $ZKL</div>
             </div>
           )}
         </div>
@@ -1009,7 +1044,10 @@ export default function EcoDApps({
       <MilestoneBox>
         <div className="mt-[36px] flex justify-between items-center">
           {isNoProgress ? (
-            <div>Max $ZKL Allocation: {formatToThounds(maxZKL)} $ZKL</div>
+            <div>
+              This sector currently doesn't have a milestone, so the $ZKL
+              allocation will grow contingently.
+            </div>
           ) : (
             <>
               <div>Current TVL: {formatToThounds(currentTvl)}</div>
