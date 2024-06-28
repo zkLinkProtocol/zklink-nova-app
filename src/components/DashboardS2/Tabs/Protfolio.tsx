@@ -14,6 +14,7 @@ import {
   getRsethPoints,
 } from "@/api";
 import axios from "axios";
+import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 const Title = styled.div`
   background: linear-gradient(180deg, #fff 0%, #bababa 100%);
   background-clip: text;
@@ -189,22 +190,29 @@ const NovaPointsBox = styled.div`
   background-size: 440px auto;
 `;
 
-const PointsPopoverContent = () => (
-  <div className="w-full">
-    <div className="flex items-center justify-between mb-5">
-      <span>Earned by Holding</span>
-      <span>1.26k </span>
+const PointsPopoverContent = (props: {
+  data: {
+    name: string;
+    points: number;
+  }[];
+}) => {
+  const { data } = props;
+  return (
+    <div className="w-full">
+      {data.map((item, index) => (
+        <div
+          className={`flex items-center justify-between ${
+            index !== 0 ? "mt-5" : ""
+          }`}
+          key={index}
+        >
+          <span>{item.name}</span>
+          <span>{formatNumberWithUnit(item.points)}</span>
+        </div>
+      ))}
     </div>
-    <div className="flex items-center justify-between mb-5">
-      <span>Earned by Holding</span>
-      <span>1.26k </span>
-    </div>
-    <div className="flex items-center justify-between ">
-      <span>Earned by Holding</span>
-      <span>1.26k </span>
-    </div>
-  </div>
-);
+  );
+};
 
 export interface ProjectPointsItem {
   iconURL: string;
@@ -220,15 +228,10 @@ export default function Portfolio({
   novaPointsList,
   handleTabChange,
 }: {
-  novaPointsList: {
-    name: string;
-    points: number;
-  }[];
+  novaPointsList: NovaPointsListItem[];
   handleTabChange: (index: number) => void;
 }) {
   const [checked, setChecked] = useState(false);
-  const [filterTableList, setFilterTableList] = useState<any[]>([]);
-
   const { address } = useAccount();
 
   const [pufferPoints, setPufferPoints] = useState(0);
@@ -407,18 +410,6 @@ export default function Portfolio({
     getBedrockPointsFunc();
   }, [address]);
 
-  useEffect(() => {
-    setFilterTableList(
-      new Array(5).fill({
-        iconURL: "",
-        name: "Renzo",
-        twitter: "@Renzo.fi",
-        ezPoints: 100,
-        eigenlayerPoints: 2000.2,
-      })
-    );
-  }, []);
-
   const handleViewMore = () => {};
 
   return (
@@ -442,7 +433,7 @@ export default function Portfolio({
                 content:
                   "w-[300px] rounded-lg bg-[#151923] text-white px-4 py-5",
               }}
-              content={<PointsPopoverContent />}
+              content={<PointsPopoverContent data={item.earnedBy} />}
             >
               <p className="points-value">
                 {formatNumberWithUnit(item.points)}

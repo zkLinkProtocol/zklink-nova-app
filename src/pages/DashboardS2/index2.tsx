@@ -1,5 +1,5 @@
 import Assets from "@/components/DashboardS2/Tabs/Assets";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   NovaCategoryPoints,
@@ -10,6 +10,7 @@ import {
   getAccountTvl,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
+  getPointsDetail,
   getSupportTokens,
   getTokenPrice,
   getTotalTvlByToken,
@@ -20,6 +21,10 @@ import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
 import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
+import { get } from "lodash";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import Decimal from "decimal.js";
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -193,8 +198,19 @@ const TabsCard = styled.div`
   }
 `;
 
+export interface NovaPointsListItem {
+  name: string;
+  points: number;
+  earnedBy: {
+    name: string;
+    points: number;
+  }[];
+}
+
 export default function Dashboard() {
   const { address } = useAccount();
+  const { invite } = useSelector((store: RootState) => store.airdrop);
+
   const tabs1 = [
     {
       name: "Aggregation Parade",
@@ -344,93 +360,157 @@ export default function Dashboard() {
     setTvlCategoryMilestone(res?.data || []);
   };
 
-  const [novaPoints, setNovaPoints] = useState(0);
+  const [holdingPoints, setHoldingPoints] = useState(0);
   const getAccountPointFunc = async () => {
     if (!address) {
-      setNovaPoints(0);
+      setHoldingPoints(0);
       return;
     }
     const { result } = await getAccountPoint(address);
-    setNovaPoints(Number(result?.novaPoint) || 0);
+    const points = Number(result?.novaPoint) || 0;
+
+    const kolPoints =
+      points !== 0 && invite?.kolGroup
+        ? Decimal.mul(points, 0.05).toNumber()
+        : 0;
+    setHoldingPoints(points + kolPoints);
   };
 
-  const holdingPointsMap: {
-    [key: string]: number;
-  } = useMemo(() => {
-    const nativeboost = novaCategoryPoints
-      .filter((item) => item.category === "nativeboost")
-      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+  const [referPoints, setReferPoints] = useState(0);
+  const [pointsDetail, setPointsDetail] = useState({
+    refPoints: 0,
+    boostPoints: 0,
+    okxCampaignPoints: 0,
+  });
 
-    const spotdex = novaCategoryPoints
-      .filter((item) => item.category === "spotdex")
-      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+  const otherNovaPoints = useMemo(() => {
+    const points =
+      (Number(invite?.points) || 0) +
+      pointsDetail.okxCampaignPoints +
+      pointsDetail.boostPoints;
 
-    const perpdex = novaCategoryPoints
-      .filter((item) => item.category === "perpdex")
-      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+    return address ? points : 0;
+  }, [invite?.points, pointsDetail]);
 
-    const lending = novaCategoryPoints
-      .filter((item) => item.category === "lending")
-      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+  const getPointsDetailFunc = async () => {
+    if (!address) return;
+    const { result } = await getPointsDetail();
+    // console.log("getPointsDetail", res);
+    if (result) {
+      setPointsDetail({
+        refPoints: Number(result?.refPoints) || 0,
+        boostPoints: Number(result?.boostPoints) || 0,
+        okxCampaignPoints: Number(result?.okxCampaignPoints) || 0,
+      });
+    }
 
-    const gamefi = novaCategoryPoints
-      .filter((item) => item.category === "gamefi")
-      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+    setReferPoints(Number(result?.refPoints) || 0);
+  };
 
-    const other = novaCategoryPoints
-      .filter((item) => item.category === "other")
-      .reduce((prev, cur) => prev + cur.holdingPoints, 0);
+  const getEcoCategoryPoints = useCallback(
+    (category: string) => {
+      const filters = novaCategoryPoints.filter(
+        (item) => item.category === category
+      );
 
-    return {
-      nativeboost,
-      spotdex,
-      perpdex,
-      lending,
-      gamefi,
-      other,
-    };
-  }, [novaCategoryPoints]);
+      const holdingPoints = filters.reduce(
+        (prev, cur) => prev + Number(cur.holdingPoints),
+        0
+      );
+      const refPoints = filters.reduce(
+        (prev, cur) => prev + Number(cur.refPoints),
+        0
+      );
 
-  const holdingPoints = useMemo(() => {
+      return {
+        points: holdingPoints + refPoints,
+        holdingPoints,
+        refPoints,
+      };
+    },
+    [novaCategoryPoints]
+  );
+
+  const ecoHoldingPoints = useMemo(() => {
     const category = tabs2[tabs2Active]?.category;
-    return holdingPointsMap[category] || 0;
-  }, [holdingPointsMap, tabs2Active]);
+    const categoryData = getEcoCategoryPoints(category);
+    return categoryData?.points || 0;
+  }, [getEcoCategoryPoints, tabs2Active]);
 
-  const novaPointsList = useMemo(() => {
-    return [
+  const novaPointsList: NovaPointsListItem[] = useMemo(() => {
+    const ecoList = [
       {
-        name: "Assets Points",
-        points: novaPoints,
+        name: "Native Boost Points",
+        category: "nativeboost",
       },
       {
         name: "Spot DEX Points",
-        points: holdingPointsMap.spotdex,
-      },
-      {
-        name: "Native Boost Points",
-        points: holdingPointsMap.nativeboost,
+        category: "spotdex",
       },
       {
         name: "Perp DEX Points",
-        points: holdingPointsMap.perpdex,
+        category: "perpdex",
       },
       {
         name: "Lending Points",
-        points: holdingPointsMap.lending,
+        category: "lending",
       },
       {
         name: "GameFi Points",
-        points: holdingPointsMap.gamefi,
+        category: "gamefi",
       },
       {
         name: "Others Points",
-        points: holdingPointsMap.other,
+        category: "other",
       },
     ];
-  }, [holdingPointsMap, novaPoints]);
+
+    const ecoPoints = ecoList.map((item) => {
+      const categoryData = getEcoCategoryPoints(item.category);
+      return {
+        name: item.name,
+        points: categoryData.points,
+        earnedBy: [
+          {
+            name: "Earned by Holding",
+            points: categoryData.holdingPoints,
+          },
+          {
+            name: "Earned by Referral",
+            points: categoryData.refPoints,
+          },
+        ],
+      };
+    });
+
+    const arr: NovaPointsListItem[] = [
+      {
+        name: "Assets Points",
+        points: holdingPoints + referPoints + otherNovaPoints,
+        earnedBy: [
+          {
+            name: "Earned by Holding",
+            points: holdingPoints,
+          },
+          {
+            name: "Earned by Referral",
+            points: referPoints,
+          },
+          {
+            name: "Earned by Other Activities",
+            points: otherNovaPoints,
+          },
+        ],
+      },
+      ...ecoPoints,
+    ];
+
+    return arr;
+  }, [holdingPoints, referPoints, otherNovaPoints, getEcoCategoryPoints]);
 
   useEffect(() => {
     getAccountPointFunc();
+    getPointsDetailFunc();
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
@@ -538,7 +618,7 @@ export default function Dashboard() {
                   totalTvlList={totalTvlList}
                   accountTvlData={accountTvlData}
                   currentTvl={totalTvl}
-                  holdingPoints={novaPoints}
+                  holdingPoints={holdingPoints}
                 />
               )}
               {tabs2Active !== 0 && tabs2Active !== 99 && (
@@ -546,7 +626,7 @@ export default function Dashboard() {
                   tabActive={tabs2[tabs2Active]}
                   novaCategoryPoints={novaCategoryPoints}
                   tvlCategoryMilestone={tvlCategoryMilestone}
-                  holdingPoints={holdingPoints}
+                  holdingPoints={ecoHoldingPoints}
                 />
               )}
 
