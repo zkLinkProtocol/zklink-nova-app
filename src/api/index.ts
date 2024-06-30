@@ -1,6 +1,6 @@
 import http from "@/utils/http";
 import { user } from "@nextui-org/react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import qs from "qs";
 
 type Response = {
@@ -657,5 +657,25 @@ interface CategoryListResponse {
   data: CategoryListItem[];
 }
 
-export const getCategoryList = (category: string): Promise<CategoryListResponse> =>
-  http.get(`${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`);
+export const getCategoryList = (
+  category: string
+): Promise<CategoryListResponse> =>
+  http.get(
+    `${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`
+  );
+
+export const dailyOpen = (): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/checkin/open`);
+
+export interface DailyCheckinHistoryData {
+  date: string;
+  expired: boolean;
+  maxDraw: number;
+  remainNum: number;
+}
+type PromiseResponse<T> = {
+  result: T;
+};
+export const getDailyCheckinHistory = (): Promise<
+  PromiseResponse<DailyCheckinHistoryData[]>
+> => http.get(`${BASE_URL_API}/invite/checkin/history`);
