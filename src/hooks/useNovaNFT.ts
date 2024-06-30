@@ -44,6 +44,8 @@ export type TrademarkMintParams = {
   nonce: number;
   signature: string;
   expiry: number;
+  method?: string;
+  mintType?: number;
 };
 export type MysteryboxOpenParams = {
   tokenId?: number;
@@ -282,9 +284,21 @@ const useNovaDrawNFT = () => {
       const tx: WriteContractParameters = {
         address: isLynks ? LYNKS_NFT_CONTRACT : TRADEMARK_NFT_CONTRACT,
         abi: (isLynks ? NovaLynksNFT : NovaTrademarkNFT) as Abi,
-        functionName: isLynks ? "safeMintWithAuth" : "safeMint",
+        functionName: isLynks
+          ? "safeMintWithAuth"
+          : params.method || "safeMint",
         args: isLynks
           ? [address, params.nonce, params.expiry, params.signature]
+          : params.method === "safeMintCommon"
+          ? [
+              address,
+              params.nonce,
+              params.tokenId,
+              1,
+              params.expiry,
+              params.signature,
+              params.mintType,
+            ]
           : [
               address,
               params.nonce,

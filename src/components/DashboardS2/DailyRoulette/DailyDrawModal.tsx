@@ -28,7 +28,7 @@ export const PrizeItems = [
     img: "/img/img-point-plus-1.png",
   },
   {
-    name: "Nova +50 Booster",
+    name: "Nova +10 Booster",
     img: "/img/img-point-plus-10.png",
   },
   {
@@ -78,8 +78,15 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     if ([1, 2, 3, 4].includes(tokenId)) {
       await sleep(2000); // show nft
       setMinting(true);
-      const { tokenId, nonce, signature, expiry } = res.result;
-      const mintParams = { tokenId, nonce, signature, expiry };
+      const { tokenId, nonce, signature, expiry, mintType } = res.result;
+      const mintParams = {
+        tokenId,
+        nonce,
+        signature,
+        expiry,
+        method: "safeMintCommon",
+        mintType,
+      };
 
       try {
         await sendTrademarkMintTx(mintParams);
@@ -105,6 +112,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       setSpinging(false);
     }
     onDrawed();
+    modalInstance.onClose();
   };
 
   return (
@@ -227,16 +235,17 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                   <p className="text-[24px] font-inter font-normal">
                     {mintResult?.name}
                   </p>
-
-                  <Button
-                    className="
+                  {mintResult?.img.includes("trademark") && (
+                    <Button
+                      className="
                     gradient-btn mt-4 px-6"
-                    onClick={() =>
-                      window.open(TRADEMARK_NFT_MARKET_URL, "_blank")
-                    }
-                  >
-                    Trade on OKX NFT Marketplace
-                  </Button>
+                      onClick={() =>
+                        window.open(TRADEMARK_NFT_MARKET_URL, "_blank")
+                      }
+                    >
+                      Trade on OKX NFT Marketplace
+                    </Button>
+                  )}
                 </div>
               )}
             </TxResult>
