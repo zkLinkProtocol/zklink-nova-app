@@ -435,11 +435,66 @@ export const useBridgeTx = () => {
     }
   };
 
+  // Define the function to perform the POST request
+  const postTransactionData = async (payload: any) => {
+    try {
+      const response = await fetch(
+        "https://api.zyfi.org/api/erc20_sponsored_paymaster/v1",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": "5d118597-585b-41ff-b360-31c9760e1a4a",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data); // Process the response data
+      return data;
+    } catch (error) {
+      console.error("Error during the API call:", error);
+    }
+  };
+
+  const getSponsoredPayload = async (tx: any) => {
+    let txData;
+    if (tx.functionName === "requestL2Transaction") {
+      const face = new Interface(IZkSync.abi);
+      txData = face.encodeFunctionData("requestL2Transaction", [
+        ...tx.args,
+      ]) as `0x${string}`;
+    } else {
+      const face = new Interface(IL1Bridge.abi);
+      txData = face.encodeFunctionData(tx.functionName, [
+        ...tx.args,
+      ]) as `0x${string}`;
+    }
+    const payload = {
+      feeTokenAddress: "0x4b9eb6c0b6ea15176bbf62841c6b2a8a398cb656", //Dai. ERC20 the user desires to use as gas token
+      sponsorshipRatio: 100, // [0-100] which % of the transaction is sponsored by the protocol
+      replayLimit: 5, // Optional (default of 5), how many times the user can execute the transaction
+      txData: {
+        from: address,
+        to: tx.address,
+        data: txData,
+      },
+    };
+    const res = await postTransactionData(payload);
+    return res;
+  };
+
   const sendDepositTx = async (
     token: Address,
     amount: BigNumberish,
     nativeBalance: BigNumberish,
-    isMergeSelected?: boolean
+    isMergeSelected?: boolean,
+    isSponsored?: boolean
   ) => {
     const network = nodeConfig.find((item) => item.key === networkKey);
     if (!address || !network) {
@@ -636,6 +691,28 @@ export const useBridgeTx = () => {
             `"Insufficient Gas Token Balance. Tx value: ${tx.value.toString()}, base cost: ${baseCost.toString()},  gas balance: ${nativeBalance.toString()}`
           )
         );
+      }
+      if (isSponsored && isZkSyncChain) {
+        const res = await getSponsoredPayload(tx);
+        const rawTx = res.txData;
+        const txPayload = {
+          account: address,
+          to: rawTx.to,
+          value: BigInt(rawTx.value!),
+          gas: BigInt(rawTx.gasLimit),
+          gasPerPubdata: BigInt(rawTx.customData.gasPerPubdata),
+          maxFeePerGas: BigInt(rawTx.maxFeePerGas),
+          maxPriorityFeePerGas: BigInt(0),
+          data: rawTx.data,
+          paymaster: rawTx.customData.paymasterParams.paymaster,
+          paymasterInput: rawTx.customData.paymasterParams.paymasterInput,
+        };
+        const hash = (await walletClient?.sendTransaction(
+          txPayload
+        )) as `0x${string}`;
+        const txRes = await publicClient?.waitForTransactionReceipt({ hash });
+        console.log("tx res: ", txRes);
+        return;
       }
       const hash = (await walletClient?.writeContract(tx)) as `0x${string}`;
       console.log("tx hash: ", hash);
