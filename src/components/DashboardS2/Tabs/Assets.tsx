@@ -217,8 +217,21 @@ const AllocatedBox = styled.div`
   min-width: 419px;
   border-radius: 16px;
   border: 1px solid rgba(51, 49, 49, 0);
-  background: #10131c;
+  /* background: #10131c; */
   filter: blur(0.125px);
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(
+      175deg,
+      #fb2450 1%,
+      #fbc82e 5%,
+      #6eee3f,
+      #5889f3,
+      #5095f1,
+      #b10af4
+    );
 
   .label {
     color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
@@ -302,6 +315,7 @@ interface IAssetsTableProps {
   ethUsdPrice: number;
   currentTvl: number;
   holdingPoints: number;
+  novaCategoryTotalPoints: number;
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -312,6 +326,7 @@ export default function Assets(props: IAssetsTableProps) {
     ethUsdPrice,
     currentTvl,
     holdingPoints,
+    novaCategoryTotalPoints
   } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
@@ -511,9 +526,20 @@ export default function Assets(props: IAssetsTableProps) {
   //   500000
   // ]
 
-  const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
+  const [milestoneProgressList, setMilestoneProgressList] = useState<number[]>(
     []
   );
+
+  const isMaxProgress = useMemo(() => {
+    if (
+      milestoneProgressList.length > 0 &&
+      milestoneProgressList[milestoneProgressList.length - 1] === 100
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [milestoneProgressList]);
 
   const milestoneData = [
     {
@@ -566,7 +592,7 @@ export default function Assets(props: IAssetsTableProps) {
         progress = 0;
       }
 
-      return `${progress.toFixed(2)}%`;
+      return progress;
     });
 
     setMilestoneProgressList(arr);
@@ -595,8 +621,10 @@ export default function Assets(props: IAssetsTableProps) {
           </div>
           <AllocatedBox>
             <div className="flex items-center justify-between">
-              <span className="label">Total Allocated Points</span>
-              <span className="value">0</span>
+              <span className="label">Sector Allocated Points</span>
+              <span className="value">
+                {formatNumberWithUnit(novaCategoryTotalPoints)}
+              </span>
             </div>
             <div className="line"></div>
             <div className="flex items-center justify-between">
@@ -611,7 +639,13 @@ export default function Assets(props: IAssetsTableProps) {
         <MilestoneBox>
           <div className="mt-[36px] flex justify-between items-center">
             <div>Current TVL: {formatToThounds(currentTvl)}</div>
-            <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
+            <div>
+              {isMaxProgress ? (
+                <span className="text-green">Max</span>
+              ) : (
+                <>Next Target TVL: {formatToThounds(nextTargetTvl)}</>
+              )}
+            </div>
           </div>
           <div className="mt-[22px] flex items-center justify-between gap-[17px]">
             {milestoneProgressList.map((item, index) => (

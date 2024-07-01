@@ -1,4 +1,4 @@
-import { NovaCategoryPoints } from "@/api";
+import { NovaCategoryUserPoints } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit } from "@/utils";
 import {
@@ -261,7 +261,7 @@ export default ({
   novaCategoryPoints,
 }: {
   tabActive?: string;
-  novaCategoryPoints: NovaCategoryPoints[];
+  novaCategoryPoints: NovaCategoryUserPoints[];
 }) => {
   const {
     orbiterBridgeNovaPoints,

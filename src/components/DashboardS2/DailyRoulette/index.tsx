@@ -4,8 +4,12 @@ import { useDisclosure } from "@nextui-org/react";
 import InviteBoxModal from "./InviteBoxModal";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { getRemainDrawCount } from "@/api";
-
+import { getRemainDrawCount, getDailyCheckinHistory } from "@/api";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const Container = styled.div`
   border-radius: 12px;
   border: 2px solid #635f5f;
@@ -116,6 +120,19 @@ export default function DailyRoulette() {
   const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
   const [drawedNftId, setDrawedNftId] = useState<number | undefined>();
   const [update, setUpdate] = useState(0);
+  const [dailyData, setDailyData] = useState<
+    {
+      type: BoxType;
+      date: number;
+      weekday: string;
+      amount?: number;
+      remain?: number;
+    }[]
+  >([]);
+
+  const handleDrawed = () => {
+    setUpdate((v) => v + 1);
+  };
 
   useEffect(() => {
     if (address) {
@@ -124,6 +141,37 @@ export default function DailyRoulette() {
         const { remainNumber, tokenId } = res.result;
         tokenId && setDrawedNftId(Number(tokenId));
         setRemainDrawCount(remainNumber);
+      });
+      getDailyCheckinHistory().then((res) => {
+        console.log("history: ", res);
+        const data = [];
+        for (let i = 0; i < res.result.length; i++) {
+          const item = res.result[i];
+          const weekday = dayjs
+            .utc(item.date)
+            .tz(dayjs.tz.guess())
+            .format("ddd");
+          let type = item.expired ? BoxType.Expired : BoxType.Opend;
+          if (i === res.result.length - 1 && item.remainNum > 0) {
+            type = BoxType.Active;
+          }
+          data.push({
+            weekday,
+            type,
+            amount: item.maxDraw,
+            remain: item.remainNum,
+            date: dayjs(item.date).format("YYYY-MM-DD HH:mm:ss"),
+          });
+        }
+        const today = res.result[res.result.length - 1].date;
+        for (let i = 1; i < 4; i++) {
+          data.push({
+            weekday: dayjs(today).add(i, "day").format("ddd"),
+            type: BoxType.Pending,
+            date: dayjs(today).add(i, "day").unix(),
+          });
+        }
+        setDailyData(data);
       });
     }
   }, [address, update]);
@@ -142,8 +190,13 @@ export default function DailyRoulette() {
         </div>
       </div>
       <div className="flex items-center justify-between mt-[30px]">
-        {BoxList.map((item, index) => (
-          <DailyBox {...item} index={index + 1} key={index} />
+        {dailyData.map((item, index) => (
+          <DailyBox
+            {...item}
+            index={index + 1}
+            key={index}
+            onDrawed={handleDrawed}
+          />
         ))}
       </div>
       <InviteBoxModal

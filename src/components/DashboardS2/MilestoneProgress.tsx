@@ -24,12 +24,15 @@ export default function MilestoneProgress({
   progress,
   isDisabled,
 }: {
-  progress?: string | number;
+  progress?: number;
   isDisabled?: boolean;
 }) {
   return (
     <Container className={isDisabled ? "disabled" : ""}>
-      <div className="inner" style={{ width: progress || 0 }}></div>
+      <div
+        className="inner"
+        style={{ width: `${progress?.toFixed(2)}%` || 0 }}
+      ></div>
     </Container>
   );
 }

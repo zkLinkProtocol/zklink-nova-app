@@ -1,6 +1,6 @@
 import http from "@/utils/http";
 import { user } from "@nextui-org/react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import qs from "qs";
 
 type Response = {
@@ -586,7 +586,7 @@ export const getMystery3Reamin = (address: string): Promise<Response> =>
 export const drawMystery3 = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
 
-export interface NovaCategoryPoints {
+export interface NovaCategoryUserPoints {
   category:
     | "spotdex"
     | "nativeboost"
@@ -599,18 +599,38 @@ export interface NovaCategoryPoints {
   refPoints: number;
 }
 
+interface NovaCategoryUserResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryUserPoints[];
+}
+
+export const getNovaCategoryUserPoints = (
+  address: string
+): Promise<NovaCategoryUserResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/user/points`, {
+    params: { address },
+  });
+
+export interface NovaCategoryPoints {
+  category:
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
+  totalPoints: number;
+}
+
 interface NovaCategoryResponse {
   errno: number;
   errmsg: string;
   data: NovaCategoryPoints[];
 }
 
-export const getNovaCategoryPoints = (
-  address: string
-): Promise<NovaCategoryResponse> =>
-  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`, {
-    params: { address },
-  });
+export const getNovaCategoryPoints = (): Promise<NovaCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`);
 
 export interface TvlCategory {
   name: string;
@@ -648,7 +668,7 @@ export const modifyUsername = (userName: string): Promise<Response> =>
 export interface CategoryListItem {
   username: string;
   address: string;
-  totalPoint: string;
+  totalPoints: string;
 }
 
 interface CategoryListResponse {
@@ -657,5 +677,53 @@ interface CategoryListResponse {
   data: CategoryListItem[];
 }
 
-export const getCategoryList = (category: string): Promise<CategoryListResponse> =>
-  http.get(`${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`);
+export const getCategoryList = (
+  category: string
+): Promise<CategoryListResponse> =>
+  http.get(
+    `${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`
+  );
+
+export const dailyOpen = (): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/checkin/open`);
+
+export interface DailyCheckinHistoryData {
+  date: string;
+  expired: boolean;
+  maxDraw: number;
+  remainNum: number;
+}
+type PromiseResponse<T> = {
+  result: T;
+};
+export const getDailyCheckinHistory = (): Promise<
+  PromiseResponse<DailyCheckinHistoryData[]>
+> => http.get(`${BASE_URL_API}/invite/checkin/history`);
+
+export interface DailyCheckinHistoryData {
+  date: string;
+  expired: boolean;
+  maxDraw: number;
+  remainNum: number;
+}
+
+export interface ReferralPointsListItem {
+  address: string;
+  username: string;
+  points: {
+    category: string;
+    point: number;
+  }[];
+}
+
+interface ReferralPointsListResponse {
+  errno: number;
+  errmsg: string;
+  data: ReferralPointsListItem[];
+}
+
+export const getReferralPointsList = (
+  address: string
+): Promise<ReferralPointsListResponse> => {
+  return http.get(`${BASE_URL_LRT_POINTS}/nova/${address}/referrer`);
+};

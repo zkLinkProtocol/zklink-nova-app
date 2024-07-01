@@ -5,6 +5,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import DailyDrawModal from "./DailyDrawModal";
 import { useDisclosure } from "@nextui-org/react";
+import { dailyOpen } from "@/api";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export enum BoxType {
@@ -17,13 +18,14 @@ interface DailyBoxProps {
   type: BoxType;
   weekday: string;
   date: number;
-  amount: number;
+  amount?: number;
   index: number;
+  onDrawed?: () => void;
 }
 
 const DailyBox = (props: DailyBoxProps) => {
   const modal = useDisclosure();
-  const { type, weekday, date, amount, index } = props;
+  const { type, weekday, date, amount, index, remain, onDrawed } = props;
   const btnText = useMemo(() => {
     if (type === BoxType.Opend) {
       return "Box opened";
@@ -53,7 +55,7 @@ const DailyBox = (props: DailyBoxProps) => {
       return `Exactly in 1 Day & ${minutes} Min`;
     }
   }, [index]);
-  const handleClaim = useCallback(() => {
+  const handleClaim = useCallback(async () => {
     if (type === BoxType.Active) {
       modal.onOpen();
     }
@@ -67,8 +69,12 @@ const DailyBox = (props: DailyBoxProps) => {
             <div className="img-bg">
               <img src="/img/s2/img-daily-box.png" alt="" />
             </div>
-            <p>X{amount}</p>
-            <div className={`status status-${type}`} onClick={handleClaim}>
+            {amount && <p>X{amount}</p>}
+
+            <div
+              className={`mt-auto status status-${type}`}
+              onClick={handleClaim}
+            >
               {type === BoxType.Opend && (
                 <img src="img/s2/icon-opened.svg" alt="" />
               )}
@@ -90,7 +96,7 @@ const DailyBox = (props: DailyBoxProps) => {
           </div>
         )}
       </div>
-      <DailyDrawModal modalInstance={modal} />
+      <DailyDrawModal modalInstance={modal} onDrawed={onDrawed} />
     </Container>
   );
 };
@@ -175,6 +181,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 18px;
     & > img {
       width: 138px;
       height: 138px;

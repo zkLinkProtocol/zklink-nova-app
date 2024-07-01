@@ -10,48 +10,28 @@ import {
 
 const INITIAL_SPEED = 60;
 const IMAGE_WIDTH = 120;
-const HALF_WIDTH = IMAGE_WIDTH / 2;
-const PrizeItems = [
-  {
-    name: "Nova +1 Booster",
-    img: "/img/img-point-plus-1.png",
-    tooltipId: 50,
-  },
-  {
-    name: "Nova +50 Booster",
-    img: "/img/img-point-plus-10.png",
-    tooltipId: 100,
-  },
-  {
-    name: "Nova +50 Booster",
-    img: "/img/img-point-plus-50.png",
-    tooltipId: 200,
-  },
-  { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
-  { name: "Chess Knight", img: "/img/img-trademark-3.png" },
-  { name: "Magnifying Glass", img: "/img/img-trademark-2.png" },
-  { name: "Oak Tree Roots", img: "/img/img-trademark-1.png" },
-];
-const InitialTranslate = Math.floor(PrizeItems.length / 2) * IMAGE_WIDTH;
-const ActualPrizeItems = [
-  PrizeItems[PrizeItems.length - 1],
-  ...PrizeItems,
-  PrizeItems[0],
-];
-const PRIZE_SIZE = PrizeItems.length;
+
 let timeout;
 interface IProps {
+  PrizeItems: { img: string; name: string }[];
   targetIndex?: number;
   onDrawEnd?: () => void;
 }
 type Ref = ReactNode | { start: (target: number) => void };
 const Marquee = forwardRef<Ref, IProps>((props, ref) => {
-  const { targetIndex, onDrawEnd } = props;
+  const { targetIndex, onDrawEnd, PrizeItems } = props;
   const [isOpening, setIsOpening] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [speed, setSpeed] = useState(INITIAL_SPEED);
   const marqueeRef = useRef<HTMLDivElement>(null);
-  const animationFrameRef = useRef<number>(null);
+
+  const InitialTranslate = Math.floor(PrizeItems.length / 2) * IMAGE_WIDTH;
+  const ActualPrizeItems = [
+    PrizeItems[PrizeItems.length - 1],
+    ...PrizeItems,
+    PrizeItems[0],
+  ];
+  const PRIZE_SIZE = PrizeItems.length;
 
   const curRef = useRef<HTMLDivElement>(null);
   useImperativeHandle(ref, () => ({

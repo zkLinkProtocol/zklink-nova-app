@@ -1,4 +1,9 @@
-import { NovaCategoryPoints, TvlCategory, TvlCategoryMilestone } from "@/api";
+import {
+  NovaCategoryPoints,
+  NovaCategoryUserPoints,
+  TvlCategory,
+  TvlCategoryMilestone,
+} from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit, formatToThounds } from "@/utils";
 import {
@@ -288,8 +293,8 @@ interface EcoDAppItem {
   handler: string;
   type: string;
   rewards: string;
-  protocolAllocated: string;
-  yourPoints: string;
+  rewardsIcon?: string[];
+  protocolAllocated: number;
   details: {
     booster: string | ReactNode;
     description: string;
@@ -415,25 +420,18 @@ const EcoDApp = (props: {
         <div className="col-line"></div>
 
         <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
-          {new Array(4).fill("").map((_, index) => (
-            <IconBox
-              className="min-w-[42px]"
+          {data?.rewardsIcon?.map((item, index) => (
+            <img
               key={index}
-              // style={{
-              //   left: `-${index * 16}px`,
-              // }}
-            >
-              <img
-                src={`/img/icon-rewards-${index + 1}.svg`}
-                className="w-[32px] h-[32px] rounded-full"
-              />
-            </IconBox>
+              src={`/img/icon-rewards-${item}.svg`}
+              className="min-w-[32px] min-h-[32px] rounded-full"
+            />
           ))}
         </div>
         <div className="col-line"></div>
 
         <div className="list-content-item text-center">
-          {data.protocolAllocated}
+          {formatNumberWithUnit(data.protocolAllocated)}
         </div>
         <div className="col-line"></div>
 
@@ -491,25 +489,23 @@ const EcoDApp = (props: {
 
 export default function EcoDApps({
   tabActive,
-  novaCategoryPoints,
+  novaCategoryUserPoints,
   tvlCategoryMilestone,
   holdingPoints,
+  novaCategoryTotalPoints
 }: {
   tabActive?: {
     category: string;
     name: string;
     iconURL: string;
   };
-  novaCategoryPoints: NovaCategoryPoints[];
+  novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
   holdingPoints: number;
+  novaCategoryTotalPoints: number
 }) {
-  const geNovaCategoryPointsByProject = (project: string) => {
-    const obj = novaCategoryPoints.find((item) => item.project === project);
-    // const obj = {
-    //   ...findObj,
-    //   tab: findObj ? categoryMap[findObj.category] : "",
-    // };
+  const geNovaCategoryUserPointsByProject = (project: string) => {
+    const obj = novaCategoryUserPoints.find((item) => item.project === project);
     return obj;
   };
 
@@ -520,20 +516,21 @@ export default function EcoDApps({
   } = useNovaPoints();
 
   const ecoDAppsList = useMemo(() => {
-    const novaswap = geNovaCategoryPointsByProject("novaswap");
-    const izumi = geNovaCategoryPointsByProject("izumi");
-    const wagmi = geNovaCategoryPointsByProject("wagmi");
-    const eddy = geNovaCategoryPointsByProject("eddy");
-    const logx = geNovaCategoryPointsByProject("logx");
-    const zkdx = geNovaCategoryPointsByProject("zkdx");
-    const layerbank = geNovaCategoryPointsByProject("layerbank");
-    const aqua = geNovaCategoryPointsByProject("aqua");
-    const allspark = geNovaCategoryPointsByProject("allspark");
-    const rubic = geNovaCategoryPointsByProject("rubic");
-    const interport = geNovaCategoryPointsByProject("interport");
-    const orbiter = geNovaCategoryPointsByProject("orbiter");
-    const symbiosis = geNovaCategoryPointsByProject("symbiosis");
-    const meson = geNovaCategoryPointsByProject("meson");
+    const novaswap = geNovaCategoryUserPointsByProject("novaswap");
+    const izumi = geNovaCategoryUserPointsByProject("izumi");
+    const shoebill = geNovaCategoryUserPointsByProject("shoebill");
+    const wagmi = geNovaCategoryUserPointsByProject("wagmi");
+    const eddy = geNovaCategoryUserPointsByProject("eddy");
+    const logx = geNovaCategoryUserPointsByProject("logx");
+    const zkdx = geNovaCategoryUserPointsByProject("zkdx");
+    const layerbank = geNovaCategoryUserPointsByProject("layerbank");
+    const aqua = geNovaCategoryUserPointsByProject("aqua");
+    const allspark = geNovaCategoryUserPointsByProject("allspark");
+    const rubic = geNovaCategoryUserPointsByProject("rubic");
+    const interport = geNovaCategoryUserPointsByProject("interport");
+    const orbiter = geNovaCategoryUserPointsByProject("orbiter");
+    const symbiosis = geNovaCategoryUserPointsByProject("symbiosis");
+    const meson = geNovaCategoryUserPointsByProject("meson");
 
     const arr: EcoDAppItem[] = [
       {
@@ -545,8 +542,9 @@ export default function EcoDApps({
         type: "DEX",
         idFeatured: true,
         rewards: "20x",
-        protocolAllocated: formatNumberWithUnit(novaswap?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(novaswap?.holdingPoints || 0), // TODO
+        rewardsIcon: ["nova"],
+        protocolAllocated:
+          (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -575,8 +573,10 @@ export default function EcoDApps({
         handler: "@LayerBankFi",
         type: "Lending",
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(layerbank?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(layerbank?.holdingPoints || 0), // TODO
+        rewardsIcon: ["nova", "layerbank", "puffer"],
+        protocolAllocated:
+          (layerbank?.refPoints || 0) + (layerbank?.holdingPoints || 0),
+
         details: [
           {
             booster: (
@@ -602,8 +602,8 @@ export default function EcoDApps({
         handler: "@LogX_trade",
         type: "Perp DEX",
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(logx?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(logx?.holdingPoints || 0), // TODO
+        rewardsIcon: ["nova"],
+        protocolAllocated: (logx?.refPoints || 0) + (logx?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -635,9 +635,9 @@ export default function EcoDApps({
         link: "https://native.org/lend?utm_campaign=zklink_nova&utm_source=custom&utm_medium=2xpoints?chainId=810180",
         handler: "@native_fi",
         type: "Lending",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(aqua?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(aqua?.holdingPoints || 0), // TODO
+        protocolAllocated: (aqua?.refPoints || 0) + (aqua?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -655,15 +655,41 @@ export default function EcoDApps({
       },
 
       {
+        category: shoebill?.category || "lending",
+        iconURL: "/img/icon-shoebill.svg",
+        name: "Shoebill",
+        link: "https://zklink-eth.shoebill.finance/#/",
+        handler: "@ShoebillFinance",
+        type: "Lending",
+        rewardsIcon: ["nova"],
+        rewards: "10x",
+        protocolAllocated:
+          (shoebill?.refPoints || 0) + (shoebill?.holdingPoints || 0),
+        details: [
+          {
+            booster: (
+              <div>
+                <p>10x for ETH</p>
+                <p>10x for other supported points</p>
+              </div>
+            ),
+            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            action: "Provide Liquidity",
+          },
+        ],
+      },
+
+      {
         category: wagmi?.category || "spotdex",
         iconURL: "/img/icon-wagmi.svg",
         name: "Wagmi",
         link: "https://app.wagmi.com/liquidity/pools",
         handler: "@popsiclefinance",
         type: "DEX",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(wagmi?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(wagmi?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (wagmi?.refPoints || 0) + (wagmi?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -694,9 +720,10 @@ export default function EcoDApps({
         link: "https://izumi.finance/trade/swap?chainId=810180",
         handler: "@izumi_Finance",
         type: "DEX",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(izumi?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(izumi?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -723,9 +750,9 @@ export default function EcoDApps({
         link: "https://app.zkdx.io/stakingliquidity",
         handler: "@zkDXio",
         type: "Perp DEX",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(zkdx?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(zkdx?.holdingPoints || 0), // TODO
+        protocolAllocated: (zkdx?.refPoints || 0) + (zkdx?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -756,9 +783,9 @@ export default function EcoDApps({
         link: "https://app.eddy.finance/swap",
         handler: "@eddy_protocol",
         type: "DEX",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(eddy?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(eddy?.holdingPoints || 0), // TODO
+        protocolAllocated: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -779,9 +806,10 @@ export default function EcoDApps({
         link: "https://www.allspark.finance/mantissa/",
         handler: "@AllsparkFinance",
         type: "DEX",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(allspark?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(allspark?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (allspark?.refPoints || 0) + (allspark?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -802,9 +830,10 @@ export default function EcoDApps({
         link: "https://rubic.exchange/",
         handler: "@CryptoRubic",
         type: "",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(rubic?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(rubic?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (rubic?.refPoints || 0) + (rubic?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -825,9 +854,10 @@ export default function EcoDApps({
         link: "https://app.interport.fi/stablecoin-pools?network=zkLink+Nova",
         handler: "@InterportFi",
         type: "",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(interport?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(interport?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (interport?.refPoints || 0) + (interport?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -848,9 +878,10 @@ export default function EcoDApps({
         link: "https://www.orbiter.finance/?source=Ethereum&dest=zkLink%20Nova&token=ETH",
         handler: "@InterportFi",
         type: "",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(orbiter?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(orbiter?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (orbiter?.refPoints || 0) + (orbiter?.holdingPoints || 0),
         details: [
           {
             booster: `${orbiterBridgeNovaPoints} Nova Points`,
@@ -867,9 +898,10 @@ export default function EcoDApps({
         link: "https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
         handler: "@symbiosis_fi",
         type: "",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(symbiosis?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(symbiosis?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (symbiosis?.refPoints || 0) + (symbiosis?.holdingPoints || 0),
         details: [
           {
             booster: `${symbiosisBridgeNovaPoints} Nova Points`,
@@ -886,9 +918,10 @@ export default function EcoDApps({
         link: "https://meson.fi/zklink",
         handler: "@mesonfi",
         type: "",
+        rewardsIcon: ["nova"],
         rewards: "10x",
-        protocolAllocated: formatNumberWithUnit(meson?.refPoints || 0), // TODO
-        yourPoints: formatNumberWithUnit(meson?.holdingPoints || 0), // TODO
+        protocolAllocated:
+          (meson?.refPoints || 0) + (meson?.holdingPoints || 0),
         details: [
           {
             booster: `${mesonBridgeNovaPoints} Nova Points`,
@@ -906,8 +939,8 @@ export default function EcoDApps({
     orbiterBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
-    novaCategoryPoints,
-    geNovaCategoryPointsByProject,
+    novaCategoryUserPoints,
+    geNovaCategoryUserPointsByProject,
     tabActive,
   ]);
 
@@ -931,9 +964,20 @@ export default function EcoDApps({
     return tvl;
   }, [tvlCategoryMilestone, tabActive]);
 
-  const [milestoneProgressList, setMilestoneProgressList] = useState<string[]>(
+  const [milestoneProgressList, setMilestoneProgressList] = useState<number[]>(
     []
   );
+
+  const isMaxProgress = useMemo(() => {
+    if (
+      milestoneProgressList.length > 0 &&
+      milestoneProgressList[milestoneProgressList.length - 1] === 100
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [milestoneProgressList]);
 
   const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
   const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
@@ -982,7 +1026,7 @@ export default function EcoDApps({
             progress = 0;
           }
 
-          return `${progress.toFixed(2)}%`;
+          return progress;
         });
 
         const activeFilters = milestoneData.filter(
@@ -1031,13 +1075,13 @@ export default function EcoDApps({
         </div>
         <AllocatedBox>
           <div className="flex items-center justify-between">
-            <span className="label">Total Allocated Points</span>
-            <span className="value">0</span>
+            <span className="label">Sector Allocated Points</span>
+            <span className="value">{formatNumberWithUnit(novaCategoryTotalPoints)}</span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Points</span>
-            <span className="value">{holdingPoints}</span>
+            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
           </div>
         </AllocatedBox>
       </div>
@@ -1051,14 +1095,20 @@ export default function EcoDApps({
           ) : (
             <>
               <div>Current TVL: {formatToThounds(currentTvl)}</div>
-              <div>Next Target TVL: {formatToThounds(nextTargetTvl)}</div>
+              <div>
+                {isMaxProgress ? (
+                  <span className="text-green">Max</span>
+                ) : (
+                  <>Next Target TVL: {formatToThounds(nextTargetTvl)}</>
+                )}
+              </div>
             </>
           )}
         </div>
 
         {isNoProgress ? (
           <div className="w-full mt-[22px]">
-            <MilestoneProgress progress={"0%"} isDisabled={true} />
+            <MilestoneProgress progress={0} isDisabled={true} />
           </div>
         ) : (
           <div className="mt-[22px] flex items-center justify-between gap-[17px]">
