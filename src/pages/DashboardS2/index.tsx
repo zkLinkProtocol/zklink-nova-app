@@ -11,12 +11,12 @@ import EcoDApps from "@/components/DashboardS2/EcoDApps";
 import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import {
-  NovaCategoryPoints,
+  NovaCategoryUserPoints,
   SupportToken,
   TvlCategory,
   getAccountTvl,
   getExplorerTokenTvl,
-  getNovaCategoryPoints,
+  getNovaCategoryUserPoints,
   getSupportTokens,
   getTokenPrice,
   getTotalTvlByToken,
@@ -204,13 +204,13 @@ export default function DashboardS2() {
   };
 
   const [novaCategoryPoints, setNovaCategoryPoints] = useState<
-    NovaCategoryPoints[]
+    NovaCategoryUserPoints[]
   >([]);
 
   const getNovaCategoryPointsFunc = async () => {
     if (!address) return;
-    const res = await getNovaCategoryPoints(address);
-    console.log("getNovaCategoryPoints", res);
+    const res = await getNovaCategoryUserPoints(address);
+    console.log("getNovaCategoryUserPoints", res);
     setNovaCategoryPoints(res?.data || []);
   };
 

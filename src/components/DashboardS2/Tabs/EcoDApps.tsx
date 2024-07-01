@@ -1,4 +1,9 @@
-import { NovaCategoryPoints, TvlCategory, TvlCategoryMilestone } from "@/api";
+import {
+  NovaCategoryPoints,
+  NovaCategoryUserPoints,
+  TvlCategory,
+  TvlCategoryMilestone,
+} from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit, formatToThounds } from "@/utils";
 import {
@@ -484,25 +489,23 @@ const EcoDApp = (props: {
 
 export default function EcoDApps({
   tabActive,
-  novaCategoryPoints,
+  novaCategoryUserPoints,
   tvlCategoryMilestone,
   holdingPoints,
+  novaCategoryTotalPoints
 }: {
   tabActive?: {
     category: string;
     name: string;
     iconURL: string;
   };
-  novaCategoryPoints: NovaCategoryPoints[];
+  novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
   holdingPoints: number;
+  novaCategoryTotalPoints: number
 }) {
-  const geNovaCategoryPointsByProject = (project: string) => {
-    const obj = novaCategoryPoints.find((item) => item.project === project);
-    // const obj = {
-    //   ...findObj,
-    //   tab: findObj ? categoryMap[findObj.category] : "",
-    // };
+  const geNovaCategoryUserPointsByProject = (project: string) => {
+    const obj = novaCategoryUserPoints.find((item) => item.project === project);
     return obj;
   };
 
@@ -513,21 +516,21 @@ export default function EcoDApps({
   } = useNovaPoints();
 
   const ecoDAppsList = useMemo(() => {
-    const novaswap = geNovaCategoryPointsByProject("novaswap");
-    const izumi = geNovaCategoryPointsByProject("izumi");
-    const shoebill = geNovaCategoryPointsByProject("shoebill");
-    const wagmi = geNovaCategoryPointsByProject("wagmi");
-    const eddy = geNovaCategoryPointsByProject("eddy");
-    const logx = geNovaCategoryPointsByProject("logx");
-    const zkdx = geNovaCategoryPointsByProject("zkdx");
-    const layerbank = geNovaCategoryPointsByProject("layerbank");
-    const aqua = geNovaCategoryPointsByProject("aqua");
-    const allspark = geNovaCategoryPointsByProject("allspark");
-    const rubic = geNovaCategoryPointsByProject("rubic");
-    const interport = geNovaCategoryPointsByProject("interport");
-    const orbiter = geNovaCategoryPointsByProject("orbiter");
-    const symbiosis = geNovaCategoryPointsByProject("symbiosis");
-    const meson = geNovaCategoryPointsByProject("meson");
+    const novaswap = geNovaCategoryUserPointsByProject("novaswap");
+    const izumi = geNovaCategoryUserPointsByProject("izumi");
+    const shoebill = geNovaCategoryUserPointsByProject("shoebill");
+    const wagmi = geNovaCategoryUserPointsByProject("wagmi");
+    const eddy = geNovaCategoryUserPointsByProject("eddy");
+    const logx = geNovaCategoryUserPointsByProject("logx");
+    const zkdx = geNovaCategoryUserPointsByProject("zkdx");
+    const layerbank = geNovaCategoryUserPointsByProject("layerbank");
+    const aqua = geNovaCategoryUserPointsByProject("aqua");
+    const allspark = geNovaCategoryUserPointsByProject("allspark");
+    const rubic = geNovaCategoryUserPointsByProject("rubic");
+    const interport = geNovaCategoryUserPointsByProject("interport");
+    const orbiter = geNovaCategoryUserPointsByProject("orbiter");
+    const symbiosis = geNovaCategoryUserPointsByProject("symbiosis");
+    const meson = geNovaCategoryUserPointsByProject("meson");
 
     const arr: EcoDAppItem[] = [
       {
@@ -936,8 +939,8 @@ export default function EcoDApps({
     orbiterBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
     mesonBridgeNovaPoints,
-    novaCategoryPoints,
-    geNovaCategoryPointsByProject,
+    novaCategoryUserPoints,
+    geNovaCategoryUserPointsByProject,
     tabActive,
   ]);
 
@@ -1073,12 +1076,12 @@ export default function EcoDApps({
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Sector Allocated Points</span>
-            <span className="value">0</span>
+            <span className="value">{formatNumberWithUnit(novaCategoryTotalPoints)}</span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Points</span>
-            <span className="value">{holdingPoints}</span>
+            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
           </div>
         </AllocatedBox>
       </div>

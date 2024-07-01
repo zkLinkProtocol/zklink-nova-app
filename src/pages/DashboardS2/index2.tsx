@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   NovaCategoryPoints,
+  NovaCategoryUserPoints,
   SupportToken,
   TvlCategory,
   TvlCategoryMilestone,
@@ -10,6 +11,7 @@ import {
   getAccountTvl,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
+  getNovaCategoryUserPoints,
   getPointsDetail,
   getSupportTokens,
   getTokenPrice,
@@ -251,7 +253,7 @@ const TabsCard = styled.div`
         #5095f1,
         #b10af4
       );
-      overflow: hidden;
+    overflow: hidden;
 
     &::before {
       content: "";
@@ -320,7 +322,7 @@ export default function Dashboard() {
     {
       iconURL: "/img/icon-sector-1.svg",
       name: "Assets",
-      category: "assets",
+      category: "holding",
     },
     {
       iconURL: "/img/icon-sector-2.svg",
@@ -424,13 +426,23 @@ export default function Dashboard() {
     setTotalTvlList(arr);
   };
 
+  const [novaCategoryUserPoints, setNovaCategoryUserPoints] = useState<
+    NovaCategoryUserPoints[]
+  >([]);
+
+  const getNovaCategoryUserPointsFunc = async () => {
+    if (!address) return;
+    const res = await getNovaCategoryUserPoints(address);
+    console.log("getNovaCategoryUserPoints", res);
+    setNovaCategoryUserPoints(res?.data || []);
+  };
+
   const [novaCategoryPoints, setNovaCategoryPoints] = useState<
     NovaCategoryPoints[]
   >([]);
 
   const getNovaCategoryPointsFunc = async () => {
-    if (!address) return;
-    const res = await getNovaCategoryPoints(address);
+    const res = await getNovaCategoryPoints();
     console.log("getNovaCategoryPoints", res);
     setNovaCategoryPoints(res?.data || []);
   };
@@ -500,7 +512,7 @@ export default function Dashboard() {
 
   const getEcoCategoryPoints = useCallback(
     (category: string) => {
-      const filters = novaCategoryPoints.filter(
+      const filters = novaCategoryUserPoints.filter(
         (item) => item.category === category
       );
 
@@ -519,7 +531,7 @@ export default function Dashboard() {
         refPoints,
       };
     },
-    [novaCategoryPoints]
+    [novaCategoryUserPoints]
   );
 
   const ecoHoldingPoints = useMemo(() => {
@@ -527,6 +539,15 @@ export default function Dashboard() {
     const categoryData = getEcoCategoryPoints(category);
     return categoryData?.points || 0;
   }, [getEcoCategoryPoints, tabs2Active]);
+
+  const novaCategoryTotalPoints = useMemo(() => {
+    const category = tabs2[tabs2Active]?.category;
+    const categoryData = novaCategoryPoints.find(
+      (item) => item.category === category
+    );
+
+    return categoryData?.totalPoints || 0;
+  }, [tabs2Active, novaCategoryPoints]);
 
   const novaPointsList: NovaPointsListItem[] = useMemo(() => {
     const ecoList = [
@@ -605,9 +626,10 @@ export default function Dashboard() {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
-    getNovaCategoryPointsFunc();
+    getNovaCategoryUserPointsFunc();
     getTvlCategoryFunc();
     getTvlCategoryMilestoneFunc();
+    getNovaCategoryPointsFunc();
   }, [address]);
 
   return (
@@ -750,14 +772,16 @@ export default function Dashboard() {
                     accountTvlData={accountTvlData}
                     currentTvl={totalTvl}
                     holdingPoints={holdingPoints}
+                    novaCategoryTotalPoints={novaCategoryTotalPoints}
                   />
                 )}
                 {tabs2Active !== 0 && tabs2Active !== 99 && (
                   <EcoDApps
                     tabActive={tabs2[tabs2Active]}
-                    novaCategoryPoints={novaCategoryPoints}
+                    novaCategoryUserPoints={novaCategoryUserPoints}
                     tvlCategoryMilestone={tvlCategoryMilestone}
                     holdingPoints={ecoHoldingPoints}
+                    novaCategoryTotalPoints={novaCategoryTotalPoints}
                   />
                 )}
 

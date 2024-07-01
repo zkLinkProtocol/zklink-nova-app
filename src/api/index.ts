@@ -586,7 +586,7 @@ export const getMystery3Reamin = (address: string): Promise<Response> =>
 export const drawMystery3 = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
 
-export interface NovaCategoryPoints {
+export interface NovaCategoryUserPoints {
   category:
     | "spotdex"
     | "nativeboost"
@@ -599,18 +599,38 @@ export interface NovaCategoryPoints {
   refPoints: number;
 }
 
+interface NovaCategoryUserResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryUserPoints[];
+}
+
+export const getNovaCategoryUserPoints = (
+  address: string
+): Promise<NovaCategoryUserResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/user/points`, {
+    params: { address },
+  });
+
+export interface NovaCategoryPoints {
+  category:
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
+  totalPoints: number;
+}
+
 interface NovaCategoryResponse {
   errno: number;
   errmsg: string;
   data: NovaCategoryPoints[];
 }
 
-export const getNovaCategoryPoints = (
-  address: string
-): Promise<NovaCategoryResponse> =>
-  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`, {
-    params: { address },
-  });
+export const getNovaCategoryPoints = (): Promise<NovaCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`);
 
 export interface TvlCategory {
   name: string;
@@ -679,3 +699,31 @@ type PromiseResponse<T> = {
 export const getDailyCheckinHistory = (): Promise<
   PromiseResponse<DailyCheckinHistoryData[]>
 > => http.get(`${BASE_URL_API}/invite/checkin/history`);
+
+export interface DailyCheckinHistoryData {
+  date: string;
+  expired: boolean;
+  maxDraw: number;
+  remainNum: number;
+}
+
+export interface ReferralPointsListItem {
+  address: string;
+  username: string;
+  points: {
+    category: string;
+    point: number;
+  }[];
+}
+
+interface ReferralPointsListResponse {
+  errno: number;
+  errmsg: string;
+  data: ReferralPointsListItem[];
+}
+
+export const getReferralPointsList = (
+  address: string
+): Promise<ReferralPointsListResponse> => {
+  return http.get(`${BASE_URL_LRT_POINTS}/nova/${address}/referrer`);
+};

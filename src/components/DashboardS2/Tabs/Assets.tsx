@@ -223,7 +223,15 @@ const AllocatedBox = styled.div`
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
   background-image: linear-gradient(to right, #282828, #000000),
-    linear-gradient(175deg,#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
+    linear-gradient(
+      175deg,
+      #fb2450 1%,
+      #fbc82e 5%,
+      #6eee3f,
+      #5889f3,
+      #5095f1,
+      #b10af4
+    );
 
   .label {
     color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
@@ -307,6 +315,7 @@ interface IAssetsTableProps {
   ethUsdPrice: number;
   currentTvl: number;
   holdingPoints: number;
+  novaCategoryTotalPoints: number;
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -317,6 +326,7 @@ export default function Assets(props: IAssetsTableProps) {
     ethUsdPrice,
     currentTvl,
     holdingPoints,
+    novaCategoryTotalPoints
   } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
@@ -612,7 +622,9 @@ export default function Assets(props: IAssetsTableProps) {
           <AllocatedBox>
             <div className="flex items-center justify-between">
               <span className="label">Sector Allocated Points</span>
-              <span className="value">0</span>
+              <span className="value">
+                {formatNumberWithUnit(novaCategoryTotalPoints)}
+              </span>
             </div>
             <div className="line"></div>
             <div className="flex items-center justify-between">

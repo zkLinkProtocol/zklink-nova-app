@@ -9,10 +9,16 @@ import {
   ModalFooter,
   Tooltip,
 } from "@nextui-org/react";
-import { copyText } from "@/utils";
 import { useState, useEffect } from "react";
 import { SecondayButton, PrimaryButton } from "./ui/Button";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { ReferralPointsListItem, getReferralPointsList } from "@/api";
+import { useAccount } from "wagmi";
+import { formatNumberWithUnit } from "@/utils";
 type ReferacData = {
+  username: string;
   address: string;
   holding: number;
   spotDex: number;
@@ -23,21 +29,63 @@ type ReferacData = {
 };
 const ReferralModal = () => {
   const modal = useDisclosure();
-  const [inviteCode, setInviteCode] = useState("AAV81");
+  const { invite } = useSelector((store: RootState) => store.airdrop);
+
   const [data, setData] = useState<ReferacData[]>([]);
+
+  const { address } = useAccount();
+
+  const getReferralPointsByCategory = (
+    data: ReferralPointsListItem,
+    category: string
+  ) => {
+    return data.points.find((point) => point.category === category)?.point || 0;
+  };
+
+  const getRefferralData = async () => {
+    if (!address) return;
+    const { data } = await getReferralPointsList(address);
+
+    if (data) {
+      const arr = data.map((item) => {
+        const obj = {
+          username: item.username,
+          address: item.address,
+          holding: getReferralPointsByCategory(item, "holding"),
+          spotDex: getReferralPointsByCategory(item, "spotDex"),
+          perpDex: getReferralPointsByCategory(item, "perpDex"),
+          lending: getReferralPointsByCategory(item, "lending"),
+          gameFi: getReferralPointsByCategory(item, "gameFi"),
+          other: getReferralPointsByCategory(item, "other"),
+        };
+        return obj;
+      });
+      setData(arr);
+
+      // setData(
+      //   {
+      //     address: res.data.address,
+      //     holding: res.data.holding,
+      //     spotDex: res.data.spotDex,
+      //     perpDex: res.data.perpDex,
+      //     lending: res.data.lending,
+      //     gameFi: res.data.gameFi,
+      //     other: res.data.other
+      //   }
+      // )
+    }
+  };
+
   useEffect(() => {
-    setData(
-      new Array(6).fill({
-        address: "0x12...3344",
-        holding: 1200,
-        spotDex: 1200,
-        perpDex: 0,
-        lending: 0,
-        gameFi: 0,
-        other: 1200,
-      })
-    );
+    getRefferralData();
   }, []);
+
+  const handleCopy = () => {
+    if (!invite?.code) return;
+    navigator.clipboard.writeText(invite?.code);
+    toast.success("Copied", { duration: 2000 });
+  };
+
   return (
     <>
       <ReferralButton variant="bordered" onClick={modal.onOpen}>
@@ -55,13 +103,13 @@ const ReferralModal = () => {
             <ModalContent>
               <ModalHeader className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <div className="flex">Your Referrals (100/999)</div>
+                  <div className="flex">Your Referrals ({data.length}/999)</div>
                   <div className="flex items-center gap-2">
                     <span>Your Invite Code</span>
                     <InviteCode>
-                      <span>{inviteCode}</span>
+                      <span>{invite?.code}</span>
                       <img
-                        onClick={() => copyText(inviteCode)}
+                        onClick={handleCopy}
                         src="img/s2/icon-copy.svg"
                         alt=""
                         className="cursor-pointer hover:opacity-80"
@@ -87,13 +135,13 @@ const ReferralModal = () => {
                 </TableHead>
                 {data.map((item) => (
                   <TableBodyRow key={item.address}>
-                    <div>{item.address}</div>
-                    <div>{item.holding}</div>
-                    <div>{item.spotDex}</div>
-                    <div>{item.perpDex}</div>
-                    <div>{item.lending}</div>
-                    <div>{item.gameFi}</div>
-                    <div>{item.other}</div>
+                    <div>{item.username}</div>
+                    <div>{formatNumberWithUnit(item.holding)}</div>
+                    <div>{formatNumberWithUnit(item.spotDex)}</div>
+                    <div>{formatNumberWithUnit(item.perpDex)}</div>
+                    <div>{formatNumberWithUnit(item.lending)}</div>
+                    <div>{formatNumberWithUnit(item.gameFi)}</div>
+                    <div>{formatNumberWithUnit(item.other)}</div>
                   </TableBodyRow>
                 ))}
                 <Divide />
