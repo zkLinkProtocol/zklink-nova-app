@@ -181,13 +181,14 @@ const Table = styled.table`
 interface ListItem {
   username: string;
   address: string;
-  totalPoint: string;
+  totalPoints: string;
   rank: number;
 }
 
 export default function Leaderboard() {
   const tabs = [
     { name: "Holding", category: "holding" },
+    { name: "Boosted", category: "nativeboost" },
     { name: "Spot Dex", category: "spotdex" },
     { name: "Perp Dex", category: "perpdex" },
     { name: "Lending", category: "lending" },
@@ -302,7 +303,7 @@ export default function Leaderboard() {
                     <td className="rank">{item.rank}</td>
                     <td>{item.username}</td>
                     <td className="points">
-                      {formatNumberWithUnit(item.totalPoint)}
+                      {formatNumberWithUnit(item.totalPoints)}
                     </td>
                   </tr>
                 )

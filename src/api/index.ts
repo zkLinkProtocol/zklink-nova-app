@@ -648,7 +648,7 @@ export const modifyUsername = (userName: string): Promise<Response> =>
 export interface CategoryListItem {
   username: string;
   address: string;
-  totalPoint: string;
+  totalPoints: string;
 }
 
 interface CategoryListResponse {

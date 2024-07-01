@@ -46,7 +46,10 @@ const Container = styled.div`
   position: relative;
   padding-top: 92px;
   min-height: 100vh;
-  background-color: #000811;
+  /* background-color: #000811; */
+  background: url("/img/bg-s2-dashboard.jpg") no-repeat;
+  background-size: 100%;
+  background-position: center top;
 `;
 
 const CardBox = styled.div`
@@ -230,7 +233,7 @@ const TabsCard = styled.div`
     }
   }
 
-  .tab-content {
+  .tab-container {
     position: relative;
     margin-top: -2px;
     min-height: 965.435px;
@@ -238,7 +241,7 @@ const TabsCard = styled.div`
     border: 2px solid transparent;
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
-    background-image: linear-gradient(to bottom, #282828, #000000),
+    background-image: linear-gradient(to bottom, #282828 5%, #000000),
       linear-gradient(
         100deg,
         #fb2450 1%,
@@ -248,6 +251,27 @@ const TabsCard = styled.div`
         #5095f1,
         #b10af4
       );
+      overflow: hidden;
+
+    &::before {
+      content: "";
+      display: block;
+      height: 1800px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-image: url("/img/bg-s2-sectors.png");
+      background-size: 100% 100%;
+      max-height: 1800px;
+      z-index: 0;
+    }
+
+    .tab-content {
+      position: relative;
+      z-index: 2;
+    }
   }
 `;
 
@@ -294,37 +318,37 @@ export default function Dashboard() {
 
   const tabs2 = [
     {
-      iconURL: "/img/icon-assets.svg",
+      iconURL: "/img/icon-sector-1.svg",
       name: "Assets",
       category: "assets",
     },
     {
-      iconURL: "/img/icon-boosted.svg",
+      iconURL: "/img/icon-sector-2.svg",
       name: "Boosted",
       category: "nativeboost",
     },
     {
-      iconURL: "/img/icon-spotdex.svg",
+      iconURL: "/img/icon-sector-3.svg",
       name: "Spot DEX",
       category: "spotdex",
     },
     {
-      iconURL: "/img/icon-perpdex.svg",
+      iconURL: "/img/icon-sector-4.svg",
       name: "Perp DEX",
       category: "perpdex",
     },
     {
-      iconURL: "/img/icon-lending.svg",
+      iconURL: "/img/icon-sector-5.svg",
       name: "Lending",
       category: "lending",
     },
     {
-      iconURL: "/img/icon-gamefi.svg",
+      iconURL: "/img/icon-sector-6.svg",
       name: "GameFi",
       category: "gamefi",
     },
     {
-      iconURL: "/img/icon-others.svg",
+      iconURL: "/img/icon-sector-7.svg",
       name: "Others",
       category: "other",
     },
@@ -701,7 +725,7 @@ export default function Dashboard() {
                 onClick={() => setTabs2Active(99)}
               >
                 <img
-                  src={"/img/icon-assets.svg"}
+                  src={"/img/icon-sector-1.svg"}
                   alt=""
                   className="w-[24px] h-[24px] block"
                 />
@@ -710,38 +734,40 @@ export default function Dashboard() {
             </div>
 
             <div
-              className="tab-content px-[31px] py-[32.5px]"
+              className="tab-container"
               style={{
                 borderRadius: `${tabs2Active === 0 ? "0" : "24px"} ${
                   tabs2Active === 99 ? "0" : "24px"
                 } 24px 24px`,
               }}
             >
-              {tabs2Active === 0 && (
-                <Assets
-                  ethUsdPrice={ethUsdPrice}
-                  supportTokens={supportTokens}
-                  totalTvlList={totalTvlList}
-                  accountTvlData={accountTvlData}
-                  currentTvl={totalTvl}
-                  holdingPoints={holdingPoints}
-                />
-              )}
-              {tabs2Active !== 0 && tabs2Active !== 99 && (
-                <EcoDApps
-                  tabActive={tabs2[tabs2Active]}
-                  novaCategoryPoints={novaCategoryPoints}
-                  tvlCategoryMilestone={tvlCategoryMilestone}
-                  holdingPoints={ecoHoldingPoints}
-                />
-              )}
+              <div className="tab-content px-[31px] py-[32.5px]">
+                {tabs2Active === 0 && (
+                  <Assets
+                    ethUsdPrice={ethUsdPrice}
+                    supportTokens={supportTokens}
+                    totalTvlList={totalTvlList}
+                    accountTvlData={accountTvlData}
+                    currentTvl={totalTvl}
+                    holdingPoints={holdingPoints}
+                  />
+                )}
+                {tabs2Active !== 0 && tabs2Active !== 99 && (
+                  <EcoDApps
+                    tabActive={tabs2[tabs2Active]}
+                    novaCategoryPoints={novaCategoryPoints}
+                    tvlCategoryMilestone={tvlCategoryMilestone}
+                    holdingPoints={ecoHoldingPoints}
+                  />
+                )}
 
-              {tabs2Active === 99 && (
-                <Portfolio
-                  novaPointsList={novaPointsList}
-                  handleTabChange={setTabs2Active}
-                />
-              )}
+                {tabs2Active === 99 && (
+                  <Portfolio
+                    novaPointsList={novaPointsList}
+                    handleTabChange={setTabs2Active}
+                  />
+                )}
+              </div>
             </div>
           </TabsCard>
         </div>
