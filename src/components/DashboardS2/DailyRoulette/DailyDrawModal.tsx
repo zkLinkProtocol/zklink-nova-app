@@ -11,29 +11,40 @@ import {
 } from "@nextui-org/react";
 import { UseDisclosureReturn } from "@nextui-org/use-disclosure";
 import Marquee from "@/components/Marquee";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { dailyOpen } from "@/api";
 import { sleep } from "@/utils";
 import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
-import { MintStatus, TRADEMARK_NFT_MARKET_URL } from "@/constants";
+import {
+  MintStatus,
+  TRADEMARK_NFT_MARKET_URL,
+  NOVA_CHAIN_ID,
+} from "@/constants";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
-
+import { useAccount, useSwitchChain } from "wagmi";
 interface IProps {
   modalInstance: UseDisclosureReturn;
   onDrawed: () => void;
+  remain?: number;
 }
 export const PrizeItems = [
   {
     name: "Nova +1 Booster",
     img: "/img/img-point-plus-1.png",
+    points: 1,
+    tooltip: "Equivalent to depositing 1 ETH into Nova for ~1 day",
   },
   {
     name: "Nova +10 Booster",
     img: "/img/img-point-plus-10.png",
+    points: 10,
+    tooltip: "Equivalent to depositing 1 ETH into Nova for ~2 hours",
   },
   {
     name: "Nova +50 Booster",
     img: "/img/img-point-plus-50.png",
+    points: 50,
+    tooltip: "Equivalent to depositing 1 ETH into Nova for ~12 minutes",
   },
   { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
   { name: "Chess Knight", img: "/img/img-trademark-3.png" },
@@ -51,19 +62,42 @@ const PRIZE_MAP: Record<number, number> = {
   9: 2,
 };
 const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
+  const { address, chainId } = useAccount();
   const [spinging, setSpinging] = useState(false);
   const [minting, setMinting] = useState(false);
   const [mintStatus, setMintStatus] = useState<MintStatus | undefined>();
   const [failMessage, setFailMessage] = useState("");
+  const { switchChain } = useSwitchChain();
 
   const { sendTrademarkMintTx } = useNovaNFT();
-  const { modalInstance, onDrawed } = props;
+  const { modalInstance, onDrawed, remain } = props;
   const drawRef = useRef<{ start: (target: number) => void }>();
-  const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
+  const [mintResult, setMintResult] = useState<{
+    name: string;
+    img: string;
+    points?: number;
+    tooltip?: string;
+  }>();
   const mintResultModal = useDisclosure();
   const handleDrawEnd = () => {};
 
-  const handleSpin = async () => {
+  const isInvaidChain = useMemo(() => {
+    return chainId !== NOVA_CHAIN_ID;
+  }, [chainId]);
+
+  const handleSpin = useCallback(async () => {
+    if (!address) return;
+    if (isInvaidChain) {
+      switchChain(
+        { chainId: NOVA_CHAIN_ID },
+        {
+          onError: (e) => {
+            console.log(e);
+          },
+        }
+      );
+      return;
+    }
     //TODO call api
     const res = await dailyOpen();
     const tokenId = res.result.tokenId as number;
@@ -72,8 +106,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     await drawRef.current?.start(prizeId);
     const prize = PrizeItems[PRIZE_MAP[tokenId]];
     setMintResult({
-      name: prize.name,
-      img: prize.img,
+      ...prize,
     });
     if ([1, 2, 3, 4].includes(tokenId)) {
       await sleep(2000); // show nft
@@ -112,8 +145,36 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       setSpinging(false);
     }
     onDrawed();
-    modalInstance.onClose();
-  };
+    if (remain === 1) {
+      modalInstance.onClose();
+    }
+  }, [
+    address,
+    isInvaidChain,
+    mintResultModal,
+    modalInstance,
+    onDrawed,
+    remain,
+    sendTrademarkMintTx,
+    switchChain,
+  ]);
+
+  useEffect(() => {
+    if (!modalInstance.isOpen) {
+      setMinting(false);
+      setSpinging(false);
+    }
+  }, [modalInstance.isOpen]);
+
+  const btnText = useMemo(() => {
+    if (isInvaidChain) {
+      return "Switch Network";
+    } else if (minting) {
+      return "Start Minting";
+    } else {
+      return `Spin Your Daily Roulette (${remain})`;
+    }
+  }, [isInvaidChain, minting, remain]);
 
   return (
     <>
@@ -164,9 +225,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                       }
                       alt=""
                     />
-                    <span>
-                      {minting ? "Start Minting" : "Spin Your Daily Roulette"}
-                    </span>
+                    <span>{btnText}</span>
                   </SpinButton>
                 </div>
               </ModalFooter>
@@ -174,7 +233,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
           )}
         </ModalContent>
       </ModalContainer>
-      <Modal
+      <ModalContainer
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
         style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
@@ -182,15 +241,20 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
         onOpenChange={mintResultModal.onOpenChange}
         className="trans"
       >
-        <ModalContent className="mt-[2rem] py-5 px-6 mb-[5.75rem]">
-          <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
+        <ModalContent className="mt-[2rem] py-5  mb-[5.75rem]">
+          <ModalHeader className="px-5 pt-0 flex flex-col text-xl font-normal ">
             {mintStatus === MintStatus.Minting && <span>Minting</span>}
-            {mintStatus === MintStatus.Success && <span>Congratulations</span>}
+            {mintStatus === MintStatus.Success && (
+              <span className="text-[#03D498] font-900 text-[24px]">
+                Congratulations
+              </span>
+            )}
             {mintStatus === MintStatus.Failed && (
               <span>Transaction Failed</span>
             )}
           </ModalHeader>
           <ModalBody className="pb-8">
+            <Divide />
             <TxResult>
               {mintStatus === MintStatus.Minting && (
                 <div className="flex flex-col items-center">
@@ -225,33 +289,80 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
               )}
               {mintStatus === MintStatus.Success && (
                 <div className="flex flex-col items-center">
-                  <p className="text-[#C0C0C0]">You have successfully minted</p>
+                  {mintResult?.points && (
+                    <p className="prize-text">
+                      You’ve Receive{" "}
+                      <span className="text-white">
+                        {mintResult?.points} Holding Points
+                      </span>{" "}
+                      , Please note that it will be added directly to your
+                      holding points.
+                    </p>
+                  )}
+                  {mintResult?.img.includes("trademark") && (
+                    <p className="prize-text">
+                      You’ve Receive a{" "}
+                      <span className="text-white">{mintResult?.name}</span>.
+                      You can mint a Lynks after collecting all four Trademarks.
+                    </p>
+                  )}
                   <img
                     src={mintResult?.img}
                     alt=""
-                    className="w-[10rem] h-[10rem] rounded-xl my-4 bg-[#3C4550]"
+                    className="w-[10rem] h-[10rem] rounded-xl my-4"
                   />
-
-                  <p className="text-[24px] font-inter font-normal">
-                    {mintResult?.name}
-                  </p>
+                  {mintResult?.tooltip && (
+                    <p className="prize-text-sub">{mintResult?.tooltip}</p>
+                  )}
                   {mintResult?.img.includes("trademark") && (
-                    <Button
-                      className="
-                    gradient-btn mt-4 px-6"
+                    <SpinButton
+                      className="mt-3"
                       onClick={() =>
                         window.open(TRADEMARK_NFT_MARKET_URL, "_blank")
                       }
                     >
-                      Trade on OKX NFT Marketplace
-                    </Button>
+                      Trade on OKX
+                    </SpinButton>
+                  )}
+
+                  {Number(remain) > 0 && (
+                    <SpinButton
+                      className="
+                    spin-btn mt-4 px-6"
+                      onClick={() => {
+                        mintResultModal.onClose();
+                        handleSpin();
+                      }}
+                    >
+                      <img
+                        src={
+                          minting
+                            ? "/img/s2/icon-daily-mint.svg"
+                            : "/img/s2/icon-spin.svg"
+                        }
+                        alt=""
+                      />
+                      <span>Re-Spin</span>
+                    </SpinButton>
+                  )}
+                  {!remain && (
+                    <SpinButton
+                      className="
+                    spin-btn mt-4 px-6"
+                      onClick={() => {
+                        mintResultModal.onClose();
+                        modalInstance.onClose();
+                      }}
+                    >
+                      <span>Confirm</span>
+                    </SpinButton>
                   )}
                 </div>
               )}
             </TxResult>
           </ModalBody>
         </ModalContent>
-      </Modal>
+      </ModalContainer>
     </>
   );
 };
@@ -274,6 +385,15 @@ const SpinButton = styled(Button)`
     0px 0px 13.835px 0px rgba(255, 255, 255, 0.75) inset;
   height: 54px;
   gap: 8px;
+  color: #fff;
+  text-align: center;
+  font-family: Satoshi;
+  font-size: 18.446px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  text-transform: capitalize;
+  width: 100%;
 `;
 
 const SpinPointer = styled.div`
@@ -289,5 +409,22 @@ const ModalContainer = styled(Modal)`
   background: url("img/s2/bg-spin-container.svg") no-repeat;
   background-size: cover;
   width: 400px;
+  .prize-text {
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    font-family: Satoshi;
+    font-size: 16.14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  .prize-text-sub {
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 `;
 export default DailyDrawModal;
