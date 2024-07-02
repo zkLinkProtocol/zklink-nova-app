@@ -38,9 +38,6 @@ const DailyBox = (props: DailyBoxProps) => {
   }, [type]);
   const pendingTime = useMemo(() => {
     if (index > 4) {
-      if (index > 5) {
-        return `Exactly in ${index - 4} days`;
-      }
       const now = dayjs();
       // UTC 10:00
       const tomorrow10am = dayjs()
@@ -51,7 +48,8 @@ const DailyBox = (props: DailyBoxProps) => {
         .second(0);
       const timeDiff = tomorrow10am.diff(now);
       const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-      return `Exactly in ${hours} Hours`;
+
+      return `Exactly in ${hours + (index - 5) * 24} Hours`;
     }
   }, [index]);
   const handleClaim = useCallback(async () => {
