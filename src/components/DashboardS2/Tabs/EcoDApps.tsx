@@ -12,6 +12,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import { ReactNode, useEffect, useMemo, useState } from "react";
@@ -93,9 +94,20 @@ const AllocatedBox = styled.div`
   padding: 16px 28px;
   min-width: 419px;
   border-radius: 16px;
-  border: 1px solid rgba(51, 49, 49, 0);
-  background: #10131c;
   filter: blur(0.125px);
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(
+      175deg,
+      #fb2450 1%,
+      #fbc82e 5%,
+      #6eee3f,
+      #5889f3,
+      #5095f1,
+      #b10af4
+    );
 
   .label {
     color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
@@ -293,7 +305,10 @@ interface EcoDAppItem {
   handler: string;
   type: string;
   rewards: string;
-  rewardsIcon?: string[];
+  rewardsIcon?: {
+    name: string;
+    iconURL: string;
+  }[];
   protocolAllocated: number;
   details: {
     booster: string | ReactNode;
@@ -415,17 +430,26 @@ const EcoDApp = (props: {
         </div>
         <div className="col-line"></div>
         <div className="list-content-item text-center flex items-center justify-center">
-          Up to {data.rewards}
+          <Tooltip
+            classNames={{
+              content:
+                "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+            }}
+            content={data.details[0].booster}
+          >
+            <div>Up to {data.rewards}</div>
+          </Tooltip>
         </div>
         <div className="col-line"></div>
 
         <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
           {data?.rewardsIcon?.map((item, index) => (
-            <img
-              key={index}
-              src={`/img/icon-rewards-${item}.svg`}
-              className="min-w-[32px] min-h-[32px] rounded-full"
-            />
+            <Tooltip content={item.name} key={index}>
+              <img
+                src={item.iconURL}
+                className="min-w-[32px] min-h-[32px] rounded-full"
+              />
+            </Tooltip>
           ))}
         </div>
         <div className="col-line"></div>
@@ -492,7 +516,7 @@ export default function EcoDApps({
   novaCategoryUserPoints,
   tvlCategoryMilestone,
   holdingPoints,
-  novaCategoryTotalPoints
+  novaCategoryTotalPoints,
 }: {
   tabActive?: {
     category: string;
@@ -502,7 +526,7 @@ export default function EcoDApps({
   novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
   holdingPoints: number;
-  novaCategoryTotalPoints: number
+  novaCategoryTotalPoints: number;
 }) {
   const geNovaCategoryUserPointsByProject = (project: string) => {
     const obj = novaCategoryUserPoints.find((item) => item.project === project);
@@ -534,7 +558,7 @@ export default function EcoDApps({
 
     const arr: EcoDAppItem[] = [
       {
-        category: novaswap?.category || "nativeboost",
+        category: "nativeboost",
         iconURL: "/img/icon-novaswap.svg",
         name: "Novaswap",
         link: "https://novaswap.fi/",
@@ -542,7 +566,43 @@ export default function EcoDApps({
         type: "DEX",
         idFeatured: true,
         rewards: "20x",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        protocolAllocated:
+          (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
+        details: [
+          {
+            booster: (
+              <div>
+                <p className="whitespace-nowrap">
+                  <span className="font-[700]">20x</span> for ETH, WETH, Merged
+                  WBTC, USDT, USDC
+                </p>
+                <p className="whitespace-nowrap">
+                  <span className="font-[700]">10x</span> for canonically
+                  bridged tokens eligible to earn points
+                </p>
+              </div>
+            ),
+            description:
+              "You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.",
+            action: "Provide Liquidity",
+          },
+        ],
+      },
+      {
+        category: "spotdex",
+        iconURL: "/img/icon-novaswap.svg",
+        name: "Novaswap",
+        link: "https://novaswap.fi/",
+        handler: "@NovaSwap_fi",
+        type: "DEX",
+        idFeatured: true,
+        rewards: "20x",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         protocolAllocated:
           (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
         details: [
@@ -573,7 +633,15 @@ export default function EcoDApps({
         handler: "@LayerBankFi",
         type: "Lending",
         rewards: "10x",
-        rewardsIcon: ["nova", "layerbank", "puffer"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+          {
+            name: "EigenLayer Points",
+            iconURL: "/img/icon-rewards-eigenlayer.svg",
+          },
+          { name: "Puffer Points", iconURL: "/img/icon-rewards-puffer.svg" },
+        ],
+
         protocolAllocated:
           (layerbank?.refPoints || 0) + (layerbank?.holdingPoints || 0),
 
@@ -602,7 +670,9 @@ export default function EcoDApps({
         handler: "@LogX_trade",
         type: "Perp DEX",
         rewards: "10x",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         protocolAllocated: (logx?.refPoints || 0) + (logx?.holdingPoints || 0),
         details: [
           {
@@ -635,7 +705,9 @@ export default function EcoDApps({
         link: "https://native.org/lend?utm_campaign=zklink_nova&utm_source=custom&utm_medium=2xpoints?chainId=810180",
         handler: "@native_fi",
         type: "Lending",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated: (aqua?.refPoints || 0) + (aqua?.holdingPoints || 0),
         details: [
@@ -661,7 +733,9 @@ export default function EcoDApps({
         link: "https://zklink-eth.shoebill.finance/#/",
         handler: "@ShoebillFinance",
         type: "Lending",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (shoebill?.refPoints || 0) + (shoebill?.holdingPoints || 0),
@@ -686,7 +760,9 @@ export default function EcoDApps({
         link: "https://app.wagmi.com/liquidity/pools",
         handler: "@popsiclefinance",
         type: "DEX",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (wagmi?.refPoints || 0) + (wagmi?.holdingPoints || 0),
@@ -720,7 +796,9 @@ export default function EcoDApps({
         link: "https://izumi.finance/trade/swap?chainId=810180",
         handler: "@izumi_Finance",
         type: "DEX",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
@@ -750,7 +828,9 @@ export default function EcoDApps({
         link: "https://app.zkdx.io/stakingliquidity",
         handler: "@zkDXio",
         type: "Perp DEX",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated: (zkdx?.refPoints || 0) + (zkdx?.holdingPoints || 0),
         details: [
@@ -783,7 +863,9 @@ export default function EcoDApps({
         link: "https://app.eddy.finance/swap",
         handler: "@eddy_protocol",
         type: "DEX",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
         details: [
@@ -806,7 +888,13 @@ export default function EcoDApps({
         link: "https://www.allspark.finance/mantissa/",
         handler: "@AllsparkFinance",
         type: "DEX",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+          {
+            name: "AllSpark Points",
+            iconURL: "/img/icon-rewards-allspark.svg",
+          },
+        ],
         rewards: "10x",
         protocolAllocated:
           (allspark?.refPoints || 0) + (allspark?.holdingPoints || 0),
@@ -830,7 +918,9 @@ export default function EcoDApps({
         link: "https://rubic.exchange/",
         handler: "@CryptoRubic",
         type: "",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (rubic?.refPoints || 0) + (rubic?.holdingPoints || 0),
@@ -854,7 +944,9 @@ export default function EcoDApps({
         link: "https://app.interport.fi/stablecoin-pools?network=zkLink+Nova",
         handler: "@InterportFi",
         type: "",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (interport?.refPoints || 0) + (interport?.holdingPoints || 0),
@@ -878,7 +970,9 @@ export default function EcoDApps({
         link: "https://www.orbiter.finance/?source=Ethereum&dest=zkLink%20Nova&token=ETH",
         handler: "@InterportFi",
         type: "",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (orbiter?.refPoints || 0) + (orbiter?.holdingPoints || 0),
@@ -898,7 +992,9 @@ export default function EcoDApps({
         link: "https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
         handler: "@symbiosis_fi",
         type: "",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (symbiosis?.refPoints || 0) + (symbiosis?.holdingPoints || 0),
@@ -918,7 +1014,9 @@ export default function EcoDApps({
         link: "https://meson.fi/zklink",
         handler: "@mesonfi",
         type: "",
-        rewardsIcon: ["nova"],
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
         rewards: "10x",
         protocolAllocated:
           (meson?.refPoints || 0) + (meson?.holdingPoints || 0),
@@ -1064,8 +1162,24 @@ export default function EcoDApps({
             {formatToThounds(currentAllocationZKL)} $ZKL
           </div>
           {!isNoProgress ? (
-            <div className="holding-desc mt-[8px]">
-              Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
+            <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
+              Next $ZKL Allocation Milestone:{" "}
+              {formatToThounds(nextAllocationZKL)} $ZKL
+              <Tooltip
+                classNames={{
+                  content:
+                    "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                }}
+                content={`This sector will allocated ${formatToThounds(
+                  nextAllocationZKL
+                )} $ZKL after reaching the next milestone.`}
+              >
+                <img
+                  src="/img/icon-info-2.svg"
+                  alt=""
+                  className="w-[20px] h-[20px]"
+                />
+              </Tooltip>
             </div>
           ) : (
             <div className="holding-desc mt-[8px]">
@@ -1076,7 +1190,9 @@ export default function EcoDApps({
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Sector Allocated Points</span>
-            <span className="value">{formatNumberWithUnit(novaCategoryTotalPoints)}</span>
+            <span className="value">
+              {formatNumberWithUnit(novaCategoryTotalPoints)}
+            </span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
@@ -1094,12 +1210,22 @@ export default function EcoDApps({
             </div>
           ) : (
             <>
-              <div>Current TVL: {formatToThounds(currentTvl)}</div>
+              <div>
+                Current{" "}
+                {tabActive?.category === "perpdex" ? "Trading Volume" : "TVL"}:{" "}
+                {formatToThounds(currentTvl)}
+              </div>
               <div>
                 {isMaxProgress ? (
                   <span className="text-green">Max</span>
                 ) : (
-                  <>Next Target TVL: {formatToThounds(nextTargetTvl)}</>
+                  <>
+                    Next Target{" "}
+                    {tabActive?.category === "perpdex"
+                      ? "Trading Volume"
+                      : "TVL"}
+                    : {formatToThounds(nextTargetTvl)}
+                  </>
                 )}
               </div>
             </>

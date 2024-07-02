@@ -26,6 +26,7 @@ import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Decimal from "decimal.js";
+import { Tooltip } from "@nextui-org/react";
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -72,35 +73,57 @@ const CardBox = styled.div`
       #b10af4
     );
 
-  .prize-title {
+  .rewards {
     color: #fff;
     font-family: Satoshi;
-    font-size: 44px;
+    font-size: 19.033px;
     font-style: normal;
     font-weight: 900;
-    line-height: 110%; /* 26.4px */
+    line-height: 110%; /* 20.936px */
   }
-
-  .prize-desc {
-    color: rgba(251, 251, 251, 0.6);
+  .rewards-line {
+    margin: 12px 0 18px;
+    width: 438.813px;
+    height: 1.057px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+  .prize {
+    color: #fff;
     font-family: Satoshi;
-    font-size: 16px;
+    font-size: 46.525px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 125%;
+    font-weight: 900;
+    line-height: 110%; /* 51.177px */
   }
-  .prize-value {
+  .zkl {
     text-align: right;
     font-family: Satoshi;
-    font-size: 84px;
+    font-size: 109.968px;
     font-style: normal;
     font-weight: 900;
-    line-height: normal;
+    line-height: 110%; /* 120.964px */
     background: linear-gradient(180deg, #fff 0%, #bababa 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    white-space: nowrap;
+  }
+  .zkl-num {
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 160.289px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    letter-spacing: 16px;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 `;
 
@@ -636,53 +659,53 @@ export default function Dashboard() {
     <Container>
       <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
         <CardBox className="relative w-[full]">
-          <div className="absolute bottom-[36px] left-[36px] max-w-[624px]">
-            <div className="flex items-center gap-[10px]">
-              {/* <img
-                src="/img/icon-dollar.svg"
-                alt=""
-                className="w-[24px] h-[24px]"
-              /> */}
-              <span className="prize-title">Prize Pool</span>
-            </div>
-            <div className="my-[16px]">
-              <PrizeLine className="w-[624px] " />
-            </div>
-            <div className="prize-desc mt-[19px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </div>
-          </div>
-
-          <div>
-            <div className="prize-value">
-              <div>30,000,000</div>
-              <div>$ZKL</div>
-            </div>
-          </div>
-          <div className="text-right text-[16px]">
-            <p className="mt-[49px]">
-              Rewards gathered so far from there companies
-            </p>
-            <div className="my-[12px] flex justify-end">
-              <PrizeLine className="w-[415px] " />
-            </div>
-            <div className="flex justify-end gap-[16px]">
-              {new Array(4).fill("").map((_, index) => (
-                <ReawardBox
-                  className="w-[44px] h-[44px] flex items-center justify-center rounded-full"
-                  key={index}
-                >
+          <div className="flex justify-between">
+            <div>
+              <div className="rewards">
+                Rewards gathered so far from there companies
+              </div>
+              <div className="rewards-line"></div>
+              <div className="flex items-center">
+                {[
+                  "nova",
+                  "linea",
+                  "eigenlayer",
+                  "puffer",
+                  "renzo",
+                  "eigenpie",
+                  "kelp",
+                  "allspark",
+                ].map((icon, index) => (
                   <img
-                    src={`/img/icon-rewards-${index + 1}.svg`}
+                    key={index}
+                    src={`/img/icon-rewards-${icon}.svg`}
                     alt=""
-                    className="w-[18px] h-[18px] block"
+                    className="min-w-[72px] w-[72px] h-[72px] block"
                   />
-                </ReawardBox>
-              ))}
+                ))}
+              </div>
             </div>
+            <div className="flex gap-[30px]">
+              <span className="prize">Prize Pool</span>
+              <span className="zkl">$ZKL</span>
+            </div>
+          </div>
+          <div className="zkl-num flex justify-center">
+            <span>30,000,000</span>
+
+            <Tooltip
+              classNames={{
+                content:
+                  "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+              }}
+              content="Aggregation Parade Season II will reward participants from a prize pool of 30 million $ZKL tokens over three epochs."
+            >
+              <img
+                src="/img/icon-zkl-info.svg"
+                alt=""
+                className="mt-[30px] ml-[-30px] w-[20px] h-[20px]"
+              />
+            </Tooltip>
           </div>
         </CardBox>
       </div>
