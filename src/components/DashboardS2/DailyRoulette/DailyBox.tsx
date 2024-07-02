@@ -97,7 +97,11 @@ const DailyBox = (props: DailyBoxProps) => {
           </div>
         )}
       </div>
-      <DailyDrawModal modalInstance={modal} onDrawed={onDrawed} />
+      <DailyDrawModal
+        modalInstance={modal}
+        onDrawed={onDrawed}
+        remain={remain}
+      />
     </Container>
   );
 };
