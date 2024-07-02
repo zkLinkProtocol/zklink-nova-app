@@ -27,7 +27,7 @@ export interface airdropState {
 
 const initialState: airdropState = {
   viewStatus: 1,
-  inviteCode: "",
+  inviteCode: "zklink",
   isGroupLeader: false,
   signature: "",
   twitterAuthCode: "",

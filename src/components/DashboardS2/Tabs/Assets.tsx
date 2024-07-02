@@ -17,6 +17,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import {
@@ -326,7 +327,7 @@ export default function Assets(props: IAssetsTableProps) {
     ethUsdPrice,
     currentTvl,
     holdingPoints,
-    novaCategoryTotalPoints
+    novaCategoryTotalPoints,
   } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
@@ -614,9 +615,22 @@ export default function Assets(props: IAssetsTableProps) {
             <div className="holding-value mt-[16px]">
               {formatToThounds(currentAllocationZKL)} $ZKL
             </div>
-            <div className="holding-desc mt-[25px]">
+            <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
               Next $ZKL Allocation Milestone:{" "}
               {formatToThounds(nextAllocationZKL)} $ZKL
+              <Tooltip
+                classNames={{
+                  content:
+                    "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                }}
+                content={`This sector will allocated ${formatToThounds(nextAllocationZKL)} $ZKL after reaching the next milestone.`}
+              >
+                <img
+                  src="/img/icon-info-2.svg"
+                  alt=""
+                  className="w-[20px] h-[20px]"
+                />
+              </Tooltip>
             </div>
           </div>
           <AllocatedBox>

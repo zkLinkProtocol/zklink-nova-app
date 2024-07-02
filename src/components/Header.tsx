@@ -176,6 +176,8 @@ export default function Header() {
 
     if (queryInviteCode && queryInviteCode.length === 6) {
       dispatch(setInviteCode(queryInviteCode));
+    } else {
+      dispatch(setInviteCode("zklink"));
     }
 
     if (flag) {

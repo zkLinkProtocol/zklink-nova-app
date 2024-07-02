@@ -12,6 +12,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import { ReactNode, useEffect, useMemo, useState } from "react";
@@ -492,7 +493,7 @@ export default function EcoDApps({
   novaCategoryUserPoints,
   tvlCategoryMilestone,
   holdingPoints,
-  novaCategoryTotalPoints
+  novaCategoryTotalPoints,
 }: {
   tabActive?: {
     category: string;
@@ -502,7 +503,7 @@ export default function EcoDApps({
   novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
   holdingPoints: number;
-  novaCategoryTotalPoints: number
+  novaCategoryTotalPoints: number;
 }) {
   const geNovaCategoryUserPointsByProject = (project: string) => {
     const obj = novaCategoryUserPoints.find((item) => item.project === project);
@@ -806,7 +807,7 @@ export default function EcoDApps({
         link: "https://www.allspark.finance/mantissa/",
         handler: "@AllsparkFinance",
         type: "DEX",
-        rewardsIcon: ["nova"],
+        rewardsIcon: ["nova", "allspark"],
         rewards: "10x",
         protocolAllocated:
           (allspark?.refPoints || 0) + (allspark?.holdingPoints || 0),
@@ -1064,8 +1065,24 @@ export default function EcoDApps({
             {formatToThounds(currentAllocationZKL)} $ZKL
           </div>
           {!isNoProgress ? (
-            <div className="holding-desc mt-[8px]">
-              Next $ZKL Allocation Milestone: {nextAllocationZKL} $ZKL
+            <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
+              Next $ZKL Allocation Milestone:{" "}
+              {formatToThounds(nextAllocationZKL)} $ZKL
+              <Tooltip
+                classNames={{
+                  content:
+                    "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                }}
+                content={`This sector will allocated ${formatToThounds(
+                  nextAllocationZKL
+                )} $ZKL after reaching the next milestone.`}
+              >
+                <img
+                  src="/img/icon-info-2.svg"
+                  alt=""
+                  className="w-[20px] h-[20px]"
+                />
+              </Tooltip>
             </div>
           ) : (
             <div className="holding-desc mt-[8px]">
@@ -1076,7 +1093,9 @@ export default function EcoDApps({
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Sector Allocated Points</span>
-            <span className="value">{formatNumberWithUnit(novaCategoryTotalPoints)}</span>
+            <span className="value">
+              {formatNumberWithUnit(novaCategoryTotalPoints)}
+            </span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
@@ -1094,12 +1113,22 @@ export default function EcoDApps({
             </div>
           ) : (
             <>
-              <div>Current TVL: {formatToThounds(currentTvl)}</div>
+              <div>
+                Current{" "}
+                {tabActive?.category === "perpdex" ? "Trading Volume" : "TVL"}:{" "}
+                {formatToThounds(currentTvl)}
+              </div>
               <div>
                 {isMaxProgress ? (
                   <span className="text-green">Max</span>
                 ) : (
-                  <>Next Target TVL: {formatToThounds(nextTargetTvl)}</>
+                  <>
+                    Next Target{" "}
+                    {tabActive?.category === "perpdex"
+                      ? "Trading Volume"
+                      : "TVL"}
+                    : {formatToThounds(nextTargetTvl)}
+                  </>
                 )}
               </div>
             </>
