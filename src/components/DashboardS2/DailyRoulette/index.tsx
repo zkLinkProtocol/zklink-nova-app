@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import DailyBox, { BoxType } from "./DailyBox";
-import { useDisclosure } from "@nextui-org/react";
+import { Tooltip, useDisclosure } from "@nextui-org/react";
 import InviteBoxModal from "./InviteBoxModal";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -53,8 +53,8 @@ const Container = styled.div`
   }
   .invite-box {
     cursor: pointer;
-    border-radius: 64px;
-    border: 1px solid var(--Accent, #03d498);
+    border-radius: 48px;
+    background: rgba(40, 40, 40, 0.6);
     display: flex;
     height: 40px;
     padding: 7.5px 21.5px 8.5px 21.5px;
@@ -67,6 +67,18 @@ const Container = styled.div`
     font-style: normal;
     font-weight: 900;
     line-height: normal;
+
+    .text {
+      background: linear-gradient(
+        90deg,
+        #4ba790 0%,
+        rgba(251, 251, 251, 0.6) 50.31%,
+        #9747ff 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 `;
 const BoxList = [
@@ -182,11 +194,26 @@ export default function DailyRoulette() {
         <div className="flex items-center">
           <img src="img/s2/icon-roulette.svg" alt="" />
           <p className="title">Daily Roulette</p>
-          <div className="title-desc">Determined by the consecutive days</div>
+          <Tooltip
+            className="px-[16px] py-[20px] max-w-[350px] bg-[#000811] text-[#FBFBFB99]"
+            content={
+              <div>
+                Every day, users can spin x times of roulette to win zkLink Nova
+                trademark NFTs and Holding Points.
+                <br />
+                <br />X is determined by the consecutive days the users <br />
+                have been spined: X = 1 + min
+                <br />
+                (6, past consecutive days)
+              </div>
+            }
+          >
+            <div className="title-desc">Determined by the consecutive days</div>
+          </Tooltip>
         </div>
         <div className="invite-box" onClick={openBoxModal.onOpen}>
-          <img src="img/s2/icon-invite-box.svg" alt="" className="mr-2" />
-          <span>Invite Box ({remainDrawCount})</span>
+          <img src="img/icon-check-invitebox.svg" alt="" className="mr-2" />
+          <span className="text">Check Invite Box</span>
         </div>
       </div>
       <div className="flex items-center justify-between mt-[30px]">
