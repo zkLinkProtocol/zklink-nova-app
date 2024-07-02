@@ -21,6 +21,7 @@ interface DailyBoxProps {
   amount?: number;
   index: number;
   onDrawed?: () => void;
+  remain?: number;
 }
 
 const DailyBox = (props: DailyBoxProps) => {
@@ -49,10 +50,8 @@ const DailyBox = (props: DailyBoxProps) => {
         .minute(0)
         .second(0);
       const timeDiff = tomorrow10am.diff(now);
-      const minutes = Math.floor(
-        (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60)
-      );
-      return `Exactly in 1 Day & ${minutes} Min`;
+      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+      return `Exactly in ${hours} Hours`;
     }
   }, [index]);
   const handleClaim = useCallback(async () => {
@@ -69,7 +68,9 @@ const DailyBox = (props: DailyBoxProps) => {
             <div className="img-bg">
               <img src="/img/s2/img-daily-box.png" alt="" />
             </div>
-            {amount && <p>X{amount}</p>}
+            {amount && type !== BoxType.Expired && (
+              <p>X{type === BoxType.Active ? remain : amount}</p>
+            )}
 
             <div
               className={`mt-auto status status-${type}`}
