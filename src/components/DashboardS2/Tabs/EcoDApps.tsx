@@ -540,8 +540,7 @@ export default function EcoDApps({
   } = useNovaPoints();
 
   const ecoDAppsList = useMemo(() => {
-    const novaswapSpot = geNovaCategoryUserPointsByProject("novaswap");
-    const novaswapBoost = geNovaCategoryUserPointsByProject("novaswap");
+    const novaswap = geNovaCategoryUserPointsByProject("novaswap");
     const izumi = geNovaCategoryUserPointsByProject("izumi");
     const shoebill = geNovaCategoryUserPointsByProject("shoebill");
     const wagmi = geNovaCategoryUserPointsByProject("wagmi");
@@ -571,7 +570,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         protocolAllocated:
-          (novaswapBoost?.refPoints || 0) + (novaswapBoost?.holdingPoints || 0),
+          (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
         details: [
           {
             booster: (
@@ -605,7 +604,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         protocolAllocated:
-          (novaswapSpot?.refPoints || 0) + (novaswapSpot?.holdingPoints || 0),
+          (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
         details: [
           {
             booster: (

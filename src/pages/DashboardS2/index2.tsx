@@ -669,7 +669,7 @@ export default function Dashboard() {
                 {[
                   "nova",
                   "linea",
-                  "layerbank",
+                  "eigenlayer",
                   "puffer",
                   "renzo",
                   "eigenpie",

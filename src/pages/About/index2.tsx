@@ -167,7 +167,7 @@ const tokenList2 = [
   { token: "BBUSD", boost: "1" },
 ];
 
-const NovaCampaign = () => {
+const Introduction = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -176,7 +176,7 @@ const NovaCampaign = () => {
         className="card-title flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span>zkLink Nova Campaign</span>
+        <span>Introduction To The zkLink Nova Aggregation Parade</span>
         {isOpen ? (
           <BsChevronUp className="text-[20px]" />
         ) : (
@@ -187,64 +187,51 @@ const NovaCampaign = () => {
         <>
           <Underline />
           <div className="paragraph">
-            zkLink Nova is the first aggregated Layer 3 ZK-Rollup network with
-            EVM-compatibility, built on top of Ethereum and multiple Layer 2
-            rollup networks (L2s).
+            zkLink Nova is the first Aggregated Layer 3 ZK Rollup Network with
+            EVM compatibility that’s built on top of Ethereum and multiple
+            Ethereum Layer 2 Rollups.
           </div>
 
           <div className="paragraph">
-            <span className="title">
-              Participate in the Aggregation Parade Campaign to earn a share of
-              ZKL tokens.
-            </span>{" "}
-            The Aggregation Parade encompasses rewards in the form of Nova
-            Points and NFTs, all tied to the Finale Reward. Users can enhance
-            their Nova points by contributing meaningfully to the ecosystem's
-            growth. Activities such as early participation, holding more assets,
-            referring more friends, and achieving higher group TVL will boost
-            your final Nova points which impacts your final reward.
+            The Aggregation Parade is a flagship campaign created to introduce
+            users to the zkLink Nova platform and ecosystem, rewarding users
+            with Nova Points, NFT rewards, and a share of $ZKL prize pools.
+            Campaign participants earn Nova Points by interacting with zkLink
+            Nova’s Layer 3 platform by bridging assets, engaging with zkLink
+            Nova ecosystem DApps, referring friends, and contributing to the
+            network’s TVL.
           </div>
           <div className="paragraph">
             <p className="title">
-              The campaign will be divided into two Seasons:
+              The Aggregation Parade has reached its second “Season.”
             </p>
             <div>
               <ul>
                 <li className="before">
-                  Season 1 of #zkLinkNovaAggParade Season 1 has concluded and
-                  snapshot of Nova Points taken on May 30, 2024, at 12am UTC 
+                  Season I of the Aggregation Parade concluded on May 30, 2024,
+                  12 AM UTC – in which a snapshot of user Nova Points was taken
+                  and subsequent $ZKL was distributed.
                 </li>
                 <li className="before">
-                  Season 2 will commence 31st May 2024 across a 3 month period
+                  Season I of the Aggregation Parade began on May 31, 2024, and
+                  will operate under an Epoch timeline, in which there will be
+                  at least Three Epochs.
                 </li>
               </ul>
             </div>
+          </div>
+          <div className="paragraph">
+            The total prize pool for Aggregation Parade Season II will be 30
+            million $ZKL.
+          </div>
+          <div className="paragraph">
+            To participate in our Aggregation Parade Season II, head over to our{" "}
+            <a href="https://app.zklink.io/" className="text-green">
+              campaign portal
+            </a>
+            .
           </div>
 
-          <div className="paragraph">
-            <p className="title">Important updates on Season II</p>
-            <div>
-              <ul>
-                <li className="before">
-                  Duration: 31st May 2024 - 31st Aug 2, 2024
-                </li>
-                <li className="before">
-                  Group Booster feature will be removed
-                </li>
-                <li className="before">
-                  Loyalty Booster will be capped at 50%
-                </li>
-                <li className="before">
-                  3% of $ZKL of total supply will be allocated to season II
-                </li>
-                <li className="before">
-                  Nova points boost will target rewarding user activities
-                  associated with DApp interaction within Nova Ecosystem (Find
-                  out more under Eco dApp section)
-                </li>
-              </ul>
-            </div>
-          </div>
           <div>
             <img src="/img/about-1.png" alt="" className="block w-full" />
           </div>
@@ -254,7 +241,7 @@ const NovaCampaign = () => {
   );
 };
 
-const EarnNovaPoints = () => {
+const HowToJoin = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -263,7 +250,7 @@ const EarnNovaPoints = () => {
         className="card-title flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span>How to earn Nova points?</span>
+        <span>How To Join The Aggregation Parade?</span>
         {isOpen ? (
           <BsChevronUp className="text-[20px]" />
         ) : (
@@ -274,90 +261,12 @@ const EarnNovaPoints = () => {
         <>
           <Underline />
           <div className="paragraph">
-            You can see the detail and formula of how we calculate Nova points{" "}
-            <a
-              className="text-green"
-              href="https://blog.zk.link/aggregation-parade-7997d31ca8e1"
-              target="_blank"
-            >
-              here
+            To participate in our Aggregation Parade Season II, head over to our{" "}
+            <a href="https://app.zklink.io/" className="text-green">
+              campaign portal
             </a>
-            .
-          </div>
-          <div className="paragraph">
-            <div className="title">Minimal Entry:</div>
-            <div>1. First 7 days 0.1 ETH (Or Equivalent)</div>
-            <div>2. After the 7th day 0.25 ETH (Or Equivalent)</div>
-          </div>
-          <div className="paragraph">
-            <div className="title">Deposit / Bridge Assets to Nova</div>
-            <div>
-              Bridging any supported assets to Nova can instantly earn Nova
-              points. The points earned is determined by a multiple factors:
-            </div>
-            <ul>
-              <li className="before">Deposit Value </li>
-              <li className="before">Token Multiplier</li>
-              <li className="before">Deposit Multiplier</li>
-            </ul>
-            <div className="title">
-              To join the Aggregation Parade, make sure your deposit surpasses
-              the Minimum Entry of 0.1ETH or equivalent.
-            </div>
-          </div>
-          <div className="paragraph">
-            <div className="title">Holding assets on Nova</div>
-            <div>
-              Holding any supported assets on Nova allows you to accrue Nova
-              points every 8 hours until the final Nova Point computation date.
-            </div>
-            <div className="flex gap-[20px] mt-[30px]">
-              {/* <img
-              src="/img/image2.svg"
-              alt=""
-              className="w-full"
-              onLoad={scrollToAnchor}
-            /> */}
-              <div className="w-1/2">
-                <table className="w-full">
-                  <tr className="tr">
-                    <td className="td">Token</td>
-                    <td className="td">Boost</td>
-                  </tr>
-                  {tokenList1.map((item, index) => (
-                    <tr className="tr" key={index}>
-                      <td className="td">{item.token}</td>
-                      <td className="td">{item.boost}</td>
-                    </tr>
-                  ))}
-                </table>
-              </div>
-
-              <div className="w-1/2">
-                <table className="w-full">
-                  <tr className="tr">
-                    <td className="td">Token</td>
-                    <td className="td">Boost</td>
-                  </tr>
-                  {tokenList2.map((item, index) => (
-                    <tr className="tr" key={index}>
-                      <td className="td">{item.token}</td>
-                      <td className="td">{item.boost}</td>
-                    </tr>
-                  ))}
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div className="paragraph">
-            <div className="title">Referral Rewards</div>
-            <div>
-              By inviting friends, you can earn 10% of the Nova points they earn
-              throughout the duration of the Aggregation Parade. For instance,
-              if you refer to 10 users, and collectively they earn 100 Nova
-              points, you will also earn 10 points.
-            </div>
+            , enter your Invite Code, Connect Your Wallet, and Bridge the
+            minimum requirement of 0.1 ETH or equivalent.
           </div>
         </>
       )}
@@ -800,6 +709,404 @@ const Timeline = () => {
   );
 };
 
+const S2Details = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <CardBox className="flex flex-col gap-[30px]">
+      <div
+        className="card-title flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-w-[850px]">
+          Aggregation Parade Season II: Details
+        </span>
+        {isOpen ? (
+          <BsChevronUp className="text-[20px]" />
+        ) : (
+          <BsChevronDown className="text-[20px]" />
+        )}
+      </div>
+      {isOpen && (
+        <>
+          <Underline />
+          <div className="paragraph">
+            Aggregation Parade Season II has a combined prize pool of 30 million
+            $ZKL that will be distributed to users over the span of at least
+            Three Epochs, with Nova Points being converted into ZKL and given to
+            participants at the end of each Epoch, based on the user’s
+            respective Nova Points accumulated throughout the Epoch.
+          </div>
+          <div className="paragraph">
+            <p>
+              The 30 million $ZKL prize pool will be allocated to the following
+              categories:
+            </p>
+            <div>
+              <ul>
+                <li className="before">
+                  Holding Assets (Including Token Merge, Roulette, & Referrals)
+                </li>
+                <li className="before">Spot DEXs</li>
+                <li className="before">Perp DEXs</li>
+                <li className="before">Lending</li>
+                <li className="before">GameFi</li>
+                <li className="before">Other Protocols</li>
+                <li className="before">
+                  Boost (zkLink Nova Native Ecosystem DApps)
+                </li>
+              </ul>
+            </div>
+          </div>
+        </>
+      )}
+    </CardBox>
+  );
+};
+
+const AllAboutNovaPoints = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <CardBox className="flex flex-col gap-[30px]">
+      <div
+        className="card-title flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-w-[850px]">
+          All About Nova Points: How To Earn Nova Points?
+        </span>
+        {isOpen ? (
+          <BsChevronUp className="text-[20px]" />
+        ) : (
+          <BsChevronDown className="text-[20px]" />
+        )}
+      </div>
+      {isOpen && (
+        <>
+          <Underline />
+
+          <div className="paragraph">
+            Nova Points (NPs) are the designated metric for our campaign system
+            used to recognize and reward individuals with $ZKL according to our
+            allocation scheme who participate in the zkLink Nova Aggregation
+            Parade.
+          </div>
+          <div className="paragraph">
+            Aggregation Parade Season II users who partake in any of the above
+            tasks, such as holding assets, merging tokens, referring, engaging
+            with dashboard-listed sectors and DApps, and interacting with native
+            zkLink Nova DApps will receive Nova Points.
+          </div>
+          <div className="paragraph">
+            <div>In short, to earn Nova Points, users can:</div>
+            <ol>
+              <li>1. Deposit & Hold Assets On zkLink Nova</li>
+              <li>2. Merge Tokens</li>
+              <li>
+                3. Interact With zkLink Nova Aggregation Parade Participating
+                Ecosystem DApps Under The Categories Of Spot DEXs, Perp DEXs,
+                Lending, GameFi, & Others.
+              </li>
+              <li>4. Boost: Interact With Native zkLink Nova DApps</li>
+              <li>5. Refer Friends</li>
+              <li>5. Roulette</li>
+            </ol>
+          </div>
+          <div className="paragraph">
+            Nova Points measure users’ contribution to each sector and action
+            mentioned above, and will be used to distribute $ZKL rewards of the
+            prize pool of each sector. Nova Points earned during the campaign
+            will be converted into $ZKL at the end of each Epoch and distributed
+            to participants.
+          </div>
+          <div className="paragraph">
+            <div>
+              Nova Points earned are determined and calculated according to
+              multiple factors, including:
+            </div>
+            <ul>
+              <li className="before">Deposit Value</li>
+              <li className="before">Token Multiplier</li>
+              <li className="before">Ecosystem Sector</li>
+              <li className="before">Native DApp Boost Engagement</li>
+              <li className="before">Referral Activity</li>
+              <li className="before">Roulette Distribution</li>
+            </ul>
+          </div>
+          <div className="paragraph">
+            As a reminder, to join the Aggregation Parade, please ensure your
+            deposit surpasses the Minimum Entry of 0.1 ETH or equivalent.
+          </div>
+          <div className="paragraph">
+            For more information regarding how Nova Points will be calculated,
+            please see our{" "}
+            <a
+              href="https://docs.zklink.io/nova-points-design/nova-points"
+              className="text-green"
+            >
+              Nova Points documentation page
+            </a>
+          </div>
+        </>
+      )}
+    </CardBox>
+  );
+};
+
+const TheDifferent = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <CardBox className="flex flex-col gap-[30px]">
+      <div
+        className="card-title flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-w-[850px]">
+          The Different Aggregation Parade Season II Sector/Verticals
+        </span>
+        {isOpen ? (
+          <BsChevronUp className="text-[20px]" />
+        ) : (
+          <BsChevronDown className="text-[20px]" />
+        )}
+      </div>
+      {isOpen && (
+        <>
+          <Underline />
+          <div className="paragraph">
+            <div>
+              The focus of Aggregation Parade Season II is ecosystem engagement,
+              where participants can earn more Nova Points by interacting with
+              zkLink Nova ecosystem DApps. In Season II, the DApps are
+              categorized into:
+            </div>
+            <ul>
+              <li className="before">Spot DEXs</li>
+              <li className="before">Perp DEXs</li>
+              <li className="before">Lending</li>
+              <li className="before">GameFi</li>
+              <li className="before">Other Protocols</li>
+            </ul>
+          </div>
+          <div className="paragraph">
+            Examples of participating protocols include LayerBank, LogX, Aqua,
+            iZUMI, Allspark, Interport, Orbiter Finance, Symbiosis, and Meson
+            Finance. By interacting with these protocols, users have the
+            opportunity to earn extra Nova Points and yield on top of the zkLink
+            Nova platform. See the Aggregation Parade Season II Dashboard or the
+            image below for additional participating DApps.
+          </div>
+          <div className="paragraph">
+            In terms of calculating rewards according to the different
+            categories, it’s important to note that Nova Point calculations will
+            vary depending on the sector/vertical, the points a user earns
+            inside a particular DApp, and the amount of financial activity a
+            user performs within a sector/vertical/DApp.
+          </div>
+          <div className="paragraph">
+            In addition, the size of the prize pool for each sector will depend
+            on the milestone that has been achieved – a higher TVL or trading
+            volume will result in larger prize pools.
+          </div>
+        </>
+      )}
+    </CardBox>
+  );
+};
+
+const HighRewards = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <CardBox className="flex flex-col gap-[30px]">
+      <div
+        className="card-title flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-w-[850px]">
+          How To Earn The Highest Rewards & Most Nova Points? Engage With zkLink
+          Nova Native DApps
+        </span>
+        {isOpen ? (
+          <BsChevronUp className="text-[20px]" />
+        ) : (
+          <BsChevronDown className="text-[20px]" />
+        )}
+      </div>
+      {isOpen && (
+        <>
+          <Underline />
+          <div className="paragraph">
+            To receive the most Nova Point rewards out of all the categories,
+            users can interact with native zkLink Nova DApps such as NovaSwap
+            (with more to be featured soon).
+          </div>
+          <div className="paragraph">
+            NovaSwap is an innovative multi-chain aggregated asset AMM DEX built
+            on zkLink Nova that offers ultimate security and multi-layer yields.
+            NovaSwap enables users to enjoy fast, low-cost transactions and earn
+            multiple layers of yields, including LSD yield, LRT points, Nova
+            points, trading fees, and $NOVA rewards.
+          </div>
+          <div className="paragraph">
+            To explore NovaSwap {">>"} please go to the{" "}
+            <a href="https://novaswap.fi/" className="text-green">
+              NovaSwap homepage
+            </a>{" "}
+            and{" "}
+            <a href="https://novaswap.fi/#/swap" className="text-green">
+              Launch the App
+            </a>
+          </div>
+        </>
+      )}
+    </CardBox>
+  );
+};
+
+const NovaNFTDetails = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <CardBox className="flex flex-col gap-[30px]">
+      <div
+        className="card-title flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-w-[850px]">
+          Nova NFTs Details, Types, & Utility: How To Earn Nova NFTs?
+        </span>
+        {isOpen ? (
+          <BsChevronUp className="text-[20px]" />
+        ) : (
+          <BsChevronDown className="text-[20px]" />
+        )}
+      </div>
+      {isOpen && (
+        <>
+          <Underline />
+          <div className="paragraph">
+            Users who deposit a minimum amount of 0.1 ETH or equivalent through
+            the campaign page or the official canonical bridge to participate in
+            the campaign will automatically be given a zkLink Nova SBT.
+          </div>
+          <div className="paragraph">
+            Similar to Season I, Aggregation Parade participants will have the
+            chance to earn Trademark NFTs to upgrade their SBT into a special
+            Nova Lynks NFT. However, users must collect ONE OF EACH of the four
+            different types of Trademark NFTs to upgrade their SBTs. To collect
+            Trademark NFTs, users must receive them from the daily “Roulette” or
+            through Mystery Boxes.
+          </div>
+          <div className="paragraph">
+            Holding on to these upgraded Nova Lynks NFTs allows users to split
+            the pool of 5 million $ZKL tokens allocated to this sector.
+          </div>
+          <div className="paragraph">
+            <div>
+              Nova Lynks NFTs can also be purchased on the{" "}
+              <a
+                href="https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-lynks"
+                className="text-green"
+              >
+                OKX NFT
+              </a>{" "}
+              Marketplace.
+            </div>
+            <ul>
+              <li className="before">
+                0-3999 Lynk holders during Season I split 5 million $ZKL
+              </li>
+              <li className="before">
+                4000-9999 Lynk holders during Season II can split 5 million $ZKL
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
+    </CardBox>
+  );
+};
+
+const ReferralInformation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <CardBox className="flex flex-col gap-[30px]">
+      <div
+        className="card-title flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-w-[850px]">
+          Referral Information: How To Earn From Inviting Friends?
+        </span>
+        {isOpen ? (
+          <BsChevronUp className="text-[20px]" />
+        ) : (
+          <BsChevronDown className="text-[20px]" />
+        )}
+      </div>
+      {isOpen && (
+        <>
+          <Underline />
+          <div className="paragraph">
+            Similar to Season I of the Aggregation Parade, users who invite
+            friends to participate in Season II will earn Nova Points as a
+            reward. This happens in two ways.
+          </div>
+          <div className="paragraph">
+            First, those who refer new participants will earn 10% of the Nova
+            Points from their direct invitees throughout the campaign’s Epochs.
+            Please note that 10% of the Nova Points earned from a user’s
+            referral will be distributed to the user’s account by sector (per
+            the invitee’s campaign activity). Second, for Season II referrals,
+            users who successfully invite a new referee can get 1 Invite Box
+            which equates to a certain amount of Nova Points.
+          </div>
+          <div className="paragraph">
+            Also, we are removing the Group Booster to give new campaign
+            participants a better advantage!
+          </div>
+        </>
+      )}
+    </CardBox>
+  );
+};
+
+const Roulette = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <CardBox className="flex flex-col gap-[30px]">
+      <div
+        className="card-title flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-w-[850px]">
+          Referral Information: How To Earn From Inviting Friends?
+        </span>
+        {isOpen ? (
+          <BsChevronUp className="text-[20px]" />
+        ) : (
+          <BsChevronDown className="text-[20px]" />
+        )}
+      </div>
+      {isOpen && (
+        <>
+          <Underline />
+          <div className="paragraph">
+            “Roulette” is a new feature to the Aggregation Parade where every
+            day, users can spin a special roulette to win zkLink Nova trademark
+            NFTs and Nova Points.
+          </div>
+        </>
+      )}
+    </CardBox>
+  );
+};
+
 const Disclaimer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -907,14 +1214,15 @@ const AboutNovaNetwork = () => {
         <>
           <Underline />
           <div className="paragraph">
-            zkLink Nova is the pioneering Aggregated Layer 3 Rollup zkEVM
-            network that brings unprecedented liquidity and asset aggregation to
+            zkLink Nova is the industry’s first Aggregated Layer 3 Rollup zkEVM
+            Network that brings unprecedented liquidity and asset aggregation to
             Ethereum and its Layer 2 Rollups. Built with ZK Stack and zkLink
-            Nexus, it leverages ZK Proofs to enhance scalability and security.
-            Developers enjoy an open platform for deploying Solidity smart
-            contracts, tapping into integrated networks like Arbitrum and
-            zkSync. Nova simplifies DeFi by presenting a unified ecosystem for
-            users and DApps, promoting a seamless blockchain experience.
+            Nexus, it leverages zero-knowledge proofs to enhance scalability and
+            security. Developers enjoy an open platform for deploying Solidity
+            smart contracts, tapping into integrated networks such as Arbitrum
+            and zkSync. zkLink Nova simplifies DeFi by presenting a unified
+            ecosystem for users and DApps, promoting a seamless blockchain
+            experience.
           </div>
         </>
       )}
@@ -925,23 +1233,18 @@ const AboutNovaNetwork = () => {
 export default function About() {
   return (
     <Container>
-      <Title className="mt-[80px]">About zk.Link Nova</Title>
+      <Title className="mt-[80px]">About zkLink Nova Aggregation Parade</Title>
 
       <div className="mt-[60px] mx-auto max-w-[982px] flex flex-col gap-[30px]">
-        <NovaCampaign />
-        <EarnNovaPoints />
-        <EarnNovaNFTs />
-        <GreenCard>
-          Aggregation Parade Phase II begins 10AM April 14, 2024 UTC
-        </GreenCard>
-        <ImportantUpdates />
-        <InviteMore />
-        <MysteryBoxSeason2 />
-        <RewardingOldestFriends />
-        <RewardingLoyalUsers />
-        <TokenMergeBonus />
-        <EcosystemBootstrapBonuses />
-        <Timeline />
+        <Introduction />
+        <HowToJoin />
+        <S2Details />
+        <AllAboutNovaPoints />
+        <TheDifferent />
+        <HighRewards />
+        <NovaNFTDetails />
+        <ReferralInformation />
+        <Roulette />
         <Disclaimer />
         <AboutNovaNetwork />
       </div>
