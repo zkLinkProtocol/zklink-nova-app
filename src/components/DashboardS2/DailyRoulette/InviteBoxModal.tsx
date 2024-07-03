@@ -307,7 +307,7 @@ const InviteBoxModal = (props: IProps) => {
       <Modal
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
-        style={{ minHeight: "300px", backgroundColor: "rgb(38, 43, 51)" }}
+        style={{ minHeight: "300px", backgroundColor: "#000811" }}
         isOpen={trademarkMintModal.isOpen}
         onOpenChange={trademarkMintModal.onOpenChange}
         className="trans"
@@ -453,9 +453,9 @@ const InviteBoxModal = (props: IProps) => {
 
                   <p className="text-white font-chakra text-[14px] mt-4 text-center">
                     With each referral, you'll have the chance to randomly draw
-                    one of the invite rewards. Please notice that Nova points
-                    rewards are not NFT, they'll be added directly to your Nova
-                    Points.
+                    one of the invite rewards. Please notice that Hodling points
+                    rewards are not NFT, they'll be added directly to your
+                    Hodling Points.
                   </p>
                 </div>
               </ModalBody>
@@ -481,7 +481,7 @@ const InviteBoxModal = (props: IProps) => {
                       "Mint"}
                   </Button>
                   <Button className="w-full " onClick={onClose}>
-                    Close
+                    Invite More
                   </Button>
                 </div>
               </ModalFooter>

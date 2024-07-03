@@ -242,11 +242,10 @@ export default function Leaderboard() {
             </div>
             <Title className="mt-[20px]">Points Leaderboard</Title>
             <Description className="mt-[30px]">
-              Please note that the leaderboard currently displays only the Nova
-              Points earned through deposits and holdings. It does not yet
-              include Nova Points earned from interacting with eco dapps, invite
-              boxes, and other activities. Don't worry—you won't lose these
-              points.
+              The leaderboard is organized by sectors. In Season II, Nova Points
+              will measure users' contributions to each sector and the actions
+              mentioned above. These points will determine the distribution of
+              $ZKL rewards from each sector's prize pool.
             </Description>
           </div>
           <Epoch className="flex items-center whitespace-nowrap">

@@ -661,9 +661,7 @@ export default function Dashboard() {
         <CardBox className="relative w-[full]">
           <div className="flex justify-between">
             <div>
-              <div className="rewards">
-                Rewards gathered so far from there companies
-              </div>
+              <div className="rewards">All supported points</div>
               <div className="rewards-line"></div>
               <div className="flex items-center">
                 {[

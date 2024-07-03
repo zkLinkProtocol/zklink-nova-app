@@ -289,7 +289,9 @@ const DetailBox = styled.div`
   }
 
   .detail-row {
-    border-radius: 16px;
+    &.rounded-bottom {
+      border-radius: 0 0 16px 16px;
+    }
     background: #0d0f14;
     .detail-item {
       padding: 24px;
@@ -437,7 +439,7 @@ const EcoDApp = (props: {
             }}
             content={data.details[0].booster}
           >
-            <div>Up to {data.rewards}</div>
+            <GradientBox>Up to {data.rewards}</GradientBox>
           </Tooltip>
         </div>
         <div className="col-line"></div>
@@ -470,12 +472,14 @@ const EcoDApp = (props: {
           </div>
         </div>
       </div>
-      <div className="row-line"></div>
+      {/* <div className="row-line"></div> */}
       {isOpen && (
-        <DetailBox className="w-full mt-[5px] pt-[16px] px-[28px]">
+        <DetailBox className="w-full mt-[4px] px-[7px]">
           {data.details.map((detail, index) => (
             <div
-              className="detail-row mb-[16px] flex items-center justify-between"
+              className={`detail-row mb-[8px] flex items-center justify-between ${
+                index === data.details.length - 1 ? "rounded-bottom" : ""
+              }`}
               key={index}
             >
               <div className="detail-item">
