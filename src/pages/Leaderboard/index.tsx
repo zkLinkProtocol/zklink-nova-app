@@ -280,14 +280,14 @@ export default function Leaderboard() {
               <tr>
                 <th className="rank">RANK</th>
                 <th>USER</th>
-                <th className="points">DEX POINTS</th>
+                <th className="points">{tabs[tabActive].name} POINTS</th>
               </tr>
             </thead>
 
             <tbody>
               {categoryList.map((item, index) =>
                 address === item.address ? (
-                  <tr className={"self"}>
+                  <tr className={"self"} key={index}>
                     <td className="rank">{item.rank}</td>
                     <td>
                       <div className="flex items-center gap-[7px]">
@@ -298,7 +298,7 @@ export default function Leaderboard() {
                     <td className="points">100,000.00</td>
                   </tr>
                 ) : (
-                  <tr>
+                  <tr key={index}>
                     <td className="rank">{item.rank}</td>
                     <td>{item.username}</td>
                     <td className="points">

@@ -1,6 +1,7 @@
-import { drawTrademarkNFT } from "@/api";
+import { drawTrademarkNFT, getRemainDrawCount } from "@/api";
 import { getPointsRewardsTooltips } from "@/components/Dashboard/PointsRewardsTooltips";
 import DrawAnimation from "@/components/DrawAnimation";
+import { PrimaryButton, SecondayButton } from "@/components/ui/Button";
 import {
   LYNKS_NFT_MARKET_URL,
   MintStatus,
@@ -21,18 +22,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Tooltip,
 } from "@nextui-org/react";
-import { UseDisclosureReturn } from "@nextui-org/use-disclosure";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import styled from "styled-components";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
@@ -42,6 +33,13 @@ const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   9: "+50 Nova points",
 };
 
+const ModalContainer = styled(Modal)`
+  /* max-width: 864px; */
+  /* width: 864px; */
+  border-radius: 12px;
+  border: 1px solid #635f5f;
+  background: var(--Background, #000811);
+`;
 export const TxResult = styled.div`
   .statusImg {
     width: 128px;
@@ -94,22 +92,14 @@ export const TxResult = styled.div`
   }
 `;
 
-interface IProps {
-  modalInstance: UseDisclosureReturn;
-  remainDrawCount: number;
-  drawedNftId: number | undefined;
-  setDrawedNftId: Dispatch<SetStateAction<number | undefined>>;
-  setUpdate: Dispatch<SetStateAction<number>>;
-}
-const InviteBoxModal = (props: IProps) => {
-  const {
-    modalInstance,
-    remainDrawCount,
-    drawedNftId,
-    setDrawedNftId,
-    setUpdate,
-  } = props;
+const InviteBoxModal = () => {
+  const modalInstance = useDisclosure();
+
   const trademarkMintModal = useDisclosure();
+
+  const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
+  const [drawedNftId, setDrawedNftId] = useState<number | undefined>();
+  const [update, setUpdate] = useState(0);
 
   const { address, chainId } = useAccount();
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
@@ -302,17 +292,32 @@ const InviteBoxModal = (props: IProps) => {
     }
   }, [mintResult]);
 
+  useEffect(() => {
+    if (address) {
+      getRemainDrawCount(address).then((res) => {
+        console.log("remain draw count: ", res);
+        const { remainNumber, tokenId } = res.result;
+        tokenId && setDrawedNftId(Number(tokenId));
+        setRemainDrawCount(remainNumber);
+      });
+    }
+  }, [address, update]);
+
   return (
     <>
+      <div className="invite-box" onClick={modalInstance.onOpen}>
+        <img src="img/icon-check-invitebox.svg" alt="" className="mr-2" />
+        <span className="text">Check Invite Box</span>
+      </div>
       <Modal
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
-        style={{ minHeight: "300px", backgroundColor: "#000811" }}
+        style={{ minHeight: "300px", backgroundColor: "rgb(0, 0, 0)" }}
         isOpen={trademarkMintModal.isOpen}
         onOpenChange={trademarkMintModal.onOpenChange}
         className="trans"
       >
-        <ModalContent className="mt-[2rem] py-4 px-4">
+        <ModalContent className="mt-[2rem] py-4 px-[24px]">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
             {trademarkMintStatus === MintStatus.Minting && !isApproving && (
               <span>Minting</span>
@@ -422,10 +427,10 @@ const InviteBoxModal = (props: IProps) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Modal
+      <ModalContainer
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
-        size="md"
+        size="lg"
         isOpen={modalInstance.isOpen}
         onOpenChange={modalInstance.onOpenChange}
       >
@@ -451,7 +456,7 @@ const InviteBoxModal = (props: IProps) => {
                     sbtNFT={nft}
                   />
 
-                  <p className="text-white font-chakra text-[14px] mt-4 text-center">
+                  <p className="text-[#FBFBFB99] font-chakra text-[14px] mt-4 text-center">
                     With each referral, you'll have the chance to randomly draw
                     one of the invite rewards. Please notice that Hodling points
                     rewards are not NFT, they'll be added directly to your
@@ -461,8 +466,8 @@ const InviteBoxModal = (props: IProps) => {
               </ModalBody>
               <ModalFooter>
                 <div className="flex flex-col w-full">
-                  <Button
-                    className="w-full gradient-btn mb-3"
+                  <PrimaryButton
+                    className="w-full gradient-btn mb-[16px]"
                     isDisabled={
                       !isInvaidChain &&
                       (novaBalance === 0 || remainDrawCount === 0)
@@ -472,23 +477,33 @@ const InviteBoxModal = (props: IProps) => {
                   >
                     {isInvaidChain && "Switch to Nova network to draw"}
                     {!isInvaidChain &&
-                      (!drawedNftId || drawedNftId === 5 || drawing) &&
-                      `Draw ( ${remainDrawCount} )`}
+                      (!drawedNftId || drawedNftId === 5 || drawing) && (
+                        <div className="flex items-center justify-center gap-[4px]">
+                          <img src="/img/icon-draw-btn.svg" alt="" />
+                          Draw ({remainDrawCount})
+                        </div>
+                      )}
                     {!isInvaidChain &&
                       !!drawedNftId &&
                       drawedNftId !== 5 &&
                       !drawing &&
                       "Mint"}
-                  </Button>
-                  <Button className="w-full " onClick={onClose}>
+                  </PrimaryButton>
+                  <SecondayButton
+                    className="w-full "
+                    onClick={() => {
+                      onClose();
+                      eventBus.emit("openRefeffalModal");
+                    }}
+                  >
                     Invite More
-                  </Button>
+                  </SecondayButton>
                 </div>
               </ModalFooter>
             </>
           )}
         </ModalContent>
-      </Modal>
+      </ModalContainer>
     </>
   );
 };

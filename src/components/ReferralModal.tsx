@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { ReferralPointsListItem, getReferralPointsList } from "@/api";
 import { useAccount } from "wagmi";
 import { formatNumberWithUnit, getTweetShareText } from "@/utils";
+import { eventBus } from "@/utils/event-bus";
 type ReferacData = {
   username: string;
   address: string;
@@ -85,6 +86,17 @@ const ReferralModal = () => {
     navigator.clipboard.writeText(invite?.code);
     toast.success("Copied", { duration: 2000 });
   };
+
+  const openRefeffalModal = () => {
+    modal.onOpen();
+  };
+
+  useEffect(() => {
+    eventBus.on("openRefeffalModal", openRefeffalModal);
+    return () => {
+      eventBus.remove("openRefeffalModal", openRefeffalModal);
+    };
+  }, []);
 
   return (
     <>
