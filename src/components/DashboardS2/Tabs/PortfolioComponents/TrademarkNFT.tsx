@@ -124,7 +124,7 @@ export default function TrademarkNFT() {
               {item.name} ({item.balance})
             </p>
             <p className="desc">
-              You could earn Oak Tree Roots by participate in daily checking or
+              You could earn {item.name} by participate in daily checking or
               buy from OKX
             </p>
           </div>

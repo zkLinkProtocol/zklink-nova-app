@@ -21,6 +21,7 @@ interface DailyBoxProps {
   amount?: number;
   index: number;
   onDrawed?: () => void;
+  remain?: number;
 }
 
 const DailyBox = (props: DailyBoxProps) => {
@@ -37,9 +38,6 @@ const DailyBox = (props: DailyBoxProps) => {
   }, [type]);
   const pendingTime = useMemo(() => {
     if (index > 4) {
-      if (index > 5) {
-        return `Exactly in ${index - 4} days`;
-      }
       const now = dayjs();
       // UTC 10:00
       const tomorrow10am = dayjs()
@@ -49,10 +47,9 @@ const DailyBox = (props: DailyBoxProps) => {
         .minute(0)
         .second(0);
       const timeDiff = tomorrow10am.diff(now);
-      const minutes = Math.floor(
-        (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60)
-      );
-      return `Exactly in 1 Day & ${minutes} Min`;
+      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+
+      return `Exactly in ${hours + (index - 5) * 24} Hours`;
     }
   }, [index]);
   const handleClaim = useCallback(async () => {
@@ -69,7 +66,9 @@ const DailyBox = (props: DailyBoxProps) => {
             <div className="img-bg">
               <img src="/img/s2/img-daily-box.png" alt="" />
             </div>
-            {amount && <p>X{amount}</p>}
+            {amount && type !== BoxType.Expired && (
+              <p>X{type === BoxType.Active ? remain : amount}</p>
+            )}
 
             <div
               className={`mt-auto status status-${type}`}
@@ -96,7 +95,11 @@ const DailyBox = (props: DailyBoxProps) => {
           </div>
         )}
       </div>
-      <DailyDrawModal modalInstance={modal} onDrawed={onDrawed} />
+      <DailyDrawModal
+        modalInstance={modal}
+        onDrawed={onDrawed}
+        remain={remain}
+      />
     </Container>
   );
 };

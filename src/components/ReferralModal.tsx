@@ -16,7 +16,8 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { ReferralPointsListItem, getReferralPointsList } from "@/api";
 import { useAccount } from "wagmi";
-import { formatNumberWithUnit } from "@/utils";
+import { formatNumberWithUnit, getTweetShareText } from "@/utils";
+import { eventBus } from "@/utils/event-bus";
 type ReferacData = {
   username: string;
   address: string;
@@ -86,13 +87,28 @@ const ReferralModal = () => {
     toast.success("Copied", { duration: 2000 });
   };
 
+  const openRefeffalModal = () => {
+    modal.onOpen();
+  };
+
+  useEffect(() => {
+    eventBus.on("openRefeffalModal", openRefeffalModal);
+    return () => {
+      eventBus.remove("openRefeffalModal", openRefeffalModal);
+    };
+  }, []);
+
   return (
     <>
-      <ReferralButton variant="bordered" onClick={modal.onOpen}>
-        Your Referral
+      <ReferralButton onClick={modal.onOpen}>
+        <img
+          src="/img/icon-invite-btn.png"
+          alt=""
+          className="absolute bottom-0 right-[48px] w-[37px]"
+        />
+        <span className="relative z-1">Your Invite Code: {invite?.code}</span>
       </ReferralButton>
       <ModalContainer
-        isDismissable={false}
         classNames={{ closeButton: "hidden" }}
         size="md"
         isOpen={modal.isOpen}
@@ -100,7 +116,7 @@ const ReferralModal = () => {
       >
         <ModalContent className="mb-[5.75rem]">
           {(onClose) => (
-            <ModalContent>
+            <>
               <ModalHeader className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <div className="flex">Your Referrals ({data.length}/999)</div>
@@ -153,11 +169,18 @@ const ReferralModal = () => {
                   </SecondayButton>
                   <PrimaryButton className="flex-1">
                     <img src="img/s2/icon-twitter.svg" alt="" />
-                    <span>Share your code on X to earn more</span>
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${getTweetShareText(
+                        invite?.code ?? ""
+                      )}`}
+                      target="_blank"
+                    >
+                      Share your code on X to earn more
+                    </a>
                   </PrimaryButton>
                 </div>
               </ModalFooter>
-            </ModalContent>
+            </>
           )}
         </ModalContent>
       </ModalContainer>
@@ -172,17 +195,22 @@ const ModalContainer = styled(Modal)`
   background: var(--Background, #000811);
 `;
 const ReferralButton = styled(Button)`
-  border-radius: 52px;
-  border: 1px solid #03d498;
-  color: #03d498;
-  font-family: "Chakra Petch";
-  font-size: 24px;
+  position: relative;
+  padding: 12px 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(51, 49, 49, 1);
+  background: #10131c;
+  filter: blur(0.125px);
+  color: rgba(251, 251, 251, 0.6);
+  text-align: right;
+  font-family: Satoshi;
+  font-size: 16px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 18px; /* 75% */
-  height: 52px;
-  padding-left: 18px;
-  padding-right: 18px;
+  font-weight: 700;
+  line-height: 110%; /* 17.6px */
+  img.absolute {
+    filter: grayscale(100%);
+  }
 `;
 const InviteCode = styled.div`
   border-radius: 24px;

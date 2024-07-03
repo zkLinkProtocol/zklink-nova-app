@@ -242,11 +242,10 @@ export default function Leaderboard() {
             </div>
             <Title className="mt-[20px]">Points Leaderboard</Title>
             <Description className="mt-[30px]">
-              Please note that the leaderboard currently displays only the Nova
-              Points earned through deposits and holdings. It does not yet
-              include Nova Points earned from interacting with eco dapps, invite
-              boxes, and other activities. Don't worry—you won't lose these
-              points.
+              The leaderboard is organized by sectors. In Season II, Nova Points
+              will measure users' contributions to each sector and the actions
+              mentioned above. These points will determine the distribution of
+              $ZKL rewards from each sector's prize pool.
             </Description>
           </div>
           <Epoch className="flex items-center whitespace-nowrap">
@@ -281,14 +280,14 @@ export default function Leaderboard() {
               <tr>
                 <th className="rank">RANK</th>
                 <th>USER</th>
-                <th className="points">DEX POINTS</th>
+                <th className="points">{tabs[tabActive].name} POINTS</th>
               </tr>
             </thead>
 
             <tbody>
               {categoryList.map((item, index) =>
                 address === item.address ? (
-                  <tr className={"self"}>
+                  <tr className={"self"} key={index}>
                     <td className="rank">{item.rank}</td>
                     <td>
                       <div className="flex items-center gap-[7px]">
@@ -299,7 +298,7 @@ export default function Leaderboard() {
                     <td className="points">100,000.00</td>
                   </tr>
                 ) : (
-                  <tr>
+                  <tr key={index}>
                     <td className="rank">{item.rank}</td>
                     <td>{item.username}</td>
                     <td className="points">
