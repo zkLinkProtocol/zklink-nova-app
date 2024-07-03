@@ -9,6 +9,7 @@ import React, {
 import "./index.css";
 import useSBTNFT, { NOVA_NFT } from "@/hooks/useNFT";
 import PointsRewardsTooltips from "../Dashboard/PointsRewardsTooltips";
+import styled from "styled-components";
 
 let timeout: string | number | NodeJS.Timeout | undefined;
 type Ref = ReactNode | { start: (target: number) => void };
@@ -19,8 +20,8 @@ interface IProps {
   sbtNFT?: NOVA_NFT;
 }
 const TrademarkItems = [
-  { name: "+10 Nova points", img: "img-trademark-8.png", tooltipId: 10 },
-  { name: "+50 Nova points", img: "img-trademark-9.png", tooltipId: 50 },
+  { name: "+10 Nova points", img: "/img/s2-points-10.png", tooltipId: 10 },
+  { name: "+50 Nova points", img: "/img/s2-points-50.png", tooltipId: 50 },
 ];
 
 const MysteryboxItems = [
@@ -33,6 +34,48 @@ const MysteryboxItems = [
   { name: "Nova +2000 Booster", img: "/img/img-point-booster-7.png" },
   { name: "Lynks", img: "" },
 ];
+
+const S2PointsCard = styled.div`
+  position: relative;
+  border-radius: 32px 32px 0 0;
+  border: 2px solid #635f5f;
+  background: #151923;
+  overflow: hidden;
+
+  .card-shadow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 381px;
+    width: 381px;
+    height: 381px;
+    display: block;
+  }
+
+  .img-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 35px 40px 28px;
+    /* width: 120px; */
+    /* height: 120px; */
+    height: auto;
+    background: #151923;
+  }
+  .item-name {
+    width: 100%;
+    background: #1b1d20;
+    z-index: 1;
+    color: #fff;
+    font-family: Satoshi;
+    font-size: 16.452px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18.802px; /* 114.286% */
+    letter-spacing: -0.082px;
+  }
+`;
 
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   const { targetImageIndex, onDrawEnd, type, sbtNFT } = props;
@@ -104,7 +147,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
       {type === "Trademark" && (
         <>
           {TrademarkItems.map((item, index) => (
-            <div
+            <S2PointsCard
               key={item.name}
               className={`lottery-item ${
                 currentImageIndex === index ? "active" : ""
@@ -113,9 +156,15 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
                 item?.tooltipId ? `points-rewards-tips-${item.tooltipId}` : ""
               }
             >
+              <img
+                src="/img/s2-points-shadow.png"
+                alt=""
+                className="card-shadow"
+              />
               <div className="img-bg">
                 <img
-                  src={index === 8 ? lynksNFTImg : `/img/${item.img}`}
+                  className="min-w-[120px] min-h-[120px]"
+                  src={index === 8 ? lynksNFTImg : `${item.img}`}
                   alt="Image 1"
                 />
               </div>
@@ -129,7 +178,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
                   <img src="/img/icon-info.svg" className="info" />
                 )}
               </div>
-            </div>
+            </S2PointsCard>
           ))}
         </>
       )}

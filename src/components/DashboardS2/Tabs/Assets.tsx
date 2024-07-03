@@ -134,7 +134,6 @@ const List = styled.div`
       font-style: normal;
       font-weight: 900;
       line-height: normal;
-      text-transform: capitalize;
     }
     .name {
       color: #03d498;
@@ -357,6 +356,7 @@ export default function Assets(props: IAssetsTableProps) {
   };
 
   const handleBridgeMore = (token: string) => {
+    console.log("bridge token", token);
     if (token === "rsETH" || token === "M-BTC") {
       window.open("https://free.tech/zklink");
     } else {
@@ -623,7 +623,9 @@ export default function Assets(props: IAssetsTableProps) {
                   content:
                     "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
                 }}
-                content={`This sector will allocated ${formatToThounds(nextAllocationZKL)} $ZKL after reaching the next milestone.`}
+                content={`This sector will allocated ${formatToThounds(
+                  nextAllocationZKL
+                )} $ZKL after reaching the next milestone.`}
               >
                 <img
                   src="/img/icon-info-2.svg"

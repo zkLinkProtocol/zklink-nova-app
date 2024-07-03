@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import DailyBox, { BoxType } from "./DailyBox";
-import { Tooltip, useDisclosure } from "@nextui-org/react";
+import { Tooltip } from "@nextui-org/react";
 import InviteBoxModal from "./InviteBoxModal";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { getRemainDrawCount, getDailyCheckinHistory } from "@/api";
+import { getDailyCheckinHistory } from "@/api";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -126,12 +126,9 @@ const BoxList = [
   },
 ];
 export default function DailyRoulette() {
-  const openBoxModal = useDisclosure();
   const { address } = useAccount();
-
-  const [remainDrawCount, setRemainDrawCount] = useState<number>(0);
-  const [drawedNftId, setDrawedNftId] = useState<number | undefined>();
   const [update, setUpdate] = useState(0);
+
   const [dailyData, setDailyData] = useState<
     {
       type: BoxType;
@@ -148,12 +145,6 @@ export default function DailyRoulette() {
 
   useEffect(() => {
     if (address) {
-      getRemainDrawCount(address).then((res) => {
-        console.log("remain draw count: ", res);
-        const { remainNumber, tokenId } = res.result;
-        tokenId && setDrawedNftId(Number(tokenId));
-        setRemainDrawCount(remainNumber);
-      });
       getDailyCheckinHistory().then((res) => {
         console.log("history: ", res);
         const data = [];
@@ -211,10 +202,7 @@ export default function DailyRoulette() {
             <div className="title-desc">Determined by the consecutive days</div>
           </Tooltip>
         </div>
-        <div className="invite-box" onClick={openBoxModal.onOpen}>
-          <img src="img/icon-check-invitebox.svg" alt="" className="mr-2" />
-          <span className="text">Check Invite Box</span>
-        </div>
+        <InviteBoxModal />
       </div>
       <div className="flex items-center justify-between mt-[30px]">
         {dailyData.map((item, index) => (
@@ -226,13 +214,6 @@ export default function DailyRoulette() {
           />
         ))}
       </div>
-      <InviteBoxModal
-        modalInstance={openBoxModal}
-        remainDrawCount={remainDrawCount}
-        drawedNftId={drawedNftId}
-        setDrawedNftId={setDrawedNftId}
-        setUpdate={setUpdate}
-      />
     </Container>
   );
 }

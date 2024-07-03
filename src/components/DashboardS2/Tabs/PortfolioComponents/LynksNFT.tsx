@@ -75,8 +75,8 @@ export default function SbtNFT() {
         </p>
         <div className="divide my-1"></div>
         <p className="text-sm text-[#FBFBFB]/[0.6]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor
+          Collect ONE OF EACH of the four different types of Trademark NFTs to
+          upgrade your SBT to Lynks.
         </p>
         <Button
           className="btn-mint mt-auto"
