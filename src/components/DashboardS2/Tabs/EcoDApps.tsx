@@ -67,6 +67,15 @@ const Container = styled.div`
     font-weight: 700;
     line-height: normal;
     text-transform: capitalize;
+    .max {
+      color: #a9a9a9;
+      font-family: Satoshi;
+      font-size: 15.436px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      text-transform: capitalize;
+    }
   }
   .holding-desc {
     color: rgba(251, 251, 251, 0.6);
@@ -208,23 +217,6 @@ const List = styled.div`
       line-height: normal;
       text-align: center;
     }
-    .particpate {
-      text-align: center;
-      font-family: Satoshi;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: normal;
-      background: linear-gradient(
-        90deg,
-        #4ba790 0%,
-        rgba(251, 251, 251, 0.6) 50.31%,
-        #9747ff 100%
-      );
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
   }
 
   .col-line {
@@ -262,6 +254,23 @@ const List = styled.div`
   }
 `;
 
+const GradientText = styled.span`
+  font-family: Satoshi;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  background: linear-gradient(
+    90deg,
+    #4ba790 0%,
+    rgba(251, 251, 251, 0.6) 50.31%,
+    #9747ff 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+
 const GradientBox = styled.div`
   padding: 4px 28px;
   border: 2px solid transparent;
@@ -282,10 +291,22 @@ const DetailBox = styled.div`
   /* background: #011a24; */
   .detail-label {
     margin-bottom: 12px;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--Neutral-1, #fff);
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px; /* 100% */
+    letter-spacing: -0.08px;
   }
   .detail-value {
-    color: #fff;
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    font-family: Satoshi;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.07px;
   }
 
   .detail-row {
@@ -439,7 +460,7 @@ const EcoDApp = (props: {
             }}
             content={data.details[0].booster}
           >
-            <GradientBox>Up to {data.rewards}</GradientBox>
+            <GradientBox>{data.rewards}</GradientBox>
           </Tooltip>
         </div>
         <div className="col-line"></div>
@@ -467,7 +488,7 @@ const EcoDApp = (props: {
             className="flex items-center gap-[4px] cursor-pointer select-none"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <span className="particpate">Participate</span>
+            <GradientText className="particpate">Participate</GradientText>
             <img src="/img/icon-ecolink2.svg" alt="" width={16} height={16} />
           </div>
         </div>
@@ -477,7 +498,7 @@ const EcoDApp = (props: {
         <DetailBox className="w-full mt-[4px] px-[7px]">
           {data.details.map((detail, index) => (
             <div
-              className={`detail-row mb-[8px] flex items-center justify-between ${
+              className={`detail-row mb-[8px] flex justify-between ${
                 index === data.details.length - 1 ? "rounded-bottom" : ""
               }`}
               key={index}
@@ -497,10 +518,10 @@ const EcoDApp = (props: {
                     className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
                     onClick={() => handleLink(detail.actionLink || data.link)}
                   >
-                    {detail.action}
+                    <GradientText>{detail.action}</GradientText>
                   </div>
                   <img
-                    src="/img/icon-open-in-new-green.svg"
+                    src="/img/open-in-new-s2.svg"
                     alt=""
                     width={20}
                     height={20}
@@ -569,7 +590,7 @@ export default function EcoDApps({
         handler: "@NovaSwap_fi",
         type: "DEX",
         idFeatured: true,
-        rewards: "20x",
+        rewards: "Up to 20x",
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
@@ -603,7 +624,7 @@ export default function EcoDApps({
         handler: "@NovaSwap_fi",
         type: "DEX",
         idFeatured: true,
-        rewards: "20x",
+        rewards: "Up to 20x",
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
@@ -636,7 +657,7 @@ export default function EcoDApps({
         link: "https://zklink.layerbank.finance/",
         handler: "@LayerBankFi",
         type: "Lending",
-        rewards: "10x",
+        rewards: "Up to 10x",
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
           {
@@ -673,7 +694,7 @@ export default function EcoDApps({
         link: "https://app.logx.trade/liquidity",
         handler: "@LogX_trade",
         type: "Perp DEX",
-        rewards: "10x",
+        rewards: "Up to 10x / Trading",
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
@@ -712,7 +733,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Up to 10x",
         protocolAllocated: (aqua?.refPoints || 0) + (aqua?.holdingPoints || 0),
         details: [
           {
@@ -740,7 +761,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Up to 10x",
         protocolAllocated:
           (shoebill?.refPoints || 0) + (shoebill?.holdingPoints || 0),
         details: [
@@ -767,7 +788,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Up to 10x / Trading",
         protocolAllocated:
           (wagmi?.refPoints || 0) + (wagmi?.holdingPoints || 0),
         details: [
@@ -803,7 +824,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Up to 10x",
         protocolAllocated:
           (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
         details: [
@@ -835,7 +856,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Up to 10x / Trading",
         protocolAllocated: (zkdx?.refPoints || 0) + (zkdx?.holdingPoints || 0),
         details: [
           {
@@ -870,7 +891,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Trading",
         protocolAllocated: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
         details: [
           {
@@ -899,7 +920,7 @@ export default function EcoDApps({
             iconURL: "/img/icon-rewards-allspark.svg",
           },
         ],
-        rewards: "10x",
+        rewards: "Interaction",
         protocolAllocated:
           (allspark?.refPoints || 0) + (allspark?.holdingPoints || 0),
         details: [
@@ -925,7 +946,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Bridge",
         protocolAllocated:
           (rubic?.refPoints || 0) + (rubic?.holdingPoints || 0),
         details: [
@@ -951,7 +972,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Up to 10x",
         protocolAllocated:
           (interport?.refPoints || 0) + (interport?.holdingPoints || 0),
         details: [
@@ -977,7 +998,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Bridge",
         protocolAllocated:
           (orbiter?.refPoints || 0) + (orbiter?.holdingPoints || 0),
         details: [
@@ -999,7 +1020,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Bridge",
         protocolAllocated:
           (symbiosis?.refPoints || 0) + (symbiosis?.holdingPoints || 0),
         details: [
@@ -1021,7 +1042,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "10x",
+        rewards: "Bridge",
         protocolAllocated:
           (meson?.refPoints || 0) + (meson?.holdingPoints || 0),
         details: [
@@ -1145,6 +1166,8 @@ export default function EcoDApps({
         setNextAllocationZKL(milestoneData[nextIndex].zkl || 0);
         setNextTargetTvl(milestoneData[nextIndex].tvl || 0);
 
+        setMaxZKL(milestoneData[milestoneData.length - 1].zkl || 0);
+
         setMilestoneProgressList(arr);
       }
     }
@@ -1163,12 +1186,15 @@ export default function EcoDApps({
             <span>{tabActive?.name} $ZKL Allocation</span>
           </div>
           <div className="holding-value mt-[16px]">
-            {formatToThounds(currentAllocationZKL)} $ZKL
+            {formatToThounds(currentAllocationZKL)} $ZKL{" "}
+            <span className="max">
+              $ZKL (Up to {formatToThounds(maxZKL)} $ZKL)
+            </span>
           </div>
           {!isNoProgress ? (
             <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
-              Next $ZKL Allocation Milestone:{" "}
-              {formatToThounds(nextAllocationZKL)} $ZKL
+              Next $ZKL Allocation Level: {formatToThounds(nextAllocationZKL)}{" "}
+              $ZKL
               <Tooltip
                 classNames={{
                   content:
@@ -1186,9 +1212,7 @@ export default function EcoDApps({
               </Tooltip>
             </div>
           ) : (
-            <div className="holding-desc mt-[8px]">
-              <div>Max $ZKL Allocation: {formatToThounds(maxZKL)} $ZKL</div>
-            </div>
+            ""
           )}
         </div>
         <AllocatedBox>
@@ -1224,11 +1248,11 @@ export default function EcoDApps({
                   <span className="text-green">Max</span>
                 ) : (
                   <>
-                    Next Target{" "}
+                    Next TVL{" "}
                     {tabActive?.category === "perpdex"
                       ? "Trading Volume"
-                      : "TVL"}
-                    : {formatToThounds(nextTargetTvl)}
+                      : "TVL"}{" "}
+                    Milestone : {formatToThounds(nextTargetTvl)}
                   </>
                 )}
               </div>
@@ -1254,7 +1278,7 @@ export default function EcoDApps({
       <List>
         <div className="list-header flex items-center">
           <div className="list-header-item text-left">Protocol</div>
-          <div className="list-header-item text-center">Points Booster</div>
+          <div className="list-header-item text-center">Points booster</div>
           <div className="list-header-item text-center">Rewards</div>
           <div className="list-header-item text-center">Allocated Points</div>
           <div className="list-header-item"></div>

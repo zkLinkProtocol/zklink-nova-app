@@ -69,6 +69,15 @@ const Container = styled.div`
     font-weight: 700;
     line-height: normal;
     text-transform: capitalize;
+    .max {
+      color: #a9a9a9;
+      font-family: Satoshi;
+      font-size: 15.436px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      text-transform: capitalize;
+    }
   }
   .holding-desc {
     color: rgba(251, 251, 251, 0.6);
@@ -599,6 +608,10 @@ export default function Assets(props: IAssetsTableProps) {
     setMilestoneProgressList(arr);
   }, [currentTvl]);
 
+  const maxZKL = useMemo(() => {
+    return milestoneData[milestoneData.length - 1].zkl;
+  }, [milestoneData]);
+
   return (
     <>
       <Container>
@@ -613,11 +626,12 @@ export default function Assets(props: IAssetsTableProps) {
               <span>Holding $ZKL Allocation</span>
             </div>
             <div className="holding-value mt-[16px]">
-              {formatToThounds(currentAllocationZKL)} $ZKL
+              {formatToThounds(currentAllocationZKL)}{" "}
+              <span className="max">$ZKL (Up to {formatToThounds(maxZKL)} $ZKL)</span>
             </div>
             <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
-              Next $ZKL Allocation Milestone:{" "}
-              {formatToThounds(nextAllocationZKL)} $ZKL
+              Next $ZKL Allocation Level: {formatToThounds(nextAllocationZKL)}{" "}
+              $ZKL
               <Tooltip
                 classNames={{
                   content:
@@ -654,12 +668,12 @@ export default function Assets(props: IAssetsTableProps) {
 
         <MilestoneBox>
           <div className="mt-[36px] flex justify-between items-center">
-            <div>Current TVL: {formatToThounds(currentTvl)}</div>
+            <div>Current TVL: ${formatToThounds(currentTvl)}</div>
             <div>
               {isMaxProgress ? (
                 <span className="text-green">Max</span>
               ) : (
-                <>Next Target TVL: {formatToThounds(nextTargetTvl)}</>
+                <>Next TVL Milestone: ${formatToThounds(nextTargetTvl)}</>
               )}
             </div>
           </div>
