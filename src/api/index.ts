@@ -674,14 +674,28 @@ export interface CategoryListItem {
 interface CategoryListResponse {
   errno: number;
   errmsg: string;
-  data: CategoryListItem[];
+  data: {
+    current?: {
+      address: string;
+      totalPoints: string;
+      userIndex: number;
+      username: string;
+    };
+    list: CategoryListItem[];
+  };
 }
 
 export const getCategoryList = (
-  category: string
+  category: string,
+  address?: string
 ): Promise<CategoryListResponse> =>
   http.get(
-    `${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`
+    `${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`,
+    {
+      params: {
+        address,
+      },
+    }
   );
 
 export const dailyOpen = (): Promise<Response> =>
