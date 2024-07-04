@@ -612,7 +612,7 @@ export default function Dashboard() {
         points: categoryData.points,
         earnedBy: [
           {
-            name: "Earned by Holding",
+            name: "Earned by participate in Sector",
             points: categoryData.holdingPoints,
           },
           {

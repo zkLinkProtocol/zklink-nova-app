@@ -1187,9 +1187,7 @@ export default function EcoDApps({
           </div>
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL{" "}
-            <span className="max">
-              $ZKL (Up to {formatToThounds(maxZKL)} $ZKL)
-            </span>
+            <span className="max">(Up to {formatToThounds(maxZKL)} $ZKL)</span>
           </div>
           {!isNoProgress ? (
             <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
