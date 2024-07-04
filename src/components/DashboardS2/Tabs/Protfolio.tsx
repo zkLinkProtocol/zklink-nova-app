@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Button, Tooltip, Checkbox } from "@nextui-org/react";
 import { useState, useEffect, useMemo } from "react";
-import { formatNumberWithUnit } from "@/utils";
+import { formatNumber2, formatNumberWithUnit } from "@/utils";
 import SbtNft from "./PortfolioComponents/SbtNFT";
 import LynksNft from "./PortfolioComponents/LynksNFT";
 import TrademarkNFT from "./PortfolioComponents/TrademarkNFT";
@@ -11,10 +11,12 @@ import {
   getMagPiePoints,
   getPufferPoints,
   getRenzoPoints,
+  getRoyaltyBooster,
   getRsethPoints,
 } from "@/api";
 import axios from "axios";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
+import Decimal from "decimal.js";
 const Title = styled.div`
   background: linear-gradient(180deg, #fff 0%, #bababa 100%);
   background-clip: text;
@@ -421,6 +423,21 @@ export default function Portfolio({
     checked,
   ]);
 
+  const [royaltyBooster, setRoyaltyBooster] = useState(0);
+  const getRoyaltyBoosterFunc = async () => {
+    if (!address) return;
+    const { result } = await getRoyaltyBooster(address);
+    if (result?.loyaltyBooster) {
+      setRoyaltyBooster(Number(result.loyaltyBooster) || 0);
+    }
+  };
+
+  const royaltyBoosterPencentage = useMemo(() => {
+    return Number(royaltyBooster)
+      ? `${formatNumber2(Decimal.sub(royaltyBooster, 1).toNumber() * 100)}%`
+      : "0%";
+  }, [royaltyBooster]);
+
   useEffect(() => {
     getPufferPointsFunc();
     getEigenlayerPointsFunc();
@@ -428,14 +445,38 @@ export default function Portfolio({
     getMagpiePointsFunc();
     getRsethPointsFunc();
     getBedrockPointsFunc();
+    getRoyaltyBoosterFunc();
   }, [address]);
 
   const handleViewMore = () => {};
 
   return (
     <Container>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-[16px]">
         <Title>Your Nova Points</Title>
+        <Tooltip
+          classNames={{
+            content: "w-[350px] rounded-lg bg-[#151923] text-white px-4 py-5",
+          }}
+          content={
+            <div className="max-w-[20rem]">
+              <h4 className="font-[700] text-[0.875rem] leading-[1.3755rem]">
+                Loyalty Booster
+              </h4>
+              <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
+                An extra boost for Loyalty users,tied with days in the
+                Aggregation parade (capped at 50%):
+                <br />
+                <br />
+                Loyalty Booster = min(50%, 0.5%*days joined)
+              </p>
+            </div>
+          }
+        >
+          <PointsBox className="text-[14px] font-[900]">
+            +{royaltyBoosterPencentage}
+          </PointsBox>
+        </Tooltip>
       </div>
       <div className="flex flex-wrap items-center mt-5">
         {novaPointsList.map((item, index) => (
