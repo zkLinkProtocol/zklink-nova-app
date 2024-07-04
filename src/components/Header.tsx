@@ -121,13 +121,22 @@ const LogoBox = styled.div`
 `;
 
 const ButtonText = styled.span`
-  color: var(--Black-1, var(--Black, #030d19));
+  /* color: var(--Black-1, var(--Black, #030d19)); */
   text-align: center;
   font-family: Satoshi;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 26px; /* 162.5% */
+  background: linear-gradient(
+    90deg,
+    #4ba790 0%,
+    rgba(251, 251, 251, 0.6) 50.31%,
+    #9747ff 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `;
 
 export default function Header() {
@@ -645,10 +654,10 @@ export default function Header() {
                 <DropdownTrigger>
                   <Button
                     // variant="bordered"
-                    className="px-[24px] py-[20px] md:h-[52px] bg-[#03D498] rounded-[100px] flex justify-center items-center md:gap-[10px]"
+                    className="px-[24px] py-[20px] md:h-[52px] bg-[#282828] rounded-[100px] flex justify-center items-center md:gap-[10px]"
                     disableAnimation
                   >
-                    <img width={20} height={20} src="/img/icon-wallet2.svg" />
+                    <img width={20} height={20} src="/img/icon-s2-wallet.svg" />
 
                     {/* <ConnectButton /> */}
                     <ButtonText
@@ -676,7 +685,7 @@ export default function Header() {
               <ConnectButton.Custom>
                 {({ chain }) => (
                   <Button
-                    className="px-[24px] py-[20px] md:h-[52px] bg-[#03D498] rounded-[100px] flex justify-center items-center md:gap-[10px]"
+                    className="px-[24px] py-[20px] md:h-[52px] bg-[#282828] rounded-[100px] flex justify-center items-center md:gap-[10px]"
                     disableAnimation
                     // onClick={() => web3Modal.open()}
                     onClick={() => {
@@ -689,7 +698,7 @@ export default function Header() {
                       }
                     }}
                   >
-                    <img width={20} height={20} src="/img/icon-wallet2.svg" />
+                    <img width={20} height={20} src="/img/icon-s2-wallet.svg" />
 
                     {/* <ConnectButton /> */}
                     <ButtonText

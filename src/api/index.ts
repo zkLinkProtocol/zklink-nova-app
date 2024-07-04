@@ -685,7 +685,7 @@ export const getCategoryList = (
   );
 
 export const dailyOpen = (): Promise<Response> =>
-  http.post(`https://goerli.app.zklink.io/api/invite/checkin/open`);
+  http.post(`${BASE_URL_API}/invite/checkin/open`);
 
 export interface DailyCheckinHistoryData {
   date: string;
@@ -698,7 +698,7 @@ type PromiseResponse<T> = {
 };
 export const getDailyCheckinHistory = (): Promise<
   PromiseResponse<DailyCheckinHistoryData[]>
-> => http.get(`https://goerli.app.zklink.io/api/invite/checkin/history`);
+> => http.get(`${BASE_URL_API}/invite/checkin/history`);
 
 export interface DailyCheckinHistoryData {
   date: string;

@@ -330,15 +330,15 @@ export default function Bridge(props: IBridgeComponentProps) {
 
   useEffect(() => {
     if (bridgeToken && !bridgeTokenInited) {
-      const token = tokenList.find((item) =>
+      const token = tokenFiltered.find((item) =>
         bridgeToken.indexOf("0x") > -1
           ? isSameAddress(item.address, bridgeToken)
           : item.symbol === bridgeToken
       );
       if (token) {
-        const _tokenList = tokenList.filter(
-          (item) => item.networkKey === token.networkKey
-        );
+        // const _tokenList = tokenList.filter(
+        //   (item) => item.networkKey === token.networkKey
+        // );
         let index = 0;
         let fromIndex = fromList.findIndex(
           (item) => item.networkKey === token.networkKey
@@ -348,7 +348,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         }
         const from = fromList[fromIndex];
         if (token.address !== ETH_ADDRESS) {
-          index = _tokenList.findIndex(
+          index = tokenFiltered.findIndex(
             (item) => item.address === token.address
           );
           setTokenActive(index);
@@ -360,7 +360,7 @@ export default function Bridge(props: IBridgeComponentProps) {
         setTokenActive(0);
         setNetworkKey(fromList[0].networkKey);
       }
-      if (tokenList.length > 1) {
+      if (tokenFiltered.length > 1) {
         setBridgeTokenInited(true);
       }
     } else {
@@ -383,7 +383,7 @@ export default function Bridge(props: IBridgeComponentProps) {
     setNetworkKey,
     isFirstDeposit,
     bridgeToken,
-    tokenList,
+    tokenFiltered,
     bridgeTokenInited,
   ]);
 
