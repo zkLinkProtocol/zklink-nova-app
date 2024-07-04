@@ -626,8 +626,10 @@ export default function Assets(props: IAssetsTableProps) {
               <span>Holding $ZKL Allocation</span>
             </div>
             <div className="holding-value mt-[16px]">
-              {formatToThounds(currentAllocationZKL)}{" "}
-              <span className="max">$ZKL (Up to {formatToThounds(maxZKL)} $ZKL)</span>
+              {formatToThounds(currentAllocationZKL)} $ZKL{" "}
+              <span className="max">
+                (Up to {formatToThounds(maxZKL)} $ZKL)
+              </span>
             </div>
             <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
               Next $ZKL Allocation Level: {formatToThounds(nextAllocationZKL)}{" "}

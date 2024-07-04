@@ -149,17 +149,20 @@ const ReferralModal = () => {
                     <div key={item}>{item}</div>
                   ))}
                 </TableHead>
-                {data.map((item) => (
-                  <TableBodyRow key={item.address}>
-                    <div>{item.username}</div>
-                    <div>{formatNumberWithUnit(item.holding)}</div>
-                    <div>{formatNumberWithUnit(item.spotDex)}</div>
-                    <div>{formatNumberWithUnit(item.perpDex)}</div>
-                    <div>{formatNumberWithUnit(item.lending)}</div>
-                    <div>{formatNumberWithUnit(item.gameFi)}</div>
-                    <div>{formatNumberWithUnit(item.other)}</div>
-                  </TableBodyRow>
-                ))}
+                <div className="max-h-[400px] overflow-auto">
+                  {data.map((item) => (
+                    <TableBodyRow key={item.address}>
+                      <div>{item.username}</div>
+                      <div>{formatNumberWithUnit(item.holding)}</div>
+                      <div>{formatNumberWithUnit(item.spotDex)}</div>
+                      <div>{formatNumberWithUnit(item.perpDex)}</div>
+                      <div>{formatNumberWithUnit(item.lending)}</div>
+                      <div>{formatNumberWithUnit(item.gameFi)}</div>
+                      <div>{formatNumberWithUnit(item.other)}</div>
+                    </TableBodyRow>
+                  ))}
+                </div>
+
                 <Divide />
               </ModalBody>
               <ModalFooter>
