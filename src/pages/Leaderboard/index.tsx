@@ -201,26 +201,33 @@ export default function Leaderboard() {
 
   const [categoryList, setCategoryList] = useState<ListItem[]>([]);
   const getCategoryListFunc = async (category: string) => {
-    const res = await getCategoryList(category);
+    try {
+      const { data } = await getCategoryList(category, address);
 
-    let self: ListItem | null = null;
+      const self: ListItem | null = data?.current
+        ? {
+            rank: data.current.userIndex,
+            username: data.current.username,
+            address: data.current.address,
+            totalPoints: data.current.totalPoints,
+          }
+        : null;
 
-    const arr = res?.data.map((item, index) => {
-      if (item.address === address) {
-        self = { ...item, rank: index + 1 };
+      const arr = data.list.map((item, index) => {
+        return {
+          rank: index + 1,
+          ...item,
+        };
+      });
+
+      if (self) {
+        arr.unshift(self);
       }
 
-      return {
-        rank: index + 1,
-        ...item,
-      };
-    });
-
-    if (self) {
-      arr.unshift(self);
+      setCategoryList(arr);
+    } catch (error) {
+      setCategoryList([]);
     }
-
-    setCategoryList(arr);
   };
 
   const handleTabClick = (index: number) => {
