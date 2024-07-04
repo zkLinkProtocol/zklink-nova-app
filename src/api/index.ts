@@ -727,3 +727,12 @@ export const getReferralPointsList = (
 ): Promise<ReferralPointsListResponse> => {
   return http.get(`${BASE_URL_LRT_POINTS}/nova/${address}/referrer`);
 };
+
+interface HoldpointResponse {
+  errno: number;
+  errmsg: string;
+  data: number;
+}
+export const getHoldpoint = (address: string): Promise<HoldpointResponse> => {
+  return http.get(`${BASE_URL_LRT_POINTS}/nova/${address}/holdpoint`);
+};
