@@ -10,6 +10,7 @@ import {
   getAccountPoint,
   getAccountTvl,
   getExplorerTokenTvl,
+  getHoldpoint,
   getNovaCategoryPoints,
   getNovaCategoryUserPoints,
   getPointsDetail,
@@ -492,8 +493,8 @@ export default function Dashboard() {
       setHoldingPoints(0);
       return;
     }
-    const { result } = await getAccountPoint(address);
-    const points = Number(result?.novaPoint) || 0;
+    const res = await getHoldpoint(address);
+    const points = Number(res.data) || 0;
 
     const kolPoints =
       points !== 0 && invite?.kolGroup
@@ -572,6 +573,10 @@ export default function Dashboard() {
     return categoryData?.totalPoints || 0;
   }, [tabs2Active, novaCategoryPoints]);
 
+  const assetsHoldingPoints = useMemo(() => {
+    return holdingPoints + referPoints + otherNovaPoints;
+  }, [holdingPoints, referPoints, otherNovaPoints]);
+
   const novaPointsList: NovaPointsListItem[] = useMemo(() => {
     const ecoList = [
       {
@@ -621,7 +626,7 @@ export default function Dashboard() {
     const arr: NovaPointsListItem[] = [
       {
         name: "Assets Points",
-        points: holdingPoints + referPoints + otherNovaPoints,
+        points: assetsHoldingPoints,
         earnedBy: [
           {
             name: "Earned by Holding",
@@ -641,7 +646,7 @@ export default function Dashboard() {
     ];
 
     return arr;
-  }, [holdingPoints, referPoints, otherNovaPoints, getEcoCategoryPoints]);
+  }, [assetsHoldingPoints, getEcoCategoryPoints]);
 
   useEffect(() => {
     getAccountPointFunc();
@@ -792,7 +797,7 @@ export default function Dashboard() {
                     totalTvlList={totalTvlList}
                     accountTvlData={accountTvlData}
                     currentTvl={totalTvl}
-                    holdingPoints={holdingPoints}
+                    holdingPoints={assetsHoldingPoints}
                     novaCategoryTotalPoints={novaCategoryTotalPoints}
                   />
                 )}
