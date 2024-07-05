@@ -16,7 +16,7 @@ export default function ThridPartyBridge() {
         desc: "Bridge Bitcoin assets to earn Nova Points.",
         tooltip: "",
         points: "",
-        link: "https://free.tech/zklink",
+        link: "https://app.free.tech/",
       },
       {
         iconURL: "/img/icon-orbiter.svg",

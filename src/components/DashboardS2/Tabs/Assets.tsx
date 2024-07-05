@@ -366,8 +366,13 @@ export default function Assets(props: IAssetsTableProps) {
 
   const handleBridgeMore = (token: string) => {
     console.log("bridge token", token);
-    if (token === "rsETH" || token === "M-BTC") {
-      window.open("https://free.tech/zklink");
+    if (
+      token === "BBTC" ||
+      token === "BBUSD" ||
+      token === "M-BTC" ||
+      token === "solvBTC.m"
+    ) {
+      window.open("https://app.free.tech/");
     } else {
       setBridgeToken(token);
       bridgeModal.onOpen();

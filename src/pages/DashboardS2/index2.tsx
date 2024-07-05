@@ -570,7 +570,7 @@ export default function Dashboard() {
       (item) => item.category === category
     );
 
-    return categoryData?.totalPoints || 0;
+    return categoryData?.ecoPoints || 0;
   }, [tabs2Active, novaCategoryPoints]);
 
   const assetsHoldingPoints = useMemo(() => {
