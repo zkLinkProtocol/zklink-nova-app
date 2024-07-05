@@ -621,9 +621,7 @@ export interface NovaCategoryPoints {
     | "lending"
     | "gamefi"
     | "other";
-  ecoPoints: number;
-  referralPoints: number;
-  otherPoints: number;
+  totalPoints: number;
 }
 
 interface NovaCategoryResponse {
@@ -634,6 +632,33 @@ interface NovaCategoryResponse {
 
 export const getNovaCategoryPoints = (): Promise<NovaCategoryResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`);
+
+export interface NovaCategoryUserPointsTotal {
+  category:
+    | "holding"
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
+  ecoPoints: number;
+  referralPoints: number;
+  otherPoints: number;
+}
+
+interface NovaCategoryUserPointsTotalResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryUserPointsTotal[];
+}
+
+export const getNovaCategoryUserPointsTotal = (
+  address: string
+): Promise<NovaCategoryUserPointsTotalResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/user/points/total`, {
+    params: { address },
+  });
 
 export interface TvlCategory {
   name: string;
