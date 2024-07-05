@@ -614,13 +614,16 @@ export const getNovaCategoryUserPoints = (
 
 export interface NovaCategoryPoints {
   category:
+    | "holding"
     | "spotdex"
     | "nativeboost"
     | "perpdex"
     | "lending"
     | "gamefi"
     | "other";
-  totalPoints: number;
+  ecoPoints: number;
+  referralPoints: number;
+  otherPoints: number;
 }
 
 interface NovaCategoryResponse {
