@@ -32,7 +32,7 @@ export const PrizeItems = [
     name: "Nova +1 Booster",
     img: "/img/img-point-plus-1.png",
     points: 1,
-    tooltip: "Equivalent to depositing 1 ETH into Nova for ~1 day",
+    tooltip: "Equivalent to depositing 1 ETH into Nova for ~12 minutes",
   },
   {
     name: "Nova +10 Booster",
@@ -44,7 +44,7 @@ export const PrizeItems = [
     name: "Nova +50 Booster",
     img: "/img/img-point-plus-50.png",
     points: 50,
-    tooltip: "Equivalent to depositing 1 ETH into Nova for ~12 minutes",
+    tooltip: "Equivalent to depositing 1 ETH into Nova for ~10 hours",
   },
   { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
   { name: "Chess Knight", img: "/img/img-trademark-3.png" },

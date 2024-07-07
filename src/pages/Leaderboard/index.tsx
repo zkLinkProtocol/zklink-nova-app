@@ -250,8 +250,7 @@ export default function Leaderboard() {
             <Title className="mt-[20px]">Points Leaderboard</Title>
             <Description className="mt-[30px]">
               The leaderboard is organized by sectors. In Season II, Nova Points
-              will measure users' contributions to each sector and the actions
-              mentioned above. These points will determine the distribution of
+              will measure users' contributions to each sector. These points will determine the distribution of
               $ZKL rewards from each sector's prize pool.
             </Description>
           </div>

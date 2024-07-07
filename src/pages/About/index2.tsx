@@ -22,7 +22,6 @@ const Title = styled.h1`
   font-weight: 900;
   line-height: 70px; /* 125% */
   letter-spacing: -0.168px;
-  text-transform: capitalize;
 `;
 
 const CardBox = styled.div`
@@ -187,7 +186,7 @@ export default function About() {
                   and subsequent $ZKL was distributed.
                 </li>
                 <li className="before">
-                  Season I of the Aggregation Parade began on May 31, 2024, and
+                  Season I of the Aggregation Parade began on May 30, 2024, and
                   will operate under an Epoch timeline, in which there will be
                   at least Three Epochs.
                 </li>
@@ -231,7 +230,7 @@ export default function About() {
       answer: (
         <>
           <div className="paragraph">
-            The second season of the Aggregation Parade started on May 31, 2024,
+            The second season of the Aggregation Parade started on May 30, 2024,
             at 10:00 AM UTC.
           </div>
         </>
@@ -312,8 +311,7 @@ export default function About() {
       answer: (
         <>
           <div className="paragraph">
-            You can find more details within our blog post [insert blog link
-            here]
+            You can find more details within our blog post
           </div>
         </>
       ),
@@ -340,7 +338,7 @@ export default function About() {
         <>
           <div className="paragraph">
             Nova Points earned from Season I do not count, continue, or transfer
-            over to Season II. Nova Points earned in Season II began on May 31,
+            over to Season II. Nova Points earned in Season II began on May 30,
             2024, and will be calculated and converted into $ZKL at the end of
             each Epoch.
           </div>

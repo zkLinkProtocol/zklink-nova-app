@@ -628,7 +628,7 @@ export default function Assets(props: IAssetsTableProps) {
                 alt=""
                 className="w-[16px] h-[16px]"
               />
-              <span>$ZKL Allocation For Holding</span>
+              <span>$ZKL Allocation For Assets</span>
             </div>
             <div className="holding-value mt-[16px]">
               {formatToThounds(currentAllocationZKL)} $ZKL{" "}
