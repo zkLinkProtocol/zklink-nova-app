@@ -58,7 +58,7 @@ const Item = styled.div`
       line-height: normal;
       margin-right: 2px;
     }
-    & > .particpate {
+    & > .participate {
       text-align: center;
       font-family: Satoshi;
       font-size: 14px;
@@ -124,8 +124,8 @@ export default function TrademarkNFT() {
               {item.name} ({item.balance})
             </p>
             <p className="desc">
-              You could earn {item.name} by participate in daily checking or
-              buy from OKX
+              You can earn {item.name} by participating in the daily roulette or
+              purchasing from OKX
             </p>
           </div>
           <div className="action flex col-2 justify-center items-center gap-[10px]">
@@ -135,7 +135,7 @@ export default function TrademarkNFT() {
               target="_blank"
               className="flex items-center gap-[10px]"
             >
-              <span className="particpate">Buy from OKX</span>
+              <span className="participate">Buy From OKX</span>
               <img src="img/icon-square-link-color.svg" alt="" />
             </a>
           </div>

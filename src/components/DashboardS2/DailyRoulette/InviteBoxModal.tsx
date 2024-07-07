@@ -29,8 +29,8 @@ import styled from "styled-components";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
-  8: "+10 Nova points",
-  9: "+50 Nova points",
+  8: "+10 Nova Points",
+  9: "+50 Nova Points",
 };
 
 const ModalContainer = styled(Modal)`
@@ -438,7 +438,7 @@ const InviteBoxModal = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Open your Invite Box
+                Open Your Invite Box
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center">
@@ -457,10 +457,10 @@ const InviteBoxModal = () => {
                   />
 
                   <p className="text-[#FBFBFB99] font-chakra text-[14px] mt-4 text-center">
-                    With each referral, you'll have the chance to randomly draw
-                    one of the invite rewards. Please notice that Hodling points
-                    rewards are not NFT, they'll be added directly to your
-                    Hodling Points.
+                    With each referral, users have a chance to randomly draw one
+                    of the invite rewards. Invite reward boxes are Nova Points
+                    that will be directly added to your Holdings. Please note
+                    that Holding points are not NFTs.
                   </p>
                 </div>
               </ModalBody>
@@ -475,7 +475,7 @@ const InviteBoxModal = () => {
                     isLoading={mintLoading || drawing}
                     onClick={handleDrawAndMint}
                   >
-                    {isInvaidChain && "Switch to Nova network to draw"}
+                    {isInvaidChain && "Switch To Nova Network To Draw"}
                     {!isInvaidChain &&
                       (!drawedNftId || drawedNftId === 5 || drawing) && (
                         <div className="flex items-center justify-center gap-[4px]">
@@ -496,7 +496,7 @@ const InviteBoxModal = () => {
                       eventBus.emit("openRefeffalModal");
                     }}
                   >
-                    Invite More
+                    Invite More Friends
                   </SecondayButton>
                 </div>
               </ModalFooter>

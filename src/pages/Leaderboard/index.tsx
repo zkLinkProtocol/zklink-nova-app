@@ -192,7 +192,7 @@ export default function Leaderboard() {
     { name: "Spot Dex", category: "spotdex" },
     { name: "Perp Dex", category: "perpdex" },
     { name: "Lending", category: "lending" },
-    { name: "GameFi", category: "gamefi" },
+    // { name: "GameFi", category: "gamefi" },
     { name: "Other", category: "other" },
   ];
 

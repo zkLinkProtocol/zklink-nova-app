@@ -488,7 +488,7 @@ const EcoDApp = (props: {
             className="flex items-center gap-[4px] cursor-pointer select-none"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <GradientText className="particpate">Participate</GradientText>
+            <GradientText className="participate">How to earn</GradientText>
             <img src="/img/icon-ecolink2.svg" alt="" width={16} height={16} />
           </div>
         </div>
@@ -704,7 +704,7 @@ export default function EcoDApps({
             booster: (
               <div>
                 <p>10x points for LPs providing USDT</p>
-                <p>1 points for a trader’s every 1000 USD trading volume</p>
+                <p>1 points for a trader’s every 200 USD trading volume</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -907,7 +907,7 @@ export default function EcoDApps({
       },
 
       {
-        category: allspark?.category || "gamefi",
+        category: allspark?.category || "other",
         iconURL: "/img/icon-allspark.svg",
         name: "Allspark",
         link: "https://www.allspark.finance/mantissa/",
@@ -927,10 +927,10 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>0.5 point per trade</p>
+                <p>0.5 points per trade</p>
               </div>
             ),
-            description: `For each transaction you interact with Allspark, you could receive 0.5 Nova Points.`,
+            description: `For each transaction you make with Allspark, you can receive 0.5 Nova Points.`,
             action: "Use Protocol",
           },
         ],
@@ -956,7 +956,7 @@ export default function EcoDApps({
                 <p>1 point per trade</p>
               </div>
             ),
-            description: `For each transaction you interact with Rubic, you could receive 1 Nova Points.`,
+            description: `For each transaction you make with Rubic, you can receive 1 Nova Point.`,
             action: "Use Protocol",
           },
         ],
@@ -1198,7 +1198,7 @@ export default function EcoDApps({
                   content:
                     "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
                 }}
-                content={`This sector will allocated ${formatToThounds(
+                content={`This sector will allocate ${formatToThounds(
                   nextAllocationZKL
                 )} $ZKL after reaching the next milestone.`}
               >
@@ -1215,14 +1215,14 @@ export default function EcoDApps({
         </div>
         <AllocatedBox>
           <div className="flex items-center justify-between">
-            <span className="label">Sector Allocated Points</span>
+            <span className="label">Total Sector Allocated Points</span>
             <span className="value">
               {formatNumberWithUnit(novaCategoryTotalPoints)}
             </span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
-            <span className="label">Your Points</span>
+            <span className="label">Your Sector Points</span>
             <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
           </div>
         </AllocatedBox>
@@ -1246,7 +1246,7 @@ export default function EcoDApps({
                   <span className="text-green">Max</span>
                 ) : (
                   <>
-                    Next TVL{" "}
+                    Next{" "}
                     {tabActive?.category === "perpdex"
                       ? "Trading Volume"
                       : "TVL"}{" "}
@@ -1276,7 +1276,7 @@ export default function EcoDApps({
       <List>
         <div className="list-header flex items-center">
           <div className="list-header-item text-left">Protocol</div>
-          <div className="list-header-item text-center">Points booster</div>
+          <div className="list-header-item text-center">Points Booster</div>
           <div className="list-header-item text-center">Rewards</div>
           <div className="list-header-item text-center">Allocated Points</div>
           <div className="list-header-item"></div>
