@@ -170,7 +170,7 @@ const List = styled.div`
       line-height: normal;
       text-align: center;
     }
-    .particpate {
+    .participate {
       text-align: center;
       font-family: Satoshi;
       font-size: 14px;
@@ -628,7 +628,7 @@ export default function Assets(props: IAssetsTableProps) {
                 alt=""
                 className="w-[16px] h-[16px]"
               />
-              <span>Holding $ZKL Allocation</span>
+              <span>$ZKL Allocation For Assets</span>
             </div>
             <div className="holding-value mt-[16px]">
               {formatToThounds(currentAllocationZKL)} $ZKL{" "}
@@ -644,7 +644,7 @@ export default function Assets(props: IAssetsTableProps) {
                   content:
                     "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
                 }}
-                content={`This sector will allocated ${formatToThounds(
+                content={`This sector will allocate ${formatToThounds(
                   nextAllocationZKL
                 )} $ZKL after reaching the next milestone.`}
               >
@@ -658,14 +658,14 @@ export default function Assets(props: IAssetsTableProps) {
           </div>
           <AllocatedBox>
             <div className="flex items-center justify-between">
-              <span className="label">Sector Allocated Points</span>
+              <span className="label">Total Sector Allocated Points</span>
               <span className="value">
                 {formatNumberWithUnit(novaCategoryTotalPoints)}
               </span>
             </div>
             <div className="line"></div>
             <div className="flex items-center justify-between">
-              <span className="label">Your Points</span>
+              <span className="label">Your Sector Points</span>
               <span className="value">
                 {formatNumberWithUnit(holdingPoints)}
               </span>
@@ -680,7 +680,7 @@ export default function Assets(props: IAssetsTableProps) {
               {isMaxProgress ? (
                 <span className="text-green">Max</span>
               ) : (
-                <>Next TVL Milestone: ${formatToThounds(nextTargetTvl)}</>
+                <>Next TVL Milestones: ${formatToThounds(nextTargetTvl)}</>
               )}
             </div>
           </div>
@@ -703,7 +703,7 @@ export default function Assets(props: IAssetsTableProps) {
               <Input
                 data-hover={false}
                 isClearable
-                placeholder="Please enter the token symbol."
+                placeholder="Enter Token Symbol To Search"
                 className="search-input"
                 classNames={{
                   base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
@@ -769,8 +769,8 @@ export default function Assets(props: IAssetsTableProps) {
                   {item?.isNova ? (
                     <Dropdown className="bg-[#000811] py-[20px]">
                       <DropdownTrigger>
-                        <span className="particpate cursor-pointer">
-                          Particpate
+                        <span className="participate cursor-pointer">
+                          Participate
                         </span>
                       </DropdownTrigger>
                       <DropdownMenu
@@ -808,7 +808,7 @@ export default function Assets(props: IAssetsTableProps) {
                     </Dropdown>
                   ) : (
                     <span
-                      className="particpate cursor-pointer"
+                      className="participate cursor-pointer"
                       onClick={() => {
                         console.log("item: ", item);
                         handleBridgeMore(item?.symbol);

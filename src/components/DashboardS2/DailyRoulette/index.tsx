@@ -189,13 +189,12 @@ export default function DailyRoulette() {
             className="px-[16px] py-[20px] max-w-[350px] bg-[#000811] text-[#FBFBFB99]"
             content={
               <div>
-                Every day, users can spin x times of roulette to win zkLink Nova
-                trademark NFTs and Holding Points.
+                Every day, users can spin the roulette up to X times to win
+                zkLink Nova Trademark NFTs and Holding Points. The value of X is
+                determined by the number of consecutive days the users have
+                logged in and spun the roulette, with a maximum of 7.
                 <br />
-                <br />X is determined by the consecutive days the users <br />
-                have been spined: X = 1 + min
-                <br />
-                (6, past consecutive days)
+                <br />X = min(7, consecutive days of spinning)
               </div>
             }
           >

@@ -189,7 +189,6 @@ const List = styled.div`
       font-style: normal;
       font-weight: 900;
       line-height: normal;
-      text-transform: capitalize;
     }
     .name {
       color: #03d498;
@@ -244,12 +243,15 @@ const List = styled.div`
     );
   }
 
-  .list-header-item,
-  .list-content-item {
-    width: 20%;
+  .row-items {
+    width: 80%;
+    .list-header-item,
+    .list-content-item {
+      width: 25%;
 
-    &:last-child {
-      width: 268px;
+      &:last-child {
+        width: 268px;
+      }
     }
   }
 `;
@@ -424,118 +426,6 @@ const milestoneNoProgressMap: {
   },
 };
 
-const EcoDApp = (props: {
-  data: EcoDAppItem;
-  handleLink: (link: string) => void;
-}) => {
-  const { data, handleLink } = props;
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="row mb-[24px] overflow-hidden">
-      <div className="flex items-center cursor-pointer">
-        <div className="list-content-item flex items-center gap-[10px]">
-          <img
-            src={data.iconURL}
-            alt=""
-            className="w-[55px] h-[56px] rounded-full block"
-          />
-          <div>
-            <div
-              className="symbol flex items-center gap-[4px]"
-              onClick={() => handleLink(data.link)}
-            >
-              <span>{data.name}</span>
-              <img src="/img/icon-ecolink.svg" alt="" width={16} height={16} />
-            </div>
-            <div className="name mt-[5px]">{data.handler}</div>
-          </div>
-        </div>
-        <div className="col-line"></div>
-        <div className="list-content-item text-center flex items-center justify-center">
-          <Tooltip
-            classNames={{
-              content:
-                "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-            }}
-            content={data.details[0].booster}
-          >
-            <GradientBox>{data.rewards}</GradientBox>
-          </Tooltip>
-        </div>
-        <div className="col-line"></div>
-
-        <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
-          {data?.rewardsIcon?.map((item, index) => (
-            <Tooltip content={item.name} key={index}>
-              <img
-                src={item.iconURL}
-                className="min-w-[32px] min-h-[32px] rounded-full"
-              />
-            </Tooltip>
-          ))}
-        </div>
-        <div className="col-line"></div>
-
-        <div className="list-content-item text-center">
-          {formatNumberWithUnit(data.protocolAllocated)}
-        </div>
-        <div className="col-line"></div>
-
-        <div className="list-content-item  flex justify-end items-center gap-[10px]">
-          <span className="action">Action:</span>
-          <div
-            className="flex items-center gap-[4px] cursor-pointer select-none"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <GradientText className="particpate">Participate</GradientText>
-            <img src="/img/icon-ecolink2.svg" alt="" width={16} height={16} />
-          </div>
-        </div>
-      </div>
-      {/* <div className="row-line"></div> */}
-      {isOpen && (
-        <DetailBox className="w-full mt-[4px] px-[7px]">
-          {data.details.map((detail, index) => (
-            <div
-              className={`detail-row mb-[8px] flex justify-between ${
-                index === data.details.length - 1 ? "rounded-bottom" : ""
-              }`}
-              key={index}
-            >
-              <div className="detail-item">
-                <div className="detail-label">Booster</div>
-                <div className="detail-value">{detail.booster}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Description</div>
-                <div className="detail-value">{detail.description}</div>
-              </div>
-              <div className="detail-item text-right">
-                <div className="detail-label">Action</div>
-                <div className="detail-value flex justify-end items-center gap-[4px]">
-                  <div
-                    className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
-                    onClick={() => handleLink(detail.actionLink || data.link)}
-                  >
-                    <GradientText>{detail.action}</GradientText>
-                  </div>
-                  <img
-                    src="/img/open-in-new-s2.svg"
-                    alt=""
-                    width={20}
-                    height={20}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </DetailBox>
-      )}
-    </div>
-  );
-};
-
 export default function EcoDApps({
   tabActive,
   novaCategoryUserPoints,
@@ -601,12 +491,10 @@ export default function EcoDApps({
             booster: (
               <div>
                 <p className="whitespace-nowrap">
-                  <span className="font-[700]">20x</span> for ETH, WETH, Merged
-                  WBTC, USDT, USDC
+                  10x for Merged wBTC, wETH, USDT
                 </p>
                 <p className="whitespace-nowrap">
-                  <span className="font-[700]">10x</span> for canonically
-                  bridged tokens eligible to earn points
+                  1 points for a trader’s every 200 USD trading volume
                 </p>
               </div>
             ),
@@ -635,12 +523,10 @@ export default function EcoDApps({
             booster: (
               <div>
                 <p className="whitespace-nowrap">
-                  <span className="font-[700]">20x</span> for ETH, WETH, Merged
-                  WBTC, USDT, USDC
+                  10x for Merged wBTC, wETH, USDT
                 </p>
                 <p className="whitespace-nowrap">
-                  <span className="font-[700]">10x</span> for canonically
-                  bridged tokens eligible to earn points
+                  1 points for a trader’s every 200 USD trading volume
                 </p>
               </div>
             ),
@@ -704,7 +590,7 @@ export default function EcoDApps({
             booster: (
               <div>
                 <p>10x points for LPs providing USDT</p>
-                <p>1 points for a trader’s every 1000 USD trading volume</p>
+                <p>1 points for a trader’s every 200 USD trading volume</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -713,11 +599,11 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>1 point / $1000 volume</p>
+                <p>1 point / $200 volume</p>
               </div>
             ),
             description: `For every $1000 in trading volume on LogX, you will receive 1 Nova Point.`,
-            action: "Provide Liquidity",
+            action: "Trade",
             actionLink: "https://app.logx.trade/",
           },
         ],
@@ -863,6 +749,7 @@ export default function EcoDApps({
             booster: (
               <div>
                 <p>10x for Merged ETH, USDC</p>
+                <p>1 points for a trader’s every 200 USD trading volume</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -907,7 +794,7 @@ export default function EcoDApps({
       },
 
       {
-        category: allspark?.category || "gamefi",
+        category: allspark?.category || "other",
         iconURL: "/img/icon-allspark.svg",
         name: "Allspark",
         link: "https://www.allspark.finance/mantissa/",
@@ -927,10 +814,10 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>0.5 point per trade</p>
+                <p>0.5 points per trade</p>
               </div>
             ),
-            description: `For each transaction you interact with Allspark, you could receive 0.5 Nova Points.`,
+            description: `For each transaction you make with Allspark, you can receive 0.5 Nova Points.`,
             action: "Use Protocol",
           },
         ],
@@ -956,7 +843,7 @@ export default function EcoDApps({
                 <p>1 point per trade</p>
               </div>
             ),
-            description: `For each transaction you interact with Rubic, you could receive 1 Nova Points.`,
+            description: `For each transaction you make with Rubic, you can receive 1 Nova Point.`,
             action: "Use Protocol",
           },
         ],
@@ -1173,6 +1060,131 @@ export default function EcoDApps({
     }
   }, [tabActive?.category, isNoProgress, currentTvl]);
 
+  const EcoDApp = (props: {
+    data: EcoDAppItem;
+    handleLink: (link: string) => void;
+  }) => {
+    const { data, handleLink } = props;
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+      <div className="row mb-[24px] overflow-hidden">
+        <div className="flex items-center cursor-pointer">
+          <div className="list-content-item flex items-center gap-[10px] w-1/5">
+            <img
+              src={data.iconURL}
+              alt=""
+              className="w-[55px] h-[56px] rounded-full block"
+            />
+            <div>
+              <div
+                className="symbol flex items-center gap-[4px]"
+                onClick={() => handleLink(data.link)}
+              >
+                <span>{data.name}</span>
+                <img
+                  src="/img/icon-ecolink.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+              </div>
+              <div className="name mt-[5px]">{data.handler}</div>
+            </div>
+          </div>
+          <div
+            className="row-items flex items-center gap-[10px] w-4/5"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <div className="col-line"></div>
+            <div className="list-content-item text-center flex items-center justify-center">
+              <Tooltip
+                classNames={{
+                  content:
+                    "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                }}
+                content={data.details[0].booster}
+              >
+                <GradientBox>{data.rewards}</GradientBox>
+              </Tooltip>
+            </div>
+            <div className="col-line"></div>
+
+            <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
+              {data?.rewardsIcon?.map((item, index) => (
+                <Tooltip content={item.name} key={index}>
+                  <img
+                    src={item.iconURL}
+                    className="min-w-[32px] min-h-[32px] rounded-full"
+                  />
+                </Tooltip>
+              ))}
+            </div>
+            <div className="col-line"></div>
+
+            <div className="list-content-item text-center">
+              {formatNumberWithUnit(data.protocolAllocated)}/
+              <span className="opacity-40">{formatNumberWithUnit(novaCategoryTotalPoints)}</span>
+            </div>
+            <div className="col-line"></div>
+
+            <div className="list-content-item  flex justify-end items-center gap-[10px]">
+              {/* <span className="action">Action:</span> */}
+              <div className="flex items-center gap-[4px] cursor-pointer select-none">
+                <GradientText className="participate">How to earn</GradientText>
+                <img
+                  src="/img/icon-ecolink2.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <div className="row-line"></div> */}
+        {isOpen && (
+          <DetailBox className="w-full mt-[4px] px-[7px]">
+            {data.details.map((detail, index) => (
+              <div
+                className={`detail-row mb-[8px] flex justify-between ${
+                  index === data.details.length - 1 ? "rounded-bottom" : ""
+                }`}
+                key={index}
+              >
+                <div className="detail-item min-w-[440px] w-[440px]">
+                  <div className="detail-label">Booster</div>
+                  <div className="detail-value">{detail.booster}</div>
+                </div>
+                <div className="detail-item min-w-[480px] w-[480px]">
+                  <div className="detail-label">Description</div>
+                  <div className="detail-value">{detail.description}</div>
+                </div>
+                <div className="detail-item text-right  w-full">
+                  <div className="detail-label">Action</div>
+                  <div className="detail-value flex justify-end items-center gap-[4px]">
+                    <div
+                      className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
+                      onClick={() => handleLink(detail.actionLink || data.link)}
+                    >
+                      <GradientText>{detail.action}</GradientText>
+                    </div>
+                    <img
+                      src="/img/open-in-new-s2.svg"
+                      alt=""
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </DetailBox>
+        )}
+      </div>
+    );
+  };
+
   return (
     <Container>
       <div className="flex justify-between">
@@ -1183,7 +1195,7 @@ export default function EcoDApps({
               alt=""
               className="w-[16px] h-[16px]"
             />
-            <span>{tabActive?.name} $ZKL Allocation</span>
+            <span>$ZKL Allocation for {tabActive?.name}</span>
           </div>
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL{" "}
@@ -1198,7 +1210,7 @@ export default function EcoDApps({
                   content:
                     "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
                 }}
-                content={`This sector will allocated ${formatToThounds(
+                content={`This sector will allocate ${formatToThounds(
                   nextAllocationZKL
                 )} $ZKL after reaching the next milestone.`}
               >
@@ -1215,14 +1227,14 @@ export default function EcoDApps({
         </div>
         <AllocatedBox>
           <div className="flex items-center justify-between">
-            <span className="label">Sector Allocated Points</span>
+            <span className="label">Total Sector Allocated Points</span>
             <span className="value">
               {formatNumberWithUnit(novaCategoryTotalPoints)}
             </span>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
-            <span className="label">Your Points</span>
+            <span className="label">Your Sector Points</span>
             <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
           </div>
         </AllocatedBox>
@@ -1238,7 +1250,9 @@ export default function EcoDApps({
             <>
               <div>
                 Current{" "}
-                {tabActive?.category === "perpdex" ? "Trading Volume" : "TVL"}:{" "}
+                {tabActive?.category === "perpdex"
+                  ? "Trading Volume: $"
+                  : "TVL: "}
                 {formatToThounds(currentTvl)}
               </div>
               <div>
@@ -1246,11 +1260,11 @@ export default function EcoDApps({
                   <span className="text-green">Max</span>
                 ) : (
                   <>
-                    Next TVL{" "}
+                    Next{" "}
                     {tabActive?.category === "perpdex"
-                      ? "Trading Volume"
-                      : "TVL"}{" "}
-                    Milestone : {formatToThounds(nextTargetTvl)}
+                      ? "Trading Volume Milestone: $"
+                      : "TVL Milestone: "}
+                    {formatToThounds(nextTargetTvl)}
                   </>
                 )}
               </div>
@@ -1275,11 +1289,13 @@ export default function EcoDApps({
 
       <List>
         <div className="list-header flex items-center">
-          <div className="list-header-item text-left">Protocol</div>
-          <div className="list-header-item text-center">Points booster</div>
-          <div className="list-header-item text-center">Rewards</div>
-          <div className="list-header-item text-center">Allocated Points</div>
-          <div className="list-header-item"></div>
+          <div className="list-header-item text-left w-1/5">Protocol</div>
+          <div className="row-items flex items-center w-4/5">
+            <div className="list-header-item text-center">Points Booster</div>
+            <div className="list-header-item text-center">Rewards</div>
+            <div className="list-header-item text-center">Allocated Points</div>
+            <div className="list-header-item"></div>
+          </div>
         </div>
         <div className="list-content">
           {ecoDAppsList.map((item, index) => (

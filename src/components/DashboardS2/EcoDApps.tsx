@@ -563,7 +563,7 @@ export default ({
           {
             booster: (
               <div>
-                <p>0.5 point per trade</p>
+                <p>0.5 points per trade</p>
               </div>
             ),
             description: `For each transaction you interact with Allspark, you could receive 0.5 Nova Points.`,

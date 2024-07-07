@@ -148,7 +148,7 @@ const List = styled.div`
       line-height: normal;
       text-align: center;
     }
-    .particpate {
+    .participate {
       text-align: center;
       font-family: Satoshi;
       font-size: 14px;
@@ -568,7 +568,7 @@ export default function Portfolio({
                 href={item.link}
                 target="_blank"
               >
-                <span className="particpate">Participate</span>
+                <span className="participate">Participate</span>
                 <img src="img/icon-link-arrow.svg" alt="" />
               </a>
             </div>
@@ -577,7 +577,7 @@ export default function Portfolio({
       </List>
       <div className="divide my-12"></div>
       <div className="flex items-center justify-between mb-5">
-        <Title>Your Nova NFT</Title>
+        <Title>Your Nova NFTs</Title>
       </div>
       <div className="flex gap-6">
         <SbtNft />

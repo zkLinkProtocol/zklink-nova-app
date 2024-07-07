@@ -125,7 +125,7 @@ export default function SbtNFT() {
         <p className="font-bold text-lg">Nova SBT</p>
         <div className="divide my-1"></div>
         <p className="text-sm text-[#FBFBFB]/[0.6]">
-          Users who deposit a minimum amount of 0.1 ETH or equivalent could mint
+          Users who deposit a minimum amount of 0.1 ETH or equivalent can mint
           a zkLink Nova SBT. 
         </p>
         <Button

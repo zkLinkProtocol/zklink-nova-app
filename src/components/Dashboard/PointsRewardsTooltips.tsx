@@ -6,8 +6,8 @@ export function getPointsRewardsTooltips(points: number) {
   } = {
     1: "4 hours",
     5: "20 hours",
-    10: "~2 days",
-    50: "~9 days",
+    10: "~2 hours",
+    50: "~10 hours",
     100: "~17 days",
     200: "~33 days",
     500: "~83 days",

@@ -121,6 +121,68 @@ const CardBox = styled.div`
   }
 `;
 
+const CardBox2 = styled.div`
+  padding: 16px;
+  background: linear-gradient(180deg, #282828 0%, #000 47.56%);
+  border-radius: 16px;
+  .total-prize-pool {
+    color: var(--Neutral-1, #fff);
+    font-family: Satoshi;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 110%; /* 26.4px */
+  }
+  .desc {
+    margin-top: 12px;
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 110%; /* 17.6px */
+
+    &.before {
+      position: relative;
+      padding-left: 20px;
+    }
+    &.before::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 6px;
+      transform: translate(0, -50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(251, 251, 251, 0.6);
+    }
+  }
+
+  .zkl-value {
+    text-align: right;
+    font-family: Satoshi;
+    font-size: 84px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .all-suported-points {
+    color: #fff;
+    text-align: right;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 110%; /* 17.6px */
+  }
+`;
+
 const TabsCard = styled.div`
   .tab-item {
     /* margin-bottom: -24px; */
@@ -266,11 +328,11 @@ export default function Dashboard() {
       name: "Lending",
       category: "lending",
     },
-    {
-      iconURL: "/img/icon-sector-6.svg",
-      name: "GameFi",
-      category: "gamefi",
-    },
+    // {
+    //   iconURL: "/img/icon-sector-6.svg",
+    //   name: "GameFi",
+    //   category: "gamefi",
+    // },
     {
       iconURL: "/img/icon-sector-7.svg",
       name: "Others",
@@ -411,10 +473,10 @@ export default function Dashboard() {
           name: "Lending Points",
           category: "lending",
         },
-        {
-          name: "GameFi Points",
-          category: "gamefi",
-        },
+        // {
+        //   name: "GameFi Points",
+        //   category: "gamefi",
+        // },
         {
           name: "Others Points",
           category: "other",
@@ -495,10 +557,10 @@ export default function Dashboard() {
   return (
     <Container>
       <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
-        <CardBox className="relative w-[full]">
+        {/* <CardBox className="relative w-[full]">
           <div className="flex justify-between">
             <div>
-              <div className="rewards">All supported points</div>
+              <div className="rewards">Aggregation Parade Season II Supported Points</div>
               <div className="rewards-line"></div>
               <div className="flex items-center">
                 {[
@@ -542,7 +604,71 @@ export default function Dashboard() {
               />
             </Tooltip>
           </div>
-        </CardBox>
+        </CardBox> */}
+        <CardBox2 className="flex justify-between">
+          <div className="px-[16px] py-[10px]">
+            <div className="flex items-center gap-[10px]">
+              <img
+                src="/img/icon-dollar.svg"
+                alt=""
+                width={32}
+                height={32}
+                className="min-w-[32px]"
+              />
+              <span className="total-prize-pool">Total Prize Pool</span>
+            </div>
+            <div className="desc">
+              The 30 million $ZKL will be distributed over at least Three
+              Epochs.
+            </div>
+            <div className="desc before">
+              Epoch One (From May 30th to July 15th)
+            </div>
+          </div>
+
+          <div>
+            <div className="zkl-value flex items-start min-w-[750px]">
+              <span>30,000,000</span>
+              <Tooltip
+                classNames={{
+                  content:
+                    "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                }}
+                content="Aggregation Parade Season II will reward participants from a prize pool of 30 million $ZKL tokens over three epochs."
+              >
+                <img
+                  src="/img/icon-zkl-info.svg"
+                  alt=""
+                  className="mt-[20px] w-[20px] h-[20px]"
+                />
+              </Tooltip>
+
+              <span>$ZKL</span>
+            </div>
+            <div className="all-suported-points flex items-center justify-end gap-[10px]">
+              <div>All Supported Points</div>
+              <div className="flex items-center">
+                {[
+                  "nova",
+                  "linea",
+                  "eigenlayer",
+                  "puffer",
+                  "renzo",
+                  "eigenpie",
+                  "kelp",
+                  "allspark",
+                ].map((icon, index) => (
+                  <img
+                    key={index}
+                    src={`/img/icon-rewards-${icon}.svg`}
+                    alt=""
+                    className="mt-[10px] min-w-[32px] w-[32px] block"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </CardBox2>
       </div>
 
       <div className="mx-auto max-w-[1246px]">
