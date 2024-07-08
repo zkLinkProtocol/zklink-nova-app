@@ -778,3 +778,18 @@ interface HoldpointResponse {
 export const getHoldpoint = (address: string): Promise<HoldpointResponse> => {
   return http.get(`${BASE_URL_LRT_POINTS}/nova/${address}/holdpoint`);
 };
+
+export interface NovaProjectTotalPoints {
+  project: string;
+  totalPoints: number;
+}
+interface NovaProjectTotalPointsResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaProjectTotalPoints[];
+}
+
+export const getNovaProjectTotalPoints =
+  (): Promise<NovaProjectTotalPointsResponse> => {
+    return http.get(`${BASE_URL_LRT_POINTS}/nova/project/points`);
+  };

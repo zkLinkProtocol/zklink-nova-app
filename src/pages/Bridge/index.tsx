@@ -375,13 +375,13 @@ export default function Bridge() {
   );
 
   const SeasonTwoItems = [
-    "Continue reaping loyalty rewards from season I by maintaining your funds on Nova L3",
-    "Get up to x5 Nova Point boost for Merge Tokens",
-    "Maximize your Nova point boost by interacting with dApps within Nova’s Ecosystem",
+    "Total Prize Pool: 30M $ZKL (3% of total supply)",
+    "Convert Nova Points to $ZKL and claim every epoch",
+    "Earn Nova Points by actively performing holding assets, transactions, referring friends, and staking assets in DApps.",
     () => (
       <p>
-        Nova Lynks holder of season I & II to split 10M $ZKL (Available for
-        purchase on{" "}
+        Nova Lynks NFT holders in Season I & II share a separate 10M $ZKL prize
+        pool (Available for purchase on{" "}
         <a
           className="text-[#03D498] "
           target="_blank"

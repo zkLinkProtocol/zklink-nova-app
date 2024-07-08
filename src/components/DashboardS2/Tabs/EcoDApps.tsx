@@ -1,8 +1,10 @@
 import {
   NovaCategoryPoints,
   NovaCategoryUserPoints,
+  NovaProjectTotalPoints,
   TvlCategory,
   TvlCategoryMilestone,
+  getNovaProjectTotalPoints,
 } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit, formatToThounds } from "@/utils";
@@ -15,7 +17,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import MilestoneProgress from "../MilestoneProgress";
 
@@ -334,7 +336,8 @@ interface EcoDAppItem {
     name: string;
     iconURL: string;
   }[];
-  protocolAllocated: number;
+  holdingPoints: number;
+  totalPoints: number;
   details: {
     booster: string | ReactNode;
     description: string;
@@ -455,6 +458,29 @@ export default function EcoDApps({
     mesonBridgeNovaPoints,
   } = useNovaPoints();
 
+  const [projectTotalPoints, setProjectTotalPoints] = useState<
+    NovaProjectTotalPoints[]
+  >([]);
+
+  const getProjectTotalPoints = async () => {
+    const { data } = await getNovaProjectTotalPoints();
+    if (data) {
+      setProjectTotalPoints(data);
+    }
+  };
+
+  useEffect(() => {
+    getProjectTotalPoints();
+  }, []);
+
+  const getTotalPointsByProject = useCallback(
+    (project: string) => {
+      const obj = projectTotalPoints.find((item) => item.project === project);
+      return obj?.totalPoints || 0;
+    },
+    [projectTotalPoints]
+  );
+
   const ecoDAppsList = useMemo(() => {
     const novaswap = geNovaCategoryUserPointsByProject("novaswap");
     const izumi = geNovaCategoryUserPointsByProject("izumi");
@@ -485,8 +511,9 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        protocolAllocated:
+        holdingPoints:
           (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("novaswap"),
         details: [
           {
             booster: (
@@ -514,8 +541,9 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        protocolAllocated:
+        holdingPoints:
           (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("novaswap"),
         details: [
           {
             booster: (
@@ -548,9 +576,9 @@ export default function EcoDApps({
           { name: "Puffer Points", iconURL: "/img/icon-rewards-puffer.svg" },
         ],
 
-        protocolAllocated:
+        holdingPoints:
           (layerbank?.refPoints || 0) + (layerbank?.holdingPoints || 0),
-
+        totalPoints: getTotalPointsByProject("layerbank"),
         details: [
           {
             booster: (
@@ -579,7 +607,8 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        protocolAllocated: (logx?.refPoints || 0) + (logx?.holdingPoints || 0),
+        holdingPoints: (logx?.refPoints || 0) + (logx?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("logx"),
         details: [
           {
             booster: (
@@ -614,7 +643,8 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        protocolAllocated: (aqua?.refPoints || 0) + (aqua?.holdingPoints || 0),
+        holdingPoints: (aqua?.refPoints || 0) + (aqua?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("aqua"),
         details: [
           {
             booster: (
@@ -642,8 +672,9 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        protocolAllocated:
+        holdingPoints:
           (shoebill?.refPoints || 0) + (shoebill?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("shoebill"),
         details: [
           {
             booster: (
@@ -669,8 +700,8 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x / Trading",
-        protocolAllocated:
-          (wagmi?.refPoints || 0) + (wagmi?.holdingPoints || 0),
+        holdingPoints: (wagmi?.refPoints || 0) + (wagmi?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("wagmi"),
         details: [
           {
             booster: (
@@ -705,8 +736,8 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        protocolAllocated:
-          (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
+        holdingPoints: (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("izumi"),
         details: [
           {
             booster: (
@@ -737,7 +768,8 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x / Trading",
-        protocolAllocated: (zkdx?.refPoints || 0) + (zkdx?.holdingPoints || 0),
+        holdingPoints: (zkdx?.refPoints || 0) + (zkdx?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("zkdx"),
         details: [
           {
             booster: (
@@ -772,7 +804,8 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Trading",
-        protocolAllocated: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
+        holdingPoints: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("eddy"),
         details: [
           {
             booster: (
@@ -801,8 +834,9 @@ export default function EcoDApps({
           },
         ],
         rewards: "Interaction",
-        protocolAllocated:
+        holdingPoints:
           (allspark?.refPoints || 0) + (allspark?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("allspark"),
         details: [
           {
             booster: (
@@ -827,8 +861,8 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        protocolAllocated:
-          (rubic?.refPoints || 0) + (rubic?.holdingPoints || 0),
+        holdingPoints: (rubic?.refPoints || 0) + (rubic?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("rubic"),
         details: [
           {
             booster: (
@@ -853,8 +887,9 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        protocolAllocated:
+        holdingPoints:
           (interport?.refPoints || 0) + (interport?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("interport"),
         details: [
           {
             booster: (
@@ -879,8 +914,9 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        protocolAllocated:
+        holdingPoints:
           (orbiter?.refPoints || 0) + (orbiter?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("orbiter"),
         details: [
           {
             booster: `${orbiterBridgeNovaPoints} Nova Points`,
@@ -903,8 +939,9 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        protocolAllocated:
+        holdingPoints:
           (symbiosis?.refPoints || 0) + (symbiosis?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("symbiosis"),
         details: [
           {
             booster: `${symbiosisBridgeNovaPoints} Nova Points`,
@@ -926,8 +963,8 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        protocolAllocated:
-          (meson?.refPoints || 0) + (meson?.holdingPoints || 0),
+        holdingPoints: (meson?.refPoints || 0) + (meson?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("meson"),
         details: [
           {
             booster: `${mesonBridgeNovaPoints} Nova Points`,
@@ -1120,9 +1157,9 @@ export default function EcoDApps({
             <div className="col-line"></div>
 
             <div className="list-content-item text-center">
-              {formatNumberWithUnit(data.protocolAllocated)}/
+              {formatNumberWithUnit(data.holdingPoints)}/
               <span className="opacity-40">
-                {formatNumberWithUnit(novaCategoryTotalPoints)}
+                {formatNumberWithUnit(data.totalPoints)}
               </span>
             </div>
             <div className="col-line"></div>
