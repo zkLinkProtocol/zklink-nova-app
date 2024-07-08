@@ -562,16 +562,16 @@ export default function Assets(props: IAssetsTableProps) {
       zkl: 500000,
     },
     {
-      tvl: 100000000,
+      tvl: 200000000,
       zkl: 1000000,
     },
     {
       tvl: 500000000,
-      zkl: 3000000,
+      zkl: 2000000,
     },
     {
       tvl: 1000000000,
-      zkl: 4000000,
+      zkl: 3000000,
     },
   ];
 

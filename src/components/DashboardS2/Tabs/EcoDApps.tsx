@@ -405,7 +405,7 @@ const milestoneMap: {
     },
     {
       tvl: 200000000,
-      zkl: 1000000,
+      zkl: 1500000,
     },
   ],
 };
