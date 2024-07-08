@@ -6,8 +6,8 @@ export function getPointsRewardsTooltips(points: number) {
   } = {
     1: "4 hours",
     5: "20 hours",
-    10: "~2 days",
-    50: "~9 days",
+    10: "~1 day",
+    50: "~3 days",
     100: "~17 days",
     200: "~33 days",
     500: "~83 days",
@@ -15,11 +15,7 @@ export function getPointsRewardsTooltips(points: number) {
   };
   return (
     <p>
-      Equivalent to depositing{" "}
-      <b className="font-[700] text-[#fff]">
-        1 ETH into the Nova Network for {pointsMap[Number(points)]}
-      </b>{" "}
-      without any additional multiplier.
+      Equivalent to depositing 1 ETH into Nova for {pointsMap[Number(points)]}.
     </p>
   );
 }

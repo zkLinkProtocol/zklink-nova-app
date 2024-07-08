@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+  <input type="text" id="username">
+
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+
+
+
+
+  <script>
+
+    const params = new URLSearchParams(window.location.search);
+
+
+    const action = params.get('action');
+    const username = params.get('username');
+
+
+    if (action === 'register') {
+      register();
+    } else if (action === 'login') {
+      login();
+    }
+
+    // GOVsRuhMQWNoScmh_cK02QyQwTolHSUSlX5ciH242Y4
+    async function register() {
+      // const username = document.getElementById('username').value
+      const options = {
+        "challenge": "gVQ2n5FCAcksuEefCEgQRKJB_xfMF4rJMinTXSP72E8",
+        "rp": {
+          "name": "Passkey Example",
+          "id": "preview.app.zklink.io"
+        },
+        "user": {
+          "id": "GOVsRuhMQWNoScmh_cK02QyQwTolHSUSlX5c212222222",
+          "name": username,
+          "displayName": username + " Display Name"
+        },
+        "pubKeyCredParams": [
+          {
+            "alg": -7,
+            "type": "public-key"
+          }
+        ],
+        "timeout": 60000,
+        "attestation": "none",
+        "excludeCredentials": [
+        ],
+        "authenticatorSelection": {
+          "authenticatorAttachment": "platform",
+          "requireResidentKey": true,
+          "residentKey": "required"
+        },
+        "extensions": {
+          "credProps": true
+        }
+      }
+
+      const encoder = new TextEncoder();
+
+      options.challenge = encoder.encode(options.challenge);
+      options.user.id = encoder.encode(options.user.id);
+
+      // 创建Credential,其中Private Key存储在操作系统的密钥管理器中,JavaScript不能获取Private Key:
+      const cred = await navigator.credentials.create({
+        publicKey: options
+      });
+      console.log(cred);
+    }
+
+
+    async function login() {
+      const options = {
+        "challenge": "x1wRuShyI4k7BqYJi60kVk-clJWsPnBGgh_7z-W9QYk",
+        "allowCredentials": [],
+        "timeout": 60000,
+        "rpId": "preview.app.zklink.io"
+      }
+
+      const encoder = new TextEncoder();
+
+      options.challenge = encoder.encode(options.challenge);
+      const cred = await navigator.credentials.get({
+        publicKey: options
+      });
+      console.log(cred);
+
+    }
+
+
+
+
+
+  </script>
+</body>
+
+</html>

@@ -27,7 +27,7 @@ import { formatBalance } from "@/utils";
 import wethIcon from "@/assets/img/weth.svg";
 import ETHIcon from "@/assets/img/eth.svg";
 import { BgBox } from "@/pages/Bridge";
-import { SelectBox } from "@/components/Bridge";
+import { SelectBox } from "@/components/Bridge/Components";
 import WETHAbi from "@/constants/abi/weth.json";
 import { Hash, parseUnits, getContract } from "viem";
 import toast from "react-hot-toast";

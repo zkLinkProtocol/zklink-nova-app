@@ -10,6 +10,7 @@ import numeral from "numeral";
 import { nexusGoerliNode, nexusNode } from "@/constants/networks";
 import FromList from "@/constants/fromChainList";
 import { checkOkx } from "@/api";
+import toast from "react-hot-toast";
 
 export const L2_BRIDGE_ABI = new utils.Interface(
   (await import("../constants/abi/IL2Bridge.json")).abi
@@ -276,6 +277,7 @@ export const copyText = (text: string) => {
   try {
     const res = document.execCommand("copy");
     console.log("copy res;", res);
+    toast.success("Copied", { duration: 2000 });
   } catch (err) {
     console.error("Fallback: Oops, unable to copy", err);
   } finally {
@@ -365,3 +367,7 @@ export const getNovaDefaultProvider = () => {
   const nodeConfig = nodeType === "nexus-goerli" ? nexusGoerliNode : nexusNode;
   return new ethers.providers.JsonRpcProvider(nodeConfig[0].rpcUrl);
 };
+
+export function formatToThounds(value: number | string) {
+  return numeral(value).format("0,0");
+}

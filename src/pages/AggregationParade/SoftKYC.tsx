@@ -2,12 +2,10 @@ import {
   checkBridge,
   checkInviteCode,
   getInvite,
-  getTwitterAccessToken,
   getTxByTxHash,
   registerAccount,
   registerAccountByBridge,
 } from "@/api";
-import TotalTvlCard from "@/components/TotalTvlCard";
 import { SIGN_MESSAGE } from "@/constants/sign";
 import { RootState } from "@/store";
 import {
@@ -19,7 +17,7 @@ import {
   setSignature,
   setSignatureAddress,
 } from "@/store/modules/airdrop";
-import { CardBox, FooterTvlText } from "@/styles/common";
+import { BlurBox, FooterTvlText } from "@/styles/common";
 import { getProviderWithRpcUrl, getRandomNumber, showAccount } from "@/utils";
 import {
   Avatar,
@@ -51,28 +49,18 @@ import { useVerifyStore } from "@/hooks/useVerifyTxHashSotre";
 import { IS_MAINNET } from "@/constants";
 import Toast from "@/components/Toast";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 const verifyFromList = [
   ...fromList,
   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
 ];
 
-// const verifyFromList = [...fromList];
-const twitterClientId = import.meta.env.VITE_TWITTER_CLIENT_ID;
-const twitterCallbackURL = import.meta.env.VITE_TWITTER_CALLBACK_URL;
-const env = import.meta.env.VITE_ENV;
-const isValidTwitterAccess = Boolean(
-  +import.meta.env.VITE_IS_VALID_TWITTER_ACCESS
-);
-
 const BgBox = styled.div`
   position: relative;
-  padding-top: 5.5rem;
+  padding-top: 92px;
   width: 100%;
-  min-height: 100vh;
-  background-image: image-set(
-    "/img/bg-mega-yield@1x.png" 1x,
-    "/img/bg-mega-yield@2x.png" 2x
-  );
+  min-height: 1212px;
+  background-image: url("/img/bg-s2.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
@@ -93,9 +81,6 @@ const BgBox = styled.div`
       }
       .input-item {
         max-width: 100%;
-        width: 100%;
-      }
-      .gradient-btn {
         width: 100%;
       }
       .btn-default {
@@ -127,6 +112,13 @@ const BgBox = styled.div`
       }
     }
   }
+`;
+
+const CardBox = styled.div`
+  border-radius: 20px;
+  border: 0.6px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
 `;
 
 const TitleText = styled.h4`
@@ -230,9 +222,6 @@ export default function SoftKYC() {
 
   const [inviteCodeValue, setInviteCodeValue] = useState(inviteCode || "");
   const [isInviteCodeLoading, setIsInviteCodeLoading] = useState(false);
-  const [twitterAuthCode, setTwitterAuthCode] = useState("");
-  const [twitterAccessToken, setTwitterAccessToken] = useState("");
-  const [twitterLoading, setTwitterLoading] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<string>(
     String(fromList[0].chainId)
   );
@@ -308,99 +297,6 @@ export default function SoftKYC() {
       setIsInviteCodeLoading(false);
     }
   };
-
-  const getTwitterClientId = () => {
-    let clientId = "";
-
-    if (env === "production") {
-      const clientIds = twitterClientId.split(",");
-      const widgetClientIds = new Array(98).fill(clientIds[0]);
-      const randomClientIds = clientIds.concat(widgetClientIds);
-      const index = getRandomNumber(0, randomClientIds.length - 1);
-      clientId = randomClientIds[index];
-    } else {
-      clientId = twitterClientId;
-    }
-
-    return clientId;
-  };
-
-  const handleConnectTwitter = () => {
-    setTwitterLoading(true);
-    const clientId = getTwitterClientId();
-    const params = {
-      response_type: "code",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
-      scope:
-        "tweet.read%20tweet.write%20like.write%20users.read%20follows.read%20follows.write",
-      state: "state",
-      code_challenge: "challenge",
-      code_challenge_method: "plain",
-    };
-    const url = new URL(`https://twitter.com/i/oauth2/authorize`);
-    url.search = qs.stringify(params, { encode: false });
-
-    window.location.href = url.href;
-  };
-
-  const toastTwitterError = (text?: string) => {
-    console.error("Could not connect to Twitter. Try again.");
-    toast.error(text || "Could not connect to Twitter. Try again.", {
-      duration: 3000,
-    });
-    setTwitterLoading(false);
-  };
-
-  const getTwitterUserFunc = async (code: string) => {
-    setTwitterLoading(true);
-
-    const clientId = getTwitterClientId();
-    const params = {
-      code,
-      grant_type: "authorization_code",
-      // client_id: "RTUyVmlpTzFjTFhWWVB4b2tyb0k6MTpjaQ",
-      // redirect_uri: "http://localhost:3000/aggregation-parade",
-      client_id: clientId,
-      redirect_uri: twitterCallbackURL,
-      code_verifier: "challenge",
-    };
-    try {
-      const { access_token } = await getTwitterAccessToken(params);
-      console.log(!access_token, isValidTwitterAccess);
-
-      if (access_token) {
-        setTwitterAccessToken(access_token);
-        /**
-         * Get twitter user info (if use)
-         * // const { data } = await getTwitterUser(access_token);
-         */
-        return;
-      }
-
-      if (isValidTwitterAccess && !access_token) {
-        toastTwitterError();
-      }
-    } catch (error: any) {
-      console.error(error);
-      if (isValidTwitterAccess) {
-        toastTwitterError();
-      }
-    } finally {
-      setTwitterAuthCode(code);
-      setTwitterLoading(false);
-    }
-  };
-
-  const [isCheckedTwitter, setIsCheckedTwitter] = useState(false);
-
-  useEffect(() => {
-    setIsCheckedTwitter(
-      isValidTwitterAccess ? Boolean(twitterAccessToken) : true
-    );
-  }, [isValidTwitterAccess, twitterAuthCode, twitterAccessToken]);
 
   const handleConnectAndSign = async () => {
     if (!isConnected || !address) {
@@ -543,14 +439,13 @@ export default function SoftKYC() {
     dispatch(setIsCheckedInviteCode(false));
     dispatch(setInviteCode(""));
     dispatch(setDepositTx(""));
-    setTwitterAccessToken("");
     dispatch(setSignature(""));
     setIsDepositViaThirdParty(false);
 
     toast.error(
       message
         ? message
-        : "Verification failed. Please recheck your invite code, wallet-tx hash relationship, and ensure your Twitter account is not binded to another address."
+        : "Verification failed. Please recheck your invite code, wallet-tx hash relationship."
     );
   };
 
@@ -579,7 +474,7 @@ export default function SoftKYC() {
           address: address,
           code: inviteCodeValue,
           siganture: signature,
-          accessToken: twitterAccessToken || null,
+          accessToken: null,
           chainId: depositChainId,
           txHash: depositTx,
         });
@@ -600,8 +495,6 @@ export default function SoftKYC() {
   };
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    const error = searchParams.get("error");
     const verifyTx = searchParams.get("verifyTx");
 
     // if after deposit to link here, show verify tx modal
@@ -618,17 +511,6 @@ export default function SoftKYC() {
         setDepositTxHash(txhash);
       }
       verifyDepositModal.onOpen();
-    }
-
-    if (error) {
-      toastTwitterError();
-      setSearchParams("");
-      return;
-    }
-
-    if (code) {
-      getTwitterUserFunc(code);
-      setSearchParams("");
     }
   }, [searchParams]);
 
@@ -667,39 +549,38 @@ export default function SoftKYC() {
       {isLoading && <Loading />}
       <div>
         {/* Title */}
-        <div className="px-6 flex flex-col-reverse md:flex-col mt-[1rem]">
-          <SubTitleText className="text-left md:text-center">
-            YOU'RE ALMOST THERE
-          </SubTitleText>
-          <TitleText className="text-left md:text-center">
+        <div className="px-6 md:flex-col mt-[120px]">
+          <div className="flex md:justify-center">
+            <BlurBox className="px-[16px] py-[14px]">
+              You're Almost There
+            </BlurBox>
+          </div>
+          <TitleText className="mt-[18px] text-left md:text-center">
             To join the zkLink Aggregation Parade S2
           </TitleText>
         </div>
 
-        <div className="mt-[3rem] mx-[1.5rem] md:mx-auto max-w-[720px] ">
+        <div className="mt-[50px] mx-[1.5rem] md:mx-auto max-w-[860px] ">
           {/* Setp 1: invite code */}
           <div className="flex justify-center gap-[0.5rem]">
             <CardBox
-              className={`hidden md:block ${
+              className={`carBox flex justify-between items-center px-[26px] py-[26px] w-[860px] h-[104px] ${
                 isCheckedInviteCode ? "successed" : ""
               }`}
             >
-              <StepNum>01</StepNum>
-            </CardBox>
-            <CardBox
-              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                isCheckedInviteCode ? "successed" : ""
-              }`}
-            >
-              <StepItem className="stepItem">
-                <StepNum className="step-num md:hidden">01</StepNum>
+              <StepItem className="stepItem flex items-center gap-[12px]">
+                <img
+                  src="/img/step-01.svg"
+                  alt=""
+                  className="w-[79px] h-[44px]"
+                />
                 <div>
                   <p className="step-title">Enter Invite Code</p>
                   <p className="step-sub-title mt-[0.25rem]">
                     Search{" "}
                     <a
                       href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
-                      className="text-[#298EDB]"
+                      className="text-[#03D498]"
                       target="_blank"
                     >
                       #zkLinkNovaAggParade
@@ -715,26 +596,28 @@ export default function SoftKYC() {
                   placeholder="Invite Code"
                   value={inviteCodeValue}
                   className={`input-item max-w-[120px] ${
-                    isCheckedInviteCode
-                      ? "bg-[#1D4138]"
-                      : "bg-[rgba(0, 0, 0, 0.5)]"
+                    isCheckedInviteCode ? "bg-[#1D4138]" : "bg-transparent"
                   }`}
-                  // disabled={validInviteCode(inviteCode)}
+                  // isDisabled={validInviteCode(inviteCode)}
                   maxLength={6}
                   onChange={(e) => onChangeInviteCode(e.target.value)}
                 />
 
                 <Button
-                  className={`gradient-btn px-[1rem] py-[0.5rem] text-[1rem] ${
+                  className={`bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem] ${
                     !validInviteCode(inviteCodeValue) ? "disabled" : ""
                   }`}
                   isLoading={isInviteCodeLoading}
-                  disabled={
+                  isDisabled={
                     !validInviteCode(inviteCodeValue) || isCheckedInviteCode
                   }
                   onClick={() => enterInviteCode(inviteCodeValue)}
                 >
                   <span className="ml-[0.5rem]">Verify</span>
+                  <img
+                    src="/img/icon-submit-arrow.svg"
+                    className="w-[13px] h-[10px]"
+                  />
                 </Button>
 
                 {/* {isInviteCodeChecked && (
@@ -748,19 +631,18 @@ export default function SoftKYC() {
           </div>
 
           {/* Step 2: connect wallet & sign */}
-          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
+          <div className="mt-[26px]">
             <CardBox
-              className={`hidden md:block ${signature ? "successed" : ""}`}
-            >
-              <StepNum>02</StepNum>
-            </CardBox>
-            <CardBox
-              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[860px] h-[104px] ${
                 signature ? "successed" : ""
               }`}
             >
-              <StepItem className="stepItem">
-                <StepNum className="step-num md:hidden">02</StepNum>
+              <StepItem className="stepItem flex items-center gap-[12px]">
+                <img
+                  src="/img/step-02.svg"
+                  alt=""
+                  className="w-[79px] h-[44px]"
+                />
                 <div>
                   <p className="step-title">Connect your wallet</p>
                   <p className="step-sub-title mt-[0.25rem]">
@@ -776,35 +658,36 @@ export default function SoftKYC() {
                 </StepItem>
 
                 <Button
-                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem]"
-                  disabled={isConnected && Boolean(signature)}
+                  className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem]"
+                  isDisabled={isConnected && Boolean(signature)}
                   onClick={handleConnectAndSign}
                   isLoading={signLoading}
                 >
                   <span className="ml-[0.5rem]">
                     {isConnected && !signature ? "Sign" : "Connect and Verify"}
                   </span>
+                  <img
+                    src="/img/icon-submit-arrow.svg"
+                    className="w-[13px] h-[10px]"
+                  />
                 </Button>
               </div>
             </CardBox>
           </div>
 
           {/* Step 3: Bridge  */}
-          <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
+          <div className="mt-[26px]">
             <CardBox
-              className={`hidden md:block ${
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[860px] h-[104] ${
                 isCheckedDeposit ? "successed" : ""
               }`}
             >
-              <StepNum>03</StepNum>
-            </CardBox>
-            <CardBox
-              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                isCheckedDeposit ? "successed" : ""
-              }`}
-            >
-              <StepItem className="stepItem">
-                <StepNum className="step-num md:hidden">03</StepNum>
+              <StepItem className="stepItem flex items-center gap-[12px]">
+                <img
+                  src="/img/step-03.svg"
+                  alt=""
+                  className="w-[79px] h-[44px]"
+                />
                 <div>
                   <p className="step-title">Bridge and Earn</p>
                   <p className="step-sub-title mt-[0.25rem]">
@@ -814,7 +697,7 @@ export default function SoftKYC() {
               </StepItem>
               <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
                 <Button
-                  className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
+                  className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[10px]"
                   onClick={() => {
                     navigate("/bridge");
                   }}
@@ -824,90 +707,52 @@ export default function SoftKYC() {
                   >
                     <span className="ml-[0.5rem]">Bridge</span>
                   </Tooltip>
+                  <img
+                    src="/img/icon-submit-arrow.svg"
+                    className="w-[13px] h-[10px]"
+                  />
                 </Button>
 
                 <Tooltip content="Connect your wallet and sign the message before verifying.">
                   <Button
-                    className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                    disabled={Boolean(depositTx) || !address || !signature}
+                    className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[10px]"
+                    isDisabled={Boolean(depositTx) || !address || !signature}
                     onClick={() => {
                       verifyDepositModal.onOpen();
                     }}
                   >
                     <span className="ml-[0.5rem]">Verify</span>
+                    <img
+                      src="/img/icon-submit-arrow.svg"
+                      className="w-[13px] h-[10px]"
+                    />
                   </Button>
                 </Tooltip>
               </div>
             </CardBox>
           </div>
 
-          {/* Step 4: connect twitter */}
-          {/* <div className="flex justify-center gap-[0.5rem] mt-[1rem]">
-            <CardBox
-              className={`hidden md:block ${
-                isCheckedTwitter ? "successed" : ""
-              }`}
-            >
-              <StepNum>04</StepNum>
-            </CardBox>
-
-            <CardBox
-              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[40.125rem] h-[6.25rem] ${
-                isCheckedTwitter ? "successed" : ""
-              }`}
-            >
-              <StepItem className="stepItem">
-                <StepNum className="step-num md:hidden">04</StepNum>
-                <div>
-                  <p className="step-title">Connect Twitter</p>
-                  <p className="step-sub-title mt-[0.25rem]">
-                    You can only bind your Twitter account with one wallet
-                  </p>
-                </div>
-              </StepItem>
-              <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
-                {isCheckedTwitter ? (
-                  <img
-                    src="/img/icon-right.svg"
-                    className="w-[1.5rem] h-[1.5rem] mx-auto"
-                  />
-                ) : (
-                  <Button
-                    className="gradient-btn px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[0.5rem]"
-                    isLoading={twitterLoading}
-                    onClick={handleConnectTwitter}
-                  >
-                    <span className="ml-[0.5rem]">Connect Twitter/X</span>
-                  </Button>
-                )}
-              </div>
-            </CardBox>
-          </div> */}
-
           {/* Submit for user bind */}
-          <div className="flex justify-center w-full md:px-[5rem] ">
+          <div className="mt-[30px] flex justify-center w-full">
             <Button
-              className={`gradient-btn mx-auto mt-[1rem] md:py-[2rem] w-full text-center`}
-              disabled={!submitStatus}
+              className={`mx-auto md:py-[20px] w-full h-[52px] text-center rounded-[100px] bg-[#03D498] text-[#030D19] text-[16px] font-[500] flex items-center justify-center gap-[10px]`}
+              isDisabled={!submitStatus}
               onClick={handleSubmit}
             >
-              <>
-                <p className="step-title">
-                  Participate zkLink Aggregation Parade
-                </p>
-              </>
+              <p className="step-title">
+                Participate zkLink Aggregation Parade
+              </p>
+              <img
+                src="/img/icon-submit-arrow.svg"
+                className="w-[13px] h-[10px]"
+              />
             </Button>
           </div>
         </div>
       </div>
 
       {/* Total tvl */}
-      <div className="flex flex-col justify-center items-center w-full py-[2rem] md:py-[2.5rem]">
-        <FooterTvlText className="mb-[0.75rem] md:mb-[0.5rem] text-center">
-          TVL
-        </FooterTvlText>
-        <TotalTvlCard />
-      </div>
+      <NovaNetworkTVL name="TVL" />
 
       {/* Verify deposit modal */}
       <Modal
@@ -1006,9 +851,9 @@ export default function SoftKYC() {
 
                 <div className="mt-[1rem] w-full">
                   <Button
-                    className="gradient-btn w-full rounded-full mt-5"
+                    className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] w-full rounded-full mt-5"
                     onClick={verifyDepositHash}
-                    disabled={
+                    isDisabled={
                       isReVerifyDeposit || accessRpcLoading || !depositTxHash
                     }
                     isLoading={isReVerifyDeposit || accessRpcLoading}
@@ -1054,7 +899,7 @@ export default function SoftKYC() {
 
                 <div className="mt-[1rem] w-full">
                   <Button
-                    className="gradient-btn w-full rounded-full mt-5"
+                    className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] w-full rounded-full mt-5"
                     onClick={verifyDepositViaThirdParty}
                     isLoading={verifyDepositThirdLoading}
                   >

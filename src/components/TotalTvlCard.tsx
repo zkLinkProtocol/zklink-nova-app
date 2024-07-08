@@ -5,11 +5,11 @@ import styled from "styled-components";
 
 const TvlBox = styled.div`
   .tvl-num-item {
-    // padding: 0 0.5rem;
-    // line-height: 3.875rem;
-    border-radius: 1rem;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15.800000190734863px);
+    border-radius: 20px;
+    border: 0.6px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(25px);
+
     color: #fff;
     font-family: Satoshi;
     font-style: normal;
@@ -20,6 +20,12 @@ const TvlBox = styled.div`
       font-weight: 400;
       background: none;
       backdrop-filter: none;
+      border: none;
+    }
+
+    &.dollar {
+      color: #030d19;
+      background: #03d498;
     }
   }
 `;
@@ -50,7 +56,7 @@ export default function TotalTvlCard() {
   };
 
   useEffect(() => {
-    let arr = getTvlArr("$" + numeral(totalTvl).format("0,0"));
+    let arr = getTvlArr(numeral(totalTvl).format("0,0"));
     setTvlArr(arr);
   }, [totalTvl]);
 
@@ -59,11 +65,16 @@ export default function TotalTvlCard() {
   }, []);
 
   return (
-    <TvlBox className="flex items-center gap-[0.5rem]">
+    <TvlBox className="flex items-center gap-[10px]">
+      <span
+        className={`tvl-num-item dollar w-[1.625rem] h-[2rem] leading-[2rem] md:w-[66px] md:h-[77px] md:leading-[77px] text-[1.5rem] md:text-[48px]`}
+      >
+        $
+      </span>
       {tvlArr.map((item, index) => (
         <span
           key={index}
-          className={`tvl-num-item w-[1.625rem] h-[2rem] leading-[2rem] md:w-[2.8rem] md:h-[3.875rem] md:leading-[3.875rem] text-[1.5rem] md:text-[48px] ${
+          className={`tvl-num-item w-[1.625rem] h-[2rem] leading-[2rem] md:w-[66px] md:h-[77px] md:leading-[77px] text-[1.5rem] md:text-[48px] ${
             item === "," ? "comma" : ""
           }`}
         >

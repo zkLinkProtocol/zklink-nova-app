@@ -382,6 +382,10 @@ export default function NovaPoints(props: INovaPointsProps) {
             <span className="font-[700]">
               Invite Box, Eco Box {minted && ", Old Friend Rewards"}
             </span>
+            <span className="font-[700]">Invite Box</span>
+            {mintable && (
+              <span className="font-[700]">, Old Friend Rewards</span>
+            )}
           </div>
         )} */}
 

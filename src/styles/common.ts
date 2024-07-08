@@ -19,6 +19,26 @@ export const GradientButton = styled.span`
   }
 `;
 
+export const GradientButton2 = styled.span`
+  background: linear-gradient(to right, #48ebae, #3d51fc, #49e9b0);
+  display: inline-block;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+  color: #fff;
+  text-align: center;
+  font-family: "Chakra Petch";
+  font-size: 20px;
+  font-style: normal;
+  letter-spacing: -0.5px;
+  
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+`;
+
 export const BgBox = styled.div`
   position: relative;
   padding-top: 4.5rem;
@@ -203,4 +223,19 @@ export const GradientBorder = styled.div`
     border-radius: inherit; /*important*/
     background: linear-gradient(90deg, #48ecae 0%, #3a50ed 52.9%, #49cdd7 100%);
   }
+`;
+
+
+export const BlurBox = styled.div`
+  border-radius: 100px;
+  border: 0.6px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  color: var(--Green, #03d498);
+  text-align: center;
+  font-family: Satoshi;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1; /* 162.5% */
 `;

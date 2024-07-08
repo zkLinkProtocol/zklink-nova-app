@@ -1,6 +1,5 @@
 import {
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   NavbarMenuToggle,
@@ -15,22 +14,14 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import { Link, NavLink, useSearchParams, useLocation } from "react-router-dom";
-import {
-  useAccount,
-  useDisconnect,
-  useConnections,
-  useConnectorClient,
-  useConnectors,
-} from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import styled from "styled-components";
-import { scrollToTop, showAccount, sleep } from "@/utils";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { scrollToTop, showAccount } from "@/utils";
+import { useEffect, useState } from "react";
 import {
   setInvite,
   setSignature,
-  setDepositStatus,
   airdropState,
-  setDepositL1TxHash,
   setTwitterAccessToken,
   setInviteCode,
   setIsActiveUser,
@@ -52,14 +43,27 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { BrowserView } from "react-device-detect";
 const nodeType = import.meta.env.VITE_NODE_TYPE;
-import { config } from "@/constants/networks";
 import toast from "react-hot-toast";
 import { eventBus } from "@/utils/event-bus";
-import { set } from "lodash";
 import { AiOutlineDown } from "react-icons/ai";
-import { FUSION_DANCE_PARADE_URL } from "@/constants";
 import useSignature from "@/hooks/useSignature";
-import axios from "axios";
+import ReferralModal from "./ReferralModal";
+const Container = styled.div`
+  .navbar {
+    /* height: 92px; */
+    border-bottom: 0.6px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+  }
+
+  .nav-link {
+    padding: 10px 14px;
+    &.active {
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.14);
+    }
+  }
+`;
 
 const NavNet = styled.div`
   background: #313841;
@@ -117,12 +121,22 @@ const LogoBox = styled.div`
 `;
 
 const ButtonText = styled.span`
-  // color: #03d498;
-  font-family: Heebo;
-  font-size: 1rem;
+  /* color: var(--Black-1, var(--Black, #030d19)); */
+  text-align: center;
+  font-family: Satoshi;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 1.5rem; /* 150% */
+  line-height: 26px; /* 162.5% */
+  background: linear-gradient(
+    90deg,
+    #4ba790 0%,
+    rgba(251, 251, 251, 0.6) 50.31%,
+    #9747ff 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `;
 
 export default function Header() {
@@ -171,6 +185,8 @@ export default function Header() {
 
     if (queryInviteCode && queryInviteCode.length === 6) {
       dispatch(setInviteCode(queryInviteCode));
+    } else {
+      dispatch(setInviteCode("zklink"));
     }
 
     if (flag) {
@@ -393,16 +409,18 @@ export default function Header() {
   }, [location.pathname]);
 
   return (
-    <>
+    <Container>
       <Navbar
         // shouldHideOnScroll
-        className={`bg-navBackground md:bg-transparent md:px-[1.5rem] py-[0.75rem] fixed pt-0 ${
+        className={`navbar md:px-[1.5rem] md:h-[92px] fixed pt-0 ${
           isMenuOpen ? "bg-mobile" : ""
         }`}
-        style={{
-          // position: isHeaderTop ? 'fixed' : 'sticky',
-          background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
-        }}
+        style={
+          {
+            // position: isHeaderTop ? 'fixed' : 'sticky',
+            // background: isHeaderTop ? "transparent" : "hsla(0,0%,9%,.88)",
+          }
+        }
         maxWidth="full"
         isBlurred={false}
         isMenuOpen={isMenuOpen}
@@ -425,14 +443,11 @@ export default function Header() {
               {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
           </Link>
-          <NavNet className="hidden md:flex">
+          {/* <NavNet className="hidden md:flex">
             <div>Mainnet Live</div>
-          </NavNet>
+          </NavNet> */}
           {/* <NavBox> */}
-          <NavbarContent
-            className="hidden md:flex gap-[2.5rem]"
-            justify="center"
-          >
+          <NavbarContent className="hidden md:flex" justify="center">
             <NavbarItem>
               <NavLink to="/aggregation-parade" className="nav-link">
                 Aggregation Parade
@@ -458,13 +473,19 @@ export default function Header() {
               </a>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/leaderboard">Leaderboard</NavLink>
+              <NavLink to="/leaderboard" className={"nav-link"}>
+                Leaderboard
+              </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/bridge">Bridge</NavLink>
+              <NavLink to="/bridge" className={"nav-link"}>
+                Bridge
+              </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/about">About</NavLink>
+              <NavLink to="/about" className={"nav-link"}>
+                About
+              </NavLink>
             </NavbarItem>
 
             <Dropdown>
@@ -610,7 +631,7 @@ export default function Header() {
                 className="w-[1.25rem] h-[1.25rem]"
               />
             </a> */}
-            {address && !depositStatus && (
+            {/* {address && !depositStatus && (
               <Button
                 className="hidden md:block border-solid border-1 border-[#03D498] text-[#03D498] bg-transparent font-bold"
                 onClick={() =>
@@ -624,8 +645,8 @@ export default function Header() {
               >
                 Deposit History
               </Button>
-            )}
-
+            )} */}
+            {address && <ReferralModal />}
             {/* <Button onClick={onDisconnect}>disconnect</Button> */}
 
             {isConnected && address ? (
@@ -633,27 +654,14 @@ export default function Header() {
                 <DropdownTrigger>
                   <Button
                     // variant="bordered"
-                    className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
+                    className="px-[24px] py-[20px] md:h-[52px] bg-[#282828] rounded-[100px] flex justify-center items-center md:gap-[10px]"
                     disableAnimation
                   >
-                    <img
-                      className="hidden md:block"
-                      width={20}
-                      height={20}
-                      src="/img/icon-wallet.svg"
-                    />
-                    <img
-                      className="md:hidden"
-                      width={22}
-                      height={22}
-                      src="/img/icon-wallet-white.svg"
-                    />
+                    <img width={20} height={20} src="/img/icon-s2-wallet.svg" />
 
                     {/* <ConnectButton /> */}
                     <ButtonText
-                      className={`text-white md:text-[#03d498] ${
-                        isConnected ? "ml-2 md:ml-0" : ""
-                      }`}
+                      className={`${isConnected ? "ml-2 md:ml-0" : ""}`}
                     >
                       {showAccount(address)}
                     </ButtonText>
@@ -677,7 +685,7 @@ export default function Header() {
               <ConnectButton.Custom>
                 {({ chain }) => (
                   <Button
-                    className="padX btn-default text-white md:bg-[#1D4138] md:text-[#03D498] md:px-4 flex justify-center items-center md:gap-[0.75rem]"
+                    className="px-[24px] py-[20px] md:h-[52px] bg-[#282828] rounded-[100px] flex justify-center items-center md:gap-[10px]"
                     disableAnimation
                     // onClick={() => web3Modal.open()}
                     onClick={() => {
@@ -690,24 +698,11 @@ export default function Header() {
                       }
                     }}
                   >
-                    <img
-                      className="hidden md:block"
-                      width={20}
-                      height={20}
-                      src="/img/icon-wallet.svg"
-                    />
-                    <img
-                      className="md:hidden"
-                      width={22}
-                      height={22}
-                      src="/img/icon-wallet-white.svg"
-                    />
+                    <img width={20} height={20} src="/img/icon-s2-wallet.svg" />
 
                     {/* <ConnectButton /> */}
                     <ButtonText
-                      className={`text-white md:text-[#03d498] ${
-                        isConnected ? "ml-2 md:ml-0" : ""
-                      }`}
+                      className={`${isConnected ? "ml-2 md:ml-0" : ""}`}
                     >
                       {isConnected ? (
                         showAccount(address)
@@ -904,6 +899,6 @@ export default function Header() {
           </div>
         )}
       </BrowserView>
-    </>
+    </Container>
   );
 }

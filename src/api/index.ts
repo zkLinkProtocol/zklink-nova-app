@@ -1,5 +1,6 @@
 import http from "@/utils/http";
-import axios from "axios";
+import { user } from "@nextui-org/react";
+import axios, { AxiosResponse } from "axios";
 import qs from "qs";
 
 type Response = {
@@ -503,6 +504,20 @@ export const getRsethPoints = (address: string): Promise<RsethPointsResponse> =>
     params: { address },
   });
 
+export const getUserTvl = (address: string): Promise<Response> =>
+  http.get(`${BASE_URL_API}/invite/user/tvl`, {
+    params: { address },
+  });
+
+export const bindTwitter = (
+  address: string,
+  accessToken: string
+): Promise<Response> => {
+  return http.post(`${BASE_URL_API}/invite/bind/twitter`, {
+    address,
+    accessToken,
+  });
+};
 export interface NovaProjectPoints {
   errno: number;
   errmsg: string;
@@ -554,16 +569,6 @@ export const getMemeMysteryboxReward = (address: string): Promise<Response> =>
     params: { address },
   });
 
-export const bindTwitter = (
-  address: string,
-  accessToken: string
-): Promise<Response> => {
-  return http.post(`${BASE_URL_API}/invite/bind/twitter`, {
-    address,
-    accessToken,
-  });
-};
-
 export const authLogin = (data: {
   address: string;
   signature: string;
@@ -580,3 +585,211 @@ export const getMystery3Reamin = (address: string): Promise<Response> =>
 
 export const drawMystery3 = (address: string): Promise<Response> =>
   http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
+
+export interface NovaCategoryUserPoints {
+  category:
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
+  project: string;
+  holdingPoints: number;
+  refPoints: number;
+}
+
+interface NovaCategoryUserResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryUserPoints[];
+}
+
+export const getNovaCategoryUserPoints = (
+  address: string
+): Promise<NovaCategoryUserResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/user/points`, {
+    params: { address },
+  });
+
+export interface NovaCategoryPoints {
+  category:
+    | "holding"
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
+  totalPoints: number;
+}
+
+interface NovaCategoryResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryPoints[];
+}
+
+export const getNovaCategoryPoints = (): Promise<NovaCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`);
+
+export interface NovaCategoryUserPointsTotal {
+  category:
+    | "holding"
+    | "spotdex"
+    | "nativeboost"
+    | "perpdex"
+    | "lending"
+    | "gamefi"
+    | "other";
+  ecoPoints: number;
+  referralPoints: number;
+  otherPoints: number;
+}
+
+interface NovaCategoryUserPointsTotalResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaCategoryUserPointsTotal[];
+}
+
+export const getNovaCategoryUserPointsTotal = (
+  address: string
+): Promise<NovaCategoryUserPointsTotalResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/user/points/total`, {
+    params: { address },
+  });
+
+export interface TvlCategory {
+  name: string;
+  tvl: string;
+}
+
+interface TvlCategoryResponse {
+  errno: number;
+  errmsg: string;
+  data: TvlCategory[];
+}
+
+export const getTvlCategory = (): Promise<TvlCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/tvl/category`);
+
+export interface TvlCategoryMilestone {
+  name: string;
+  data: string;
+  type: string;
+}
+
+interface TvlCategoryMilestoneResponse {
+  errno: number;
+  errmsg: string;
+  data: TvlCategoryMilestone[];
+}
+
+export const getTvlCategoryMilestone =
+  (): Promise<TvlCategoryMilestoneResponse> =>
+    http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone`);
+
+export const modifyUsername = (userName: string): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/modify/username`, { userName });
+
+export interface CategoryListItem {
+  username: string;
+  address: string;
+  totalPoints: string;
+}
+
+interface CategoryListResponse {
+  errno: number;
+  errmsg: string;
+  data: {
+    current?: {
+      address: string;
+      totalPoints: string;
+      userIndex: number;
+      username: string;
+    };
+    list: CategoryListItem[];
+  };
+}
+
+export const getCategoryList = (
+  category: string,
+  address?: string
+): Promise<CategoryListResponse> =>
+  http.get(
+    `${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`,
+    {
+      params: {
+        address,
+      },
+    }
+  );
+
+export const dailyOpen = (): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/checkin/open`);
+
+export interface DailyCheckinHistoryData {
+  date: string;
+  expired: boolean;
+  maxDraw: number;
+  remainNum: number;
+}
+type PromiseResponse<T> = {
+  result: T;
+};
+export const getDailyCheckinHistory = (): Promise<
+  PromiseResponse<DailyCheckinHistoryData[]>
+> => http.get(`${BASE_URL_API}/invite/checkin/history`);
+
+export interface DailyCheckinHistoryData {
+  date: string;
+  expired: boolean;
+  maxDraw: number;
+  remainNum: number;
+}
+
+export interface ReferralPointsListItem {
+  address: string;
+  username: string;
+  points: {
+    category: string;
+    point: number;
+  }[];
+}
+
+interface ReferralPointsListResponse {
+  errno: number;
+  errmsg: string;
+  data: ReferralPointsListItem[];
+}
+
+export const getReferralPointsList = (
+  address: string
+): Promise<ReferralPointsListResponse> => {
+  return http.get(`${BASE_URL_LRT_POINTS}/nova/${address}/referrer`);
+};
+
+interface HoldpointResponse {
+  errno: number;
+  errmsg: string;
+  data: number;
+}
+export const getHoldpoint = (address: string): Promise<HoldpointResponse> => {
+  return http.get(`${BASE_URL_LRT_POINTS}/nova/${address}/holdpoint`);
+};
+
+export interface NovaProjectTotalPoints {
+  project: string;
+  totalPoints: number;
+}
+interface NovaProjectTotalPointsResponse {
+  errno: number;
+  errmsg: string;
+  data: NovaProjectTotalPoints[];
+}
+
+export const getNovaProjectTotalPoints =
+  (): Promise<NovaProjectTotalPointsResponse> => {
+    return http.get(`${BASE_URL_LRT_POINTS}/nova/project/points`);
+  };

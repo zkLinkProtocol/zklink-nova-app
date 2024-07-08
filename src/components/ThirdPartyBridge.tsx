@@ -1,7 +1,7 @@
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { useMemo } from "react";
 
-export default () => {
+export default function ThridPartyBridge() {
   const {
     mesonBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
@@ -16,7 +16,7 @@ export default () => {
         desc: "Bridge Bitcoin assets to earn Nova Points.",
         tooltip: "",
         points: "",
-        link: "https://free.tech/zklink",
+        link: "https://app.free.tech/",
       },
       {
         iconURL: "/img/icon-orbiter.svg",
@@ -62,39 +62,45 @@ export default () => {
   }, [
     mesonBridgeNovaPoints,
     orbiterBridgeNovaPoints,
-    owltoBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
   ]);
 
   return (
-    <div>
-      <p className="mt-[2rem] text-[#fff] text-[1.25rem]">
+    <div className="bridge-bg-main mt-10">
+      <p className=" text-[#fff] text-[1.25rem] ">
         Earn Extra Nova Points by deposit from third-party bridges!
       </p>
+      <div className="bridge-divide mt-6"></div>
       {bridges.map((bridge, index) => (
         <a
           key={index}
-          className="mt-[1rem] px-[1rem] py-[0.75rem] bg-[#011C26] rounded-[1rem] block hover:bg-[#001117] flex justify-between items-center"
+          className="bridge-bg-secondary mt-[1rem] px-[1rem] py-[0.75rem] rounded-[1rem] block hover:bg-white/[0.3] flex justify-between items-center"
           href={bridge.link}
           target="_blank"
         >
-          <div className="flex items-center gap-[0.44rem]">
+          <div className="flex shrink grow basis-0 items-center gap-[0.44rem] mr-2">
             <img
               src={bridge.iconURL}
               alt={bridge.name}
-              className="w-[2.5rem] h-[2.5rem] rounded-full"
+              className="w-[3.75rem] h[3.75rem] rounded-full"
             />
             <div>
               <div className="text-[#fff] text-[1rem]">{bridge.name}</div>
-              <div className="text-[#A0A5AD] text-[0.75rem]">{bridge.desc}</div>
+              <div className="text-[#A0A5AD] text-[0.75rem] leading-[18px]">
+                {bridge.desc}
+              </div>
             </div>
           </div>
           <div className="min-w-[100px] flex justify-end items-center gap-[0.5rem] whitespace-nowrap">
-            <span>{bridge.points}</span>
-            <img src="img/icon-open-in-new.svg" />
+            {bridge.points && (
+              <div className="block bg-white/[0.1] text-[#03D498] text-[14px] rounded-[100px] px-[10px] h-[28px]">
+                <span>{bridge.points}</span>
+              </div>
+            )}
+            <img src="img/icon-open-in-new.svg" className="w-6 h-6" />
           </div>
         </a>
       ))}
     </div>
   );
-};
+}

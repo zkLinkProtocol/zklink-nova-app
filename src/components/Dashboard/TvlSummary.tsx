@@ -1,19 +1,21 @@
+import { UserTvlData } from "@/pages/Dashboard";
 import { RootState } from "@/store";
 import { CardBox } from "@/styles/common";
 import { formatNumberWithUnit, getTweetShareText } from "@/utils";
-import { Tooltip } from "@nextui-org/react";
+import { Skeleton, Tooltip } from "@nextui-org/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 interface ITvlSummaryProps {
   totalTvl: number;
+  userTvl: UserTvlData;
   groupTvl: number;
-  referralTvl: number;
+  referrerTvl: number;
 }
 
 export default function TvlSummary(props: ITvlSummaryProps) {
-  const { totalTvl, groupTvl, referralTvl } = props;
+  const { totalTvl, userTvl, groupTvl, referrerTvl } = props;
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [showTooltip4, setShowTooltip4] = useState(false);
 
@@ -30,14 +32,17 @@ export default function TvlSummary(props: ITvlSummaryProps) {
           <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
             {formatNumberWithUnit(totalTvl, "$")}
           </p>
+
           <p className="mt-[1rem] text-[1rem] leading-[rem] md:text-center text-left text-[#7E7E7E]">
             Nova Network TVL
           </p>
         </div>
+
         <div>
           <p className="text-[1.5rem] leading-[2rem] md:text-center text-left">
             {formatNumberWithUnit(groupTvl, "ETH")}
           </p>
+
           <p className="mt-[1rem] text-[1rem] leading-[rem] md:text-center text-left text-[#7E7E7E]">
             Group TVL
           </p>
@@ -46,7 +51,7 @@ export default function TvlSummary(props: ITvlSummaryProps) {
       <CardBox className="md:flex md:justify-around md:py-[3rem] md:px-0 md:w-1/2 md:my-0 my-[1rem] p-3">
         <div className="mb-3  md:mb-0">
           <p className="text-[1.5rem] leading-[2rem]  md:text-center text-left">
-            {formatNumberWithUnit(referralTvl, "ETH")}
+            {formatNumberWithUnit(userTvl.referrerTvl, "ETH")}
           </p>
           <p className="mt-[1rem] text-[1rem] leading-[rem]  md:text-center text-left text-[#7E7E7E]">
             Referral TVL

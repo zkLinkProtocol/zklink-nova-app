@@ -18,7 +18,8 @@ export default {
         },
         gray: '#C0C0C0',
         inputColor: "#313841",
-        green: '#43E3B5'
+        green: '#43E3B5',
+        neutral: 'rgba(251, 251, 251, 0.60)'
       },
       fontFamily: {
         'satoshi': ['Satoshi', 'sans-serif'],
