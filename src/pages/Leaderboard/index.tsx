@@ -189,8 +189,8 @@ export default function Leaderboard() {
   const tabs = [
     { name: "Holding", category: "holding" },
     { name: "Boosted", category: "nativeboost" },
-    { name: "Spot Dex", category: "spotdex" },
-    { name: "Perp Dex", category: "perpdex" },
+    { name: "Spot DEX", category: "spotdex" },
+    { name: "Perp DEX", category: "perpdex" },
     { name: "Lending", category: "lending" },
     // { name: "GameFi", category: "gamefi" },
     { name: "Other", category: "other" },
