@@ -322,11 +322,8 @@ export default function About() {
       answer: (
         <>
           <div className="paragraph">
-            There are no extra bonuses, whether in the form of either Nova
-            Points or other boosters, for users who participated in Season I of
-            the Aggregation Parade. However, we have optimized Season II with a
-            more friendly dashboard and additional Nova Point earning
-            opportunities not featured in Season I.
+            Early participants (including S1 participants) can earn additional
+            points by loyalty booster.
           </div>
         </>
       ),
