@@ -39,11 +39,11 @@ const DailyBox = (props: DailyBoxProps) => {
   const pendingTime = useMemo(() => {
     if (index > 4) {
       const now = dayjs();
-      // UTC 10:00
+      // UTC 00:00
       const tomorrow10am = dayjs()
         .add(1, "day")
         .utc()
-        .hour(10)
+        .hour(0)
         .minute(0)
         .second(0);
       const timeDiff = tomorrow10am.diff(now);
