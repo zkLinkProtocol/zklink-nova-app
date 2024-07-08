@@ -633,9 +633,36 @@ export default function EcoDApps({
       },
 
       {
-        category: aqua?.category,
+        category: shoebill?.category || "lending",
+        iconURL: "/img/icon-shoebill.svg",
+        name: "Shoebill",
+        link: "https://zklink-eth.shoebill.finance/#/",
+        handler: "@ShoebillFinance",
+        type: "Lending",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Up to 10x",
+        holdingPoints:
+          (shoebill?.refPoints || 0) + (shoebill?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("shoebill"),
+        details: [
+          {
+            booster: (
+              <div>
+                <p>10x for ETH</p>
+                <p>10x for other supported points</p>
+              </div>
+            ),
+            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            action: "Provide Liquidity",
+          },
+        ],
+      },
+      {
+        category: aqua?.category || "lending",
         iconURL: "/img/icon-native.svg",
-        name: "Native Lend" || "lending",
+        name: "Native Lend",
         link: "https://native.org/lend?utm_campaign=zklink_nova&utm_source=custom&utm_medium=2xpoints?chainId=810180",
         handler: "@native_fi",
         type: "Lending",
@@ -662,25 +689,29 @@ export default function EcoDApps({
       },
 
       {
-        category: shoebill?.category || "lending",
-        iconURL: "/img/icon-shoebill.svg",
-        name: "Shoebill",
-        link: "https://zklink-eth.shoebill.finance/#/",
-        handler: "@ShoebillFinance",
-        type: "Lending",
+        category: izumi?.category || "spotdex",
+        iconURL: "/img/icon-izumi.svg",
+        name: "iZUMI",
+        link: "https://izumi.finance/trade/swap?chainId=810180",
+        handler: "@izumi_Finance",
+        type: "DEX",
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        holdingPoints:
-          (shoebill?.refPoints || 0) + (shoebill?.holdingPoints || 0),
-        totalPoints: getTotalPointsByProject("shoebill"),
+        holdingPoints: (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("izumi"),
         details: [
           {
             booster: (
               <div>
-                <p>10x for ETH</p>
-                <p>10x for other supported points</p>
+                <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+                <p>3x for externally bridged tokens (solvBTC.m)</p>
+                <p>
+                  Note: Boosts are provided only for effective liquidity. For
+                  AMM DEX, two-sided liquidity provision is required to qualify
+                  for the dApp booster.
+                </p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -726,38 +757,6 @@ export default function EcoDApps({
       },
 
       {
-        category: izumi?.category || "spotdex",
-        iconURL: "/img/icon-izumi.svg",
-        name: "iZUMI",
-        link: "https://izumi.finance/trade/swap?chainId=810180",
-        handler: "@izumi_Finance",
-        type: "DEX",
-        rewardsIcon: [
-          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
-        ],
-        rewards: "Up to 10x",
-        holdingPoints: (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
-        totalPoints: getTotalPointsByProject("izumi"),
-        details: [
-          {
-            booster: (
-              <div>
-                <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
-                <p>3x for externally bridged tokens (solvBTC.m)</p>
-                <p>
-                  Note: Boosts are provided only for effective liquidity. For
-                  AMM DEX, two-sided liquidity provision is required to qualify
-                  for the dApp booster.
-                </p>
-              </div>
-            ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
-            action: "Provide Liquidity",
-          },
-        ],
-      },
-
-      {
         category: zkdx?.category,
         iconURL: "/img/icon-zkdx.svg" || "perpdex",
         name: "zkDX",
@@ -789,32 +788,6 @@ export default function EcoDApps({
             description: `For every $200 in trading volume on zkDX, you will receive 1 Nova Point.`,
             action: "Trade",
             actionLink: "https://app.zkdx.io/trade",
-          },
-        ],
-      },
-
-      {
-        category: eddy?.category || "spotdex",
-        iconURL: "/img/icon-eddyfinance.svg",
-        name: "Eddy Finance",
-        link: "https://app.eddy.finance/swap",
-        handler: "@eddy_protocol",
-        type: "DEX",
-        rewardsIcon: [
-          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
-        ],
-        rewards: "Trading",
-        holdingPoints: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
-        totalPoints: getTotalPointsByProject("eddy"),
-        details: [
-          {
-            booster: (
-              <div>
-                <p>1 point / $200 volume</p>
-              </div>
-            ),
-            description: `For every $200 in trading volume on Eddy Finance (Nova Network), you will receive 1 Nova Point.`,
-            action: "Trade",
           },
         ],
       },
@@ -971,6 +944,31 @@ export default function EcoDApps({
             description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
             descriptionTooltip: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
             action: "Bridge",
+          },
+        ],
+      },
+      {
+        category: eddy?.category || "other",
+        iconURL: "/img/icon-eddyfinance.svg",
+        name: "Eddy Finance",
+        link: "https://app.eddy.finance/swap",
+        handler: "@eddy_protocol",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Trading",
+        holdingPoints: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
+        totalPoints: getTotalPointsByProject("eddy"),
+        details: [
+          {
+            booster: (
+              <div>
+                <p>1 point / $200 volume</p>
+              </div>
+            ),
+            description: `For every $200 in trading volume on Eddy Finance (Nova Network), you will receive 1 Nova Point.`,
+            action: "Trade",
           },
         ],
       },
