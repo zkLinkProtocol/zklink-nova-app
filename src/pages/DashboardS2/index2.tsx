@@ -649,21 +649,47 @@ export default function Dashboard() {
               <div>All Supported Points</div>
               <div className="flex items-center">
                 {[
-                  "nova",
-                  "linea",
-                  "eigenlayer",
-                  "puffer",
-                  "renzo",
-                  "eigenpie",
-                  "kelp",
-                  "allspark",
-                ].map((icon, index) => (
-                  <img
-                    key={index}
-                    src={`/img/icon-rewards-${icon}.svg`}
-                    alt=""
-                    className="mt-[10px] min-w-[32px] w-[32px] block"
-                  />
+                  {
+                    name: "Nova Points",
+                    iconURL: "/img/icon-rewards-nova.svg",
+                  },
+                  { name: "Linea LXP", iconURL: "/img/icon-rewards-linea.svg" },
+                  {
+                    name: "Eigenlayer Points",
+                    iconURL: "/img/icon-rewards-eigenlayer.svg",
+                  },
+                  {
+                    name: "Puffer Points",
+                    iconURL: "/img/icon-rewards-puffer.svg",
+                  },
+                  {
+                    name: "Renzo Points",
+                    iconURL: "/img/icon-rewards-renzo.svg",
+                  },
+                  {
+                    name: "Eigenpie Points",
+                    iconURL: "/img/icon-rewards-eigenpie.svg",
+                  },
+                  {
+                    name: "KelpDAO Miles",
+                    iconURL: "/img/icon-rewards-kelp.svg",
+                  },
+                  {
+                    name: "All Spark Points",
+                    iconURL: "/img/icon-rewards-allspark.svg",
+                  },
+                  {
+                    name: "L.Points",
+                    iconURL: "/img/icon-rewards-layerbank.svg",
+                  },
+                ].map((item, index) => (
+                  <Tooltip content={item.name} key={index}>
+                    <img
+                      src={item.iconURL}
+                      alt=""
+                      className="mt-[10px] min-w-[32px] w-[32px] block"
+                    />
+                  </Tooltip>
                 ))}
               </div>
             </div>

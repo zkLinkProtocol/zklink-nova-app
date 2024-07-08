@@ -574,6 +574,10 @@ export default function EcoDApps({
             iconURL: "/img/icon-rewards-eigenlayer.svg",
           },
           { name: "Puffer Points", iconURL: "/img/icon-rewards-puffer.svg" },
+          {
+            name: "Layerbank Points",
+            iconURL: "/img/icon-rewards-layerbank.svg",
+          },
         ],
 
         holdingPoints:
@@ -1147,7 +1151,7 @@ export default function EcoDApps({
                 <Tooltip content={item.name} key={index}>
                   <img
                     src={item.iconURL}
-                    className="min-w-[32px] min-h-[32px] rounded-full"
+                    className="min-w-[32px] w-[32px] rounded-full"
                   />
                 </Tooltip>
               ))}
