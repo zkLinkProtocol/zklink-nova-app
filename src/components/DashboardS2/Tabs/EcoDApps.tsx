@@ -340,6 +340,7 @@ interface EcoDAppItem {
     description: string;
     action: string;
     actionLink?: string;
+    descriptionTooltip?: string;
   }[];
   idFeatured?: boolean;
 }
@@ -393,15 +394,15 @@ const milestoneMap: {
     },
     {
       tvl: 10000000,
-      zkl: 100000,
-    },
-    {
-      tvl: 50000000,
       zkl: 350000,
     },
     {
-      tvl: 200000000,
+      tvl: 50000000,
       zkl: 700000,
+    },
+    {
+      tvl: 200000000,
+      zkl: 1000000,
     },
   ],
 };
@@ -493,9 +494,6 @@ export default function EcoDApps({
                 <p className="whitespace-nowrap">
                   10x for Merged wBTC, wETH, USDT
                 </p>
-                <p className="whitespace-nowrap">
-                  1 points for a trader’s every 200 USD trading volume
-                </p>
               </div>
             ),
             description:
@@ -524,9 +522,6 @@ export default function EcoDApps({
               <div>
                 <p className="whitespace-nowrap">
                   10x for Merged wBTC, wETH, USDT
-                </p>
-                <p className="whitespace-nowrap">
-                  1 points for a trader’s every 200 USD trading volume
                 </p>
               </div>
             ),
@@ -590,7 +585,6 @@ export default function EcoDApps({
             booster: (
               <div>
                 <p>10x points for LPs providing USDT</p>
-                <p>1 points for a trader’s every 200 USD trading volume</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -749,7 +743,6 @@ export default function EcoDApps({
             booster: (
               <div>
                 <p>10x for Merged ETH, USDC</p>
-                <p>1 points for a trader’s every 200 USD trading volume</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -814,7 +807,7 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>0.5 points per trade</p>
+                <p>1 points per trade</p>
               </div>
             ),
             description: `For each transaction you make with Allspark, you can receive 0.5 Nova Points.`,
@@ -892,6 +885,8 @@ export default function EcoDApps({
           {
             booster: `${orbiterBridgeNovaPoints} Nova Points`,
             description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+            descriptionTooltip:
+              "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
             action: "Bridge",
           },
         ],
@@ -914,6 +909,7 @@ export default function EcoDApps({
           {
             booster: `${symbiosisBridgeNovaPoints} Nova Points`,
             description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+            descriptionTooltip: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
             action: "Bridge",
           },
         ],
@@ -936,6 +932,7 @@ export default function EcoDApps({
           {
             booster: `${mesonBridgeNovaPoints} Nova Points`,
             description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+            descriptionTooltip: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
             action: "Bridge",
           },
         ],
@@ -1124,7 +1121,9 @@ export default function EcoDApps({
 
             <div className="list-content-item text-center">
               {formatNumberWithUnit(data.protocolAllocated)}/
-              <span className="opacity-40">{formatNumberWithUnit(novaCategoryTotalPoints)}</span>
+              <span className="opacity-40">
+                {formatNumberWithUnit(novaCategoryTotalPoints)}
+              </span>
             </div>
             <div className="col-line"></div>
 
@@ -1158,7 +1157,25 @@ export default function EcoDApps({
                 </div>
                 <div className="detail-item min-w-[480px] w-[480px]">
                   <div className="detail-label">Description</div>
-                  <div className="detail-value">{detail.description}</div>
+                  <div className="detail-value">
+                    {detail.description}
+
+                    {detail?.descriptionTooltip && (
+                      <Tooltip
+                        content={detail.descriptionTooltip}
+                        classNames={{
+                          content:
+                            "max-w-[600px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                        }}
+                      >
+                        <img
+                          src="/img/icon-info-2.svg"
+                          alt=""
+                          className="w-[20px] h-[20px] inline-block"
+                        />
+                      </Tooltip>
+                    )}
+                  </div>
                 </div>
                 <div className="detail-item text-right  w-full">
                   <div className="detail-label">Action</div>
@@ -1251,9 +1268,9 @@ export default function EcoDApps({
               <div>
                 Current{" "}
                 {tabActive?.category === "perpdex"
-                  ? "Trading Volume: $"
+                  ? "Trading Volume: "
                   : "TVL: "}
-                {formatToThounds(currentTvl)}
+                ${formatToThounds(currentTvl)}
               </div>
               <div>
                 {isMaxProgress ? (
@@ -1262,9 +1279,9 @@ export default function EcoDApps({
                   <>
                     Next{" "}
                     {tabActive?.category === "perpdex"
-                      ? "Trading Volume Milestone: $"
+                      ? "Trading Volume Milestone: "
                       : "TVL Milestone: "}
-                    {formatToThounds(nextTargetTvl)}
+                    ${formatToThounds(nextTargetTvl)}
                   </>
                 )}
               </div>
