@@ -378,20 +378,7 @@ export default function Bridge() {
     "Total Prize Pool: 30M $ZKL (3% of total supply)",
     "Convert Nova Points to $ZKL and claim every epoch",
     "Earn Nova Points by actively performing holding assets, transactions, referring friends, and staking assets in DApps.",
-    () => (
-      <p>
-        Nova Lynks NFT holders in Season I & II share a separate 10M $ZKL prize
-        pool (Available for purchase on{" "}
-        <a
-          className="text-[#03D498] "
-          target="_blank"
-          href={TRADEMARK_NFT_MARKET_URL}
-        >
-          OKX NFT Marketplace
-        </a>
-        )
-      </p>
-    ),
+    "Nova Lynks NFT holders in Season I & II share a separate 10M $ZKL prize pool",
   ];
 
   const NftIntroduction = () => (

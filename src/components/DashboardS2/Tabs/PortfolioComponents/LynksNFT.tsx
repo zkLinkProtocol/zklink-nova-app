@@ -80,15 +80,11 @@ export default function SbtNFT() {
         </p>
         <Button
           className="btn-mint mt-auto"
-          onClick={() =>
-            window.open(
-              "https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-lynks",
-              "_blank"
-            )
-          }
+          onClick={handleMintNow}
+          isLoading={fetchLoading}
         >
           <img src="img/icon-wallet-white-2.svg" alt="" />
-          <span>Trade on OKX</span>
+          <span>Mint Now</span>
         </Button>
       </div>
       <SbtUpgradeModal

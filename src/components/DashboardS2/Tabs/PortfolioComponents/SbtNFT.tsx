@@ -125,18 +125,22 @@ export default function SbtNFT() {
         <p className="font-bold text-lg">Nova SBT</p>
         <div className="divide my-1"></div>
         <p className="text-sm text-[#FBFBFB]/[0.6]">
-          Users who deposit a minimum amount of 0.1 ETH or equivalent can mint
-          a zkLink Nova SBT. 
+          Users who deposit a minimum amount of 0.1 ETH or equivalent can mint a
+          zkLink Nova SBT. 
         </p>
-        <Button
-          className="btn-mint mt-auto"
-          isDisabled={!!nft && !upgradable}
-          isLoading={fetchLoading || mintLoading || checkingTrademarkUpgradable}
-          onClick={handleMintNow}
-        >
-          <img src="img/icon-wallet-white-2.svg" alt="" />
-          <span> {nft ? "Upgrade" : "Mint Now"}</span>
-        </Button>
+        {!nft && (
+          <Button
+            className="btn-mint mt-auto"
+            isDisabled={!!nft && !upgradable}
+            isLoading={
+              fetchLoading || mintLoading || checkingTrademarkUpgradable
+            }
+            onClick={handleMintNow}
+          >
+            <img src="img/icon-wallet-white-2.svg" alt="" />
+            <span>Mint Now</span>
+          </Button>
+        )}
       </div>
       <SbtMintModal mintModal={mintModal} />
     </NftContainer>
