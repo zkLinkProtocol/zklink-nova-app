@@ -653,7 +653,7 @@ export default function Dashboard() {
                     name: "Nova Points",
                     iconURL: "/img/icon-rewards-nova.svg",
                   },
-                  { name: "Linea LXP", iconURL: "/img/icon-rewards-linea.svg" },
+                  { name: "Linea LXP-L", iconURL: "/img/icon-rewards-linea.svg" },
                   {
                     name: "Eigenlayer Points",
                     iconURL: "/img/icon-rewards-eigenlayer.svg",

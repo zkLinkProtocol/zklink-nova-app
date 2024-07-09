@@ -186,7 +186,7 @@ export default function About() {
                   and subsequent $ZKL was distributed.
                 </li>
                 <li className="before">
-                  Season I of the Aggregation Parade began on May 30, 2024, and
+                  Season II of the Aggregation Parade began on May 30, 2024, and
                   will operate under an Epoch timeline, in which there will be
                   at least Three Epochs.
                 </li>
