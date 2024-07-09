@@ -65,11 +65,6 @@ export default function SbtNFT() {
     }
   }, [fetchLoading, upgradable, upgradeModal]);
 
-  useEffect(() => {
-    if (!upgradeModal.isOpen) {
-      setUpdate((v) => v + 1);
-    }
-  }, [upgradeModal]);
   return (
     <NftContainer>
       <div className="nft-image">
@@ -98,6 +93,7 @@ export default function SbtNFT() {
         nft={nft}
         mintLoading={mintLoading}
         upgradeModal={upgradeModal}
+        onUpgraded={() => setUpdate((v) => v + 1)}
       />
     </NftContainer>
   );
