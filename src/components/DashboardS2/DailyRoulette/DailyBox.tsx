@@ -90,7 +90,7 @@ const DailyBox = (props: DailyBoxProps) => {
         {index >= 5 && (
           <div className="pending-content">
             <img src="/img/s2/icon-daily-info.svg" alt="" />
-            <p className="font-[900]">Box will open in</p>
+            <p className="font-[900]">Box will be available</p>
             <p className="text-[#FBFBFB]/[0.6] text-[13px]">{pendingTime}</p>
           </div>
         )}
