@@ -13,7 +13,7 @@ export default function SbtNFT() {
   const { trademarkNFT, lynksNFT, publicClient } = useNovaDrawNFT();
   const { getLynksNFT } = useNovaNFT();
   const { nft, loading: mintLoading, fetchLoading } = useSbtNft();
-
+  const [update, setUpdate] = useState(0);
   const upgradeModal = useDisclosure();
   const [upgradable, setUpgradable] = useState(false);
 
@@ -54,7 +54,7 @@ export default function SbtNFT() {
         }
       }
     })();
-  }, [address, getLynksNFT, publicClient, trademarkNFT]);
+  }, [address, getLynksNFT, publicClient, trademarkNFT, update]);
 
   const handleMintNow = useCallback(() => {
     if (fetchLoading) {
@@ -64,6 +64,12 @@ export default function SbtNFT() {
       upgradeModal.onOpen();
     }
   }, [fetchLoading, upgradable, upgradeModal]);
+
+  useEffect(() => {
+    if (!upgradeModal.isOpen) {
+      setUpdate((v) => v + 1);
+    }
+  }, [upgradeModal]);
   return (
     <NftContainer>
       <div className="nft-image">
@@ -82,6 +88,7 @@ export default function SbtNFT() {
           className="btn-mint mt-auto"
           onClick={handleMintNow}
           isLoading={fetchLoading}
+          isDisabled={!upgradable}
         >
           <img src="img/icon-wallet-white-2.svg" alt="" />
           <span>Mint Now</span>

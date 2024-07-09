@@ -275,28 +275,12 @@ const SbtUpgradeModal = (props: IProps) => {
               )}
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="mt-6">
-                  {mintResult?.name.toLowerCase().includes("nova points") ? (
-                    <Button
-                      className="w-full gradient-btn"
-                      onClick={() => trademarkMintModal.onClose()}
-                    >
-                      Confirm
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full gradient-btn"
-                      onClick={() =>
-                        window.open(
-                          mintResult?.name.includes("Lynks")
-                            ? LYNKS_NFT_MARKET_URL
-                            : TRADEMARK_NFT_MARKET_URL,
-                          "_blank"
-                        )
-                      }
-                    >
-                      Trade
-                    </Button>
-                  )}
+                  <Button
+                    className="w-full gradient-btn"
+                    onClick={() => trademarkMintModal.onClose()}
+                  >
+                    Confirm
+                  </Button>
                 </div>
               )}
             </TxResult>
