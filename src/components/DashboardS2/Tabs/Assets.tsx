@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {
   ExplorerTvlItem,
+  NovaCategoryPoints,
   SupportToken,
   TvlCategory,
   getExplorerTokenTvl,
@@ -29,6 +30,7 @@ import _, { max, set } from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
 import MilestoneProgress from "../MilestoneProgress";
 import BridgeComponent from "@/components/Bridge";
+import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 
 const BlurBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -323,8 +325,8 @@ interface IAssetsTableProps {
   supportTokens: SupportToken[];
   ethUsdPrice: number;
   currentTvl: number;
-  holdingPoints: number;
-  novaCategoryTotalPoints: number;
+  holdingPoints?: NovaPointsListItem;
+  novaCategoryTotalPoints?: NovaCategoryPoints;
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -617,6 +619,47 @@ export default function Assets(props: IAssetsTableProps) {
     return milestoneData[milestoneData.length - 1].zkl;
   }, [milestoneData]);
 
+  const holdingPointsTooltips = useMemo(() => {
+    return [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(holdingPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(holdingPoints?.referralPoints || 0),
+      },
+      {
+        label: "By Other Activities",
+        value: formatNumberWithUnit(holdingPoints?.otherPoints || 0),
+      },
+    ];
+  }, [holdingPoints]);
+
+  const categoryPointsTooltips = useMemo(() => {
+    const arr = [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(
+          novaCategoryTotalPoints?.referralPoints || 0
+        ),
+      },
+    ];
+
+    if (novaCategoryTotalPoints?.otherPoints) {
+      arr.push({
+        label: "By Other Activities",
+        value: formatNumberWithUnit(novaCategoryTotalPoints?.otherPoints || 0),
+      });
+    }
+
+    return arr;
+  }, [novaCategoryTotalPoints]);
+
   return (
     <>
       <Container>
@@ -659,16 +702,73 @@ export default function Assets(props: IAssetsTableProps) {
           <AllocatedBox>
             <div className="flex items-center justify-between">
               <span className="label">Total Sector Allocated Points</span>
-              <span className="value">
-                {formatNumberWithUnit(novaCategoryTotalPoints)}
-              </span>
+
+              <Tooltip
+                classNames={{
+                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+                }}
+                content={
+                  <div className="min-w-[200px]">
+                    <div className="text-[#999] text-[14px] font-[500]">
+                      Sector Allocated Points
+                    </div>
+                    {categoryPointsTooltips.map((item, index) => (
+                      <div
+                        className="mt-[8px] flex items-center justify-between"
+                        key={index}
+                      >
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.label}
+                        </span>
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <span className="value">
+                  {formatNumberWithUnit(
+                    (novaCategoryTotalPoints?.ecoPoints || 0) +
+                      (novaCategoryTotalPoints?.referralPoints || 0) +
+                      (novaCategoryTotalPoints?.otherPoints || 0)
+                  )}
+                </span>
+              </Tooltip>
             </div>
             <div className="line"></div>
             <div className="flex items-center justify-between">
               <span className="label">Your Sector Points</span>
-              <span className="value">
-                {formatNumberWithUnit(holdingPoints)}
-              </span>
+              <Tooltip
+                classNames={{
+                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+                }}
+                content={
+                  <div className="min-w-[200px]">
+                    <div className="text-[#999] text-[14px] font-[500]">
+                      Your Sector Points
+                    </div>
+                    {holdingPointsTooltips.map((item, index) => (
+                      <div
+                        className="mt-[8px] flex items-center justify-between"
+                        key={index}
+                      >
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.label}
+                        </span>
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <span className="value">
+                  {formatNumberWithUnit(holdingPoints?.points || 0)}
+                </span>
+              </Tooltip>
             </div>
           </AllocatedBox>
         </div>
