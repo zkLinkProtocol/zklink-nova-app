@@ -621,7 +621,9 @@ export interface NovaCategoryPoints {
     | "lending"
     | "gamefi"
     | "other";
-  totalPoints: number;
+  referralPoints: number;
+  ecoPoints: number;
+  otherPoints?: number;
 }
 
 interface NovaCategoryResponse {
@@ -781,7 +783,8 @@ export const getHoldpoint = (address: string): Promise<HoldpointResponse> => {
 
 export interface NovaProjectTotalPoints {
   project: string;
-  totalPoints: number;
+  ecoPoints: number;
+  referralPoints: number;
 }
 interface NovaProjectTotalPointsResponse {
   errno: number;
