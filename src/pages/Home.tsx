@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import { BlurBox } from "@/styles/common";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
+import { useTranslation } from "react-i18next";
 
 const BgBox = styled.div`
   width: 100%;
@@ -256,6 +257,8 @@ export default function Home() {
     return !otp || otp.length !== 6;
   }, [otp]);
 
+  const { t } = useTranslation();
+
   return (
     <BgBox className="relative pt-[92px] pb-[65px]">
       {isLoading && <Loading />}
@@ -263,7 +266,7 @@ export default function Home() {
       <TitleBox className="text-left md:text-center">
         <div className="mt-[100px] flex justify-center">
           <BlurBox className="px-[16px] py-[14px]">
-            Welcome To zkLink Nova
+            {t("home.welcome_to_zklink_nova")}
           </BlurBox>
         </div>
         <div className="mt-[20px] flex justify-center px-6">

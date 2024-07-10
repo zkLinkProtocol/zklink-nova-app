@@ -1,5 +1,21 @@
 {
   "translation": {
-    "hello_world": "Hello, World"
+    "hello_world": "Hello, World",
+    "home": {
+      "welcome_to_zklink_nova": "Welcome To zkLink Nova",
+      "the_only": "The ONLY Aggregated L3 with added yield for",
+      "eth": "ETH",
+      "stablecoins": "Stablecoins",
+      "lsts": "LSTs",
+      "lrts": "LRTs",
+      "l2_native_assets": "L2 Native Assets",
+      "bridge_to_earn": "Bridge to earn Mega Yield and $ZKL on zkLink Nova",
+      "enter_iinvite_code": "Enter Your Invite Code",
+      "to_participate_in_the_campaign": "To participate in the campaign",
+      "join_our": "Join our",
+      "discord": "Discord",
+      "submit": "zkLink Nova Network TVL",
+      "zklink_nova_network_tvl": "zkLink Nova Network TVL"
+    }
   }
 }
