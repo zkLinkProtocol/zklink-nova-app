@@ -13,6 +13,7 @@ import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About/index2";
 import UnwrapETH from "@/pages/UnwrapETH";
 import DashboardS2 from "./pages/DashboardS2/index2";
+import TestI18n from "./pages/TestI18n";
 
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
@@ -107,6 +108,15 @@ export default function App() {
             element={
               <Suspense fallback="">
                 <UnwrapETH />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/test-i18n"
+            element={
+              <Suspense fallback="">
+                <TestI18n />
               </Suspense>
             }
           />

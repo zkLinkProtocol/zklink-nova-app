@@ -2,12 +2,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { NextUIProvider } from "@nextui-org/react";
 import { WagmiProvider } from "wagmi";
-import {
-  wagmiConfig,
-  projectId,
-  config,
-  wagmiDefaultConfig,
-} from "./constants/networks.ts";
+import { wagmiDefaultConfig } from "./constants/networks.ts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/store";
@@ -17,6 +12,7 @@ import Maintenance from "./components/Maintenance.tsx";
 const isMaintenance = import.meta.env.VITE_IS_MAINTENANCE;
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import "./i18n.ts";
 
 // Setup queryClient for WAGMIv2
 const queryClient = new QueryClient();
