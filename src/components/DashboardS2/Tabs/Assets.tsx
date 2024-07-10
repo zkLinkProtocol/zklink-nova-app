@@ -710,7 +710,7 @@ export default function Assets(props: IAssetsTableProps) {
                 content={
                   <div className="min-w-[200px]">
                     <div className="text-[#999] text-[14px] font-[500]">
-                      Your Sector Points
+                      Sector Allocated Points
                     </div>
                     {categoryPointsTooltips.map((item, index) => (
                       <div
