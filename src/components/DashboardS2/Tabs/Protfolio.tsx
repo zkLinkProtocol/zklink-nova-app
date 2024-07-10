@@ -491,7 +491,37 @@ export default function Portfolio({
                 content:
                   "w-[300px] rounded-lg bg-[#151923] text-white px-4 py-5",
               }}
-              content={<PointsPopoverContent data={item.earnedBy} />}
+              content={
+                <PointsPopoverContent
+                  data={
+                    item.category === "holding"
+                      ? [
+                          {
+                            name: "Earned by Holding",
+                            points: item.ecoPoints,
+                          },
+                          {
+                            name: "Earned by Referral",
+                            points: item.referralPoints,
+                          },
+                          {
+                            name: "Earned by Other Activities",
+                            points: item.otherPoints,
+                          },
+                        ]
+                      : [
+                          {
+                            name: "Earned by participate in Sector",
+                            points: item.ecoPoints,
+                          },
+                          {
+                            name: "Earned by Referral",
+                            points: item.referralPoints,
+                          },
+                        ]
+                  }
+                />
+              }
             >
               <p className="points-value">
                 {formatNumberWithUnit(item.points)}

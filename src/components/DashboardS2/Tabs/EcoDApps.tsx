@@ -20,6 +20,8 @@ import {
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import MilestoneProgress from "../MilestoneProgress";
+import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
+import { divide, now } from "lodash";
 
 const MilestoneBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -336,8 +338,8 @@ interface EcoDAppItem {
     name: string;
     iconURL: string;
   }[];
-  holdingPoints: number;
-  totalPoints: number;
+  holdingPoints: NovaProjectTotalPoints;
+  totalPoints?: NovaProjectTotalPoints;
   details: {
     booster: string | ReactNode;
     description: string;
@@ -444,8 +446,8 @@ export default function EcoDApps({
   };
   novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
-  holdingPoints: number;
-  novaCategoryTotalPoints: number;
+  holdingPoints?: NovaPointsListItem;
+  novaCategoryTotalPoints?: NovaCategoryPoints;
 }) {
   const geNovaCategoryUserPointsByProject = (project: string) => {
     const obj = novaCategoryUserPoints.find((item) => item.project === project);
@@ -476,11 +478,19 @@ export default function EcoDApps({
   const getTotalPointsByProject = useCallback(
     (project: string) => {
       const obj = projectTotalPoints.find((item) => item.project === project);
-      return obj?.totalPoints || 0;
+      return obj;
     },
     [projectTotalPoints]
   );
 
+  const getHoldingPointsByProject = (project: string) => {
+    const data = geNovaCategoryUserPointsByProject(project);
+    return {
+      project: project,
+      ecoPoints: data?.holdingPoints || 0,
+      referralPoints: data?.refPoints || 0,
+    };
+  };
   const ecoDAppsList = useMemo(() => {
     const novaswap = geNovaCategoryUserPointsByProject("novaswap");
     const izumi = geNovaCategoryUserPointsByProject("izumi");
@@ -511,8 +521,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        holdingPoints:
-          (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("nowaswap"),
         totalPoints: getTotalPointsByProject("novaswap"),
         details: [
           {
@@ -541,8 +550,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        holdingPoints:
-          (novaswap?.refPoints || 0) + (novaswap?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("nowaswap"),
         totalPoints: getTotalPointsByProject("novaswap"),
         details: [
           {
@@ -580,8 +588,7 @@ export default function EcoDApps({
           },
         ],
 
-        holdingPoints:
-          (layerbank?.refPoints || 0) + (layerbank?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("layerbank"),
         totalPoints: getTotalPointsByProject("layerbank"),
         details: [
           {
@@ -611,7 +618,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        holdingPoints: (logx?.refPoints || 0) + (logx?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("logx"),
         totalPoints: getTotalPointsByProject("logx"),
         details: [
           {
@@ -647,8 +654,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        holdingPoints:
-          (shoebill?.refPoints || 0) + (shoebill?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("shoebill"),
         totalPoints: getTotalPointsByProject("shoebill"),
         details: [
           {
@@ -674,7 +680,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        holdingPoints: (aqua?.refPoints || 0) + (aqua?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("aqua"),
         totalPoints: getTotalPointsByProject("aqua"),
         details: [
           {
@@ -703,7 +709,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        holdingPoints: (izumi?.refPoints || 0) + (izumi?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("izumi"),
         totalPoints: getTotalPointsByProject("izumi"),
         details: [
           {
@@ -735,7 +741,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x / Trading",
-        holdingPoints: (wagmi?.refPoints || 0) + (wagmi?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("wagmi"),
         totalPoints: getTotalPointsByProject("wagmi"),
         details: [
           {
@@ -771,7 +777,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x / Trading",
-        holdingPoints: (zkdx?.refPoints || 0) + (zkdx?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("zkdx"),
         totalPoints: getTotalPointsByProject("zkdx"),
         details: [
           {
@@ -811,8 +817,7 @@ export default function EcoDApps({
           },
         ],
         rewards: "Interaction",
-        holdingPoints:
-          (allspark?.refPoints || 0) + (allspark?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("allspark"),
         totalPoints: getTotalPointsByProject("allspark"),
         details: [
           {
@@ -838,7 +843,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        holdingPoints: (rubic?.refPoints || 0) + (rubic?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("rubic"),
         totalPoints: getTotalPointsByProject("rubic"),
         details: [
           {
@@ -864,8 +869,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Up to 10x",
-        holdingPoints:
-          (interport?.refPoints || 0) + (interport?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("interport"),
         totalPoints: getTotalPointsByProject("interport"),
         details: [
           {
@@ -891,8 +895,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        holdingPoints:
-          (orbiter?.refPoints || 0) + (orbiter?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("orbiter"),
         totalPoints: getTotalPointsByProject("orbiter"),
         details: [
           {
@@ -916,8 +919,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        holdingPoints:
-          (symbiosis?.refPoints || 0) + (symbiosis?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("symbiosis"),
         totalPoints: getTotalPointsByProject("symbiosis"),
         details: [
           {
@@ -940,7 +942,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Bridge",
-        holdingPoints: (meson?.refPoints || 0) + (meson?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("meson"),
         totalPoints: getTotalPointsByProject("meson"),
         details: [
           {
@@ -962,7 +964,7 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Trading",
-        holdingPoints: (eddy?.refPoints || 0) + (eddy?.holdingPoints || 0),
+        holdingPoints: getHoldingPointsByProject("eddy"),
         totalPoints: getTotalPointsByProject("eddy"),
         details: [
           {
@@ -1103,6 +1105,35 @@ export default function EcoDApps({
     const { data, handleLink } = props;
     const [isOpen, setIsOpen] = useState(false);
 
+    const allocatedTooltips = useMemo(() => {
+      const protocolPoints = [
+        {
+          label: "By Interaction",
+          value: formatNumberWithUnit(data.totalPoints?.ecoPoints || 0),
+        },
+        {
+          label: "By Referral",
+          value: formatNumberWithUnit(data.totalPoints?.referralPoints || 0),
+        },
+      ];
+
+      const yourPoints = [
+        {
+          label: "By Interaction",
+          value: formatNumberWithUnit(data.holdingPoints?.ecoPoints || 0),
+        },
+        {
+          label: "By Referral",
+          value: formatNumberWithUnit(data.holdingPoints?.referralPoints || 0),
+        },
+      ];
+
+      return {
+        protocolPoints,
+        yourPoints,
+      };
+    }, [data]);
+
     return (
       <div className="row mb-[24px] overflow-hidden">
         <div className="flex items-center cursor-pointer">
@@ -1159,10 +1190,55 @@ export default function EcoDApps({
             <div className="col-line"></div>
 
             <div className="list-content-item text-center">
-              {formatNumberWithUnit(data.holdingPoints)}/
-              <span className="opacity-40">
-                {formatNumberWithUnit(data.totalPoints)}
-              </span>
+              <Tooltip
+                classNames={{
+                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+                }}
+                content={
+                  <div className="min-w-[200px]">
+                    <div className="text-[#999] text-[14px] font-[500]">
+                      Your Allocated Points
+                    </div>
+                    {allocatedTooltips.yourPoints.map((item, index) => (
+                      <div
+                        className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
+                        key={index}
+                      >
+                        <span>{item.label}</span>
+                        <span>{item.value}</span>
+                      </div>
+                    ))}
+
+                    <div className="mt-[18px] text-[#999] text-[14px] font-[500]">
+                      Protocol Allocated Points
+                    </div>
+
+                    {allocatedTooltips.protocolPoints.map((item, index) => (
+                      <div
+                        className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
+                        key={index}
+                      >
+                        <span>{item.label}</span>
+                        <span>{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <div>
+                  {formatNumberWithUnit(
+                    data.holdingPoints.ecoPoints +
+                      data.holdingPoints.referralPoints
+                  )}
+                  /
+                  <span className="opacity-40">
+                    {formatNumberWithUnit(
+                      (data.totalPoints?.ecoPoints || 0) +
+                        (data.totalPoints?.referralPoints || 0)
+                    )}
+                  </span>
+                </div>
+              </Tooltip>
             </div>
             <div className="col-line"></div>
 
@@ -1241,6 +1317,34 @@ export default function EcoDApps({
     );
   };
 
+  const holdingPointsTooltips = useMemo(() => {
+    return [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(holdingPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(holdingPoints?.referralPoints || 0),
+      },
+    ];
+  }, [holdingPoints]);
+
+  const categoryPointsTooltips = useMemo(() => {
+    return [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(
+          novaCategoryTotalPoints?.referralPoints || 0
+        ),
+      },
+    ];
+  }, [novaCategoryTotalPoints]);
+
   return (
     <Container>
       <div className="flex justify-between">
@@ -1284,14 +1388,71 @@ export default function EcoDApps({
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Total Sector Allocated Points</span>
-            <span className="value">
-              {formatNumberWithUnit(novaCategoryTotalPoints)}
-            </span>
+            <Tooltip
+              classNames={{
+                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+              }}
+              content={
+                <div className="min-w-[200px]">
+                  <div className="text-[#999] text-[14px] font-[500]">
+                    Your Sector Points
+                  </div>
+                  {categoryPointsTooltips.map((item, index) => (
+                    <div
+                      className="mt-[8px] flex items-center justify-between"
+                      key={index}
+                    >
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.label}
+                      </span>
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <span className="value">
+                {formatNumberWithUnit(
+                  (novaCategoryTotalPoints?.ecoPoints || 0) +
+                    (novaCategoryTotalPoints?.referralPoints || 0)
+                )}
+              </span>
+            </Tooltip>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Sector Points</span>
-            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
+            <Tooltip
+              classNames={{
+                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+              }}
+              content={
+                <div className="min-w-[200px]">
+                  <div className="text-[#999] text-[14px] font-[500]">
+                    Your Sector Points
+                  </div>
+                  {holdingPointsTooltips.map((item, index) => (
+                    <div
+                      className="mt-[8px] flex items-center justify-between"
+                      key={index}
+                    >
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.label}
+                      </span>
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <span className="value">
+                {formatNumberWithUnit(holdingPoints?.points || 0)}
+              </span>
+            </Tooltip>
           </div>
         </AllocatedBox>
       </div>
