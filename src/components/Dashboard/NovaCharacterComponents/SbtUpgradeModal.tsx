@@ -26,10 +26,11 @@ interface IProps {
   upgradeModal: UseDisclosureReturn;
   nft: NOVA_NFT | undefined;
   mintLoading: boolean;
+  onUpgraded?: () => void;
 }
 
 const SbtUpgradeModal = (props: IProps) => {
-  const { upgradeModal, nft, mintLoading } = props;
+  const { upgradeModal, nft, mintLoading, onUpgraded } = props;
   const trademarkMintModal = useDisclosure();
   const [trademarkMintStatus, setTrademarkMintStatus] = useState<
     MintStatus | undefined
@@ -79,6 +80,7 @@ const SbtUpgradeModal = (props: IProps) => {
       });
       updateRefreshBalanceId();
       setUpdate((update) => update + 1);
+      onUpgraded?.();
     } catch (e: any) {
       console.log(e);
       setTrademarkMintStatus(MintStatus.Failed);
@@ -98,14 +100,15 @@ const SbtUpgradeModal = (props: IProps) => {
   }, [
     address,
     isInvaidChain,
-    isTrademarkApproved,
-    nft?.name,
-    sendTrademarkApproveTx,
-    sendUpgradeSBTTx,
     switchChain,
     trademarkMintModal,
-    upgradeModal,
+    isTrademarkApproved,
+    sendUpgradeSBTTx,
+    nft?.name,
     updateRefreshBalanceId,
+    onUpgraded,
+    sendTrademarkApproveTx,
+    upgradeModal,
   ]);
 
   const mintPointsTips = useMemo(() => {
@@ -275,28 +278,12 @@ const SbtUpgradeModal = (props: IProps) => {
               )}
               {trademarkMintStatus === MintStatus.Success && (
                 <div className="mt-6">
-                  {mintResult?.name.toLowerCase().includes("nova points") ? (
-                    <Button
-                      className="w-full gradient-btn"
-                      onClick={() => trademarkMintModal.onClose()}
-                    >
-                      Confirm
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full gradient-btn"
-                      onClick={() =>
-                        window.open(
-                          mintResult?.name.includes("Lynks")
-                            ? LYNKS_NFT_MARKET_URL
-                            : TRADEMARK_NFT_MARKET_URL,
-                          "_blank"
-                        )
-                      }
-                    >
-                      Trade
-                    </Button>
-                  )}
+                  <Button
+                    className="w-full gradient-btn"
+                    onClick={() => trademarkMintModal.onClose()}
+                  >
+                    Confirm
+                  </Button>
                 </div>
               )}
             </TxResult>
