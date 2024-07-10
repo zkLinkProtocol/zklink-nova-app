@@ -11,6 +11,7 @@ import Loading from "@/components/Loading";
 import { BlurBox } from "@/styles/common";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 import { useTranslation } from "react-i18next";
+import ReactHtmlParser from "react-html-parser";
 
 const BgBox = styled.div`
   width: 100%;
@@ -259,6 +260,19 @@ export default function Home() {
 
   const { t } = useTranslation();
 
+  const rawHtmlString = t("home.join_our", {
+    link: "Discord",
+    tag: "#zkLinkNovaAggParade",
+  })
+    .replace(
+      "Discord",
+      `<a href="https://discord.com/invite/zklink" class="text-[#03D498]" target="_blank">Discord</a>`
+    )
+    .replace(
+      "#zkLinkNovaAggParade",
+      `<a href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click" class="text-[#03D498]" target="_blank">#zkLinkNovaAggParade</a>`
+    );
+
   return (
     <BgBox className="relative pt-[92px] pb-[65px]">
       {isLoading && <Loading />}
@@ -316,23 +330,7 @@ export default function Home() {
         </div>
 
         <div className="mt-[26px] text-[1rem] leading-[18px]">
-          Join our{" "}
-          <a
-            href="https://discord.com/invite/zklink"
-            className="text-[#03D498]"
-            target="_blank"
-          >
-            Discord
-          </a>{" "}
-          or search{" "}
-          <a
-            href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
-            className="text-[#03D498]"
-            target="_blank"
-          >
-            #zkLinkNovaAggParade
-          </a>{" "}
-          on twitter for invite code
+          {ReactHtmlParser(rawHtmlString)}
         </div>
 
         <div>
