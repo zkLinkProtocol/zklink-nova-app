@@ -689,7 +689,7 @@ export default function Assets(props: IAssetsTableProps) {
                   content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
                 }}
                 content={
-                  <div className="min-w-[250px]">
+                  <div className="min-w-[200px]">
                     <div className="text-[#999] text-[14px] font-[500]">
                       Your Sector Points
                     </div>

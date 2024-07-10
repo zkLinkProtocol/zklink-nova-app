@@ -781,7 +781,8 @@ export const getHoldpoint = (address: string): Promise<HoldpointResponse> => {
 
 export interface NovaProjectTotalPoints {
   project: string;
-  totalPoints: number;
+  ecoPoints: number;
+  referralPoints: number;
 }
 interface NovaProjectTotalPointsResponse {
   errno: number;
