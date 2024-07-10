@@ -29,6 +29,7 @@ import _, { max, set } from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
 import MilestoneProgress from "../MilestoneProgress";
 import BridgeComponent from "@/components/Bridge";
+import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 
 const BlurBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -323,7 +324,7 @@ interface IAssetsTableProps {
   supportTokens: SupportToken[];
   ethUsdPrice: number;
   currentTvl: number;
-  holdingPoints: number;
+  holdingPoints?: NovaPointsListItem;
   novaCategoryTotalPoints: number;
 }
 
@@ -617,6 +618,23 @@ export default function Assets(props: IAssetsTableProps) {
     return milestoneData[milestoneData.length - 1].zkl;
   }, [milestoneData]);
 
+  const holdingPointsTooltips = useMemo(() => {
+    return [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(holdingPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(holdingPoints?.referralPoints || 0),
+      },
+      {
+        label: "By Other Activities",
+        value: formatNumberWithUnit(holdingPoints?.otherPoints || 0),
+      },
+    ];
+  }, [holdingPoints]);
+
   return (
     <>
       <Container>
@@ -666,9 +684,35 @@ export default function Assets(props: IAssetsTableProps) {
             <div className="line"></div>
             <div className="flex items-center justify-between">
               <span className="label">Your Sector Points</span>
-              <span className="value">
-                {formatNumberWithUnit(holdingPoints)}
-              </span>
+              <Tooltip
+                classNames={{
+                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+                }}
+                content={
+                  <div className="min-w-[250px]">
+                    <div className="text-[#999] text-[14px] font-[500]">
+                      Your Sector Points
+                    </div>
+                    {holdingPointsTooltips.map((item, index) => (
+                      <div
+                        className="mt-[8px] flex items-center justify-between"
+                        key={index}
+                      >
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.label}
+                        </span>
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <span className="value">
+                  {formatNumberWithUnit(holdingPoints?.points || 0)}
+                </span>
+              </Tooltip>
             </div>
           </AllocatedBox>
         </div>

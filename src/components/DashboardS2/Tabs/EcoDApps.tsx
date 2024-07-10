@@ -20,6 +20,7 @@ import {
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import MilestoneProgress from "../MilestoneProgress";
+import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 
 const MilestoneBox = styled.div`
   color: rgba(251, 251, 251, 0.6);
@@ -444,7 +445,7 @@ export default function EcoDApps({
   };
   novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
-  holdingPoints: number;
+  holdingPoints?: NovaPointsListItem;
   novaCategoryTotalPoints: number;
 }) {
   const geNovaCategoryUserPointsByProject = (project: string) => {
@@ -1241,6 +1242,19 @@ export default function EcoDApps({
     );
   };
 
+  const holdingPointsTooltips = useMemo(() => {
+    return [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(holdingPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(holdingPoints?.referralPoints || 0),
+      },
+    ];
+  }, [holdingPoints]);
+
   return (
     <Container>
       <div className="flex justify-between">
@@ -1291,7 +1305,35 @@ export default function EcoDApps({
           <div className="line"></div>
           <div className="flex items-center justify-between">
             <span className="label">Your Sector Points</span>
-            <span className="value">{formatNumberWithUnit(holdingPoints)}</span>
+            <Tooltip
+              classNames={{
+                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+              }}
+              content={
+                <div className="min-w-[250px]">
+                  <div className="text-[#999] text-[14px] font-[500]">
+                    Your Sector Points
+                  </div>
+                  {holdingPointsTooltips.map((item, index) => (
+                    <div
+                      className="mt-[8px] flex items-center justify-between"
+                      key={index}
+                    >
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.label}
+                      </span>
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <span className="value">
+                {formatNumberWithUnit(holdingPoints?.points || 0)}
+              </span>
+            </Tooltip>
           </div>
         </AllocatedBox>
       </div>

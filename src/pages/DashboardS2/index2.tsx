@@ -292,10 +292,9 @@ export interface NovaPointsListItem {
   name: string;
   category: string;
   points: number;
-  earnedBy: {
-    name: string;
-    points: number;
-  }[];
+  ecoPoints: number;
+  referralPoints: number;
+  otherPoints: number;
 }
 
 export default function Dashboard() {
@@ -494,31 +493,9 @@ export default function Dashboard() {
           name: c.name,
           category: c.category,
           points: ecoPoints + referralPoints + (isHolding ? otherPoints : 0),
-          earnedBy: isHolding
-            ? [
-                {
-                  name: "Earned by Holding",
-                  points: ecoPoints,
-                },
-                {
-                  name: "Earned by Referral",
-                  points: referralPoints,
-                },
-                {
-                  name: "Earned by Other Activities",
-                  points: otherPoints,
-                },
-              ]
-            : [
-                {
-                  name: "Earned by participate in Sector",
-                  points: ecoPoints,
-                },
-                {
-                  name: "Earned by Referral",
-                  points: referralPoints,
-                },
-              ],
+          ecoPoints: ecoPoints,
+          referralPoints: referralPoints,
+          otherPoints: otherPoints,
         };
 
         return obj;
@@ -532,7 +509,7 @@ export default function Dashboard() {
     const categoryData = novaPointsList.find(
       (item) => item.category === category
     );
-    return categoryData?.points || 0;
+    return categoryData;
   }, [novaPointsList, tabs2Active]);
 
   const novaCategoryTotalPoints = useMemo(() => {
@@ -653,7 +630,10 @@ export default function Dashboard() {
                     name: "Nova Points",
                     iconURL: "/img/icon-rewards-nova.svg",
                   },
-                  { name: "Linea LXP-L", iconURL: "/img/icon-rewards-linea.svg" },
+                  {
+                    name: "Linea LXP-L",
+                    iconURL: "/img/icon-rewards-linea.svg",
+                  },
                   {
                     name: "Eigenlayer Points",
                     iconURL: "/img/icon-rewards-eigenlayer.svg",
