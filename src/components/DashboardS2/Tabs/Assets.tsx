@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {
   ExplorerTvlItem,
+  NovaCategoryPoints,
   SupportToken,
   TvlCategory,
   getExplorerTokenTvl,
@@ -325,7 +326,7 @@ interface IAssetsTableProps {
   ethUsdPrice: number;
   currentTvl: number;
   holdingPoints?: NovaPointsListItem;
-  novaCategoryTotalPoints: number;
+  novaCategoryTotalPoints?: NovaCategoryPoints;
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -635,6 +636,30 @@ export default function Assets(props: IAssetsTableProps) {
     ];
   }, [holdingPoints]);
 
+  const categoryPointsTooltips = useMemo(() => {
+    const arr = [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(
+          novaCategoryTotalPoints?.referralPoints || 0
+        ),
+      },
+    ];
+
+    if (novaCategoryTotalPoints?.otherPoints) {
+      arr.push({
+        label: "By Other Activities",
+        value: formatNumberWithUnit(novaCategoryTotalPoints?.otherPoints || 0),
+      });
+    }
+
+    return arr;
+  }, [novaCategoryTotalPoints]);
+
   return (
     <>
       <Container>
@@ -677,9 +702,40 @@ export default function Assets(props: IAssetsTableProps) {
           <AllocatedBox>
             <div className="flex items-center justify-between">
               <span className="label">Total Sector Allocated Points</span>
-              <span className="value">
-                {formatNumberWithUnit(novaCategoryTotalPoints)}
-              </span>
+
+              <Tooltip
+                classNames={{
+                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+                }}
+                content={
+                  <div className="min-w-[200px]">
+                    <div className="text-[#999] text-[14px] font-[500]">
+                      Your Sector Points
+                    </div>
+                    {categoryPointsTooltips.map((item, index) => (
+                      <div
+                        className="mt-[8px] flex items-center justify-between"
+                        key={index}
+                      >
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.label}
+                        </span>
+                        <span className="text-[#fff] text-[14px] font-[500]">
+                          {item.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <span className="value">
+                  {formatNumberWithUnit(
+                    (novaCategoryTotalPoints?.ecoPoints || 0) +
+                      (novaCategoryTotalPoints?.referralPoints || 0) +
+                      (novaCategoryTotalPoints?.otherPoints || 0)
+                  )}
+                </span>
+              </Tooltip>
             </div>
             <div className="line"></div>
             <div className="flex items-center justify-between">

@@ -447,7 +447,7 @@ export default function EcoDApps({
   novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
   holdingPoints?: NovaPointsListItem;
-  novaCategoryTotalPoints: number;
+  novaCategoryTotalPoints?: NovaCategoryPoints;
 }) {
   const geNovaCategoryUserPointsByProject = (project: string) => {
     const obj = novaCategoryUserPoints.find((item) => item.project === project);
@@ -1192,8 +1192,7 @@ export default function EcoDApps({
             <div className="list-content-item text-center">
               <Tooltip
                 classNames={{
-                  content:
-                    "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
                 }}
                 content={
                   <div className="min-w-[200px]">
@@ -1331,6 +1330,21 @@ export default function EcoDApps({
     ];
   }, [holdingPoints]);
 
+  const categoryPointsTooltips = useMemo(() => {
+    return [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(
+          novaCategoryTotalPoints?.referralPoints || 0
+        ),
+      },
+    ];
+  }, [novaCategoryTotalPoints]);
+
   return (
     <Container>
       <div className="flex justify-between">
@@ -1374,9 +1388,38 @@ export default function EcoDApps({
         <AllocatedBox>
           <div className="flex items-center justify-between">
             <span className="label">Total Sector Allocated Points</span>
-            <span className="value">
-              {formatNumberWithUnit(novaCategoryTotalPoints)}
-            </span>
+            <Tooltip
+              classNames={{
+                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+              }}
+              content={
+                <div className="min-w-[200px]">
+                  <div className="text-[#999] text-[14px] font-[500]">
+                    Your Sector Points
+                  </div>
+                  {categoryPointsTooltips.map((item, index) => (
+                    <div
+                      className="mt-[8px] flex items-center justify-between"
+                      key={index}
+                    >
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.label}
+                      </span>
+                      <span className="text-[#fff] text-[14px] font-[500]">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <span className="value">
+                {formatNumberWithUnit(
+                  (novaCategoryTotalPoints?.ecoPoints || 0) +
+                    (novaCategoryTotalPoints?.referralPoints || 0)
+                )}
+              </span>
+            </Tooltip>
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">

@@ -621,7 +621,9 @@ export interface NovaCategoryPoints {
     | "lending"
     | "gamefi"
     | "other";
-  totalPoints: number;
+  referralPoints: number;
+  ecoPoints: number;
+  otherPoints?: number;
 }
 
 interface NovaCategoryResponse {

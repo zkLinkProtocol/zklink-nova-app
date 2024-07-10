@@ -518,7 +518,7 @@ export default function Dashboard() {
       (item) => item.category === category
     );
 
-    return categoryData?.totalPoints || 0;
+    return categoryData;
   }, [tabs2Active, novaCategoryPoints]);
 
   useEffect(() => {
