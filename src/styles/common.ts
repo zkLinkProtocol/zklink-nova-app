@@ -32,7 +32,7 @@ export const GradientButton2 = styled.span`
   font-size: 20px;
   font-style: normal;
   letter-spacing: -0.5px;
-  
+
   &.disabled {
     cursor: not-allowed;
     opacity: 0.4;
@@ -225,7 +225,6 @@ export const GradientBorder = styled.div`
   }
 `;
 
-
 export const BlurBox = styled.div`
   border-radius: 100px;
   border: 0.6px solid rgba(255, 255, 255, 0.4);
@@ -238,4 +237,22 @@ export const BlurBox = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: 1; /* 162.5% */
+`;
+
+export const GradientBox = styled.div`
+  filter: blur(0.125px);
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to bottom, #282828, #000000),
+    linear-gradient(
+      175deg,
+      #fb2450,
+      #fbc82e,
+      #6eee3f,
+      #5889f3,
+      #5095f1,
+      #b10af4 80%
+    );
+  box-shadow: 0px 52px 124px 0px rgba(29, 10, 245, 0.2);
 `;

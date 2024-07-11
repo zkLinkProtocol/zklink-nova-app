@@ -23,14 +23,16 @@ a {
 }
 
 .inputStyle {
-  width: 66px !important;
-  height: 77px;
-  margin: 0 4px;
+  width: 90px !important;
+  height: 90px;
+  margin: 0 8px;
   font-size: 24px;
   color: #fff;
-  border-radius: 20px;
-  border: 1px solid var(--Green, #03d498);
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  /* border: 2.205px solid #635f5f;
+  background: #151923; */
+  background: url('/img/s2/bg-home-otp.png');
+  background-size: cover;
 }
 @media only screen and (max-width: 768px) {
   .inputStyle {
