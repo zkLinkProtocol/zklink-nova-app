@@ -655,7 +655,7 @@ export default function Dashboard() {
                     iconURL: "/img/icon-rewards-kelp.svg",
                   },
                   {
-                    name: "All Spark Points",
+                    name: "Allspark Points",
                     iconURL: "/img/icon-rewards-allspark.svg",
                   },
                   {
