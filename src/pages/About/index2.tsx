@@ -7,7 +7,9 @@ const Container = styled.div`
   position: relative;
   padding-top: 92px;
   min-height: 100vh;
-  background-image: url("/img/bg-about.jpg");
+  /* max-height: 3266px; */
+  overflow: auto;
+  background-image: url("/img/s2/bg-s2-about.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top center;
@@ -25,35 +27,51 @@ const Title = styled.h1`
 `;
 
 const CardBox = styled.div`
-  padding: 30px;
-  border-radius: 14px;
-  border: 0.6px solid rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(30px);
+  padding: 24px 30px;
+  border-radius: 24px;
+  border: 2px solid #635f5f;
+  background: #151923;
+
+  &.gradient-border {
+    filter: blur(0.125px);
+    border: 4px solid transparent;
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    background-image: linear-gradient(to bottom, #282828, #000000),
+      linear-gradient(
+        175deg,
+        #fb2450,
+        #fbc82e,
+        #6eee3f,
+        #5889f3,
+        #5095f1,
+        #b10af4 80%
+      );
+  }
 
   .card-title {
-    color: #fff;
+    color: var(--White, #fff);
     font-family: Satoshi;
     font-size: 22px;
     font-style: normal;
     font-weight: 700;
     line-height: 46px; /* 209.091% */
     letter-spacing: -0.066px;
-    cursor: pointer;
   }
 
   .paragraph {
-    color: #d5d5d5;
+    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
     font-family: Satoshi;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 26px; /* 162.5% */
+    line-height: 26px;
 
     &.text-green,
     .text-green,
     .title {
       color: #03d498;
+      font-weight: 900;
     }
 
     .before:before {
@@ -100,7 +118,12 @@ const CardBox = styled.div`
 const Underline = styled.div`
   width: 100%;
   height: 0.8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(251, 251, 251, 0.6) 51.5%,
+    rgba(255, 255, 255, 0) 100%
+  );
 `;
 
 const GreenCard = styled.div`
@@ -123,24 +146,38 @@ const CollapseCard = ({
   question,
   answer,
   isOpened,
+  isGradientBorder,
 }: {
   question: string | JSX.Element;
   answer: string | JSX.Element;
   isOpened?: boolean;
+  isGradientBorder?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState<Boolean>(Boolean(isOpened) || false);
 
   return (
-    <CardBox className="flex flex-col gap-[30px]">
+    <CardBox
+      className={`flex flex-col gap-[30px] ${
+        isGradientBorder ? "gradient-border" : ""
+      }`}
+    >
       <div
         className="card-title flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{question}</span>
         {isOpen ? (
-          <BsChevronUp className="text-[20px]" />
+          <img
+            src="/img/s2/about-arrow-up.svg"
+            alt=""
+            className="w-[32px] h-[32px]"
+          />
         ) : (
-          <BsChevronDown className="text-[20px]" />
+          <img
+            src="/img/s2/about-arrow-down.svg"
+            alt=""
+            className="w-[32px] h-[32px]"
+          />
         )}
       </div>
       {isOpen && (
@@ -211,6 +248,7 @@ export default function About() {
         </>
       ),
       isOpened: true,
+      isGradientBorder: true,
     },
     {
       question: "What is the Aggregation Parade Season 2?",
@@ -366,6 +404,7 @@ export default function About() {
             question={item.question}
             answer={item.answer}
             isOpened={item.isOpened}
+            isGradientBorder={item.isGradientBorder}
           />
         ))}
       </div>
