@@ -254,5 +254,5 @@ export const GradientBox = styled.div`
       #5095f1,
       #b10af4 80%
     );
-  box-shadow: 0px 52px 124px 0px rgba(29, 10, 245, 0.2);
+  /* box-shadow: 0px 52px 124px 0px rgba(29, 10, 245, 0.2); */
 `;

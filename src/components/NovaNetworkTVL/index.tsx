@@ -8,7 +8,7 @@ export default function NovaNetworkTVL({
   name?: string;
 }) {
   return (
-    <div className="mt-[112px]">
+    <div className="mt-[112px] pb-[90px]">
       <div className="flex justify-center">
         <GradientBox className="px-[28px] py-[12px] rounded-[48px] text-[16px]">
           {name}
