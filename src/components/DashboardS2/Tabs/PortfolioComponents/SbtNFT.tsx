@@ -101,12 +101,14 @@ export default function SbtNFT() {
   const nftImage = useMemo(() => {
     if (!nft) {
       return "/img/img-mint-example.png";
-    } else if (lynksBalance > 0) {
-      return `/img/img-${nft?.name}-LYNK.png`;
-    } else {
+    }
+    // else if (lynksBalance > 0) {
+    //   return `/img/img-${nft?.name}-LYNK.png`;
+    // }
+    else {
       return nft.image;
     }
-  }, [nft, lynksBalance]);
+  }, [nft]);
 
   const handleMintNow = useCallback(() => {
     if (fetchLoading) {

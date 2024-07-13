@@ -3,7 +3,7 @@ import { Button, useDisclosure } from "@nextui-org/react";
 import useNovaNFT from "@/hooks/useNovaNFT";
 import useSbtNft from "@/hooks/useNFT";
 import { useAccount } from "wagmi";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Abi } from "viem";
 import SbtUpgradeModal from "@/components/Dashboard/NovaCharacterComponents/SbtUpgradeModal";
 export default function SbtNFT() {
@@ -72,10 +72,18 @@ export default function SbtNFT() {
     }
   }, [fetchLoading, upgradable, upgradeModal]);
 
+  const nftImage = useMemo(() => {
+    if (nft && lynksBalance > 0) {
+      return `/img/img-${nft?.name}-LYNK.png`;
+    } else {
+      return "/img/img-ENTP-LYNK.png";
+    }
+  }, [lynksBalance, nft]);
+
   return (
     <NftContainer>
       <div className="nft-image">
-        <img src="/img/s2/img-lynks-nft-ESFJ.png" alt="" />
+        <img src={nftImage} alt="" />
       </div>
       <div className="flex flex-col flex-1 h-full">
         <p className="font-bold text-lg">
