@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BlurBox } from "@/styles/common";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
@@ -56,6 +56,12 @@ const Epoch = styled.div`
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(20px);
     color: #fff;
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
     &.left {
       border-radius: 16px 0px 0px 16px;
@@ -239,6 +245,32 @@ export default function Leaderboard() {
     getCategoryListFunc(tabs[tabActive].category);
   }, [address, tabActive]);
 
+  const [epochActive, setEpochActive] = useState(1);
+
+  const epochList = [
+    {
+      name: "Epoch One",
+      time: "Snapshot taken on July 15, 2024, at 12:00 PM UTC",
+    },
+    { name: "Epoch Two" },
+  ];
+
+  const epochPrevDisabled = useMemo(() => {
+    return epochActive === 0;
+  }, [epochActive]);
+
+  const epochNextDisabled = useMemo(() => {
+    return epochActive === epochList.length - 1;
+  }, [epochActive, epochList]);
+
+  const handleEpochClick = (type: "prev" | "next") => {
+    if (type === "prev" && epochActive !== 0) {
+      setEpochActive((prev) => prev - 1);
+    } else if (type === "next" && epochActive !== epochList.length - 1) {
+      setEpochActive((prev) => prev + 1);
+    }
+  };
+
   return (
     <BgBox>
       <div className="mt-[80px] px-[16px] md:px-[140px] relative z-1">
@@ -250,21 +282,39 @@ export default function Leaderboard() {
             <Title className="mt-[20px]">Points Leaderboard</Title>
             <Description className="mt-[30px]">
               The leaderboard is organized by sectors. In Season II, Nova Points
-              will measure users' contributions to each sector. These points will determine the distribution of
-              $ZKL rewards from each sector's prize pool.
+              will measure users' contributions to each sector. These points
+              will determine the distribution of $ZKL rewards from each sector's
+              prize pool.
             </Description>
           </div>
-          <Epoch className="flex items-center whitespace-nowrap">
-            <div className="epoch-btn left flex items-center justify-center opacity-40 cursor-not-allowed">
-              <AiFillCaretLeft />
-            </div>
-            <div className="epoch-text px-[20px] flex items-center justify-center">
-              Epoch One
-            </div>
-            <div className="epoch-btn right flex items-center justify-center opacity-40 cursor-not-allowed">
-              <AiFillCaretRight />
-            </div>
-          </Epoch>
+          <div>
+            <Epoch className="flex items-center justify-center whitespace-nowrap">
+              <div
+                className={`epoch-btn left flex items-center justify-center ${
+                  epochPrevDisabled ? "disabled" : ""
+                }`}
+                onClick={() => handleEpochClick("prev")}
+              >
+                <AiFillCaretLeft />
+              </div>
+              <div className="epoch-text px-[20px] flex items-center justify-center">
+                {epochList[epochActive].name}
+              </div>
+              <div
+                className={`epoch-btn right flex items-center justify-center ${
+                  epochNextDisabled ? "disabled" : ""
+                }`}
+                onClick={() => handleEpochClick("next")}
+              >
+                <AiFillCaretRight />
+              </div>
+            </Epoch>
+            {epochList[epochActive]?.time && (
+              <div className="mt-[14px] whitespace-nowrap text-[#999] text-center">
+                {epochList[epochActive]?.time}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="mt-[50px] flex max-w-[100%] overflow-auto">
