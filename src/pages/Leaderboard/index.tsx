@@ -4,8 +4,11 @@ import { GradientBox } from "@/styles/common";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 import { getCategoryList } from "@/api";
-import { formatNumberWithUnit } from "@/utils";
+import { formatNumberWithUnit, getTweetShareTextForMysteryBox } from "@/utils";
 import { useAccount } from "wagmi";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import toast from "react-hot-toast";
 // import { TableBoxs } from "@/styles/common";
 
 const Container = styled.div`
@@ -428,8 +431,7 @@ const RowLine = styled.div`
 `;
 const ColLine = styled.div`
   width: 1px;
-  height: 44px;
-  opacity: 0.3;
+  /* opacity: 0.3; */
   background: linear-gradient(
     rgba(255, 255, 255, 0) 0%,
     rgba(251, 251, 251, 0.6) 51.5%,
@@ -502,9 +504,17 @@ export default function Leaderboard() {
     getCategoryListFunc(tabs[tabActive].category);
   }, [address, tabActive]);
 
+  const { invite } = useSelector((store: RootState) => store.airdrop);
+
+  const handleCopy = () => {
+    if (!invite?.code) return;
+    navigator.clipboard.writeText(invite?.code);
+    toast.success("Copied", { duration: 2000 });
+  };
+
   return (
     <Container>
-      <div className="mt-[80px] px-[16px] md:px-[140px] relative z-1">
+      <div className="mt-[80px] px-[16px] md:px-[70px] relative z-1">
         <div className="flex items-end flex-col md:flex-row gap-[46px]">
           <div>
             <div className="flex">
@@ -536,24 +546,58 @@ export default function Leaderboard() {
         </div>
 
         <ContentBox>
-          <div className="tab-bar mt-[50px] flex max-w-[100%]">
-            <div className="flex items-end gap-[24px]">
-              {tabs.map((tab, index) => (
-                <div
-                  className={`tab-item flex justify-center items-center gap-[8px] ${
-                    index === tabActive ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick(index)}
-                  key={index}
-                >
-                  <img
-                    src={tab.iconURL}
-                    alt=""
-                    className="w-[24px] h-[24px] block"
-                  />
-                  <span>{tab.name}</span>
-                </div>
-              ))}
+          <div className="tab-bar mt-[50px] max-w-[100%]">
+            <div className="w-full flex justify-between items-start">
+              <div className="flex items-end gap-[24px]">
+                {tabs.map((tab, index) => (
+                  <div
+                    className={`tab-item flex justify-center items-center gap-[8px] ${
+                      index === tabActive ? "active" : ""
+                    }`}
+                    onClick={() => handleTabClick(index)}
+                    key={index}
+                  >
+                    <img
+                      src={tab.iconURL}
+                      alt=""
+                      className="w-[24px] h-[24px] block"
+                    />
+                    <span>{tab.name}</span>
+                  </div>
+                ))}
+              </div>
+              <GradientBox className="px-[28px] h-[52px] rounded-[76px] flex items-center gap-[12px]">
+                <span className="text-[#fff] text-[14px] font-[500] opacity-80">
+                  Invite To Earn More
+                </span>
+                <ColLine className="h-[28px]" />
+                <span className="font-[900] text-[30px] text-[#fff]">
+                  {invite?.code}
+                </span>
+                <img
+                  src="/img/icon-invite-copy.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="cursor-pointer"
+                  onClick={handleCopy}
+                />
+                <img
+                  src="/img/icon-invite-twitter.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    window.open(
+                      `https://twitter.com/intent/tweet?text=${getTweetShareTextForMysteryBox(
+                        invite?.code ?? ""
+                      )}`,
+                      "_blank"
+                    )
+                  }
+                />
+              </GradientBox>
             </div>
           </div>
           <div
@@ -582,12 +626,12 @@ export default function Leaderboard() {
                       {selfData.rank}
                     </GradientBox>
                   </div>
-                  <ColLine />
+                  <ColLine className="h-[44px] opacity-40" />
                   <span className="td-item item-user">
                     {selfData.username}
                     <span className="self-tag">You</span>
                   </span>
-                  <ColLine />
+                  <ColLine className="h-[44px] opacity-40" />
                   <span className="td-item item-points">
                     {formatNumberWithUnit(selfData.totalPoints)}
                   </span>
@@ -600,9 +644,9 @@ export default function Leaderboard() {
                   key={index}
                 >
                   <span className="td-item item-rank">{item.rank}</span>
-                  <ColLine />
+                  <ColLine className="h-[44px] opacity-40" />
                   <span className="td-item item-user">{item.username}</span>
-                  <ColLine />
+                  <ColLine className="h-[44px] opacity-40" />
                   <span className="td-item item-points">
                     {formatNumberWithUnit(item.totalPoints)}
                   </span>

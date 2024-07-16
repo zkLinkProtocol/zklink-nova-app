@@ -160,13 +160,9 @@ export const Container = styled.div`
 `;
 export const SelectBox = styled.div`
   & {
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--White, #fff);
-    text-align: center;
-    font-family: Satoshi;
-    font-weight: 500;
-    font-size: 14px;
+    border-radius: 16px;
+    border: 2.205px solid #635f5f;
+    background: #151923;
   }
   .label {
     font-size: 14px;
@@ -276,6 +272,40 @@ export const LoyaltyBoostTooltipContent = styled.div`
   font-weight: 400;
   font-size: 16px;
   /* font-family: "Space Mono"; */
+`;
+
+export const Line = styled.div`
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(251, 251, 251, 0.6) 51.5%,
+    rgba(255, 255, 255, 0) 100%
+  );
+`;
+
+export const DefaultBtn = styled(Button)`
+  border-radius: 48px;
+  background: linear-gradient(180deg, #3a3a3a 0%, #282828 100%);
+
+  .btn-text {
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    background: linear-gradient(
+      90deg,
+      #4ba790 0%,
+      rgba(251, 251, 251, 0.6) 50.31%,
+      #9747ff 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 `;
 
 export const AssetTypes = [

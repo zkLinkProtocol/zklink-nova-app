@@ -394,10 +394,10 @@ export default function About() {
   ];
 
   return (
-    <Container>
+    <Container className="px-[104px]">
       <Title className="mt-[80px]">About zkLink Nova Aggregation Parade</Title>
 
-      <div className="mt-[60px] mx-auto max-w-[982px] flex flex-col gap-[30px]">
+      <div className="mt-[60px] mx-auto flex flex-col gap-[30px]">
         {list.map((item, index) => (
           <CollapseCard
             key={index}
