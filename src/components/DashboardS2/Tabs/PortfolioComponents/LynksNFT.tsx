@@ -1,16 +1,15 @@
 import { NftContainer } from "./SbtNFT";
 import { Button, useDisclosure } from "@nextui-org/react";
-import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
-import useNovaDrawNFT from "@/hooks/useNovaNFT";
+import useNovaNFT from "@/hooks/useNovaNFT";
 import useSbtNft from "@/hooks/useNFT";
 import { useAccount } from "wagmi";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Abi } from "viem";
 import SbtUpgradeModal from "@/components/Dashboard/NovaCharacterComponents/SbtUpgradeModal";
 export default function SbtNFT() {
   const { address } = useAccount();
   const [lynksBalance, setLynksBalance] = useState(0);
-  const { trademarkNFT, lynksNFT, publicClient } = useNovaDrawNFT();
+  const { publicClient, trademarkNFT } = useNovaNFT();
   const { getLynksNFT } = useNovaNFT();
   const { nft, loading: mintLoading, fetchLoading } = useSbtNft();
   const [update, setUpdate] = useState(0);
@@ -19,15 +18,7 @@ export default function SbtNFT() {
 
   useEffect(() => {
     (async () => {
-      if (address && trademarkNFT) {
-        const lynksBalances = await getLynksNFT(address);
-        if (lynksBalances) {
-          const balance = lynksBalances.reduce(
-            (acc, cur) => acc + cur.balance,
-            0
-          );
-          setLynksBalance(balance);
-        }
+      if (address && trademarkNFT && publicClient) {
         const trademarkBalancesCall = await publicClient?.multicall({
           contracts: [1, 2, 3, 4].map((item) => ({
             address: trademarkNFT.address,
@@ -56,6 +47,22 @@ export default function SbtNFT() {
     })();
   }, [address, getLynksNFT, publicClient, trademarkNFT, update]);
 
+  useEffect(() => {
+    (async () => {
+      if (!address) {
+        return;
+      }
+      const lynksBalances = await getLynksNFT(address);
+      if (lynksBalances) {
+        const balance = lynksBalances.reduce(
+          (acc, cur) => acc + cur.balance,
+          0
+        );
+        setLynksBalance(balance);
+      }
+    })();
+  }, [address, getLynksNFT]);
+
   const handleMintNow = useCallback(() => {
     if (fetchLoading) {
       return;
@@ -65,10 +72,18 @@ export default function SbtNFT() {
     }
   }, [fetchLoading, upgradable, upgradeModal]);
 
+  const nftImage = useMemo(() => {
+    if (nft && lynksBalance > 0) {
+      return `/img/img-${nft?.name}-LYNK.png`;
+    } else {
+      return "/img/img-ENTP-LYNK.png";
+    }
+  }, [lynksBalance, nft]);
+
   return (
     <NftContainer>
       <div className="nft-image">
-        <img src="/img/s2/img-lynks-nft-ESFJ.png" alt="" />
+        <img src={nftImage} alt="" />
       </div>
       <div className="flex flex-col flex-1 h-full">
         <p className="font-bold text-lg">

@@ -17,8 +17,8 @@ import {
   setSignature,
   setSignatureAddress,
 } from "@/store/modules/airdrop";
-import { BlurBox, FooterTvlText } from "@/styles/common";
-import { getProviderWithRpcUrl, getRandomNumber, showAccount } from "@/utils";
+import { GradientBox } from "@/styles/common";
+import { getProviderWithRpcUrl, showAccount } from "@/utils";
 import {
   Avatar,
   Button,
@@ -55,12 +55,12 @@ const verifyFromList = [
   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
 ];
 
-const BgBox = styled.div`
+const Container = styled.div`
   position: relative;
   padding-top: 92px;
   width: 100%;
-  min-height: 1212px;
-  background-image: url("/img/bg-s2.jpg");
+  min-height: 1384px;
+  background-image: url("/img/s2/bg-s2-home.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
@@ -122,14 +122,16 @@ const CardBox = styled.div`
 `;
 
 const TitleText = styled.h4`
-  color: #c2e2ff;
-  // text-align: center;
+  text-align: center;
   font-family: Satoshi;
-  font-size: 2.5rem;
+  font-size: 52px;
   font-style: normal;
   font-weight: 900;
-  line-height: 2.5rem; /* 100% */
-  letter-spacing: -0.03125rem;
+  line-height: normal;
+  background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   @media (max-width: 768px) {
     & {
       font-size: 2rem;
@@ -166,37 +168,116 @@ const StepItem = styled.div`
   .step-title {
     color: #fff;
     font-family: Satoshi;
-    font-size: 1rem;
+    font-size: 26px;
     font-style: normal;
-    font-weight: 900;
-    line-height: 1.5rem; /* 150% */
-    letter-spacing: -0.03125rem;
+    font-weight: 700;
+    line-height: 26px; /* 100% */
   }
   .step-sub-title {
-    color: #c6d3dd;
+    color: #fff;
     font-family: Satoshi;
-    font-size: 1rem;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 1.5rem; /* 150% */
-    letter-spacing: -0.03125rem;
+    line-height: 26px; /* 162.5% */
+    opacity: 0.8;
   }
 `;
 
 const InviteInput = styled.input`
-  border-radius: 8px;
-  border: 1px solid #7ba099;
-  display: inline-flex;
-  padding: 8px 12px 8px 12px;
-  align-items: center;
-  font-size: 1rem;
-  color: #fff;
+  padding: 8px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(51, 49, 49, 1);
+  background: #10131c;
+  filter: blur(0.125px);
+  color: var(--White, #fff);
   font-family: Satoshi;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 150% */
-  letter-spacing: -0.5px;
+  line-height: 26px; /* 162.5% */
+`;
+
+const DefaultButton = styled.div`
+  border-radius: 48px;
+  background: rgba(40, 40, 40, 0.6);
+
+  .btn-text {
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: capitalize;
+    background: linear-gradient(
+      90deg,
+      #4ba790 0%,
+      rgba(251, 251, 251, 0.6) 50.31%,
+      #9747ff 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+`;
+
+const GradientBtn = styled(Button)`
+  padding: 12px 32px;
+  color: var(--Neutral-1, #fff);
+  font-family: Satoshi;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  filter: blur(0.125px);
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to bottom, #282828, #000000),
+    linear-gradient(
+      175deg,
+      #fb2450,
+      #fbc82e,
+      #6eee3f,
+      #5889f3,
+      #5095f1,
+      #b10af4 80%
+    );
+  cursor: pointer;
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+`;
+
+const SubmitBtn = styled(Button)`
+  border-radius: 48px;
+  background: linear-gradient(180deg, #3a3a3a 0%, #282828 100%);
+  cursor: pointer;
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-text {
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    background: linear-gradient(
+      90deg,
+      #4ba790 0%,
+      rgba(251, 251, 251, 0.6) 50.31%,
+      #9747ff 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 `;
 
 export const enum VerifyResult {
@@ -544,27 +625,27 @@ export default function SoftKYC() {
   }, [address]);
 
   return (
-    <BgBox>
+    <Container>
       <Toast />
       {isLoading && <Loading />}
       <div>
         {/* Title */}
         <div className="px-6 md:flex-col mt-[120px]">
           <div className="flex md:justify-center">
-            <BlurBox className="px-[16px] py-[14px]">
-              You're Almost There
-            </BlurBox>
+            <DefaultButton className="px-[16px] py-[14px]">
+              <span className="btn-text">You're Almost There</span>
+            </DefaultButton>
           </div>
           <TitleText className="mt-[18px] text-left md:text-center">
             To join the zkLink Aggregation Parade S2
           </TitleText>
         </div>
 
-        <div className="mt-[50px] mx-[1.5rem] md:mx-auto max-w-[860px] ">
+        <div className="mt-[50px] mx-[1.5rem] md:mx-auto max-w-[918px] ">
           {/* Setp 1: invite code */}
           <div className="flex justify-center gap-[0.5rem]">
-            <CardBox
-              className={`carBox flex justify-between items-center px-[26px] py-[26px] w-[860px] h-[104px] ${
+            <GradientBox
+              className={`carBox flex justify-between items-center px-[26px] py-[26px] w-[918px] h-[104px] rounded-[16px] ${
                 isCheckedInviteCode ? "successed" : ""
               }`}
             >
@@ -580,7 +661,7 @@ export default function SoftKYC() {
                     Search{" "}
                     <a
                       href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
-                      className="text-[#03D498]"
+                      className="text-[#03D498] font-[500]"
                       target="_blank"
                     >
                       #zkLinkNovaAggParade
@@ -603,8 +684,8 @@ export default function SoftKYC() {
                   onChange={(e) => onChangeInviteCode(e.target.value)}
                 />
 
-                <Button
-                  className={`bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem] ${
+                <GradientBtn
+                  className={`rounded-[100px] ${
                     !validInviteCode(inviteCodeValue) ? "disabled" : ""
                   }`}
                   isLoading={isInviteCodeLoading}
@@ -615,10 +696,10 @@ export default function SoftKYC() {
                 >
                   <span className="ml-[0.5rem]">Verify</span>
                   <img
-                    src="/img/icon-submit-arrow.svg"
-                    className="w-[13px] h-[10px]"
+                    src="/img/icon-submit-arrow-white.svg"
+                    className="w-[16px] h-[16px]"
                   />
-                </Button>
+                </GradientBtn>
 
                 {/* {isInviteCodeChecked && (
                   <img
@@ -627,13 +708,13 @@ export default function SoftKYC() {
                   />
                 )} */}
               </div>
-            </CardBox>
+            </GradientBox>
           </div>
 
           {/* Step 2: connect wallet & sign */}
           <div className="mt-[26px]">
-            <CardBox
-              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[860px] h-[104px] ${
+            <GradientBox
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[918px] h-[104px] rounded-[16px] ${
                 signature ? "successed" : ""
               }`}
             >
@@ -657,8 +738,8 @@ export default function SoftKYC() {
                   )}
                 </StepItem>
 
-                <Button
-                  className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem]"
+                <GradientBtn
+                  className="rounded-[100px]"
                   isDisabled={isConnected && Boolean(signature)}
                   onClick={handleConnectAndSign}
                   isLoading={signLoading}
@@ -667,18 +748,18 @@ export default function SoftKYC() {
                     {isConnected && !signature ? "Sign" : "Connect and Verify"}
                   </span>
                   <img
-                    src="/img/icon-submit-arrow.svg"
-                    className="w-[13px] h-[10px]"
+                    src="/img/icon-submit-arrow-white.svg"
+                    className="w-[16px] h-[16px]"
                   />
-                </Button>
+                </GradientBtn>
               </div>
-            </CardBox>
+            </GradientBox>
           </div>
 
           {/* Step 3: Bridge  */}
           <div className="mt-[26px]">
-            <CardBox
-              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[860px] h-[104] ${
+            <GradientBox
+              className={`carBox flex justify-between items-center px-[1.5rem] py-[1rem] w-[918px] h-[104] rounded-[16px] ${
                 isCheckedDeposit ? "successed" : ""
               }`}
             >
@@ -696,8 +777,8 @@ export default function SoftKYC() {
                 </div>
               </StepItem>
               <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
-                <Button
-                  className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[10px]"
+                <GradientBtn
+                  className="rounded-[100px] flex items-center gap-[10px]"
                   onClick={() => {
                     navigate("/bridge");
                   }}
@@ -708,14 +789,14 @@ export default function SoftKYC() {
                     <span className="ml-[0.5rem]">Bridge</span>
                   </Tooltip>
                   <img
-                    src="/img/icon-submit-arrow.svg"
-                    className="w-[13px] h-[10px]"
+                    src="/img/icon-submit-arrow-white.svg"
+                    className="w-[16px] h-[16px]"
                   />
-                </Button>
+                </GradientBtn>
 
                 <Tooltip content="Connect your wallet and sign the message before verifying.">
-                  <Button
-                    className="bg-[#03D498] rounded-[100px] text-[#030D19] font-[500] px-[1rem] py-[0.5rem] text-[1rem] flex items-center gap-[10px]"
+                  <GradientBtn
+                    className="rounded-[100px] flex items-center gap-[10px]"
                     isDisabled={Boolean(depositTx) || !address || !signature}
                     onClick={() => {
                       verifyDepositModal.onOpen();
@@ -723,36 +804,34 @@ export default function SoftKYC() {
                   >
                     <span className="ml-[0.5rem]">Verify</span>
                     <img
-                      src="/img/icon-submit-arrow.svg"
-                      className="w-[13px] h-[10px]"
+                      src="/img/icon-submit-arrow-white.svg"
+                      className="w-[16px] h-[16px]"
                     />
-                  </Button>
+                  </GradientBtn>
                 </Tooltip>
               </div>
-            </CardBox>
+            </GradientBox>
           </div>
 
           {/* Submit for user bind */}
           <div className="mt-[30px] flex justify-center w-full">
-            <Button
-              className={`mx-auto md:py-[20px] w-full h-[52px] text-center rounded-[100px] bg-[#03D498] text-[#030D19] text-[16px] font-[500] flex items-center justify-center gap-[10px]`}
+            <SubmitBtn
+              className={`mx-auto md:py-[20px] w-full h-[64px] text-center rounded-[100px] flex items-center justify-center gap-[10px]`}
               isDisabled={!submitStatus}
               onClick={handleSubmit}
             >
-              <p className="step-title">
-                Participate zkLink Aggregation Parade
-              </p>
+              <p className="btn-text">Participate zkLink Aggregation Parade</p>
               <img
-                src="/img/icon-submit-arrow.svg"
-                className="w-[13px] h-[10px]"
+                src="/img/icon-submit-arrow-gradient.svg"
+                className="w-[32px] h-[32px]"
               />
-            </Button>
+            </SubmitBtn>
           </div>
         </div>
       </div>
 
       {/* Total tvl */}
-      <NovaNetworkTVL name="TVL" />
+      <NovaNetworkTVL />
 
       {/* Verify deposit modal */}
       <Modal
@@ -925,6 +1004,6 @@ export default function SoftKYC() {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </BgBox>
+    </Container>
   );
 }

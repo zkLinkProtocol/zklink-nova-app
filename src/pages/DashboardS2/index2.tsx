@@ -134,7 +134,6 @@ const CardBox2 = styled.div`
     line-height: 110%; /* 26.4px */
   }
   .desc {
-    margin-top: 12px;
     color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
     font-family: Satoshi;
     font-size: 16px;
@@ -142,11 +141,11 @@ const CardBox2 = styled.div`
     font-weight: 400;
     line-height: 110%; /* 17.6px */
 
-    &.before {
+    .before {
       position: relative;
       padding-left: 20px;
     }
-    &.before::before {
+    .before::before {
       content: "";
       display: block;
       position: absolute;
@@ -595,11 +594,16 @@ export default function Dashboard() {
               <span className="total-prize-pool">Total Prize Pool</span>
             </div>
             <div className="desc">
-              The 30 million $ZKL will be distributed over at least Three
-              Epochs.
-            </div>
-            <div className="desc before">
-              Epoch One (From May 30th to July 15th)
+              <div className="mt-[12px]">
+                The 30 million $ZKL will be distributed over at least Three
+                Epochs.
+              </div>
+              <div className="mt-[12px] before">
+                Epoch One (From May 30th to July 15th)
+              </div>
+              <div className="mt-[12px] before text-[#fff]">
+                Epoch Two (From July 16th to Aug 31th)
+              </div>
             </div>
           </div>
 
@@ -655,7 +659,7 @@ export default function Dashboard() {
                     iconURL: "/img/icon-rewards-kelp.svg",
                   },
                   {
-                    name: "All Spark Points",
+                    name: "Allspark Points",
                     iconURL: "/img/icon-rewards-allspark.svg",
                   },
                   {
