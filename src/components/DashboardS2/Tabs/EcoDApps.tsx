@@ -599,7 +599,7 @@ export default function EcoDApps({
                   4x for canonically bridged tokens (pufETH.eth, Manta.manta,
                   Stone.manta, wBTC.eth)
                 </p>
-                <p>2x for externally bridged tokens (solvBTC.m, mBTC, BTCT)</p>
+                <p>2x for externally bridged tokens (solvBTC.m, mBTC)</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
