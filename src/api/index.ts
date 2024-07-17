@@ -605,11 +605,12 @@ interface NovaCategoryUserResponse {
   data: NovaCategoryUserPoints[];
 }
 
-export const getNovaCategoryUserPoints = (
-  address: string
-): Promise<NovaCategoryUserResponse> =>
+export const getNovaCategoryUserPoints = (params: {
+  address: string;
+  season: number;
+}): Promise<NovaCategoryUserResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/nova/category/user/points`, {
-    params: { address },
+    params,
   });
 
 export interface NovaCategoryPoints {
@@ -632,8 +633,12 @@ interface NovaCategoryResponse {
   data: NovaCategoryPoints[];
 }
 
-export const getNovaCategoryPoints = (): Promise<NovaCategoryResponse> =>
-  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`);
+export const getNovaCategoryPoints = (params: {
+  season: number;
+}): Promise<NovaCategoryResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/nova/category/points`, {
+    params,
+  });
 
 export interface NovaCategoryUserPointsTotal {
   category:
@@ -655,11 +660,12 @@ interface NovaCategoryUserPointsTotalResponse {
   data: NovaCategoryUserPointsTotal[];
 }
 
-export const getNovaCategoryUserPointsTotal = (
-  address: string
-): Promise<NovaCategoryUserPointsTotalResponse> =>
+export const getNovaCategoryUserPointsTotal = (params: {
+  address: string;
+  season: number;
+}): Promise<NovaCategoryUserPointsTotalResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/nova/category/user/points/total`, {
-    params: { address },
+    params,
   });
 
 export interface TvlCategory {
@@ -717,14 +723,15 @@ interface CategoryListResponse {
 
 export const getCategoryList = (
   category: string,
-  address?: string
+  params: {
+    season: number;
+    address?: string;
+  }
 ): Promise<CategoryListResponse> =>
   http.get(
     `${BASE_URL_LRT_POINTS}/nova/category/${category}/list?page=1&limit=100`,
     {
-      params: {
-        address,
-      },
+      params,
     }
   );
 

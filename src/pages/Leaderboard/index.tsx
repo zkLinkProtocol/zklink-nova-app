@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GradientBox } from "@/styles/common";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
@@ -9,6 +9,7 @@ import { useAccount } from "wagmi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import toast from "react-hot-toast";
+import { epochList } from "@/constants/epoch";
 // import { TableBoxs } from "@/styles/common";
 
 const Container = styled.div`
@@ -45,28 +46,24 @@ const Description = styled.p`
   line-height: 28px; /* 175% */
 `;
 
-const Epoch = styled.div`
-  border-radius: 16px;
-  color: var(--Green, #03d498);
-  text-align: center;
-  font-family: Satoshi;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 26px; /* 144.444% */
+const EpochBox = styled.div`
   .epoch-btn {
+    min-width: 44px;
     width: 44px;
     height: 52px;
-    /* padding: 20px 24px; */
-    background: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(
+        180deg,
+        rgba(40, 40, 40, 0.8) 0%,
+        rgba(0, 0, 0, 0.8) 89.99%
+      ),
+      rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(20px);
     color: #fff;
+    cursor: pointer;
 
-    &.left {
-      border-radius: 16px 0px 0px 16px;
-    }
-    &.right {
-      border-radius: 0 16px 16px 0;
+    &.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
   }
 
@@ -77,7 +74,9 @@ const Epoch = styled.div`
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
-    line-height: 26px; /* 144.444% */
+    line-height: 52px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
   }
 `;
 
@@ -465,13 +464,16 @@ export default function Leaderboard() {
   const { address } = useAccount();
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [tabActive, setTabActive] = useState(0);
-
+  const [epochActive, setEpochActive] = useState(1);
   const [selfData, setSelfData] = useState<ListItem | null>(null);
-
   const [categoryList, setCategoryList] = useState<ListItem[]>([]);
+
   const getCategoryListFunc = async (category: string) => {
     try {
-      const { data } = await getCategoryList(category, address);
+      const { data } = await getCategoryList(category, {
+        address,
+        season: epochList[epochActive].season,
+      });
 
       const arr = data.list.map((item, index) => {
         return {
@@ -503,15 +505,30 @@ export default function Leaderboard() {
     // setCategoryList([]);
   };
 
-  useEffect(() => {
-    getCategoryListFunc(tabs[tabActive].category);
-  }, [address, tabActive]);
+  const epochPrevDisabled = useMemo(() => {
+    return epochActive === 0;
+  }, [epochActive]);
 
+  const epochNextDisabled = useMemo(() => {
+    return epochActive === epochList.length - 1;
+  }, [epochActive, epochList]);
+
+  const handleEpochClick = (type: "prev" | "next") => {
+    if (type === "prev" && epochActive !== 0) {
+      setEpochActive((prev) => prev - 1);
+    } else if (type === "next" && epochActive !== epochList.length - 1) {
+      setEpochActive((prev) => prev + 1);
+    }
+  };
   const handleCopy = () => {
     if (!invite?.code) return;
     navigator.clipboard.writeText(invite?.code);
     toast.success("Copied", { duration: 2000 });
   };
+
+  useEffect(() => {
+    getCategoryListFunc(tabs[tabActive].category);
+  }, [address, tabActive, epochActive]);
 
   return (
     <Container>
@@ -531,19 +548,35 @@ export default function Leaderboard() {
               prize pool.
             </Description>
           </div>
-          <GradientBox className="rounded-[100px]">
-            <Epoch className="flex items-center whitespace-nowrap">
-              <div className="epoch-btn left flex items-center justify-center opacity-40 cursor-not-allowed">
+
+          <EpochBox className="flex flex-col items-center">
+            <GradientBox className="max-w-[224px] rounded-[100px] overflow-hidden flex items-center justify-center whitespace-nowrap">
+              <div
+                className={`epoch-btn left flex items-center justify-center ${
+                  epochPrevDisabled ? "disabled" : ""
+                }`}
+                onClick={() => handleEpochClick("prev")}
+              >
                 <AiFillCaretLeft />
               </div>
-              <div className="epoch-text px-[20px] flex items-center justify-center">
-                Epoch One
+              <div className="w-full epoch-text px-[20px] flex items-center justify-center">
+                {epochList[epochActive].name}
               </div>
-              <div className="epoch-btn right flex items-center justify-center opacity-40 cursor-not-allowed">
+              <div
+                className={`epoch-btn right flex items-center justify-center ${
+                  epochNextDisabled ? "disabled" : ""
+                }`}
+                onClick={() => handleEpochClick("next")}
+              >
                 <AiFillCaretRight />
               </div>
-            </Epoch>
-          </GradientBox>
+            </GradientBox>
+            {epochList[epochActive]?.time && (
+              <div className="mt-[14px] whitespace-nowrap text-[12px] text-[#999] text-center">
+                {epochList[epochActive]?.time}
+              </div>
+            )}
+          </EpochBox>
         </div>
 
         <ContentBox>
