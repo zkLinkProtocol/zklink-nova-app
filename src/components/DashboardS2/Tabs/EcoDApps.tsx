@@ -2,12 +2,11 @@ import {
   NovaCategoryPoints,
   NovaCategoryUserPoints,
   NovaProjectTotalPoints,
-  TvlCategory,
   TvlCategoryMilestone,
   getNovaProjectTotalPoints,
 } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
-import { formatNumberWithUnit, formatToThounds } from "@/utils";
+import { formatNumberWithUnit } from "@/utils";
 import {
   Button,
   Modal,
@@ -19,39 +18,8 @@ import {
 } from "@nextui-org/react";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import MilestoneProgress from "../MilestoneProgress";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
-import { divide, now } from "lodash";
-
-const MilestoneBox = styled.div`
-  color: rgba(251, 251, 251, 0.6);
-  font-family: Satoshi;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
-
-const BlurBox = styled.div`
-  color: rgba(251, 251, 251, 0.6);
-  text-align: center;
-  font-family: Satoshi;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 12px;
-  border-radius: 24px;
-  border: 1px solid rgba(51, 49, 49, 0.6);
-  background: #10131c;
-  filter: blur(0.125px);
-  .bold {
-    font-weight: 900;
-    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-`;
+import SectorHeader from "./SectorHeader";
 
 const Container = styled.div`
   .holding-title {
@@ -89,72 +57,6 @@ const Container = styled.div`
     font-weight: 700;
     line-height: normal;
     text-transform: capitalize;
-  }
-`;
-
-const IconBox = styled.div`
-  position: relative;
-  padding: 4px;
-  border: 1px solid transparent;
-  border-radius: 50%;
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
-  background-image: linear-gradient(to right, #282828, #000000),
-    linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
-`;
-
-const AllocatedBox = styled.div`
-  padding: 16px 28px;
-  min-width: 419px;
-  border-radius: 16px;
-  filter: blur(0.125px);
-  border: 2px solid transparent;
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
-  background-image: linear-gradient(to right, #282828, #000000),
-    linear-gradient(
-      175deg,
-      #fb2450 1%,
-      #fbc82e 5%,
-      #6eee3f,
-      #5889f3,
-      #5095f1,
-      #b10af4
-    );
-
-  .label {
-    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-  }
-
-  .value {
-    text-align: right;
-    font-family: Satoshi;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 900;
-    line-height: normal;
-    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .line {
-    margin: 12px auto;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(251, 251, 251, 0.6) 51.5%,
-      rgba(255, 255, 255, 0) 100%
-    );
   }
 `;
 
@@ -350,88 +252,6 @@ interface EcoDAppItem {
   idFeatured?: boolean;
 }
 
-const milestoneMap: {
-  [key: string]: {
-    zkl: number;
-    tvl: number;
-  }[];
-} = {
-  spotdex: [
-    {
-      tvl: 0,
-      zkl: 100000,
-    },
-    {
-      tvl: 5000000,
-      zkl: 500000,
-    },
-    {
-      tvl: 25000000,
-      zkl: 1000000,
-    },
-    {
-      tvl: 50000000,
-      zkl: 1500000,
-    },
-  ],
-  perpdex: [
-    {
-      tvl: 0,
-      zkl: 100000,
-    },
-    {
-      tvl: 100000000,
-      zkl: 500000,
-    },
-    {
-      tvl: 500000000,
-      zkl: 1000000,
-    },
-    {
-      tvl: 2000000000,
-      zkl: 2000000,
-    },
-  ],
-  lending: [
-    {
-      tvl: 0,
-      zkl: 100000,
-    },
-    {
-      tvl: 10000000,
-      zkl: 350000,
-    },
-    {
-      tvl: 50000000,
-      zkl: 700000,
-    },
-    {
-      tvl: 200000000,
-      zkl: 1500000,
-    },
-  ],
-};
-
-const milestoneNoProgressMap: {
-  [key: string]: {
-    zkl: number;
-    max: number;
-  };
-} = {
-  gamefi: {
-    zkl: 10000,
-    max: 1000000,
-  },
-  other: {
-    zkl: 50000,
-    max: 500000,
-  },
-  nativeboost: {
-    zkl: 50000,
-    max: 500000,
-  },
-};
-
 export default function EcoDApps({
   tabActive,
   novaCategoryUserPoints,
@@ -492,7 +312,7 @@ export default function EcoDApps({
     };
   };
   const ecoDAppsList = useMemo(() => {
-    const novaswap = geNovaCategoryUserPointsByProject("novaswap");
+    // const novaswap = geNovaCategoryUserPointsByProject("novaswap");
     const izumi = geNovaCategoryUserPointsByProject("izumi");
     const shoebill = geNovaCategoryUserPointsByProject("shoebill");
     const wagmi = geNovaCategoryUserPointsByProject("wagmi");
@@ -1002,102 +822,6 @@ export default function EcoDApps({
     warningModal.onOpen();
   };
 
-  const currentTvl = useMemo(() => {
-    console.log("tvlCategory", tvlCategoryMilestone, tabActive?.category);
-    const tvl =
-      tvlCategoryMilestone?.find((item) => item.name === tabActive?.category)
-        ?.data || 0;
-
-    console.log("tvl", tvl);
-    return tvl;
-  }, [tvlCategoryMilestone, tabActive]);
-
-  const [milestoneProgressList, setMilestoneProgressList] = useState<number[]>(
-    []
-  );
-
-  const isMaxProgress = useMemo(() => {
-    if (
-      milestoneProgressList.length > 0 &&
-      milestoneProgressList[milestoneProgressList.length - 1] === 100
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [milestoneProgressList]);
-
-  const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
-  const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
-  const [nextTargetTvl, setNextTargetTvl] = useState(0);
-  const [maxZKL, setMaxZKL] = useState(0);
-
-  const isNoProgress = useMemo(() => {
-    if (
-      tabActive?.category === "gamefi" ||
-      tabActive?.category === "other" ||
-      tabActive?.category === "nativeboost"
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [tabActive]);
-
-  useEffect(() => {
-    if (!tabActive) return;
-    console.log("tabActive", tabActive);
-
-    if (tabActive?.category && isNoProgress) {
-      setCurrentAllocationZKL(
-        milestoneNoProgressMap[tabActive?.category].zkl || 0
-      );
-      setMaxZKL(milestoneNoProgressMap[tabActive?.category].max || 0);
-    } else {
-      const milestoneData = milestoneMap[tabActive?.category];
-      console.log("milestoneData", milestoneData);
-
-      if (milestoneData) {
-        const currentTvlNum = Number(currentTvl);
-
-        const progressFilters = milestoneData.filter((item) => item.tvl !== 0);
-
-        const arr = progressFilters.map((item, index) => {
-          let progress = 0;
-
-          const prevTvl = index > 0 ? progressFilters[index - 1].tvl : 0;
-          if (currentTvlNum >= item.tvl) {
-            progress = 100;
-          } else if (currentTvlNum > prevTvl && currentTvlNum < item.tvl) {
-            progress = (currentTvlNum / item.tvl) * 100;
-          } else {
-            progress = 0;
-          }
-
-          return progress;
-        });
-
-        const activeFilters = milestoneData.filter(
-          (item) => currentTvlNum > item.tvl
-        );
-        const currentIndex =
-          activeFilters.length === 0 ? 0 : activeFilters.length - 1;
-        const nextIndex =
-          currentIndex + 1 === milestoneData.length
-            ? currentIndex
-            : currentIndex + 1;
-
-        setCurrentAllocationZKL(milestoneData[currentIndex].zkl || 0);
-        setNextAllocationZKL(milestoneData[nextIndex].zkl || 0);
-        setNextTargetTvl(milestoneData[nextIndex].tvl || 0);
-
-        setMaxZKL(milestoneData[milestoneData.length - 1].zkl || 0);
-
-        setMilestoneProgressList(arr);
-      }
-    }
-  }, [tabActive?.category, isNoProgress, currentTvl]);
-
   const EcoDApp = (props: {
     data: EcoDAppItem;
     handleLink: (link: string) => void;
@@ -1317,192 +1041,14 @@ export default function EcoDApps({
     );
   };
 
-  const holdingPointsTooltips = useMemo(() => {
-    return [
-      {
-        label: "By Interaction",
-        value: formatNumberWithUnit(holdingPoints?.ecoPoints || 0),
-      },
-      {
-        label: "By Referral",
-        value: formatNumberWithUnit(holdingPoints?.referralPoints || 0),
-      },
-    ];
-  }, [holdingPoints]);
-
-  const categoryPointsTooltips = useMemo(() => {
-    return [
-      {
-        label: "By Interaction",
-        value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
-      },
-      {
-        label: "By Referral",
-        value: formatNumberWithUnit(
-          novaCategoryTotalPoints?.referralPoints || 0
-        ),
-      },
-    ];
-  }, [novaCategoryTotalPoints]);
-
   return (
     <Container>
-      <div className="flex justify-between">
-        <div>
-          <div className="holding-title flex items-center gap-[4px]">
-            <img
-              src={tabActive?.iconURL}
-              alt=""
-              className="w-[16px] h-[16px]"
-            />
-            <span>$ZKL Allocation for {tabActive?.name}</span>
-          </div>
-          <div className="holding-value mt-[16px]">
-            {formatToThounds(currentAllocationZKL)} $ZKL{" "}
-            <span className="max">(Up to {formatToThounds(maxZKL)} $ZKL)</span>
-          </div>
-          {!isNoProgress ? (
-            <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
-              Next $ZKL Allocation Level: {formatToThounds(nextAllocationZKL)}{" "}
-              $ZKL
-              <Tooltip
-                classNames={{
-                  content:
-                    "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-                }}
-                content={`This sector will allocate ${formatToThounds(
-                  nextAllocationZKL
-                )} $ZKL after reaching the next milestone.`}
-              >
-                <img
-                  src="/img/icon-info-2.svg"
-                  alt=""
-                  className="w-[20px] h-[20px]"
-                />
-              </Tooltip>
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
-        <AllocatedBox>
-          <div className="flex items-center justify-between">
-            <span className="label">Total Sector Allocated Points</span>
-            <Tooltip
-              classNames={{
-                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
-              }}
-              content={
-                <div className="min-w-[200px]">
-                  <div className="text-[#999] text-[14px] font-[500]">
-                    Sector Allocated Points
-                  </div>
-                  {categoryPointsTooltips.map((item, index) => (
-                    <div
-                      className="mt-[8px] flex items-center justify-between"
-                      key={index}
-                    >
-                      <span className="text-[#fff] text-[14px] font-[500]">
-                        {item.label}
-                      </span>
-                      <span className="text-[#fff] text-[14px] font-[500]">
-                        {item.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              }
-            >
-              <span className="value">
-                {formatNumberWithUnit(
-                  (novaCategoryTotalPoints?.ecoPoints || 0) +
-                    (novaCategoryTotalPoints?.referralPoints || 0)
-                )}
-              </span>
-            </Tooltip>
-          </div>
-          <div className="line"></div>
-          <div className="flex items-center justify-between">
-            <span className="label">Your Sector Points</span>
-            <Tooltip
-              classNames={{
-                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
-              }}
-              content={
-                <div className="min-w-[200px]">
-                  <div className="text-[#999] text-[14px] font-[500]">
-                    Your Sector Points
-                  </div>
-                  {holdingPointsTooltips.map((item, index) => (
-                    <div
-                      className="mt-[8px] flex items-center justify-between"
-                      key={index}
-                    >
-                      <span className="text-[#fff] text-[14px] font-[500]">
-                        {item.label}
-                      </span>
-                      <span className="text-[#fff] text-[14px] font-[500]">
-                        {item.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              }
-            >
-              <span className="value">
-                {formatNumberWithUnit(holdingPoints?.points || 0)}
-              </span>
-            </Tooltip>
-          </div>
-        </AllocatedBox>
-      </div>
-      <MilestoneBox>
-        <div className="mt-[36px] flex justify-between items-center">
-          {isNoProgress ? (
-            <div>
-              This sector currently doesn't have a milestone, so the $ZKL
-              allocation will grow contingently.
-            </div>
-          ) : (
-            <>
-              <div>
-                Current{" "}
-                {tabActive?.category === "perpdex"
-                  ? "Trading Volume: "
-                  : "TVL: "}
-                ${formatToThounds(currentTvl)}
-              </div>
-              <div>
-                {isMaxProgress ? (
-                  <span className="text-green">Max</span>
-                ) : (
-                  <>
-                    Next{" "}
-                    {tabActive?.category === "perpdex"
-                      ? "Trading Volume Milestone: "
-                      : "TVL Milestone: "}
-                    ${formatToThounds(nextTargetTvl)}
-                  </>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-
-        {isNoProgress ? (
-          <div className="w-full mt-[22px]">
-            <MilestoneProgress progress={0} isDisabled={true} />
-          </div>
-        ) : (
-          <div className="mt-[22px] flex items-center justify-between gap-[17px]">
-            {milestoneProgressList.map((item, index) => (
-              <div className="w-full" key={index}>
-                <MilestoneProgress progress={item} />
-              </div>
-            ))}
-          </div>
-        )}
-      </MilestoneBox>
+      <SectorHeader
+        tabActive={tabActive}
+        holdingPoints={holdingPoints}
+        novaCategoryTotalPoints={novaCategoryTotalPoints}
+        tvlCategoryMilestone={tvlCategoryMilestone}
+      />
 
       <List>
         <div className="list-header flex items-center">

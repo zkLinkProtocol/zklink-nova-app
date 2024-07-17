@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import Decimal from "decimal.js";
+import { epochList } from "@/constants/epoch";
 const Title = styled.div`
   background: linear-gradient(180deg, #fff 0%, #bababa 100%);
   background-clip: text;
@@ -259,9 +260,13 @@ export interface ProjectPointsItem {
 export default function Portfolio({
   novaPointsList,
   handleTabChange,
+  epochActive,
+  handleEpochChange,
 }: {
   novaPointsList: NovaPointsListItem[];
   handleTabChange: (index: number) => void;
+  epochActive: number;
+  handleEpochChange: (index: number) => void;
 }) {
   const [checked, setChecked] = useState(false);
   const { address } = useAccount();
@@ -469,16 +474,6 @@ export default function Portfolio({
 
   const handleViewMore = () => {};
 
-  const [epochActive, setEpochActive] = useState(0);
-
-  const epochList = [
-    {
-      name: "Epoch One",
-      time: "Snapshot taken on July 15, 2024, at 12:00 PM UTC",
-    },
-    { name: "Epoch Two" },
-  ];
-
   return (
     <Container>
       <div className="flex justify-between items-center">
@@ -520,7 +515,7 @@ export default function Portfolio({
             {epochList.map((item, index) => (
               <span
                 key={index}
-                onClick={() => setEpochActive(index)}
+                onClick={() => handleEpochChange(index)}
                 className={`cursor-pointer ${
                   index === epochActive ? "active" : ""
                 }`}
@@ -548,13 +543,13 @@ export default function Portfolio({
               content={
                 <div>
                   <div className="mb-[16px] text-[14px] font-[700]">
-                    Sector in Epoch One
+                    Sector in {epochList[epochActive].name}
                   </div>
                   <PointsPopoverContent
                     data={[
                       {
                         name: "Total Allocated Points",
-                        points: 0, //TODO
+                        points: item.sectorTotalPoints,
                       },
                       {
                         name: "Total Allocated $ZKL",
@@ -566,7 +561,7 @@ export default function Portfolio({
                   <div className="my-[24px] w-full h-[1px] bg-[#999]"></div>
 
                   <div className="mb-[16px] text-[14px] font-[700]">
-                    Your Sector Points in Epoch One
+                    Your Sector Points in {epochList[epochActive].name}
                   </div>
                   <PointsPopoverContent
                     data={
@@ -574,25 +569,25 @@ export default function Portfolio({
                         ? [
                             {
                               name: "Earned by Holding",
-                              points: item.ecoPoints,
+                              points: item.userEcoPoints,
                             },
                             {
                               name: "Earned by Referral",
-                              points: item.referralPoints,
+                              points: item.userReferralPoints,
                             },
                             {
                               name: "Earned by Other Activities",
-                              points: item.otherPoints,
+                              points: item.userOtherPoints,
                             },
                           ]
                         : [
                             {
                               name: "Earned by participate in Sector",
-                              points: item.ecoPoints,
+                              points: item.userEcoPoints,
                             },
                             {
                               name: "Earned by Referral",
-                              points: item.referralPoints,
+                              points: item.userReferralPoints,
                             },
                           ]
                     }
@@ -601,7 +596,7 @@ export default function Portfolio({
               }
             >
               <p className="points-value">
-                {formatNumberWithUnit(item.points)}
+                {formatNumberWithUnit(item.userTotalPoints)}
               </p>
             </Tooltip>
             <div className="flex justify-center">

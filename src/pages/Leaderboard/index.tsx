@@ -9,6 +9,7 @@ import { useAccount } from "wagmi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import toast from "react-hot-toast";
+import { epochList } from "@/constants/epoch";
 // import { TableBoxs } from "@/styles/common";
 
 const Container = styled.div`
@@ -463,13 +464,16 @@ export default function Leaderboard() {
   const { address } = useAccount();
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [tabActive, setTabActive] = useState(0);
-
+  const [epochActive, setEpochActive] = useState(1);
   const [selfData, setSelfData] = useState<ListItem | null>(null);
-
   const [categoryList, setCategoryList] = useState<ListItem[]>([]);
+
   const getCategoryListFunc = async (category: string) => {
     try {
-      const { data } = await getCategoryList(category, address);
+      const { data } = await getCategoryList(category, {
+        address,
+        season: epochList[epochActive].season,
+      });
 
       const arr = data.list.map((item, index) => {
         return {
@@ -501,20 +505,6 @@ export default function Leaderboard() {
     // setCategoryList([]);
   };
 
-  useEffect(() => {
-    getCategoryListFunc(tabs[tabActive].category);
-  }, [address, tabActive]);
-
-  const [epochActive, setEpochActive] = useState(1);
-
-  const epochList = [
-    {
-      name: "Epoch One",
-      time: "Snapshot taken on July 15, 2024, at 12:00 PM UTC",
-    },
-    { name: "Epoch Two" },
-  ];
-
   const epochPrevDisabled = useMemo(() => {
     return epochActive === 0;
   }, [epochActive]);
@@ -535,6 +525,10 @@ export default function Leaderboard() {
     navigator.clipboard.writeText(invite?.code);
     toast.success("Copied", { duration: 2000 });
   };
+
+  useEffect(() => {
+    getCategoryListFunc(tabs[tabActive].category);
+  }, [address, tabActive, epochActive]);
 
   return (
     <Container>
