@@ -118,7 +118,7 @@ export default function Bridge() {
         Nova NFT Introduction
       </p>
       <div className="bridge-divide"></div>
-      <p className="text-[16px] font-normal leading-6 my-6">
+      <p className="text-[#FBFBFB99] text-[16px] font-[700] leading-6 my-6">
         You will be able to mint one of the four Nova SBT once you bridge a
         minimal worth of 0.1 ETH.
       </p>
@@ -153,16 +153,22 @@ export default function Bridge() {
         Aggregation Parade Season II
       </p>
       <Line />
-      <ul className="season-two-list mt-6 ">
+      <ul className="season-two-list">
         {SeasonTwoItems.map(
           (item: string | (() => JSX.Element), index: number) => (
-            <li key={index} className="flex mb-6">
+            <li key={index} className="flex items-center gap-[10px] mt-6">
               <img
                 src="./img/icon-check-white.svg"
                 alt=""
-                className="w-[18px] h-[18px] mr-2 mt-1"
+                className="w-[18px] h-[18px]"
               />
-              {typeof item === "string" ? <p>{item}</p> : item()}
+              {typeof item === "string" ? (
+                <p className="text-[#FBFBFB99] text-[14px] font-[700]">
+                  {item}
+                </p>
+              ) : (
+                item()
+              )}
             </li>
           )
         )}
@@ -172,7 +178,7 @@ export default function Bridge() {
 
   return (
     <Container>
-      <div className="mt-[50px] flex justify-evenly">
+      <div className="mt-[50px] flex justify-center gap-[50px]">
         <div className="w-[622px]">
           <Title>zk.Link Nova</Title>
           <SubTitle className="mt-[24px]">

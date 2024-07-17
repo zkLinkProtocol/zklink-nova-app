@@ -46,16 +46,11 @@ const Container = styled.div`
 
     &.active {
       position: relative;
+      width: 100%;
       padding: 24px 42px 40px;
       font-size: 18px;
       color: #fff;
       opacity: 1;
-      /* background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(145, 145, 145, 0.1) 40.05%,
-        rgba(19, 19, 19, 0.1) 100%
-      ); */
       border-radius: 24px 24px 0 0;
       border: 2px solid transparent;
       border-bottom: 0;
@@ -734,10 +729,10 @@ const BridgeCompPC = (props: IProps) => {
   return (
     <Container className="hidden md:block">
       {/* <ContainerCover /> */}
-      <div className="tabs flex items-end justify-between gap-[24px]">
+      <div className="tabs flex items-end justify-between gap-[16px]">
         {tabs.map((tab, index) => (
           <div
-            className={`tab-item flex items-center gap-[16px] ${
+            className={`tab-item flex items-center justify-center gap-[16px] ${
               index === tabActive ? "active" : ""
             }`}
             onClick={() => handleTabsClick(index, tab?.link)}

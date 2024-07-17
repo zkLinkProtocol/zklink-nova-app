@@ -385,7 +385,7 @@ const ContentBox = styled.div`
         &.item-rank {
           color: var(--Neutral-1, #fff);
           font-family: Satoshi;
-          font-size: 14px;
+          font-size: 32px;
           font-style: normal;
           font-weight: 900;
           line-height: normal;
@@ -393,7 +393,7 @@ const ContentBox = styled.div`
         &.item-user {
           color: var(--Neutral-1, #fff);
           font-family: Satoshi;
-          font-size: 16px;
+          font-size: 24px;
           font-style: normal;
           font-weight: 900;
           line-height: normal;
@@ -463,6 +463,7 @@ export default function Leaderboard() {
   ];
 
   const { address } = useAccount();
+  const { invite } = useSelector((store: RootState) => store.airdrop);
   const [tabActive, setTabActive] = useState(0);
 
   const [selfData, setSelfData] = useState<ListItem | null>(null);
@@ -481,14 +482,16 @@ export default function Leaderboard() {
 
       setCategoryList(arr);
 
-      const self: ListItem | null = data?.current
-        ? {
-            rank: data.current.userIndex,
-            username: data.current.username,
-            address: data.current.address,
-            totalPoints: data.current.totalPoints,
-          }
-        : null;
+      const { current } = data;
+
+      const currentData: ListItem = {
+        rank: current?.userIndex || 0,
+        username: current?.username || invite?.userName || address || "",
+        address: current?.address || address || "",
+        totalPoints: current?.totalPoints || "0",
+      };
+
+      const self: ListItem | null = address ? currentData : null;
       setSelfData(self);
     } catch (error) {
       setCategoryList([]);
@@ -503,8 +506,6 @@ export default function Leaderboard() {
   useEffect(() => {
     getCategoryListFunc(tabs[tabActive].category);
   }, [address, tabActive]);
-
-  const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const handleCopy = () => {
     if (!invite?.code) return;
@@ -623,11 +624,11 @@ export default function Leaderboard() {
                 <GradientBox className="mt-[16px] py-[22px] rounded-[24px] flex items-center justify-between">
                   <div className="td-item item-rank flex justify-center">
                     <GradientBox className="px-[24px] py-[8px] rounded-[100px]">
-                      {selfData.rank}
+                      {selfData.rank || "-"}
                     </GradientBox>
                   </div>
                   <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-user">
+                  <span className="td-item item-user flex items-center gap-[16px]">
                     {selfData.username}
                     <span className="self-tag">You</span>
                   </span>
