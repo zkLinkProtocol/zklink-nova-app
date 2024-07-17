@@ -77,7 +77,7 @@ export const IS_MAINNET = nodeType === "nexus";
 export const TWEET_SHARE_TEXT = "ZkLink Nova Campaign blablablablabla";
 
 export const TRADEMARK_NFT_MARKET_URL =
-  "https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-lynks";
+  "https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-trademark-nfts";
 
 export const LYNKS_NFT_MARKET_URL =
   "https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-trademark-nfts";

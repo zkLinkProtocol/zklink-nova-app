@@ -141,11 +141,11 @@ const CardBox2 = styled.div`
     font-weight: 400;
     line-height: 110%; /* 17.6px */
 
-    &.before {
+    .before {
       position: relative;
       padding-left: 20px;
     }
-    &.before::before {
+    .before::before {
       content: "";
       display: block;
       position: absolute;
@@ -602,9 +602,8 @@ export default function Dashboard() {
               <div className="mt-[12px] before">
                 Epoch One (From May 30th to July 15th)
               </div>
-
               <div className="mt-[12px] before text-[#fff]">
-                Epoch Two (From July 16th to Aug 30th)
+                Epoch Two (From July 16th to Aug 31th)
               </div>
             </div>
           </div>
