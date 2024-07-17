@@ -2,11 +2,14 @@ import Assets from "@/components/DashboardS2/Tabs/Assets";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
+  CategoryZKLItem,
   NovaCategoryPoints,
   NovaCategoryUserPoints,
+  NovaCategoryUserPointsTotal,
   SupportToken,
   TvlCategoryMilestone,
   getAccountTvl,
+  getCategoryZKL,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
   getNovaCategoryUserPoints,
@@ -21,6 +24,7 @@ import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
 import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
 import { Tooltip } from "@nextui-org/react";
+import { epochList } from "@/constants/epoch";
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -290,10 +294,15 @@ const TabsCard = styled.div`
 export interface NovaPointsListItem {
   name: string;
   category: string;
-  points: number;
-  ecoPoints: number;
-  referralPoints: number;
-  otherPoints: number;
+  userTotalPoints: number;
+  userEcoPoints: number;
+  userReferralPoints: number;
+  userOtherPoints: number;
+  sectorTotalPoints: number;
+  sectorEcoPoints: number;
+  sectorReferralPoints: number;
+  sectorOtherPoints: number;
+  zkl: number;
 }
 
 export default function Dashboard() {
@@ -413,8 +422,12 @@ export default function Dashboard() {
   >([]);
 
   const getNovaCategoryUserPointsFunc = async () => {
+    setNovaCategoryUserPoints([]);
     if (!address) return;
-    const res = await getNovaCategoryUserPoints(address);
+    const res = await getNovaCategoryUserPoints({
+      address,
+      season,
+    });
     console.log("getNovaCategoryUserPoints", res);
     setNovaCategoryUserPoints(res?.data || []);
   };
@@ -424,7 +437,11 @@ export default function Dashboard() {
   >([]);
 
   const getNovaCategoryPointsFunc = async () => {
-    const res = await getNovaCategoryPoints();
+    setNovaCategoryPoints([]);
+
+    const res = await getNovaCategoryPoints({
+      season,
+    });
     console.log("getNovaCategoryPoints", res);
     setNovaCategoryPoints(res?.data || []);
   };
@@ -437,71 +454,112 @@ export default function Dashboard() {
     console.log("getTvlCategory", res);
     setTvlCategoryMilestone(res?.data || []);
   };
+  const [epochActive, setEpochActive] = useState(1);
 
-  const [novaPointsList, setNovaPointsList] = useState<NovaPointsListItem[]>(
-    []
-  );
+  const season = useMemo(() => {
+    if (tabs2Active === 99) {
+      return epochList[epochActive].season;
+    } else {
+      return epochList[epochList.length - 1].season;
+    }
+  }, [tabs2Active, epochActive]);
+
+  const [novaCategoryUserPointsTotal, setNovaCategoryUserPointsTotal] =
+    useState<NovaCategoryUserPointsTotal[]>([]);
 
   const getNovaCategoryUserPointsTotalFunc = async () => {
+    setNovaCategoryUserPointsTotal([]);
     if (!address) return;
 
-    const { data } = await getNovaCategoryUserPointsTotal(address);
-
-    if (data) {
-      // const holding = getItem(data, "holding");
-
-      const categorys = [
-        {
-          name: "Assets Points",
-          category: "holding",
-        },
-        {
-          name: "Native Boost Points",
-          category: "nativeboost",
-        },
-        {
-          name: "Spot DEX Points",
-          category: "spotdex",
-        },
-        {
-          name: "Perp DEX Points",
-          category: "perpdex",
-        },
-        {
-          name: "Lending Points",
-          category: "lending",
-        },
-        // {
-        //   name: "GameFi Points",
-        //   category: "gamefi",
-        // },
-        {
-          name: "Others Points",
-          category: "other",
-        },
-      ];
-
-      const arr = categorys.map((c) => {
-        const isHolding = c.category === "holding";
-        const categoryData = data.find((item) => item.category === c.category);
-        const ecoPoints = Number(categoryData?.ecoPoints) || 0;
-        const referralPoints = Number(categoryData?.referralPoints) || 0;
-        const otherPoints = Number(categoryData?.otherPoints) || 0;
-
-        const obj = {
-          name: c.name,
-          category: c.category,
-          points: ecoPoints + referralPoints + (isHolding ? otherPoints : 0),
-          ecoPoints: ecoPoints,
-          referralPoints: referralPoints,
-          otherPoints: otherPoints,
-        };
-
-        return obj;
-      });
-      setNovaPointsList(arr);
-    }
+    const { data } = await getNovaCategoryUserPointsTotal({
+      address,
+      season,
+    });
+    setNovaCategoryUserPointsTotal(data || []);
   };
+
+  const [categoryZKLs, setCategoryZKLs] = useState<CategoryZKLItem[]>([]);
+
+  const getCategoryZKLFunc = async () => {
+    const { data } = await getCategoryZKL();
+    setCategoryZKLs(data || []);
+  };
+
+  const novaPointsList = useMemo(() => {
+    const categorys = [
+      {
+        name: "Assets Points",
+        category: "holding",
+      },
+      {
+        name: "Native Boost Points",
+        category: "nativeboost",
+      },
+      {
+        name: "Spot DEX Points",
+        category: "spotdex",
+      },
+      {
+        name: "Perp DEX Points",
+        category: "perpdex",
+      },
+      {
+        name: "Lending Points",
+        category: "lending",
+      },
+      // {
+      //   name: "GameFi Points",
+      //   category: "gamefi",
+      // },
+      {
+        name: "Others Points",
+        category: "other",
+      },
+    ];
+
+    const arr = categorys.map((c) => {
+      const userCategoryData = novaCategoryUserPointsTotal.find(
+        (item) => item.category === c.category
+      );
+      const userEcoPoints = Number(userCategoryData?.ecoPoints) || 0;
+      const userReferralPoints = Number(userCategoryData?.referralPoints) || 0;
+      const userOtherPoints = Number(userCategoryData?.otherPoints) || 0;
+      const userTotalPoints =
+        userEcoPoints + userReferralPoints + userOtherPoints;
+
+      const sectorCategoryData = novaCategoryPoints.find(
+        (item) => item.category === c.category
+      );
+      const sectorEcoPoints = Number(sectorCategoryData?.ecoPoints) || 0;
+      const sectorReferralPoints =
+        Number(sectorCategoryData?.referralPoints) || 0;
+      const sectorOtherPoints = Number(sectorCategoryData?.otherPoints) || 0;
+
+      const sectorTotalPoints =
+        sectorEcoPoints + sectorReferralPoints + sectorOtherPoints;
+
+      const categoryZKLData = categoryZKLs.find(
+        (item) => item.name === c.category
+      );
+
+      const obj: NovaPointsListItem = {
+        name: c.name,
+        category: c.category,
+        userTotalPoints,
+        userEcoPoints,
+        userReferralPoints,
+        userOtherPoints,
+        sectorTotalPoints,
+        sectorEcoPoints,
+        sectorReferralPoints,
+        sectorOtherPoints,
+        zkl: categoryZKLData?.zkl || 0,
+      };
+
+      return obj;
+    });
+    return arr;
+  }, [novaCategoryUserPointsTotal, novaCategoryPoints, categoryZKLs]);
 
   const userHoldingPoints = useMemo(() => {
     const category = tabs2[tabs2Active]?.category;
@@ -524,63 +582,20 @@ export default function Dashboard() {
     getAccountTvlFunc();
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
-    getNovaCategoryUserPointsFunc();
     getTvlCategoryMilestoneFunc();
-    getNovaCategoryPointsFunc();
-    getNovaCategoryUserPointsTotalFunc();
   }, [address]);
+
+  useEffect(() => {
+    // if (tabs2Active !== 99 && season === 1) return;
+    getNovaCategoryPointsFunc();
+    getNovaCategoryUserPointsFunc();
+    getNovaCategoryUserPointsTotalFunc();
+    getCategoryZKLFunc();
+  }, [address, season]);
 
   return (
     <Container>
       <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
-        {/* <CardBox className="relative w-[full]">
-          <div className="flex justify-between">
-            <div>
-              <div className="rewards">Aggregation Parade Season II Supported Points</div>
-              <div className="rewards-line"></div>
-              <div className="flex items-center">
-                {[
-                  "nova",
-                  "linea",
-                  "eigenlayer",
-                  "puffer",
-                  "renzo",
-                  "eigenpie",
-                  "kelp",
-                  "allspark",
-                ].map((icon, index) => (
-                  <img
-                    key={index}
-                    src={`/img/icon-rewards-${icon}.svg`}
-                    alt=""
-                    className="min-w-[72px] w-[72px] h-[72px] block"
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="flex gap-[30px]">
-              <span className="prize">Prize Pool</span>
-              <span className="zkl">$ZKL</span>
-            </div>
-          </div>
-          <div className="zkl-num flex justify-center">
-            <span>30,000,000</span>
-
-            <Tooltip
-              classNames={{
-                content:
-                  "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-              }}
-              content="Aggregation Parade Season II will reward participants from a prize pool of 30 million $ZKL tokens over three epochs."
-            >
-              <img
-                src="/img/icon-zkl-info.svg"
-                alt=""
-                className="mt-[30px] ml-[-30px] w-[20px] h-[20px]"
-              />
-            </Tooltip>
-          </div>
-        </CardBox> */}
         <CardBox2 className="flex justify-between">
           <div className="px-[16px] py-[10px]">
             <div className="flex items-center gap-[10px]">
@@ -593,6 +608,7 @@ export default function Dashboard() {
               />
               <span className="total-prize-pool">Total Prize Pool</span>
             </div>
+
             <div className="desc">
               <div className="mt-[12px]">
                 The 30 million $ZKL will be distributed over at least Three
@@ -732,6 +748,7 @@ export default function Dashboard() {
               <div className="tab-content px-[31px] py-[32.5px]">
                 {tabs2Active === 0 && (
                   <Assets
+                    tabActive={tabs2[tabs2Active]}
                     ethUsdPrice={ethUsdPrice}
                     supportTokens={supportTokens}
                     totalTvlList={totalTvlList}
@@ -739,6 +756,7 @@ export default function Dashboard() {
                     currentTvl={totalTvl}
                     holdingPoints={userHoldingPoints}
                     novaCategoryTotalPoints={novaCategoryTotalPoints}
+                    tvlCategoryMilestone={tvlCategoryMilestone}
                   />
                 )}
                 {tabs2Active !== 0 && tabs2Active !== 99 && (
@@ -755,6 +773,8 @@ export default function Dashboard() {
                   <Portfolio
                     novaPointsList={novaPointsList}
                     handleTabChange={setTabs2Active}
+                    epochActive={epochActive}
+                    handleEpochChange={setEpochActive}
                   />
                 )}
               </div>

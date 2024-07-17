@@ -26,7 +26,7 @@ import { NOVA_CHAIN_ID, WETH_CONTRACT } from "@/constants";
 import { formatBalance } from "@/utils";
 import wethIcon from "@/assets/img/weth.svg";
 import ETHIcon from "@/assets/img/eth.svg";
-import { BgBox } from "@/pages/Bridge";
+import { Container } from "@/pages/Bridge";
 import { SelectBox } from "@/components/Bridge/Components";
 import WETHAbi from "@/constants/abi/weth.json";
 import { Hash, parseUnits, getContract } from "viem";
@@ -175,7 +175,7 @@ export default function Swap() {
   ]);
 
   return (
-    <BgBox>
+    <Container>
       <div className="my-10 px-3 mx-auto md:w-[40rem]">
         <div className="px-4 md:px-8 py-4 md:py-6 bg-[#022738] mb-4">
           <p className="font-satoshi text-2xl font-bold mb-4">
@@ -285,6 +285,6 @@ export default function Swap() {
           {btnText}
         </Button>
       </div>
-    </BgBox>
+    </Container>
   );
 }

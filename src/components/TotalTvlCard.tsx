@@ -5,28 +5,18 @@ import styled from "styled-components";
 
 const TvlBox = styled.div`
   .tvl-num-item {
-    border-radius: 20px;
-    border: 0.6px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(25px);
-
-    color: #fff;
-    font-family: Satoshi;
-    font-style: normal;
-    font-weight: 700;
     text-align: center;
-    &.comma {
-      width: auto;
-      font-weight: 400;
-      background: none;
-      backdrop-filter: none;
-      border: none;
-    }
-
-    &.dollar {
-      color: #030d19;
-      background: #03d498;
-    }
+    font-family: Satoshi;
+    width: 54px;
+    height: 112px;
+    font-size: 78px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 `;
 
@@ -65,7 +55,7 @@ export default function TotalTvlCard() {
   }, []);
 
   return (
-    <TvlBox className="flex items-center gap-[10px]">
+    <TvlBox className="flex items-center gap-[24px]">
       <span
         className={`tvl-num-item dollar w-[1.625rem] h-[2rem] leading-[2rem] md:w-[66px] md:h-[77px] md:leading-[77px] text-[1.5rem] md:text-[48px]`}
       >

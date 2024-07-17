@@ -657,7 +657,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           setIsMergeSelected,
         }}
       />
-      <BridgeCompMobile
+      {/* <BridgeCompMobile
         {...{
           actionBtnDisabled,
           actionBtnTooltipForMantleDisabeld,
@@ -692,7 +692,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           handleInputValue,
           setIsMergeSelected,
         }}
-      />
+      /> */}
       {isFirstDeposit && address && txhashes[address]?.[0] && (
         <div>
           <Link

@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import Decimal from "decimal.js";
+import { epochList } from "@/constants/epoch";
 const Title = styled.div`
   background: linear-gradient(180deg, #fff 0%, #bababa 100%);
   background-clip: text;
@@ -202,6 +203,25 @@ const PointsBox = styled.div`
     linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
 `;
 
+const EpochBox = styled.div`
+  color: #999;
+  text-align: center;
+  font-family: Satoshi;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 110%; /* 17.6px */
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #282828, #000000),
+    linear-gradient(#fb2450 1%, #fbc82e 5%, #6eee3f, #5889f3, #5095f1, #b10af4);
+
+  .active {
+    color: #fff;
+  }
+`;
+
 const PointsPopoverContent = (props: {
   data: {
     name: string;
@@ -218,7 +238,7 @@ const PointsPopoverContent = (props: {
           }`}
           key={index}
         >
-          <span>{item.name}</span>
+          <span className="text-[#999]">{item.name}</span>
           <span>{formatNumberWithUnit(item.points)}</span>
         </div>
       ))}
@@ -240,9 +260,13 @@ export interface ProjectPointsItem {
 export default function Portfolio({
   novaPointsList,
   handleTabChange,
+  epochActive,
+  handleEpochChange,
 }: {
   novaPointsList: NovaPointsListItem[];
   handleTabChange: (index: number) => void;
+  epochActive: number;
+  handleEpochChange: (index: number) => void;
 }) {
   const [checked, setChecked] = useState(false);
   const { address } = useAccount();
@@ -452,32 +476,57 @@ export default function Portfolio({
 
   return (
     <Container>
-      <div className="flex items-center gap-[16px]">
-        <Title>Your Nova Points</Title>
-        <Tooltip
-          classNames={{
-            content: "w-[350px] rounded-lg bg-[#151923] text-white px-4 py-5",
-          }}
-          content={
-            <div className="max-w-[20rem]">
-              <h4 className="font-[700] text-[0.875rem] leading-[1.3755rem]">
-                Loyalty Booster
-              </h4>
-              <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
-                An extra boost for Loyalty users,tied with days in the
-                Aggregation parade (capped at 50%):
-                <br />
-                <br />
-                Loyalty Booster = min(50%, 0.5%*days joined)
-              </p>
-            </div>
-          }
-        >
-          <PointsBox className="text-[14px] font-[900]">
-            +{royaltyBoosterPencentage}
-          </PointsBox>
-        </Tooltip>
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-[16px]">
+          <Title>Your Nova Points</Title>
+          <Tooltip
+            classNames={{
+              content: "w-[350px] rounded-lg bg-[#151923] text-white px-4 py-5",
+            }}
+            content={
+              <div className="max-w-[20rem]">
+                <h4 className="font-[700] text-[0.875rem] leading-[1.3755rem]">
+                  Loyalty Booster
+                </h4>
+                <p className="mt-[0.75rem] font-[400] text-[0.875rem] leading-[1.3755rem]">
+                  An extra boost for Loyalty users,tied with days in the
+                  Aggregation parade (capped at 50%):
+                  <br />
+                  <br />
+                  Loyalty Booster = min(50%, 0.5%*days joined)
+                </p>
+              </div>
+            }
+          >
+            <PointsBox className="text-[14px] font-[900]">
+              +{royaltyBoosterPencentage}
+            </PointsBox>
+          </Tooltip>
+        </div>
+
+        <div className="flex items-center gap-[12px]">
+          {epochList[epochActive]?.time && (
+            <span className="text-[#999] text-[14px]">
+              {epochList[epochActive].time}
+            </span>
+          )}
+
+          <EpochBox className="px-[24px] py-[10px] rounded-[32px] flex items-center gap-[16px]">
+            {epochList.map((item, index) => (
+              <span
+                key={index}
+                onClick={() => handleEpochChange(index)}
+                className={`cursor-pointer ${
+                  index === epochActive ? "active" : ""
+                }`}
+              >
+                {item.name}
+              </span>
+            ))}
+          </EpochBox>
+        </div>
       </div>
+
       <div className="flex flex-wrap items-center mt-5">
         {novaPointsList.map((item, index) => (
           <NovaPointsBox
@@ -492,39 +541,67 @@ export default function Portfolio({
                   "w-[300px] rounded-lg bg-[#151923] text-white px-4 py-5",
               }}
               content={
-                <PointsPopoverContent
-                  data={
-                    item.category === "holding"
-                      ? [
-                          {
-                            name: "Earned by Holding",
-                            points: item.ecoPoints,
-                          },
-                          {
-                            name: "Earned by Referral",
-                            points: item.referralPoints,
-                          },
-                          {
-                            name: "Earned by Other Activities",
-                            points: item.otherPoints,
-                          },
-                        ]
-                      : [
-                          {
-                            name: "Earned by participate in Sector",
-                            points: item.ecoPoints,
-                          },
-                          {
-                            name: "Earned by Referral",
-                            points: item.referralPoints,
-                          },
-                        ]
-                  }
-                />
+                <div>
+                  {epochActive === 0 && (
+                    <div>
+                      <>
+                        <div className="mb-[16px] text-[14px] font-[700]">
+                          Sector in {epochList[epochActive].name}
+                        </div>
+                        <PointsPopoverContent
+                          data={[
+                            {
+                              name: "Total Allocated Points",
+                              points: item.sectorTotalPoints,
+                            },
+                            {
+                              name: "Total Allocated $ZKL",
+                              points: item.zkl,
+                            },
+                          ]}
+                        />
+                        <div className="my-[24px] w-full h-[1px] bg-[#999]"></div>
+                      </>
+                    </div>
+                  )}
+
+                  <div className="mb-[16px] text-[14px] font-[700]">
+                    Your Sector Points in {epochList[epochActive].name}
+                  </div>
+                  <PointsPopoverContent
+                    data={
+                      item.category === "holding"
+                        ? [
+                            {
+                              name: "Earned by Holding",
+                              points: item.userEcoPoints,
+                            },
+                            {
+                              name: "Earned by Referral",
+                              points: item.userReferralPoints,
+                            },
+                            {
+                              name: "Earned by Other Activities",
+                              points: item.userOtherPoints,
+                            },
+                          ]
+                        : [
+                            {
+                              name: "Earned by participate",
+                              points: item.userEcoPoints,
+                            },
+                            {
+                              name: "Earned by Referral",
+                              points: item.userReferralPoints,
+                            },
+                          ]
+                    }
+                  />
+                </div>
               }
             >
               <p className="points-value">
-                {formatNumberWithUnit(item.points)}
+                {formatNumberWithUnit(item.userTotalPoints)}
               </p>
             </Tooltip>
             <div className="flex justify-center">
