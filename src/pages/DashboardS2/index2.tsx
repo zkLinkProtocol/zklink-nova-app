@@ -422,10 +422,11 @@ export default function Dashboard() {
   >([]);
 
   const getNovaCategoryUserPointsFunc = async () => {
+    setNovaCategoryUserPoints([]);
     if (!address) return;
     const res = await getNovaCategoryUserPoints({
       address,
-      season: epochList[epochActive].season,
+      season,
     });
     console.log("getNovaCategoryUserPoints", res);
     setNovaCategoryUserPoints(res?.data || []);
@@ -436,8 +437,10 @@ export default function Dashboard() {
   >([]);
 
   const getNovaCategoryPointsFunc = async () => {
+    setNovaCategoryPoints([]);
+
     const res = await getNovaCategoryPoints({
-      season: epochList[epochActive].season,
+      season,
     });
     console.log("getNovaCategoryPoints", res);
     setNovaCategoryPoints(res?.data || []);
@@ -451,18 +454,26 @@ export default function Dashboard() {
     console.log("getTvlCategory", res);
     setTvlCategoryMilestone(res?.data || []);
   };
-
   const [epochActive, setEpochActive] = useState(1);
+
+  const season = useMemo(() => {
+    if (tabs2Active === 99) {
+      return epochList[epochActive].season;
+    } else {
+      return epochList[epochList.length - 1].season;
+    }
+  }, [tabs2Active, epochActive]);
 
   const [novaCategoryUserPointsTotal, setNovaCategoryUserPointsTotal] =
     useState<NovaCategoryUserPointsTotal[]>([]);
 
   const getNovaCategoryUserPointsTotalFunc = async () => {
+    setNovaCategoryUserPointsTotal([]);
     if (!address) return;
 
     const { data } = await getNovaCategoryUserPointsTotal({
       address,
-      season: epochList[epochActive].season,
+      season,
     });
     setNovaCategoryUserPointsTotal(data || []);
   };
@@ -572,14 +583,15 @@ export default function Dashboard() {
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getTvlCategoryMilestoneFunc();
-    getCategoryZKLFunc();
   }, [address]);
 
   useEffect(() => {
+    // if (tabs2Active !== 99 && season === 1) return;
     getNovaCategoryPointsFunc();
     getNovaCategoryUserPointsFunc();
     getNovaCategoryUserPointsTotalFunc();
-  }, [address, epochActive]);
+    getCategoryZKLFunc();
+  }, [address, season]);
 
   return (
     <Container>
