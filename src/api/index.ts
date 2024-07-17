@@ -803,3 +803,19 @@ export const getNovaProjectTotalPoints =
   (): Promise<NovaProjectTotalPointsResponse> => {
     return http.get(`${BASE_URL_LRT_POINTS}/nova/project/points`);
   };
+
+export interface CategoryZKLItem {
+  name: string;
+  data: string;
+  type: string;
+  zkl: number;
+}
+interface CategoryZKLResponse {
+  errno: number;
+  errmsg: string;
+  data: CategoryZKLItem[];
+}
+
+export const getCategoryZKL = (): Promise<CategoryZKLResponse> => {
+  return http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone/s2-1`);
+};

@@ -542,23 +542,28 @@ export default function Portfolio({
               }}
               content={
                 <div>
-                  <div className="mb-[16px] text-[14px] font-[700]">
-                    Sector in {epochList[epochActive].name}
-                  </div>
-                  <PointsPopoverContent
-                    data={[
-                      {
-                        name: "Total Allocated Points",
-                        points: item.sectorTotalPoints,
-                      },
-                      {
-                        name: "Total Allocated $ZKL",
-                        points: 0, //TODO
-                      },
-                    ]}
-                  />
-
-                  <div className="my-[24px] w-full h-[1px] bg-[#999]"></div>
+                  {epochActive === 0 && (
+                    <div>
+                      <>
+                        <div className="mb-[16px] text-[14px] font-[700]">
+                          Sector in {epochList[epochActive].name}
+                        </div>
+                        <PointsPopoverContent
+                          data={[
+                            {
+                              name: "Total Allocated Points",
+                              points: item.sectorTotalPoints,
+                            },
+                            {
+                              name: "Total Allocated $ZKL",
+                              points: item.zkl,
+                            },
+                          ]}
+                        />
+                        <div className="my-[24px] w-full h-[1px] bg-[#999]"></div>
+                      </>
+                    </div>
+                  )}
 
                   <div className="mb-[16px] text-[14px] font-[700]">
                     Your Sector Points in {epochList[epochActive].name}
