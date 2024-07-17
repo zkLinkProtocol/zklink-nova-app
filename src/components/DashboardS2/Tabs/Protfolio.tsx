@@ -238,7 +238,7 @@ const PointsPopoverContent = (props: {
           }`}
           key={index}
         >
-          <span>{item.name}</span>
+          <span className="text-[#999]">{item.name}</span>
           <span>{formatNumberWithUnit(item.points)}</span>
         </div>
       ))}
@@ -587,7 +587,7 @@ export default function Portfolio({
                           ]
                         : [
                             {
-                              name: "Earned by participate in Sector",
+                              name: "Earned by participate",
                               points: item.userEcoPoints,
                             },
                             {
