@@ -2,12 +2,14 @@ import Assets from "@/components/DashboardS2/Tabs/Assets";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
+  CategoryZKLItem,
   NovaCategoryPoints,
   NovaCategoryUserPoints,
   NovaCategoryUserPointsTotal,
   SupportToken,
   TvlCategoryMilestone,
   getAccountTvl,
+  getCategoryZKL,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
   getNovaCategoryUserPoints,
@@ -300,6 +302,7 @@ export interface NovaPointsListItem {
   sectorEcoPoints: number;
   sectorReferralPoints: number;
   sectorOtherPoints: number;
+  zkl: number;
 }
 
 export default function Dashboard() {
@@ -464,6 +467,13 @@ export default function Dashboard() {
     setNovaCategoryUserPointsTotal(data || []);
   };
 
+  const [categoryZKLs, setCategoryZKLs] = useState<CategoryZKLItem[]>([]);
+
+  const getCategoryZKLFunc = async () => {
+    const { data } = await getCategoryZKL();
+    setCategoryZKLs(data || []);
+  };
+
   const novaPointsList = useMemo(() => {
     const categorys = [
       {
@@ -517,6 +527,10 @@ export default function Dashboard() {
       const sectorTotalPoints =
         sectorEcoPoints + sectorReferralPoints + sectorOtherPoints;
 
+      const categoryZKLData = categoryZKLs.find(
+        (item) => item.name === c.category
+      );
+
       const obj: NovaPointsListItem = {
         name: c.name,
         category: c.category,
@@ -528,12 +542,13 @@ export default function Dashboard() {
         sectorEcoPoints,
         sectorReferralPoints,
         sectorOtherPoints,
+        zkl: categoryZKLData?.zkl || 0,
       };
 
       return obj;
     });
     return arr;
-  }, [novaCategoryUserPointsTotal, novaCategoryPoints]);
+  }, [novaCategoryUserPointsTotal, novaCategoryPoints, categoryZKLs]);
 
   const userHoldingPoints = useMemo(() => {
     const category = tabs2[tabs2Active]?.category;
@@ -557,6 +572,7 @@ export default function Dashboard() {
     getSupportTokensFunc();
     getTotalTvlByTokenFunc();
     getTvlCategoryMilestoneFunc();
+    getCategoryZKLFunc();
   }, [address]);
 
   useEffect(() => {
