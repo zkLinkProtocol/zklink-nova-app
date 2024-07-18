@@ -25,6 +25,7 @@ import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
 import { Tooltip } from "@nextui-org/react";
 import { epochList } from "@/constants/epoch";
+import PremiusAd from "@/components/DashboardS2/PremiusAd";
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -595,6 +596,7 @@ export default function Dashboard() {
 
   return (
     <Container>
+      <PremiusAd />
       <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
         <CardBox2 className="flex justify-between">
           <div className="px-[16px] py-[10px]">

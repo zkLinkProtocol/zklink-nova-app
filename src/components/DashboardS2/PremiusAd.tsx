@@ -1,0 +1,143 @@
+import { Button } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+
+const Container = styled.div`
+  position: fixed;
+  top: 120px;
+  right: 32px;
+  width: 376px;
+  /* height: 328px; */
+  border-radius: 16px;
+  background: #181d20;
+  color: #fff;
+  font-family: Satoshi;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  z-index: 999;
+  overflow: hidden;
+  transition: all 0.3s;
+
+  .progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    @keyframes shrinkWidth {
+      from {
+        width: 100%;
+      }
+      to {
+        width: 0%;
+      }
+    }
+
+    .progress {
+      height: 4px;
+      background: var(
+        --Button-Rainbow,
+        linear-gradient(
+          90deg,
+          #4ba790 0%,
+          rgba(251, 251, 251, 0.6) 50.31%,
+          #9747ff 100%
+        )
+      );
+      width: 100%;
+      animation: shrinkWidth 8.3s linear;
+    }
+  }
+`;
+
+const DefaultButton = styled(Button)`
+  border-radius: 8px;
+  background: #282828;
+  .btn-text {
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    background: var(
+      --Button-Rainbow,
+      linear-gradient(
+        90deg,
+        #4ba790 0%,
+        rgba(251, 251, 251, 0.6) 50.31%,
+        #9747ff 100%
+      )
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+`;
+
+export default function PremiusAd() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const premius_ts = localStorage.getItem("premius_ts");
+    const now = new Date().getTime();
+
+    console.log("premius_ts", premius_ts, now, now - Number(premius_ts));
+
+    if (!premius_ts || now - Number(premius_ts) > 12 * 60 * 60 * 1000) {
+      setIsOpen(true);
+      localStorage.setItem("premius_ts", now.toString());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const timer = setTimeout(() => {
+      setIsOpen(false);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, [isOpen]);
+
+  const handleJoin = () => {
+    setIsOpen(false);
+    window.open("https://app.premius.market?ref=zkLink", "_blank");
+  };
+
+  return (
+    <Container
+      className={`px-[12px] pt-[16px] pb-[20px] ${isOpen ? "block" : "hidden"}`}
+    >
+      <div>
+        <img
+          src="/img/modal-close.svg"
+          alt=""
+          width={24}
+          height={24}
+          className="absolute top-[16px] right-[12px] cursor-pointer"
+          onClick={() => setIsOpen(false)}
+        />
+      </div>
+      <div>
+        <img src="/img/premius-banner.png" alt="" width={352} height={192} />
+      </div>
+      <p className="mt-[12px]">
+        Trade $ZKL (pre-market) on Premius to win a share of{" "}
+        <span className="font-[700]">$10k USD prize</span>
+        pool this week!
+      </p>
+      <div className="mt-[16px]">
+        <DefaultButton className="w-full" onClick={handleJoin}>
+          <span className="btn-text">Join Now</span>
+        </DefaultButton>
+      </div>
+
+      {isOpen && (
+        <div className="progress-bar">
+          <div className="progress"></div>
+        </div>
+      )}
+    </Container>
+  );
+}
