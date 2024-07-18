@@ -322,9 +322,7 @@ export default function About() {
             Points accumulated from their platform holdings, sector/vertical
             point rewards, DApp rewards, zkLink Nova native DApp booster rewards
             – as well as a brand new entertainment element where users can spin
-            a daily “roulette” for surprise campaign benefits. In addition,
-            Season II will convert user Nova Points to $ZKL at the end of each
-            Epoch, in which there will be a total of at least three Epochs.
+            a daily “roulette” for surprise campaign benefits.
           </div>
         </>
       ),
@@ -374,8 +372,7 @@ export default function About() {
           <div className="paragraph">
             Nova Points earned from Season I do not count, continue, or transfer
             over to Season II. Nova Points earned in Season II began on May 30,
-            2024, and will be calculated and converted into $ZKL at the end of
-            each Epoch.
+            2024.
           </div>
         </>
       ),
