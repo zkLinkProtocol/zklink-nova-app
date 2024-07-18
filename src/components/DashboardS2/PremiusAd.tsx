@@ -88,14 +88,14 @@ export default function PremiusAd() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const timer = setTimeout(() => {
-      setIsOpen(false);
-    }, 30000);
+  // useEffect(() => {
+  //   if (!isOpen) return;
+  //   const timer = setTimeout(() => {
+  //     setIsOpen(false);
+  //   }, 30000);
 
-    return () => clearTimeout(timer);
-  }, [isOpen]);
+  //   return () => clearTimeout(timer);
+  // }, [isOpen]);
 
   const handleJoin = () => {
     setIsOpen(false);
@@ -136,11 +136,11 @@ export default function PremiusAd() {
           </DefaultButton>
         </div>
 
-        {isOpen && (
+        {/* {isOpen && (
           <div className="progress-bar">
             <div className="progress"></div>
           </div>
-        )}
+        )} */}
       </GradientBox>
     </Container>
   );
