@@ -1,3 +1,4 @@
+import { GradientBox } from "@/styles/common";
 import { Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -6,9 +7,6 @@ const Container = styled.div`
   position: fixed;
   top: 120px;
   right: 32px;
-  width: 376px;
-  /* height: 328px; */
-  border-radius: 16px;
   background: #181d20;
   color: #fff;
   font-family: Satoshi;
@@ -17,7 +15,6 @@ const Container = styled.div`
   font-weight: 400;
   line-height: normal;
   z-index: 999;
-  overflow: hidden;
   transition: all 0.3s;
 
   .progress-bar {
@@ -47,7 +44,7 @@ const Container = styled.div`
         )
       );
       width: 100%;
-      animation: shrinkWidth 8.3s linear;
+      animation: shrinkWidth 30.3s linear;
     }
   }
 `;
@@ -91,14 +88,14 @@ export default function PremiusAd() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const timer = setTimeout(() => {
-      setIsOpen(false);
-    }, 8000);
+  // useEffect(() => {
+  //   if (!isOpen) return;
+  //   const timer = setTimeout(() => {
+  //     setIsOpen(false);
+  //   }, 30000);
 
-    return () => clearTimeout(timer);
-  }, [isOpen]);
+  //   return () => clearTimeout(timer);
+  // }, [isOpen]);
 
   const handleJoin = () => {
     setIsOpen(false);
@@ -106,38 +103,45 @@ export default function PremiusAd() {
   };
 
   return (
-    <Container
-      className={`px-[12px] pt-[16px] pb-[20px] ${isOpen ? "block" : "hidden"}`}
-    >
-      <div>
-        <img
-          src="/img/modal-close.svg"
-          alt=""
-          width={24}
-          height={24}
-          className="absolute top-[16px] right-[12px] cursor-pointer"
-          onClick={() => setIsOpen(false)}
-        />
-      </div>
-      <div>
-        <img src="/img/premius-banner.png" alt="" width={352} height={192} />
-      </div>
-      <p className="mt-[12px]">
-        Trade $ZKL (pre-market) on Premius to win a share of{" "}
-        <span className="font-[700]">$10k USD prize</span>
-        pool this week!
-      </p>
-      <div className="mt-[16px]">
-        <DefaultButton className="w-full" onClick={handleJoin}>
-          <span className="btn-text">Join Now</span>
-        </DefaultButton>
-      </div>
-
-      {isOpen && (
-        <div className="progress-bar">
-          <div className="progress"></div>
+    <Container className={`${isOpen ? "block" : "hidden"}`}>
+      <GradientBox
+        className={`rounded-[16px] px-[20px] pt-[16px] pb-[20px] w-[392px] overflow-hidden relative`}
+      >
+        <div>
+          <img
+            src="/img/modal-close.svg"
+            alt=""
+            width={24}
+            height={24}
+            className="absolute top-[16px] right-[12px] cursor-pointer"
+            onClick={() => setIsOpen(false)}
+          />
         </div>
-      )}
+        <div>
+          <img
+            src="/img/premius-banner.png"
+            alt=""
+            width={352}
+            height={192}
+            className="min-w-[352px] mx-auto"
+          />
+        </div>
+        <p className="mt-[12px]">
+          Trade $ZKL (pre-market) on Premius to win a share of{" "}
+          <span className="font-[700]">$10k USD prize</span> pool this week!
+        </p>
+        <div className="mt-[16px]">
+          <DefaultButton className="w-full" onClick={handleJoin}>
+            <span className="btn-text">Join Now</span>
+          </DefaultButton>
+        </div>
+
+        {/* {isOpen && (
+          <div className="progress-bar">
+            <div className="progress"></div>
+          </div>
+        )} */}
+      </GradientBox>
     </Container>
   );
 }
