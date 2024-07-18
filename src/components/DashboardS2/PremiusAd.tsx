@@ -84,7 +84,6 @@ export default function PremiusAd() {
 
     if (!premius_ts || now - Number(premius_ts) > 12 * 60 * 60 * 1000) {
       setIsOpen(true);
-      localStorage.setItem("premius_ts", now.toString());
     }
   }, []);
 
@@ -97,8 +96,14 @@ export default function PremiusAd() {
   //   return () => clearTimeout(timer);
   // }, [isOpen]);
 
-  const handleJoin = () => {
+  const handleClose = () => {
     setIsOpen(false);
+    const now = new Date().getTime();
+    localStorage.setItem("premius_ts", now.toString());
+  };
+
+  const handleJoin = () => {
+    handleClose();
     window.open("https://app.premius.market?ref=zkLink", "_blank");
   };
 
@@ -114,7 +119,7 @@ export default function PremiusAd() {
             width={24}
             height={24}
             className="absolute top-[16px] right-[12px] cursor-pointer"
-            onClick={() => setIsOpen(false)}
+            onClick={handleClose}
           />
         </div>
         <div>
