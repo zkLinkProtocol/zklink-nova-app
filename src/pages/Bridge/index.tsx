@@ -107,7 +107,7 @@ const CardBox = styled.div`
 export default function Bridge() {
   const SeasonTwoItems = [
     "Total Prize Pool: 30M $ZKL (3% of total supply)",
-    "Convert Nova Points to $ZKL and claim every epoch",
+    "$ZKL will be distributed based on the Nova Points users gained within each Epoch.",
     "Earn Nova Points by actively performing holding assets, transactions, referring friends, and staking assets in DApps.",
     "Nova Lynks NFT holders in Season I & II share a separate 10M $ZKL prize pool",
   ];
