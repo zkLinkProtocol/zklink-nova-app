@@ -128,8 +128,7 @@ export default function PremiusAd() {
         </div>
         <p className="mt-[12px]">
           Trade $ZKL (pre-market) on Premius to win a share of{" "}
-          <span className="font-[700]">$10k USD prize</span>
-          pool this week!
+          <span className="font-[700]">$10k USD prize</span> pool this week!
         </p>
         <div className="mt-[16px]">
           <DefaultButton className="w-full" onClick={handleJoin}>
