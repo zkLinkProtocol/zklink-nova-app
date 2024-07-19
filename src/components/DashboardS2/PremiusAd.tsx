@@ -74,18 +74,18 @@ const DefaultButton = styled(Button)`
 `;
 
 export default function PremiusAd() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
-  useEffect(() => {
-    const premius_ts = localStorage.getItem("premius_ts");
-    const now = new Date().getTime();
+  // useEffect(() => {
+  //   const premius_ts = localStorage.getItem("premius_ts");
+  //   const now = new Date().getTime();
 
-    console.log("premius_ts", premius_ts, now, now - Number(premius_ts));
+  //   console.log("premius_ts", premius_ts, now, now - Number(premius_ts));
 
-    if (!premius_ts || now - Number(premius_ts) > 12 * 60 * 60 * 1000) {
-      setIsOpen(true);
-    }
-  }, []);
+  //   if (!premius_ts || now - Number(premius_ts) > 12 * 60 * 60 * 1000) {
+  //     setIsOpen(true);
+  //   }
+  // }, []);
 
   // useEffect(() => {
   //   if (!isOpen) return;
@@ -98,8 +98,8 @@ export default function PremiusAd() {
 
   const handleClose = () => {
     setIsOpen(false);
-    const now = new Date().getTime();
-    localStorage.setItem("premius_ts", now.toString());
+    // const now = new Date().getTime();
+    // localStorage.setItem("premius_ts", now.toString());
   };
 
   const handleJoin = () => {
