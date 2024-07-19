@@ -39,12 +39,20 @@ export default function ThridPartyBridge() {
   const bridges = useMemo(() => {
     return [
       {
+        iconURL: "/img/icon-zkJump.svg",
+        name: "zkJump",
+        desc: "Bridge your $ZKL from Nova to Ethereum in minutes",
+        tooltip: "",
+        points: "",
+        link: "https://zkjump.io/app",
+      },
+      {
         iconURL: "/img/icon-free.svg",
         name: "Free",
         desc: "Bridge Bitcoin assets to earn Nova Points.",
         tooltip: "",
         points: "",
-        link: "https://app.free.tech/",
+        link: "https://free.tech/",
       },
       {
         iconURL: "/img/icon-orbiter.svg",
