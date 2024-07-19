@@ -965,7 +965,20 @@ export default function EcoDApps({
               </Tooltip>
             </div>
             <div className="col-line"></div>
+            <div className="list-content-item flex justify-center items-center">
+              <div className="px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px]">
+                <img
+                  src="/img/s2/icon-spin-gradient.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="min-w-[24px]"
+                />
+                <GradientText>Spin</GradientText>
+              </div>
+            </div>
 
+            <div className="col-line"></div>
             <div className="list-content-item  flex justify-end items-center gap-[10px]">
               {/* <span className="action">Action:</span> */}
               <div className="flex items-center gap-[4px] cursor-pointer select-none">
@@ -1057,6 +1070,7 @@ export default function EcoDApps({
             <div className="list-header-item text-center">Points Booster</div>
             <div className="list-header-item text-center">Rewards</div>
             <div className="list-header-item text-center">Allocated Points</div>
+            <div className="list-header-item text-center">Roulette</div>
             <div className="list-header-item"></div>
           </div>
         </div>
