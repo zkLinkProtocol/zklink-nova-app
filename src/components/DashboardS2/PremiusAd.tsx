@@ -98,8 +98,8 @@ export default function PremiusAd() {
 
   const handleClose = () => {
     setIsOpen(false);
-    const now = new Date().getTime();
-    localStorage.setItem("premius_ts", now.toString());
+    // const now = new Date().getTime();
+    // localStorage.setItem("premius_ts", now.toString());
   };
 
   const handleJoin = () => {
