@@ -101,10 +101,10 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     if (!modalInstance.isOpen) {
       modalInstance.onOpen();
     }
+    setSpinging(true);
     const res = await dailyOpen();
     const tokenId = res.result.tokenId as number;
     const prizeId = PRIZE_MAP[tokenId];
-    setSpinging(true);
     onDrawed(); // update remain times
     await drawRef.current?.start(prizeId);
     const prize = PrizeItems[PRIZE_MAP[tokenId]];
