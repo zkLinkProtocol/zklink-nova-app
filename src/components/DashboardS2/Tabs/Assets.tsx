@@ -518,7 +518,7 @@ export default function Assets(props: IAssetsTableProps) {
                       {formatNumberWithUnit(item?.totalAmount)}
                       <span className="text-gray">
                         ({formatNumberWithUnit(item?.totalTvl, "$")})
-                      </span>{" "}
+                      </span>
                     </>
                   )}
                 </div>
