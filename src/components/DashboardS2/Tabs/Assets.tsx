@@ -382,6 +382,10 @@ export default function Assets(props: IAssetsTableProps) {
           !obj?.iconURL || obj.iconURL === ""
             ? getIconUrlByL2Address(chains.l2Address)
             : obj.iconURL;
+
+        if (obj.symbol === "ZKL") {
+          obj.iconURL = "https://etherscan.io/token/images/zklink_32.png";
+        }
       });
 
       // not WETH
@@ -507,10 +511,11 @@ export default function Assets(props: IAssetsTableProps) {
                 <div className="col-line"></div>
 
                 <div className="list-content-item  text-center">
-                  {formatNumberWithUnit(item?.totalAmount)}
+                  {/* {formatNumberWithUnit(item?.totalAmount)}
                   <span className="text-gray">
                     ({formatNumberWithUnit(item?.totalTvl, "$")})
-                  </span>
+                  </span> */}
+                  -
                 </div>
                 <div className="col-line"></div>
 
