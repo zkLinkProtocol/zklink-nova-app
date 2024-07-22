@@ -333,7 +333,7 @@ export default function Header() {
   }, [address, signature]);
 
   useEffect(() => {
-    if (signature) {
+    if (signature && !apiToken) {
       getJWT();
     }
   }, [signature, apiToken]);
