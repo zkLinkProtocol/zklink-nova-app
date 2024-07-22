@@ -58,7 +58,7 @@ const Container = styled.div`
   }
 
   .nav-link {
-    padding: 10px 14px;
+    padding: 10px;
     color: #7e7e7e;
     font-family: Satoshi;
     font-size: 16px;
@@ -498,6 +498,15 @@ export default function Header() {
               </NavLink>
             </NavbarItem>
             <NavbarItem>
+              <a
+                href="https://zk.link/governance"
+                target="_blank"
+                className={"nav-link"}
+              >
+                Governance
+              </a>
+            </NavbarItem>
+            <NavbarItem>
               <NavLink to="/about" className={"nav-link"}>
                 About
               </NavLink>
@@ -777,6 +786,17 @@ export default function Header() {
               Leaderboard
             </NavLink>
           </NavbarMenuItem>
+
+          <NavbarMenuItem isActive={location.pathname === "/about"}>
+            <a
+              href="https://zk.link/governance"
+              target="_blank"
+              className="block"
+            >
+              About
+            </a>
+          </NavbarMenuItem>
+
           <NavbarMenuItem isActive={location.pathname === "/about"}>
             <NavLink to="/about" className="block">
               About
