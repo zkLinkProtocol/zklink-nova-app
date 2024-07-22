@@ -511,11 +511,16 @@ export default function Assets(props: IAssetsTableProps) {
                 <div className="col-line"></div>
 
                 <div className="list-content-item  text-center">
-                  {/* {formatNumberWithUnit(item?.totalAmount)}
-                  <span className="text-gray">
-                    ({formatNumberWithUnit(item?.totalTvl, "$")})
-                  </span> */}
-                  -
+                  {item.symbol === "ZKL" ? (
+                    "-"
+                  ) : (
+                    <>
+                      {formatNumberWithUnit(item?.totalAmount)}
+                      <span className="text-gray">
+                        ({formatNumberWithUnit(item?.totalTvl, "$")})
+                      </span>
+                    </>
+                  )}
                 </div>
                 <div className="col-line"></div>
 
