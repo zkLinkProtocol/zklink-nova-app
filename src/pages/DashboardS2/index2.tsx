@@ -27,6 +27,7 @@ import { Tooltip } from "@nextui-org/react";
 import { epochList } from "@/constants/epoch";
 import PremiusAd from "@/components/DashboardS2/PremiusAd";
 import ZKLClaimAd from "@/components/DashboardS2/ZKLClaimAd";
+import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -597,8 +598,10 @@ export default function Dashboard() {
 
   return (
     <Container>
-      {/* <PremiusAd /> */}
-      <ZKLClaimAd />
+      <div className="side fixed right-[32px] top-[120px] z-[999] max-w-[400px]">
+        <ZKLClaimAd />
+        <MysteryBoxIII />
+      </div>
       <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
         <CardBox2 className="flex justify-between">
           <div className="px-[16px] py-[10px]">

@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  position: fixed;
-  top: 120px;
-  right: 32px;
   background: #181d20;
   color: #fff;
   font-family: Satoshi;
@@ -14,7 +11,6 @@ const Container = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  z-index: 999;
   transition: all 0.3s;
 
   .progress-bar {

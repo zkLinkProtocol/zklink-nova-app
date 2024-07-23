@@ -8,7 +8,6 @@ export const GradientButton = styled.span`
   font-style: normal;
   font-weight: 900;
   letter-spacing: 0.125rem;
-  text-transform: uppercase;
   border-radius: 0.5rem;
   display: inline-block;
   user-select: none;
