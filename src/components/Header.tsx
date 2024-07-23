@@ -51,16 +51,27 @@ import ReferralModal from "./ReferralModal";
 const Container = styled.div`
   .navbar {
     /* height: 92px; */
-    border-bottom: 0.6px solid rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.1);
+    /* border-bottom: 0.6px solid rgba(255, 255, 255, 0.4); */
+    /* background: rgba(255, 255, 255, 0.1); */
+    background: linear-gradient(90deg, #000811 0%, #000811 116.47%);
     backdrop-filter: blur(20px);
   }
 
   .nav-link {
-    padding: 10px 14px;
+    padding: 10px;
+    color: #7e7e7e;
+    font-family: Satoshi;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px; /* 137.5% */
+    letter-spacing: -0.5px;
+
+    &:hover,
     &.active {
-      border-radius: 100px;
-      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      /* border-radius: 100px; */
+      /* background: rgba(255, 255, 255, 0.14); */
     }
   }
 `;
@@ -322,7 +333,7 @@ export default function Header() {
   }, [address, signature]);
 
   useEffect(() => {
-    if (signature) {
+    if (signature && !apiToken) {
       getJWT();
     }
   }, [signature, apiToken]);
@@ -468,7 +479,11 @@ export default function Header() {
               </NavbarItem> */}
 
             <NavbarItem>
-              <a href="https://zklink.io/novadrop" target="_blank">
+              <a
+                href="https://zklink.io/novadrop"
+                className="nav-link"
+                target="_blank"
+              >
                 NovaDrop🔥
               </a>
             </NavbarItem>
@@ -483,6 +498,15 @@ export default function Header() {
               </NavLink>
             </NavbarItem>
             <NavbarItem>
+              <a
+                href="https://zk.link/governance"
+                target="_blank"
+                className={"nav-link"}
+              >
+                Governance
+              </a>
+            </NavbarItem>
+            <NavbarItem>
               <NavLink to="/about" className={"nav-link"}>
                 About
               </NavLink>
@@ -493,7 +517,7 @@ export default function Header() {
                 <DropdownTrigger>
                   <Button
                     disableRipple
-                    className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                    className="nav-link p-0 bg-transparent data-[hover=true]:bg-transparent"
                     radius="sm"
                     variant="light"
                   >
@@ -762,6 +786,17 @@ export default function Header() {
               Leaderboard
             </NavLink>
           </NavbarMenuItem>
+
+          <NavbarMenuItem isActive={location.pathname === "/about"}>
+            <a
+              href="https://zk.link/governance"
+              target="_blank"
+              className="block"
+            >
+              About
+            </a>
+          </NavbarMenuItem>
+
           <NavbarMenuItem isActive={location.pathname === "/about"}>
             <NavLink to="/about" className="block">
               About

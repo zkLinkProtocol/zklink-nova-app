@@ -98,11 +98,14 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       );
       return;
     }
-    //TODO call api
+    if (!modalInstance.isOpen) {
+      modalInstance.onOpen();
+    }
+    setSpinging(true);
     const res = await dailyOpen();
     const tokenId = res.result.tokenId as number;
     const prizeId = PRIZE_MAP[tokenId];
-    setSpinging(true);
+    onDrawed(); // update remain times
     await drawRef.current?.start(prizeId);
     const prize = PrizeItems[PRIZE_MAP[tokenId]];
     setMintResult({
@@ -125,6 +128,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
         await sendTrademarkMintTx(mintParams);
         setMintStatus(MintStatus.Success);
         mintResultModal.onOpen();
+        onDrawed(); // update remain times after mint tx
       } catch (e) {
         console.log(e);
         setMintStatus(MintStatus.Failed);
@@ -144,8 +148,8 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       mintResultModal.onOpen();
       setSpinging(false);
     }
-    onDrawed();
-    if (remain === 1) {
+
+    if (!remain || remain <= 1) {
       modalInstance.onClose();
     }
   }, [
@@ -215,7 +219,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                   <SpinButton
                     onClick={handleSpin}
                     isLoading={spinging}
-                    disabled={minting || spinging}
+                    disabled={minting || spinging || !remain}
                   >
                     <img
                       src={

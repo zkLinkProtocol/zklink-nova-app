@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import {
   ExplorerTvlItem,
+  NovaCategoryPoints,
   SupportToken,
-  TvlCategory,
+  TvlCategoryMilestone,
   getExplorerTokenTvl,
 } from "@/api";
 import { AccountTvlItem, TotalTvlItem } from "@/pages/Dashboard";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -17,39 +18,14 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import {
-  findClosestMultiplier,
-  formatNumberWithUnit,
-  formatToThounds,
-} from "@/utils";
-import _, { max, set } from "lodash";
+import { findClosestMultiplier, formatNumberWithUnit } from "@/utils";
+import _ from "lodash";
 import { SearchIcon } from "@/components/SearchIcon";
-import MilestoneProgress from "../MilestoneProgress";
 import BridgeComponent from "@/components/Bridge";
-
-const BlurBox = styled.div`
-  color: rgba(251, 251, 251, 0.6);
-  text-align: center;
-  font-family: Satoshi;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 12px;
-  border-radius: 24px;
-  border: 1px solid rgba(51, 49, 49, 0.6);
-  background: #10131c;
-  filter: blur(0.125px);
-  .bold {
-    font-weight: 900;
-    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-`;
+import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
+import SectorHeader from "./SectorHeader";
 
 const Container = styled.div`
   .holding-title {
@@ -94,18 +70,6 @@ const Container = styled.div`
     background: #10131c;
     filter: blur(0.125px);
   }
-`;
-
-const DropdownLine = styled.div`
-  width: 100%;
-  height: 1px;
-  opacity: 0.75;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(251, 251, 251, 0.6) 51.5%,
-    rgba(255, 255, 255, 0) 100%
-  );
 `;
 
 const List = styled.div`
@@ -212,72 +176,6 @@ const List = styled.div`
   }
 `;
 
-const MilestoneBox = styled.div`
-  color: rgba(251, 251, 251, 0.6);
-  font-family: Satoshi;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
-
-const AllocatedBox = styled.div`
-  padding: 16px 28px;
-  min-width: 419px;
-  border-radius: 16px;
-  border: 1px solid rgba(51, 49, 49, 0);
-  /* background: #10131c; */
-  filter: blur(0.125px);
-  border: 2px solid transparent;
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
-  background-image: linear-gradient(to right, #282828, #000000),
-    linear-gradient(
-      175deg,
-      #fb2450 1%,
-      #fbc82e 5%,
-      #6eee3f,
-      #5889f3,
-      #5095f1,
-      #b10af4
-    );
-
-  .label {
-    color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-  }
-
-  .value {
-    text-align: right;
-    font-family: Satoshi;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 900;
-    line-height: normal;
-    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .line {
-    margin: 12px auto;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(251, 251, 251, 0.6) 51.5%,
-      rgba(255, 255, 255, 0) 100%
-    );
-  }
-`;
-
 const GradientBox = styled.div`
   padding: 4px 28px;
   border: 2px solid transparent;
@@ -323,8 +221,14 @@ interface IAssetsTableProps {
   supportTokens: SupportToken[];
   ethUsdPrice: number;
   currentTvl: number;
-  holdingPoints: number;
-  novaCategoryTotalPoints: number;
+  holdingPoints?: NovaPointsListItem;
+  novaCategoryTotalPoints?: NovaCategoryPoints;
+  tvlCategoryMilestone: TvlCategoryMilestone[];
+  tabActive?: {
+    category: string;
+    name: string;
+    iconURL: string;
+  };
 }
 
 export default function Assets(props: IAssetsTableProps) {
@@ -336,6 +240,8 @@ export default function Assets(props: IAssetsTableProps) {
     currentTvl,
     holdingPoints,
     novaCategoryTotalPoints,
+    tabActive,
+    tvlCategoryMilestone,
   } = props;
   const [assetsTabsActive, setAssetsTabsActive] = useState(0);
   const [assetTabList, setAssetTabList] = useState([{ name: "All" }]);
@@ -476,6 +382,10 @@ export default function Assets(props: IAssetsTableProps) {
           !obj?.iconURL || obj.iconURL === ""
             ? getIconUrlByL2Address(chains.l2Address)
             : obj.iconURL;
+
+        if (obj.symbol === "ZKL") {
+          obj.iconURL = "https://etherscan.io/token/images/zklink_32.png";
+        }
       });
 
       // not WETH
@@ -530,168 +440,18 @@ export default function Assets(props: IAssetsTableProps) {
       );
 
     setFilterTableList(arr);
-
-    // const notNovaFilters = arr.filter((item) => !item.isNova);
-    // const novaFilters = arr.filter((item) => item.isNova);
-    // const newArr = [...novaFilters, ...notNovaFilters];
-    // setFilterTableList(newArr);
   }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
-
-  // const milestoneZKLs = [
-  //   500000
-  // ]
-
-  const [milestoneProgressList, setMilestoneProgressList] = useState<number[]>(
-    []
-  );
-
-  const isMaxProgress = useMemo(() => {
-    if (
-      milestoneProgressList.length > 0 &&
-      milestoneProgressList[milestoneProgressList.length - 1] === 100
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [milestoneProgressList]);
-
-  const milestoneData = [
-    {
-      tvl: 0,
-      zkl: 500000,
-    },
-    {
-      tvl: 200000000,
-      zkl: 1000000,
-    },
-    {
-      tvl: 500000000,
-      zkl: 2000000,
-    },
-    {
-      tvl: 1000000000,
-      zkl: 3000000,
-    },
-  ];
-
-  const [nextTargetTvl, setNextTargetTvl] = useState(0);
-  const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
-  const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
-
-  useEffect(() => {
-    const filters = milestoneData.filter((item) => currentTvl > item.tvl);
-    const currentIndex = filters.length === 0 ? 0 : filters.length - 1;
-    const nextIndex =
-      currentIndex + 1 === milestoneData.length
-        ? currentIndex
-        : currentIndex + 1;
-
-    setCurrentAllocationZKL(milestoneData[currentIndex].zkl || 0);
-    setNextAllocationZKL(milestoneData[nextIndex].zkl || 0);
-    setNextTargetTvl(milestoneData[nextIndex].tvl || 0);
-  }, [currentTvl]);
-
-  useEffect(() => {
-    const filters = milestoneData.filter((item) => item.tvl !== 0);
-
-    const arr = filters.map((item, index) => {
-      let progress = 0;
-
-      const prevTvl = index > 0 ? filters[index - 1].tvl : 0;
-      if (currentTvl >= item.tvl) {
-        progress = 100;
-      } else if (currentTvl > prevTvl && currentTvl < item.tvl) {
-        progress = (currentTvl / item.tvl) * 100;
-      } else {
-        progress = 0;
-      }
-
-      return progress;
-    });
-
-    setMilestoneProgressList(arr);
-  }, [currentTvl]);
-
-  const maxZKL = useMemo(() => {
-    return milestoneData[milestoneData.length - 1].zkl;
-  }, [milestoneData]);
 
   return (
     <>
       <Container>
-        <div className="flex justify-between items-center">
-          <div>
-            <div className="holding-title flex items-center gap-[4px]">
-              <img
-                src="/img/icon-assets.svg"
-                alt=""
-                className="w-[16px] h-[16px]"
-              />
-              <span>$ZKL Allocation For Assets</span>
-            </div>
-            <div className="holding-value mt-[16px]">
-              {formatToThounds(currentAllocationZKL)} $ZKL{" "}
-              <span className="max">
-                (Up to {formatToThounds(maxZKL)} $ZKL)
-              </span>
-            </div>
-            <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
-              Next $ZKL Allocation Level: {formatToThounds(nextAllocationZKL)}{" "}
-              $ZKL
-              <Tooltip
-                classNames={{
-                  content:
-                    "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-                }}
-                content={`This sector will allocate ${formatToThounds(
-                  nextAllocationZKL
-                )} $ZKL after reaching the next milestone.`}
-              >
-                <img
-                  src="/img/icon-info-2.svg"
-                  alt=""
-                  className="w-[20px] h-[20px]"
-                />
-              </Tooltip>
-            </div>
-          </div>
-          <AllocatedBox>
-            <div className="flex items-center justify-between">
-              <span className="label">Total Sector Allocated Points</span>
-              <span className="value">
-                {formatNumberWithUnit(novaCategoryTotalPoints)}
-              </span>
-            </div>
-            <div className="line"></div>
-            <div className="flex items-center justify-between">
-              <span className="label">Your Sector Points</span>
-              <span className="value">
-                {formatNumberWithUnit(holdingPoints)}
-              </span>
-            </div>
-          </AllocatedBox>
-        </div>
-
-        <MilestoneBox>
-          <div className="mt-[36px] flex justify-between items-center">
-            <div>Current TVL: ${formatToThounds(currentTvl)}</div>
-            <div>
-              {isMaxProgress ? (
-                <span className="text-green">Max</span>
-              ) : (
-                <>Next TVL Milestones: ${formatToThounds(nextTargetTvl)}</>
-              )}
-            </div>
-          </div>
-          <div className="mt-[22px] flex items-center justify-between gap-[17px]">
-            {milestoneProgressList.map((item, index) => (
-              <div className="w-full" key={index}>
-                <MilestoneProgress progress={item} />
-              </div>
-            ))}
-          </div>
-        </MilestoneBox>
+        <SectorHeader
+          tabActive={tabActive}
+          holdingPoints={holdingPoints}
+          novaCategoryTotalPoints={novaCategoryTotalPoints}
+          tvlCategoryMilestone={tvlCategoryMilestone}
+          totalTvl={currentTvl}
+        />
 
         <List>
           <div className="list-header flex items-center">
@@ -751,10 +511,16 @@ export default function Assets(props: IAssetsTableProps) {
                 <div className="col-line"></div>
 
                 <div className="list-content-item  text-center">
-                  {formatNumberWithUnit(item?.totalAmount)}
-                  <span className="text-gray">
-                    ({formatNumberWithUnit(item?.totalTvl, "$")})
-                  </span>
+                  {item.symbol === "ZKL" ? (
+                    "-"
+                  ) : (
+                    <>
+                      {formatNumberWithUnit(item?.totalAmount)}
+                      <span className="text-gray">
+                        ({formatNumberWithUnit(item?.totalTvl, "$")})
+                      </span>
+                    </>
+                  )}
                 </div>
                 <div className="col-line"></div>
 
