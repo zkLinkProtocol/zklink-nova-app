@@ -28,6 +28,7 @@ import { epochList } from "@/constants/epoch";
 import PremiusAd from "@/components/DashboardS2/PremiusAd";
 import ZKLClaimAd from "@/components/DashboardS2/ZKLClaimAd";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
+import GoogleRecaptcha from "@/components/GoogleRecaptcha";
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -601,6 +602,7 @@ export default function Dashboard() {
       <div className="side fixed right-[32px] top-[120px] z-[999] max-w-[400px]">
         <ZKLClaimAd />
         <MysteryBoxIII />
+        {/* <GoogleRecaptcha /> */}
       </div>
       <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
         <CardBox2 className="flex justify-between">

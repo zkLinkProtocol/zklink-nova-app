@@ -252,6 +252,217 @@ interface EcoDAppItem {
   idFeatured?: boolean;
 }
 
+const EcoDApp = (props: {
+  data: EcoDAppItem;
+  handleLink: (link: string) => void;
+}) => {
+  const { data, handleLink } = props;
+  const [isOpen, setIsOpen] = useState(false);
+
+  const allocatedTooltips = useMemo(() => {
+    const protocolPoints = [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(data.totalPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(data.totalPoints?.referralPoints || 0),
+      },
+    ];
+
+    const yourPoints = [
+      {
+        label: "By Interaction",
+        value: formatNumberWithUnit(data.holdingPoints?.ecoPoints || 0),
+      },
+      {
+        label: "By Referral",
+        value: formatNumberWithUnit(data.holdingPoints?.referralPoints || 0),
+      },
+    ];
+
+    return {
+      protocolPoints,
+      yourPoints,
+    };
+  }, [data]);
+
+  return (
+    <div className="row mb-[24px] overflow-hidden">
+      <div className="flex items-center cursor-pointer">
+        <div className="list-content-item flex items-center gap-[10px] w-1/5">
+          <img
+            src={data.iconURL}
+            alt=""
+            className="w-[55px] h-[56px] rounded-full block"
+          />
+          <div>
+            <div
+              className="symbol flex items-center gap-[4px]"
+              onClick={(e) => {
+                handleLink(data.link);
+              }}
+            >
+              <span>{data.name}</span>
+              <img src="/img/icon-ecolink.svg" alt="" width={16} height={16} />
+            </div>
+            <div className="name mt-[5px]">{data.handler}</div>
+          </div>
+        </div>
+        <div
+          className="row-items flex items-center gap-[10px] w-4/5"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <div className="col-line"></div>
+          <div className="list-content-item text-center flex items-center justify-center">
+            <Tooltip
+              classNames={{
+                content:
+                  "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+              }}
+              content={data.details[0].booster}
+            >
+              <GradientBox>{data.rewards}</GradientBox>
+            </Tooltip>
+          </div>
+          <div className="col-line"></div>
+
+          <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
+            {data?.rewardsIcon?.map((item, index) => (
+              <Tooltip content={item.name} key={index}>
+                <img
+                  src={item.iconURL}
+                  className="min-w-[32px] w-[32px] rounded-full"
+                />
+              </Tooltip>
+            ))}
+          </div>
+          <div className="col-line"></div>
+
+          <div className="list-content-item text-center">
+            <Tooltip
+              classNames={{
+                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+              }}
+              content={
+                <div className="min-w-[200px]">
+                  <div className="text-[#999] text-[14px] font-[500]">
+                    Your Allocated Points
+                  </div>
+                  {allocatedTooltips.yourPoints.map((item, index) => (
+                    <div
+                      className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
+                      key={index}
+                    >
+                      <span>{item.label}</span>
+                      <span>{item.value}</span>
+                    </div>
+                  ))}
+
+                  <div className="mt-[18px] text-[#999] text-[14px] font-[500]">
+                    Protocol Allocated Points
+                  </div>
+
+                  {allocatedTooltips.protocolPoints.map((item, index) => (
+                    <div
+                      className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
+                      key={index}
+                    >
+                      <span>{item.label}</span>
+                      <span>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <div>
+                {formatNumberWithUnit(
+                  data.holdingPoints.ecoPoints +
+                    data.holdingPoints.referralPoints
+                )}
+                /
+                <span className="opacity-40">
+                  {formatNumberWithUnit(
+                    (data.totalPoints?.ecoPoints || 0) +
+                      (data.totalPoints?.referralPoints || 0)
+                  )}
+                </span>
+              </div>
+            </Tooltip>
+          </div>
+          <div className="col-line"></div>
+
+          <div className="list-content-item  flex justify-end items-center gap-[10px]">
+            {/* <span className="action">Action:</span> */}
+            <div className="flex items-center gap-[4px] cursor-pointer select-none">
+              <GradientText className="participate">How to earn</GradientText>
+              <img src="/img/icon-ecolink2.svg" alt="" width={16} height={16} />
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="row-line"></div> */}
+      {isOpen && (
+        <DetailBox className="w-full mt-[4px] px-[7px]">
+          {data.details.map((detail, index) => (
+            <div
+              className={`detail-row mb-[8px] flex justify-between ${
+                index === data.details.length - 1 ? "rounded-bottom" : ""
+              }`}
+              key={index}
+            >
+              <div className="detail-item min-w-[440px] w-[440px]">
+                <div className="detail-label">Booster</div>
+                <div className="detail-value">{detail.booster}</div>
+              </div>
+              <div className="detail-item min-w-[480px] w-[480px]">
+                <div className="detail-label">Description</div>
+                <div className="detail-value">
+                  {detail.description}
+
+                  {detail?.descriptionTooltip && (
+                    <Tooltip
+                      content={detail.descriptionTooltip}
+                      classNames={{
+                        content:
+                          "max-w-[600px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                      }}
+                    >
+                      <img
+                        src="/img/icon-info-2.svg"
+                        alt=""
+                        className="w-[20px] h-[20px] inline-block"
+                      />
+                    </Tooltip>
+                  )}
+                </div>
+              </div>
+              <div className="detail-item text-right  w-full">
+                <div className="detail-label">Action</div>
+                <div className="detail-value flex justify-end items-center gap-[4px]">
+                  <div
+                    className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
+                    onClick={(e) => handleLink(detail.actionLink || data.link)}
+                  >
+                    <GradientText>{detail.action}</GradientText>
+                  </div>
+                  <img
+                    src="/img/open-in-new-s2.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </DetailBox>
+      )}
+    </div>
+  );
+};
+
 export default function EcoDApps({
   tabActive,
   novaCategoryUserPoints,
@@ -347,9 +558,8 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p className="whitespace-nowrap">
-                  10x for Merged wBTC, wETH, USDT
-                </p>
+                <p>20x for ZKL, Merge wBTC, wETH, USDT，USDC</p>
+                <p>10x for other supported tokens</p>
               </div>
             ),
             description:
@@ -376,9 +586,10 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p className="whitespace-nowrap">
-                  10x for Merged wBTC, wETH, USDT
-                </p>
+                <div>
+                  <p>20x for ZKL, Merge wBTC, wETH, USDT，USDC</p>
+                  <p>10x for other supported tokens</p>
+                </div>
               </div>
             ),
             description:
@@ -414,7 +625,7 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+                <p>10x for ZKL, ETH/wETH and merged wBTC, USDT, USDC</p>
                 <p>
                   4x for canonically bridged tokens (pufETH.eth, Manta.manta,
                   Stone.manta, wBTC.eth)
@@ -480,8 +691,8 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>10x for ETH</p>
-                <p>10x for other supported points</p>
+                <p>10x for ZKL, ETH</p>
+                <p>4x for other suppoted points</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -535,7 +746,7 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+                <p>10x for ZKL, ETH/wETH and merged wBTC, USDT, USDC</p>
                 <p>3x for externally bridged tokens (solvBTC.m)</p>
                 <p>
                   Note: Boosts are provided only for effective liquidity. For
@@ -820,225 +1031,6 @@ export default function EcoDApps({
     setRecognize(false);
     setLink(link);
     warningModal.onOpen();
-  };
-
-  const EcoDApp = (props: {
-    data: EcoDAppItem;
-    handleLink: (link: string) => void;
-  }) => {
-    const { data, handleLink } = props;
-    const [isOpen, setIsOpen] = useState(false);
-
-    const allocatedTooltips = useMemo(() => {
-      const protocolPoints = [
-        {
-          label: "By Interaction",
-          value: formatNumberWithUnit(data.totalPoints?.ecoPoints || 0),
-        },
-        {
-          label: "By Referral",
-          value: formatNumberWithUnit(data.totalPoints?.referralPoints || 0),
-        },
-      ];
-
-      const yourPoints = [
-        {
-          label: "By Interaction",
-          value: formatNumberWithUnit(data.holdingPoints?.ecoPoints || 0),
-        },
-        {
-          label: "By Referral",
-          value: formatNumberWithUnit(data.holdingPoints?.referralPoints || 0),
-        },
-      ];
-
-      return {
-        protocolPoints,
-        yourPoints,
-      };
-    }, [data]);
-
-    return (
-      <div className="row mb-[24px] overflow-hidden">
-        <div className="flex items-center cursor-pointer">
-          <div className="list-content-item flex items-center gap-[10px] w-1/5">
-            <img
-              src={data.iconURL}
-              alt=""
-              className="w-[55px] h-[56px] rounded-full block"
-            />
-            <div>
-              <div
-                className="symbol flex items-center gap-[4px]"
-                onClick={() => handleLink(data.link)}
-              >
-                <span>{data.name}</span>
-                <img
-                  src="/img/icon-ecolink.svg"
-                  alt=""
-                  width={16}
-                  height={16}
-                />
-              </div>
-              <div className="name mt-[5px]">{data.handler}</div>
-            </div>
-          </div>
-          <div
-            className="row-items flex items-center gap-[10px] w-4/5"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <div className="col-line"></div>
-            <div className="list-content-item text-center flex items-center justify-center">
-              <Tooltip
-                classNames={{
-                  content:
-                    "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-                }}
-                content={data.details[0].booster}
-              >
-                <GradientBox>{data.rewards}</GradientBox>
-              </Tooltip>
-            </div>
-            <div className="col-line"></div>
-
-            <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
-              {data?.rewardsIcon?.map((item, index) => (
-                <Tooltip content={item.name} key={index}>
-                  <img
-                    src={item.iconURL}
-                    className="min-w-[32px] w-[32px] rounded-full"
-                  />
-                </Tooltip>
-              ))}
-            </div>
-            <div className="col-line"></div>
-
-            <div className="list-content-item text-center">
-              <Tooltip
-                classNames={{
-                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
-                }}
-                content={
-                  <div className="min-w-[200px]">
-                    <div className="text-[#999] text-[14px] font-[500]">
-                      Your Allocated Points
-                    </div>
-                    {allocatedTooltips.yourPoints.map((item, index) => (
-                      <div
-                        className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
-                        key={index}
-                      >
-                        <span>{item.label}</span>
-                        <span>{item.value}</span>
-                      </div>
-                    ))}
-
-                    <div className="mt-[18px] text-[#999] text-[14px] font-[500]">
-                      Protocol Allocated Points
-                    </div>
-
-                    {allocatedTooltips.protocolPoints.map((item, index) => (
-                      <div
-                        className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
-                        key={index}
-                      >
-                        <span>{item.label}</span>
-                        <span>{item.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                }
-              >
-                <div>
-                  {formatNumberWithUnit(
-                    data.holdingPoints.ecoPoints +
-                      data.holdingPoints.referralPoints
-                  )}
-                  /
-                  <span className="opacity-40">
-                    {formatNumberWithUnit(
-                      (data.totalPoints?.ecoPoints || 0) +
-                        (data.totalPoints?.referralPoints || 0)
-                    )}
-                  </span>
-                </div>
-              </Tooltip>
-            </div>
-            <div className="col-line"></div>
-
-            <div className="list-content-item  flex justify-end items-center gap-[10px]">
-              {/* <span className="action">Action:</span> */}
-              <div className="flex items-center gap-[4px] cursor-pointer select-none">
-                <GradientText className="participate">How to earn</GradientText>
-                <img
-                  src="/img/icon-ecolink2.svg"
-                  alt=""
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* <div className="row-line"></div> */}
-        {isOpen && (
-          <DetailBox className="w-full mt-[4px] px-[7px]">
-            {data.details.map((detail, index) => (
-              <div
-                className={`detail-row mb-[8px] flex justify-between ${
-                  index === data.details.length - 1 ? "rounded-bottom" : ""
-                }`}
-                key={index}
-              >
-                <div className="detail-item min-w-[440px] w-[440px]">
-                  <div className="detail-label">Booster</div>
-                  <div className="detail-value">{detail.booster}</div>
-                </div>
-                <div className="detail-item min-w-[480px] w-[480px]">
-                  <div className="detail-label">Description</div>
-                  <div className="detail-value">
-                    {detail.description}
-
-                    {detail?.descriptionTooltip && (
-                      <Tooltip
-                        content={detail.descriptionTooltip}
-                        classNames={{
-                          content:
-                            "max-w-[600px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-                        }}
-                      >
-                        <img
-                          src="/img/icon-info-2.svg"
-                          alt=""
-                          className="w-[20px] h-[20px] inline-block"
-                        />
-                      </Tooltip>
-                    )}
-                  </div>
-                </div>
-                <div className="detail-item text-right  w-full">
-                  <div className="detail-label">Action</div>
-                  <div className="detail-value flex justify-end items-center gap-[4px]">
-                    <div
-                      className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
-                      onClick={() => handleLink(detail.actionLink || data.link)}
-                    >
-                      <GradientText>{detail.action}</GradientText>
-                    </div>
-                    <img
-                      src="/img/open-in-new-s2.svg"
-                      alt=""
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </DetailBox>
-        )}
-      </div>
-    );
   };
 
   return (
