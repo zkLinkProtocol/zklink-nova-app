@@ -41,8 +41,36 @@ const Container = styled.div`
     z-index: -1;
     margin: -1px;
     border-radius: inherit; /*important*/
-    background: linear-gradient(90deg, #48ecae 0%, #3e52fc 52.9%, #49cdd7 100%);
+    background: linear-gradient(
+      175deg,
+      #fb2450,
+      #fbc82e,
+      #6eee3f,
+      #5889f3,
+      #5095f1,
+      #b10af4 60%
+    );
   }
+`;
+
+const CustomButton = styled(GradientButton)`
+  border-radius: 8px;
+  background: var(
+    --Button-Rainbow,
+    linear-gradient(
+      90deg,
+      #4ba790 0%,
+      rgba(251, 251, 251, 0.6) 50.31%,
+      #9747ff 100%
+    )
+  );
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 26px; /* 144.444% */
+  letter-spacing: 1px;
 `;
 
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
@@ -234,25 +262,27 @@ export default function MysteryBoxIII() {
   return (
     <>
       {remainDrawCount > 0 && (
-        <Container className="my-[32px] px-[24px] py-[16px] flex justify-between items-center">
-          <img
-            src="/img/img-mystery-box-v2.png"
-            alt=""
-            width={56}
-            height={56}
-            className="rounded-[12px]"
-          />
-          <div className="text-[18px] font-[700] leading-[26px]">
-            <p>Mystery Box III</p>
-            <p className="mt-[4px]">x{remainDrawCount}</p>
+        <Container className="my-[32px] px-[20px] py-[16px] flex justify-between items-center">
+          <div className="flex items-center gap-[12px]">
+            <img
+              src="/img/img-mystery-box-v2.png"
+              alt=""
+              width={56}
+              height={56}
+              className="rounded-[12px]"
+            />
+            <div className="text-[18px] font-[700] leading-[26px]">
+              <p>Mystery Box III</p>
+              <p className="mt-[4px]">x{remainDrawCount}</p>
+            </div>
           </div>
           <div>
-            <GradientButton
-              className="px-[56px] py-[15px]"
+            <CustomButton
+              className="px-[32px] py-[15px]"
               onClick={() => drawModal.onOpen()}
             >
               Open
-            </GradientButton>
+            </CustomButton>
           </div>
         </Container>
       )}
