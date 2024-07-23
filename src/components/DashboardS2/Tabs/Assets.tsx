@@ -532,7 +532,51 @@ export default function Assets(props: IAssetsTableProps) {
 
                 <div className="list-content-item  flex justify-end items-center gap-[10px]">
                   <span className="action">Action:</span>
-                  {item?.isNova ? (
+                  {item.symbol === "ZKL" ? (
+                    <Dropdown className="bg-[#000811] py-[20px]">
+                      <DropdownTrigger>
+                        <span className="participate cursor-pointer">
+                          Buy Now
+                        </span>
+                      </DropdownTrigger>
+                      <DropdownMenu
+                        aria-label="ACME features"
+                        itemClasses={{
+                          base: "gap-4",
+                        }}
+                      >
+                        <DropdownItem key="bridge">
+                          <div
+                            className="flex justify-between items-center"
+                            onClick={() => {
+                              window.open(
+                                "https://novaswap.fi/#/swap",
+                                "_blank"
+                              );
+                            }}
+                          >
+                            Buy from Novaswap
+                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
+                          </div>
+                        </DropdownItem>
+
+                        <DropdownItem key="merge">
+                          <div
+                            className="flex justify-between items-center"
+                            onClick={() => {
+                              window.open(
+                                "https://izumi.finance/trade/swap?chainId=810180",
+                                "_blank"
+                              );
+                            }}
+                          >
+                            Buy from izumi
+                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
+                          </div>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  ) : item?.isNova ? (
                     <Dropdown className="bg-[#000811] py-[20px]">
                       <DropdownTrigger>
                         <span className="participate cursor-pointer">
@@ -541,7 +585,6 @@ export default function Assets(props: IAssetsTableProps) {
                       </DropdownTrigger>
                       <DropdownMenu
                         aria-label="ACME features"
-                        className="w-[10rem]"
                         itemClasses={{
                           base: "gap-4",
                         }}
