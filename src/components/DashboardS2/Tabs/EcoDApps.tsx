@@ -558,9 +558,8 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p className="whitespace-nowrap">
-                  10x for Merged wBTC, wETH, USDT
-                </p>
+                <p>20x for ZKL, Merge wBTC, wETH, USDT，USDC</p>
+                <p>10x for other supported tokens</p>
               </div>
             ),
             description:
@@ -587,9 +586,10 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p className="whitespace-nowrap">
-                  10x for Merged wBTC, wETH, USDT
-                </p>
+                <div>
+                  <p>20x for ZKL, Merge wBTC, wETH, USDT，USDC</p>
+                  <p>10x for other supported tokens</p>
+                </div>
               </div>
             ),
             description:
@@ -625,7 +625,7 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+                <p>10x for ZKL, ETH/wETH and merged wBTC, USDT, USDC</p>
                 <p>
                   4x for canonically bridged tokens (pufETH.eth, Manta.manta,
                   Stone.manta, wBTC.eth)
@@ -691,8 +691,8 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>10x for ETH</p>
-                <p>10x for other supported points</p>
+                <p>10x for ZKL, ETH</p>
+                <p>4x for other suppoted points</p>
               </div>
             ),
             description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
@@ -746,7 +746,7 @@ export default function EcoDApps({
           {
             booster: (
               <div>
-                <p>10x for ETH/wETH and merged wBTC, USDT, USDC</p>
+                <p>10x for ZKL, ETH/wETH and merged wBTC, USDT, USDC</p>
                 <p>3x for externally bridged tokens (solvBTC.m)</p>
                 <p>
                   Note: Boosts are provided only for effective liquidity. For
