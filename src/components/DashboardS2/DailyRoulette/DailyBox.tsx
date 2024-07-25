@@ -1,11 +1,13 @@
 import styled from "styled-components";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import DailyDrawModal from "./DailyDrawModal";
 import { useDisclosure } from "@nextui-org/react";
 import { dailyOpen } from "@/api";
+import { useReCaptchaStore } from "@/hooks/useReCaptchaStore";
+import GoogleRecaptcha from "@/components/GoogleRecaptcha";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export enum BoxType {
@@ -23,6 +25,14 @@ interface DailyBoxProps {
   onDrawed?: () => void;
   remain?: number;
 }
+
+const RecaptchaContainer = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+`;
 
 const DailyBox = (props: DailyBoxProps) => {
   const modal = useDisclosure();
@@ -52,11 +62,39 @@ const DailyBox = (props: DailyBoxProps) => {
       return `Exactly in ${hours + (index - 5) * 24} Hours`;
     }
   }, [index]);
+
+  const { reCaptchaTs, reCaptchaValue } = useReCaptchaStore();
+
+  const [isShowRecaptcha, setIsShowRecaptcha] = useState(false);
+
+  useEffect(() => {
+    console.log("isShowRecaptcha", isShowRecaptcha);
+  }, [isShowRecaptcha]);
+
   const handleClaim = useCallback(async () => {
+    console.log("handleClaim");
+
     if (type === BoxType.Active) {
+      const ts = Date.now();
+
+      if (
+        reCaptchaTs === 0 ||
+        ts - reCaptchaTs > 1000 * 60 * 60 * 12 ||
+        !reCaptchaValue
+      ) {
+        setIsShowRecaptcha(true);
+        return;
+      }
       modal.onOpen();
     }
-  }, [type, modal]);
+  }, [type, modal, reCaptchaValue, reCaptchaTs]);
+
+  const handleReCaptchaSuccess = () => {
+    console.log("handleReCaptchaSuccess");
+    setIsShowRecaptcha(false);
+    modal.onOpen();
+  };
+
   return (
     <Container>
       <p className="weekday">{weekday}</p>
@@ -100,6 +138,12 @@ const DailyBox = (props: DailyBoxProps) => {
         onDrawed={onDrawed}
         remain={remain}
       />
+
+      {isShowRecaptcha && (
+        <RecaptchaContainer>
+          <GoogleRecaptcha onSuccess={handleReCaptchaSuccess} />
+        </RecaptchaContainer>
+      )}
     </Container>
   );
 };
