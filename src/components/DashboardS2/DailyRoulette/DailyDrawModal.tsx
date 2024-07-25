@@ -35,17 +35,18 @@ export const PrizeItems = [
     tooltip: "Equivalent to depositing 0.1 ETH into Nova for ~16 hours",
   },
   {
+    name: "Nova +3 Booster",
+    img: "/img/img-point-plus-3.png",
+    points: 3,
+    tooltip: "Equivalent to depositing 0.1 ETH into Nova for ~48 hours",
+  },
+  {
     name: "Nova +10 Booster",
     img: "/img/img-point-plus-10.png",
     points: 10,
-    tooltip: "Equivalent to depositing 1 ETH into Nova for ~16 hours",
+    tooltip: "Equivalent to depositing 0.1 ETH into Nova for ~160 hours",
   },
-  {
-    name: "Nova +50 Booster",
-    img: "/img/img-point-plus-50.png",
-    points: 50,
-    tooltip: "Equivalent to depositing 1 ETH into Nova for ~80 hours",
-  },
+
   { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
   { name: "Chess Knight", img: "/img/img-trademark-3.png" },
   { name: "Magnifying Glass", img: "/img/img-trademark-2.png" },
@@ -58,8 +59,8 @@ const PRIZE_MAP: Record<number, number> = {
   3: 4,
   4: 3,
   6: 0,
-  8: 1,
-  9: 2,
+  11: 1,
+  8: 2,
 };
 const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   const { address, chainId } = useAccount();
