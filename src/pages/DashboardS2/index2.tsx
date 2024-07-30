@@ -511,10 +511,10 @@ export default function Dashboard() {
         name: "Lending Points",
         category: "lending",
       },
-      // {
-      //   name: "GameFi Points",
-      //   category: "gamefi",
-      // },
+      {
+        name: "GameFi Points",
+        category: "gamefi",
+      },
       {
         name: "Others Points",
         category: "other",
