@@ -76,7 +76,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   const [mintStatus, setMintStatus] = useState<MintStatus | undefined>();
   const [failMessage, setFailMessage] = useState("");
   const { switchChain } = useSwitchChain();
-  const { updateFactory } = useUpdateNftBalanceStore();
+  const { updateFactor } = useUpdateNftBalanceStore();
 
   const { sendTrademarkMintTx } = useNovaNFT();
   const { modalInstance, onDrawed, remain } = props;
@@ -161,7 +161,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       mintResultModal.onOpen();
       onDrawed(); // update remain times after mint tx
       setMintParams(undefined);
-      updateFactory();
+      updateFactor();
     } catch (e) {
       console.log(e);
       setMintStatus(MintStatus.Failed);
@@ -180,7 +180,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     mintResultModal,
     onDrawed,
     sendTrademarkMintTx,
-    updateFactory,
+    updateFactor,
   ]);
 
   const handleSkip = async () => {

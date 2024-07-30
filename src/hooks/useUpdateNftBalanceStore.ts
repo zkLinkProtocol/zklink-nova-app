@@ -2,12 +2,12 @@ import { create } from "zustand";
 
 interface UpdateNftBalanceStore {
   factor: number;
-  updateFactory: () => void;
+  updateFactor: () => void;
 }
 
 export const useUpdateNftBalanceStore = create<UpdateNftBalanceStore>(
   (set) => ({
     factor: 0,
-    updateFactory: () => set((state) => ({ factor: state.factor + 1 })),
+    updateFactor: () => set((state) => ({ factor: state.factor + 1 })),
   })
 );
