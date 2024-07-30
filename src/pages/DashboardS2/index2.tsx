@@ -339,11 +339,11 @@ export default function Dashboard() {
       name: "Lending",
       category: "lending",
     },
-    // {
-    //   iconURL: "/img/icon-sector-6.svg",
-    //   name: "GameFi",
-    //   category: "gamefi",
-    // },
+    {
+      iconURL: "/img/icon-sector-6.svg",
+      name: "GameFi",
+      category: "gamefi",
+    },
     {
       iconURL: "/img/icon-sector-7.svg",
       name: "Others",
