@@ -25,6 +25,8 @@ import {
 } from "@/constants";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
 import { useAccount, useSwitchChain } from "wagmi";
+import { useUpdateNftBalanceStore } from "@/hooks/useUpdateNftBalanceStore";
+
 interface IProps {
   modalInstance: UseDisclosureReturn;
   onDrawed: () => void;
@@ -72,6 +74,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   const [mintStatus, setMintStatus] = useState<MintStatus | undefined>();
   const [failMessage, setFailMessage] = useState("");
   const { switchChain } = useSwitchChain();
+  const { updateFactory } = useUpdateNftBalanceStore();
 
   const { sendTrademarkMintTx } = useNovaNFT();
   const { modalInstance, onDrawed, remain } = props;
@@ -156,6 +159,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       mintResultModal.onOpen();
       onDrawed(); // update remain times after mint tx
       setMintParams(undefined);
+      updateFactory();
     } catch (e) {
       console.log(e);
       setMintStatus(MintStatus.Failed);
@@ -169,7 +173,13 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     } finally {
       setMinting(false);
     }
-  }, [mintParams, mintResultModal, onDrawed, sendTrademarkMintTx]);
+  }, [
+    mintParams,
+    mintResultModal,
+    onDrawed,
+    sendTrademarkMintTx,
+    updateFactory,
+  ]);
 
   const handleSkip = async () => {
     await dailySkipMint();
@@ -224,6 +234,9 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                   ref={drawRef}
                   onDrawEnd={handleDrawEnd}
                   PrizeItems={PrizeItems}
+                  targetIndex={
+                    mintParams ? PRIZE_MAP[mintParams.tokenId] : undefined
+                  }
                 />
                 <SpinPointer>
                   <img src="/img/s2/icon-daily-spin-pointer.png" alt="" />
