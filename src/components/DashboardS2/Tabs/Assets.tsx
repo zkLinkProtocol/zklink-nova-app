@@ -26,6 +26,7 @@ import { SearchIcon } from "@/components/SearchIcon";
 import BridgeComponent from "@/components/Bridge";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import SectorHeader from "./SectorHeader";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   .holding-title {
@@ -442,6 +443,8 @@ export default function Assets(props: IAssetsTableProps) {
     setFilterTableList(arr);
   }, [tableList, serachValue, isMyHolding, assetsTabsActive]);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <Container>
@@ -455,15 +458,23 @@ export default function Assets(props: IAssetsTableProps) {
 
         <List>
           <div className="list-header flex items-center">
-            <div className="list-header-item text-left">Token</div>
-            <div className="list-header-item text-center">Points Booster</div>
-            <div className="list-header-item text-center">Nova TVL</div>
-            <div className="list-header-item text-center">Your Deposit</div>
+            <div className="list-header-item text-left">
+              {t("dashboard.token")}
+            </div>
+            <div className="list-header-item text-center">
+              {t("dashboard.points_booster")}
+            </div>
+            <div className="list-header-item text-center">
+              {t("dashboard.nova_tvl")}
+            </div>
+            <div className="list-header-item text-center">
+              {t("dashboard.ur_deposit")}
+            </div>
             <div className="list-header-item">
               <Input
                 data-hover={false}
                 isClearable
-                placeholder="Enter Token Symbol To Search"
+                placeholder={t("dashboard.enter_token_symbol")}
                 className="search-input"
                 classNames={{
                   base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
@@ -597,7 +608,7 @@ export default function Assets(props: IAssetsTableProps) {
                               handleBridgeMore(item?.symbol);
                             }}
                           >
-                            Bridge Now
+                            {t('dashboard.bridge_now')}
                             <img src="/img/icon-bridge-link-arrow.svg" alt="" />
                           </div>
                         </DropdownItem>
@@ -623,7 +634,7 @@ export default function Assets(props: IAssetsTableProps) {
                         handleBridgeMore(item?.symbol);
                       }}
                     >
-                      Bridge Now
+                      {t('dashboard.bridge_now')}
                     </span>
                   )}
                 </div>

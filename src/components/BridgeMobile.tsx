@@ -58,6 +58,8 @@ import FromList from "@/constants/fromChainList";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 const ModalSelectItem = styled.div`
   &:hover {
     background-color: rgb(61, 66, 77);
@@ -465,9 +467,10 @@ export default function Bridge(props: IBridgeComponentProps) {
     actionBtnDisabled,
     tokenFiltered[tokenActive]
   );
+  const { t } = useTranslation();
   const btnText = useMemo(() => {
     if (invalidChain) {
-      return "Switch Network";
+      return t("common.switch_network");
     } else if (
       amount &&
       tokenFiltered[tokenActive] &&

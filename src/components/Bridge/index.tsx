@@ -49,6 +49,7 @@ import {
   TokenYieldBox,
   Trans,
 } from "./Components";
+import { useTranslation } from "react-i18next";
 
 export interface IBridgeComponentProps {
   onClose?: () => void;
@@ -453,9 +454,10 @@ export default function Bridge(props: IBridgeComponentProps) {
       tokenFiltered[tokenActive].address !== ETH_ADDRESS
     );
   }, [tokenActive, tokenFiltered]);
+  const { t } = useTranslation();
   const btnText = useMemo(() => {
     if (invalidChain) {
-      return "Switch Network";
+      return t("common.switch_network");
     } else if (
       amount &&
       tokenFiltered[tokenActive] &&

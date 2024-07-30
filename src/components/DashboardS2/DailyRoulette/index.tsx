@@ -8,6 +8,7 @@ import { getDailyCheckinHistory } from "@/api";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { t } from "i18next";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const Container = styled.div`
@@ -184,7 +185,7 @@ export default function DailyRoulette() {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img src="img/s2/icon-roulette.svg" alt="" />
-          <p className="title">Daily Roulette</p>
+          <p className="title">{t("dashboard.daily_roulette")}</p>
           <Tooltip
             className="px-[16px] py-[20px] max-w-[350px] bg-[#000811] text-[#FBFBFB99]"
             content={
@@ -203,7 +204,7 @@ export default function DailyRoulette() {
               </div>
             }
           >
-            <div className="title-desc">Determined by the consecutive days</div>
+            <div className="title-desc">{t("dashboard.determined_by")}</div>
           </Tooltip>
         </div>
         <InviteBoxModal />

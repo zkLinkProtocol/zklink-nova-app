@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import toast from "react-hot-toast";
 import { epochList } from "@/constants/epoch";
+import { useTranslation } from "react-i18next";
 // import { TableBoxs } from "@/styles/common";
 
 const Container = styled.div`
@@ -439,26 +440,35 @@ const ColLine = styled.div`
 `;
 
 export default function Leaderboard() {
+  const { t } = useTranslation();
   const tabs = [
-    { name: "Holding", category: "holding", iconURL: "/img/icon-sector-1.svg" },
     {
-      name: "Boosted",
+      name: t("dashboard.holding"),
+      category: "holding",
+      iconURL: "/img/icon-sector-1.svg",
+    },
+    {
+      name: t("dashboard.boosted"),
       category: "nativeboost",
       iconURL: "/img/icon-sector-2.svg",
     },
     {
-      name: "Spot DEX",
+      name: t("dashboard.spot_dex"),
       category: "spotdex",
       iconURL: "/img/icon-sector-3.svg",
     },
     {
-      name: "Perp DEX",
+      name: t("dashboard.perp_dex"),
       category: "perpdex",
       iconURL: "/img/icon-sector-4.svg",
     },
-    { name: "Lending", category: "lending", iconURL: "/img/icon-sector-5.svg" },
-    // { name: "GameFi", category: "gamefi" },
-    { name: "Other", category: "other", iconURL: "/img/icon-sector-7.svg" },
+    {
+      name: t("dashboard.lending"),
+      category: "lending",
+      iconURL: "/img/icon-sector-5.svg",
+    },
+    { name: "GameFi", category: "gamefi" },
+    { name: t("other"), category: "other", iconURL: "/img/icon-sector-7.svg" },
   ];
 
   const { address } = useAccount();
@@ -537,15 +547,14 @@ export default function Leaderboard() {
           <div>
             <div className="flex">
               <div className="px-[16px] py-[10px] rounded-[48px] bg-[#28282899]">
-                <GradientText>Leaderboard</GradientText>
+                <GradientText>{t("header.leaderboard")}</GradientText>
               </div>
             </div>
-            <Title className="mt-[20px]">Points Leaderboard</Title>
+            <Title className="mt-[20px]">
+              {t("leaderboard.points_leaderboard")}
+            </Title>
             <Description className="mt-[30px]">
-              The leaderboard is organized by sectors. In Season II, Nova Points
-              will measure users' contributions to each sector. These points
-              will determine the distribution of $ZKL rewards from each sector's
-              prize pool.
+              {t("leaderboard.points_leaderboard_desc")}
             </Description>
           </div>
 
@@ -644,8 +653,12 @@ export default function Leaderboard() {
           >
             <div className="tab-content px-[42px] py-[32px]">
               <div className="flex items-center justify-between">
-                <span className="th-item item-rank">Rank</span>
-                <span className="th-item item-user">User</span>
+                <span className="th-item item-rank">
+                  {t("leaderboard.rank")}
+                </span>
+                <span className="th-item item-user">
+                  {t("leaderboard.user")}
+                </span>
                 <span className="th-item item-points">
                   {tabs[tabActive].name} Points
                 </span>

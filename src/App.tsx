@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 
@@ -13,6 +13,8 @@ import Leaderboard from "./pages/Leaderboard";
 import About from "./pages/About/index2";
 import UnwrapETH from "@/pages/UnwrapETH";
 import DashboardS2 from "./pages/DashboardS2/index2";
+import { useLanguageStore } from "./hooks/useLanguageStore";
+import { useTranslation } from "react-i18next";
 
 // const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
 // const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
@@ -27,6 +29,15 @@ const HideBox = styled.div`
 `;
 
 export default function App() {
+  const { language } = useLanguageStore();
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    if (language !== i18n.language) {
+      i18n.changeLanguage(language);
+    }
+  }, [i18n.language, language]);
+
   return (
     <main className="main dark text-foreground bg-background header lg:min-w-[1080px]">
       <BrowserRouter>

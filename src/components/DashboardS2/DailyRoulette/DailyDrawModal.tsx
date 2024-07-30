@@ -22,6 +22,7 @@ import {
 } from "@/constants";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
 import { useAccount, useSwitchChain } from "wagmi";
+import { useTranslation } from "react-i18next";
 interface IProps {
   modalInstance: UseDisclosureReturn;
   onDrawed: () => void;
@@ -63,6 +64,7 @@ const PRIZE_MAP: Record<number, number> = {
   8: 2,
 };
 const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
+  const { t } = useTranslation();
   const { address, chainId } = useAccount();
   const [spinging, setSpinging] = useState(false);
   const [minting, setMinting] = useState(false);
@@ -173,7 +175,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
 
   const btnText = useMemo(() => {
     if (isInvaidChain) {
-      return "Switch Network";
+      return t("common.switch_network");
     } else if (minting) {
       return "Start Minting";
     } else {
@@ -194,7 +196,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Daily Roulette
+                {t("dashboard.daily_roulette")}
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center">
