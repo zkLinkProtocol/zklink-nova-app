@@ -20,6 +20,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import SectorHeader from "./SectorHeader";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   .holding-title {
@@ -1033,6 +1034,8 @@ export default function EcoDApps({
     warningModal.onOpen();
   };
 
+  const { t } = useTranslation();
+
   return (
     <Container>
       <SectorHeader
@@ -1046,9 +1049,13 @@ export default function EcoDApps({
         <div className="list-header flex items-center">
           <div className="list-header-item text-left w-1/5">Protocol</div>
           <div className="row-items flex items-center w-4/5">
-            <div className="list-header-item text-center">Points Booster</div>
-            <div className="list-header-item text-center">Rewards</div>
-            <div className="list-header-item text-center">Allocated Points</div>
+            <div className="list-header-item text-center">{t('dashboard.points_booster')}</div>
+            <div className="list-header-item text-center">
+              {t("dashboard.rewards")}
+            </div>
+            <div className="list-header-item text-center">
+              {t("dashboard.allocated_points")}
+            </div>
             <div className="list-header-item"></div>
           </div>
         </div>

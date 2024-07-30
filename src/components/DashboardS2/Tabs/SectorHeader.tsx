@@ -5,6 +5,7 @@ import { Tooltip } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import MilestoneProgress from "../MilestoneProgress";
+import { useTranslation } from "react-i18next";
 
 const AllocatedBox = styled.div`
   padding: 16px 28px;
@@ -329,6 +330,8 @@ export default function SectorHeader({
     }
   }, [tabActive?.category, isNoProgress, currentTvl]);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="flex justify-between">
@@ -339,7 +342,11 @@ export default function SectorHeader({
               alt=""
               className="w-[16px] h-[16px]"
             />
-            <span>$ZKL Allocation for {tabActive?.name}</span>
+            <span>
+              {t("dashboard.zkl_allocation_for_sector", {
+                sector: tabActive?.name,
+              })}
+            </span>
           </div>
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL{" "}
@@ -347,8 +354,8 @@ export default function SectorHeader({
           </div>
           {!isNoProgress ? (
             <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
-              Next $ZKL Allocation Level: {formatToThounds(nextAllocationZKL)}{" "}
-              $ZKL
+              {t("dashboard.next_zkl_allocation_lv")}:{" "}
+              {formatToThounds(nextAllocationZKL)} $ZKL
               <Tooltip
                 classNames={{
                   content:
@@ -371,7 +378,9 @@ export default function SectorHeader({
         </div>
         <AllocatedBox>
           <div className="flex items-center justify-between">
-            <span className="label">Total Sector Allocated Points</span>
+            <span className="label">
+              {t("dashboard.total_sector_allocated_points")}
+            </span>
             <Tooltip
               classNames={{
                 content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
@@ -407,7 +416,7 @@ export default function SectorHeader({
           </div>
           <div className="line"></div>
           <div className="flex items-center justify-between">
-            <span className="label">Your Sector Points</span>
+            <span className="label">{t("dashboard.ur_sector_points")}</span>
             <Tooltip
               classNames={{
                 content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
@@ -415,7 +424,7 @@ export default function SectorHeader({
               content={
                 <div className="min-w-[200px]">
                   <div className="text-[#999] text-[14px] font-[500]">
-                    Your Sector Points
+                    {t("dashboard.ur_sector_points")}
                   </div>
                   {holdingPointsTooltips.map((item, index) => (
                     <div
@@ -450,10 +459,9 @@ export default function SectorHeader({
           ) : (
             <>
               <div>
-                Current{" "}
                 {tabActive?.category === "perpdex"
-                  ? "Trading Volume: "
-                  : "TVL: "}
+                  ? `${t("dashboard.current_trading_volume")}: `
+                  : `${t("dashboard.current_tvl")}: `}
                 ${formatToThounds(currentTvl)}
               </div>
               <div>
@@ -461,10 +469,9 @@ export default function SectorHeader({
                   <span className="text-green">Max</span>
                 ) : (
                   <>
-                    Next{" "}
                     {tabActive?.category === "perpdex"
-                      ? "Trading Volume Milestone: "
-                      : "TVL Milestone: "}
+                      ? `${t("dashboard.next_trading_volume_milestone")}: `
+                      : `${t("dashboard.next_tvl_milestone")}: `}
                     ${formatToThounds(nextTargetTvl)}
                   </>
                 )}

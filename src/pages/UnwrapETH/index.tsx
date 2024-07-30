@@ -31,6 +31,7 @@ import { SelectBox } from "@/components/Bridge/Components";
 import WETHAbi from "@/constants/abi/weth.json";
 import { Hash, parseUnits, getContract } from "viem";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 export default function Swap() {
   const resultModal = useDisclosure();
   const [amount, setAmount] = useState("");
@@ -120,9 +121,11 @@ export default function Swap() {
     wethBalance,
   ]);
 
+  const { t } = useTranslation();
+
   const btnText = useMemo(() => {
     if (invalidChain) {
-      return "Switch Network";
+      return t("common.switch_network");
     }
     return "Continue";
   }, [invalidChain]);
