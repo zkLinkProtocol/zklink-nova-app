@@ -830,5 +830,5 @@ export interface PortocolSpinItem {
 export const getProtocolSpin = (): Promise<APIResponse<PortocolSpinItem[]>> =>
   http.get(`${BASE_URL_API}/invite/protocol/spin`);
 
-export const openProtocolSpin = (): Promise<APIResponse> =>
-  http.post(`${BASE_URL_API}/invite/protocol/open`);
+export const openProtocolSpin = (projectName: string): Promise<APIResponse> =>
+  http.post(`${BASE_URL_API}/invite/protocol/open?projectName=${projectName}`);

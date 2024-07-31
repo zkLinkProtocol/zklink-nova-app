@@ -12,7 +12,7 @@ import {
 import { UseDisclosureReturn } from "@nextui-org/use-disclosure";
 import Marquee from "@/components/Marquee";
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { dailyOpen } from "@/api";
+import { dailyOpen, openProtocolSpin } from "@/api";
 import { sleep } from "@/utils";
 import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
 import {
@@ -26,6 +26,8 @@ interface IProps {
   modalInstance: UseDisclosureReturn;
   onDrawed: () => void;
   remain?: number;
+  type?: "daily" | "protocol";
+  projectName?: string;
 }
 export const PrizeItems = [
   {
@@ -71,7 +73,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   const { switchChain } = useSwitchChain();
 
   const { sendTrademarkMintTx } = useNovaNFT();
-  const { modalInstance, onDrawed, remain } = props;
+  const { modalInstance, onDrawed, remain, type, projectName } = props;
   const drawRef = useRef<{ start: (target: number) => void }>();
   const [mintResult, setMintResult] = useState<{
     name: string;
@@ -103,7 +105,10 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       modalInstance.onOpen();
     }
     setSpinging(true);
-    const res = await dailyOpen();
+    const res =
+      type === "protocol" && projectName
+        ? await openProtocolSpin(projectName)
+        : await dailyOpen();
     const tokenId = res.result.tokenId as number;
     const prizeId = PRIZE_MAP[tokenId];
     onDrawed(); // update remain times

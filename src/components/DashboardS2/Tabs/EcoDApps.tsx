@@ -513,6 +513,8 @@ const EcoDApp = (props: {
         modalInstance={modal}
         onDrawed={onDrawed}
         remain={data.remainSpinNum}
+        type="protocol"
+        projectName={data.projectName}
       />
     </>
   );
