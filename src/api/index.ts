@@ -823,8 +823,7 @@ export const getCategoryZKL = (): Promise<CategoryZKLResponse> => {
 };
 
 export interface PortocolSpinItem {
-  project: string;
-  pairAddress: string;
+  projectName: string;
   remainSpinNum: number;
 }
 

@@ -245,7 +245,7 @@ interface EcoDAppItem {
   }[];
   holdingPoints: NovaProjectTotalPoints;
   remainSpinNum: number;
-  pairAddress: string;
+  projectName: string;
   totalPoints?: NovaProjectTotalPoints;
   details: {
     booster: string | ReactNode;
@@ -589,11 +589,10 @@ export default function EcoDApps({
   };
 
   const getSpinByProject = (project: string) => {
-    const data = spinList.find((item) => item.project === project);
+    const data = spinList.find((item) => item.projectName === project);
     return {
       project,
       remainSpinNum: data?.remainSpinNum || 0,
-      pairAddress: data?.pairAddress || "",
     };
   };
 
@@ -630,7 +629,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("nowaswap"),
         totalPoints: getTotalPointsByProject("novaswap"),
         remainSpinNum: getSpinByProject("novaswap").remainSpinNum,
-        pairAddress: getSpinByProject("novaswap").pairAddress,
+        projectName: "novaswap",
         details: [
           {
             booster: (
@@ -660,7 +659,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("nowaswap"),
         totalPoints: getTotalPointsByProject("novaswap"),
         remainSpinNum: getSpinByProject("novaswap").remainSpinNum,
-        pairAddress: getSpinByProject("novaswap").pairAddress,
+        projectName: "novaswap",
         details: [
           {
             booster: (
@@ -700,7 +699,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("layerbank"),
         totalPoints: getTotalPointsByProject("layerbank"),
         remainSpinNum: getSpinByProject("layerbank").remainSpinNum,
-        pairAddress: getSpinByProject("layerbank").pairAddress,
+        projectName: "layerbank",
         details: [
           {
             booster: (
@@ -732,7 +731,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("logx"),
         totalPoints: getTotalPointsByProject("logx"),
         remainSpinNum: getSpinByProject("logx").remainSpinNum,
-        pairAddress: getSpinByProject("logx").pairAddress,
+        projectName: "logx",
         details: [
           {
             booster: (
@@ -770,7 +769,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("shoebill"),
         totalPoints: getTotalPointsByProject("shoebill"),
         remainSpinNum: getSpinByProject("shoebill").remainSpinNum,
-        pairAddress: getSpinByProject("shoebill").pairAddress,
+        projectName: "shoebill",
         details: [
           {
             booster: (
@@ -798,7 +797,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("aqua"),
         totalPoints: getTotalPointsByProject("aqua"),
         remainSpinNum: getSpinByProject("aqua").remainSpinNum,
-        pairAddress: getSpinByProject("aqua").pairAddress,
+        projectName: "aqua",
         details: [
           {
             booster: (
@@ -829,7 +828,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("izumi"),
         totalPoints: getTotalPointsByProject("izumi"),
         remainSpinNum: getSpinByProject("izumi").remainSpinNum,
-        pairAddress: getSpinByProject("izumi").pairAddress,
+        projectName: "izumi",
         details: [
           {
             booster: (
@@ -863,7 +862,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("wagmi"),
         totalPoints: getTotalPointsByProject("wagmi"),
         remainSpinNum: getSpinByProject("wagmi").remainSpinNum,
-        pairAddress: getSpinByProject("wagmi").pairAddress,
+        projectName: "wagmi",
         details: [
           {
             booster: (
@@ -888,8 +887,8 @@ export default function EcoDApps({
       },
 
       {
-        category: zkdx?.category,
-        iconURL: "/img/icon-zkdx.svg" || "perpdex",
+        category: zkdx?.category || "perpdex",
+        iconURL: "/img/icon-zkdx.svg",
         name: "zkDX",
         link: "https://app.zkdx.io/stakingliquidity",
         handler: "@zkDXio",
@@ -901,7 +900,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("zkdx"),
         totalPoints: getTotalPointsByProject("zkdx"),
         remainSpinNum: getSpinByProject("zkdx").remainSpinNum,
-        pairAddress: getSpinByProject("zkdx").pairAddress,
+        projectName: "zkdx",
         details: [
           {
             booster: (
@@ -943,7 +942,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("allspark"),
         totalPoints: getTotalPointsByProject("allspark"),
         remainSpinNum: getSpinByProject("allspark").remainSpinNum,
-        pairAddress: getSpinByProject("allspark").pairAddress,
+        projectName: "allspark",
         details: [
           {
             booster: (
@@ -971,7 +970,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("rubic"),
         totalPoints: getTotalPointsByProject("rubic"),
         remainSpinNum: getSpinByProject("rubic").remainSpinNum,
-        pairAddress: getSpinByProject("rubic").pairAddress,
+        projectName: "rubic",
         details: [
           {
             booster: (
@@ -999,7 +998,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("interport"),
         totalPoints: getTotalPointsByProject("interport"),
         remainSpinNum: getSpinByProject("interport").remainSpinNum,
-        pairAddress: getSpinByProject("interport").pairAddress,
+        projectName: "interport",
         details: [
           {
             booster: (
@@ -1027,7 +1026,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("orbiter"),
         totalPoints: getTotalPointsByProject("orbiter"),
         remainSpinNum: getSpinByProject("orbiter").remainSpinNum,
-        pairAddress: getSpinByProject("orbiter").pairAddress,
+        projectName: "orbiter",
         details: [
           {
             booster: `${orbiterBridgeNovaPoints} Nova Points`,
@@ -1053,7 +1052,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("symbiosis"),
         totalPoints: getTotalPointsByProject("symbiosis"),
         remainSpinNum: getSpinByProject("symbiosis").remainSpinNum,
-        pairAddress: getSpinByProject("symbiosis").pairAddress,
+        projectName: "symbiosis",
         details: [
           {
             booster: `${symbiosisBridgeNovaPoints} Nova Points`,
@@ -1078,7 +1077,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("meson"),
         totalPoints: getTotalPointsByProject("meson"),
         remainSpinNum: getSpinByProject("meson").remainSpinNum,
-        pairAddress: getSpinByProject("meson").pairAddress,
+        projectName: "meson",
         details: [
           {
             booster: `${mesonBridgeNovaPoints} Nova Points`,
@@ -1102,7 +1101,7 @@ export default function EcoDApps({
         holdingPoints: getHoldingPointsByProject("eddy"),
         totalPoints: getTotalPointsByProject("eddy"),
         remainSpinNum: getSpinByProject("eddy").remainSpinNum,
-        pairAddress: getSpinByProject("eddy").pairAddress,
+        projectName: "eddy",
         details: [
           {
             booster: (
