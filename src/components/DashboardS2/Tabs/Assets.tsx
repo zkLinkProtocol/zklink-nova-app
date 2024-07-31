@@ -458,7 +458,7 @@ export default function Assets(props: IAssetsTableProps) {
             <div className="list-header-item text-left">Token</div>
             <div className="list-header-item text-center">Points Booster</div>
             <div className="list-header-item text-center">Nova TVL</div>
-            <div className="list-header-item text-center">Your Deposit</div>
+            <div className="list-header-item text-center">Your Holding</div>
             <div className="list-header-item">
               <Input
                 data-hover={false}
