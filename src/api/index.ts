@@ -3,15 +3,6 @@ import { user } from "@nextui-org/react";
 import axios, { AxiosResponse } from "axios";
 import qs from "qs";
 
-type Response = {
-  status: string;
-  message: string;
-  result?: any;
-  error?: any;
-  data?: any;
-  statusCode?: number;
-};
-
 const isProd = import.meta.env.PROD;
 const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -23,6 +14,15 @@ export const BASE_URL_TWITTER = `${BASE_URL}/twitter`;
 export const BASE_URL_LRT_POINTS = `${BASE_URL}/lrt-points`;
 export const BASE_URL_QUEST = `${BASE_URL}/quest-api`;
 
+export interface APIResponse<T = any> {
+  status: string;
+  message: string;
+  result?: T;
+  error?: any;
+  data?: T;
+  statusCode?: number;
+}
+
 export type BindInviteCodeWithAddressParams = {
   address: string;
   code?: string | null;
@@ -31,7 +31,7 @@ export type BindInviteCodeWithAddressParams = {
 };
 export const bindInviteCodeWithAddress = (
   data: BindInviteCodeWithAddressParams
-): Promise<Response> => {
+): Promise<APIResponse> => {
   console.log(data);
   if (!data.code) {
     delete data.code;
@@ -41,7 +41,7 @@ export const bindInviteCodeWithAddress = (
   });
 };
 
-export const checkInviteCode = (code: string): Promise<Response> => {
+export const checkInviteCode = (code: string): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/validCode`, {
     params: {
       code,
@@ -49,13 +49,13 @@ export const checkInviteCode = (code: string): Promise<Response> => {
   });
 };
 
-export const getRemainDrawCount = (address: string): Promise<Response> => {
+export const getRemainDrawCount = (address: string): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/draw/nft/remain`, {
     params: { address },
   });
 };
 
-export const drawTrademarkNFT = (address: string): Promise<Response> => {
+export const drawTrademarkNFT = (address: string): Promise<APIResponse> => {
   return http.post(`${BASE_URL_API}/invite/draw/nft`, {
     address,
   });
@@ -63,7 +63,7 @@ export const drawTrademarkNFT = (address: string): Promise<Response> => {
 
 export const getRemainMysteryboxDrawCount = (
   address: string
-): Promise<Response> => {
+): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/draw/mysterybox/remain`, {
     params: { address },
   });
@@ -71,32 +71,32 @@ export const getRemainMysteryboxDrawCount = (
 
 export const getRemainMysteryboxDrawCountV2 = (
   address: string
-): Promise<Response> => {
+): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/draw/mysterybox/v2/remain`, {
     params: { address },
   });
 };
 
 // for mint box params
-export const mintMysteryboxNFT = (address: string): Promise<Response> => {
+export const mintMysteryboxNFT = (address: string): Promise<APIResponse> => {
   return http.post(`${BASE_URL_API}/invite/mint/mysterybox`, {
     address,
   });
 };
 
-export const mintMysteryboxNFTV2 = (address: string): Promise<Response> => {
+export const mintMysteryboxNFTV2 = (address: string): Promise<APIResponse> => {
   return http.post(`${BASE_URL_API}/invite/mint/mysterybox/v2`, {
     address,
   });
 };
 
-export const openMysteryboxNFT = (address: string): Promise<Response> => {
+export const openMysteryboxNFT = (address: string): Promise<APIResponse> => {
   return http.post(`${BASE_URL_API}/invite/open/mysterybox`, {
     address,
   });
 };
 
-export const openMysteryboxNFTV2 = (address: string): Promise<Response> => {
+export const openMysteryboxNFTV2 = (address: string): Promise<APIResponse> => {
   return http.post(`${BASE_URL_API}/invite/open/mysterybox/v2`, {
     address,
   });
@@ -104,7 +104,7 @@ export const openMysteryboxNFTV2 = (address: string): Promise<Response> => {
 
 export const getRemainMysteryboxOpenableCount = (
   address: string
-): Promise<Response> => {
+): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/open/mysterybox/remain`, {
     params: { address },
   });
@@ -112,64 +112,64 @@ export const getRemainMysteryboxOpenableCount = (
 
 export const getRemainMysteryboxOpenableCountV2 = (
   address: string
-): Promise<Response> => {
+): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/open/mysterybox/v2/remain`, {
     params: { address },
   });
 };
 
-export const getMintSignature = (address: string): Promise<Response> => {
+export const getMintSignature = (address: string): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/validate/nft`, {
     params: { address, projectId: "NOVA-SBT-1" },
   });
 };
-export const getInvite = (address: string): Promise<Response> =>
+export const getInvite = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/invite/${address}`);
 
-export const getReferrer = (address: string): Promise<Response> =>
+export const getReferrer = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/referrer/${address}`);
 
 export const getDepositETHThreshold = (): Promise<{ ethAmount: number }> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getDepositEthThreshold`);
 
-export const getAccounTvl = (address: string): Promise<Response> =>
+export const getAccounTvl = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccounTvl`, {
     params: { address },
   });
 
-export const getAccountPoint = (address: string): Promise<Response> =>
+export const getAccountPoint = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountPoint`, {
     params: { address },
   });
 
-export const getTotalTvl = (): Promise<Response> =>
+export const getTotalTvl = (): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getTotalTvl`);
-export const getActiveAccounts = (): Promise<Response> =>
+export const getActiveAccounts = (): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/invite/getActiveAccounts`);
 
-export const getAccountTvl = (address: string): Promise<Response> =>
+export const getAccountTvl = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccounTvl`, {
     params: {
       address,
     },
   });
 
-export const getGroupTvl = (address: string): Promise<Response> =>
+export const getGroupTvl = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getGroupTvl`, {
     params: {
       address,
     },
   });
 
-export const getTotalTvlByToken = (): Promise<Response> =>
+export const getTotalTvlByToken = (): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getTotalTvlByToken`);
 
-export const getReferralTvl = (address: string): Promise<Response> =>
+export const getReferralTvl = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getReferralTvl`, {
     params: { address },
   });
 
-export const getAccountTwitter = (params: any): Promise<Response> =>
+export const getAccountTwitter = (params: any): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/invite/account/twitter`, params);
 
 export type SupportToken = {
@@ -202,7 +202,7 @@ export const getAccountRefferalsTVL = (
   address: string,
   page = 1,
   limit = 100
-): Promise<Response> =>
+): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRefferalsTVL`, {
     params: { address, page, limit },
   });
@@ -219,12 +219,12 @@ export type PageParams = {
   limit: number;
 };
 
-export const getAccountsRank = (params?: PageParams): Promise<Response> =>
+export const getAccountsRank = (params?: PageParams): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountsRank`, {
     params,
   });
 
-export const getAccountRank = (address: string): Promise<Response> =>
+export const getAccountRank = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountRank`, {
     params: { address },
   });
@@ -258,7 +258,7 @@ export const getExplorerTokenTvl = (
 export const validTwitter = (
   twitterHandler: string,
   address?: string
-): Promise<Response> => {
+): Promise<APIResponse> => {
   return http.get(`${BASE_URL_API}/invite/validTwitter2`, {
     params: {
       twitterHandler,
@@ -292,7 +292,7 @@ export type RegisterAccountParams = {
 
 export const registerAccount = (
   data: RegisterAccountParams
-): Promise<Response> => {
+): Promise<APIResponse> => {
   console.log(data);
   if (!data.code) {
     delete data.code;
@@ -306,7 +306,7 @@ export const registerAccountByBridge = (data: {
   address: string;
   code: string;
   siganture: string;
-}): Promise<Response> =>
+}): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/invite/register/account/byBridge`, { ...data });
 
 export type AccessTokenParams = {
@@ -346,17 +346,17 @@ export const getTwitterUser = (
     },
   });
 
-export const checkOkx = (address: string): Promise<Response> =>
+export const checkOkx = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/invite/check/okx`, {
     params: { addressList: [address] },
   });
 
-export const visitReward = (address: string): Promise<Response> =>
+export const visitReward = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/invite/visit/reward`, {
     params: { address },
   });
 
-export const okxVisitTask = (address: string): Promise<Response> =>
+export const okxVisitTask = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/task/okx/visit/task`, { params: { address } });
 
 export const getEigenlayerPoints = (address: string) =>
@@ -411,12 +411,12 @@ export const getRenzoPoints = (address: string): Promise<RenzoResponse> =>
     params: { address },
   });
 
-export const getTradeMarkRank = (address: string): Promise<Response> =>
+export const getTradeMarkRank = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/referrer/tradeMark/balance/rank`, {
     params: { address },
   });
 
-export const getTopInviteAndRandom = (date?: string): Promise<Response> =>
+export const getTopInviteAndRandom = (date?: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/referrer/daily/topInviteAndRandom`, {
     params: { date },
   });
@@ -469,15 +469,15 @@ export const getLinkswapNovaPoints = (
     params: { address },
   });
 
-export const getRoyaltyBooster = (address: string): Promise<Response> =>
+export const getRoyaltyBooster = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_POINTS}/addressTokenTvl/getAccountLoyaltyBooster`, {
     params: { address },
   });
 
-export const getNFTLashin = (address: string): Promise<Response> =>
+export const getNFTLashin = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/nft/user/recruitment`, { params: { address } });
 
-export const postNFTLashin = (address: string): Promise<Response> =>
+export const postNFTLashin = (address: string): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/nft/user/recruitment?address=${address}`);
 
 export interface RsethPointsResponse {
@@ -504,7 +504,7 @@ export const getRsethPoints = (address: string): Promise<RsethPointsResponse> =>
     params: { address },
   });
 
-export const getUserTvl = (address: string): Promise<Response> =>
+export const getUserTvl = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/invite/user/tvl`, {
     params: { address },
   });
@@ -512,7 +512,7 @@ export const getUserTvl = (address: string): Promise<Response> =>
 export const bindTwitter = (
   address: string,
   accessToken: string
-): Promise<Response> => {
+): Promise<APIResponse> => {
   return http.post(`${BASE_URL_API}/invite/bind/twitter`, {
     address,
     accessToken,
@@ -535,7 +535,7 @@ export const getNovaProjectPoints = (
     params: { address, project },
   });
 
-export const checkBridge = async (address: string): Promise<Response> =>
+export const checkBridge = async (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/invite/check/bridge`, { params: { address } });
 
 export interface BridgePoints {
@@ -548,23 +548,25 @@ export const getBridgePoints = (name: string): Promise<BridgePoints> =>
     params: { name },
   });
 
-export const checkWinnerAddress = (address: string): Promise<Response> =>
+export const checkWinnerAddress = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/referrer/checkWinnerAddress`, {
     params: { address },
   });
 
-export const getEcoRamain = (address: string): Promise<Response> =>
+export const getEcoRamain = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/nft/ecology/nft/remain`, {
     params: { address },
   });
 
-export const getEcoRank = (): Promise<Response> =>
+export const getEcoRank = (): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/nft/ecology/rank`);
 
-export const postEcoDraw = (address: string): Promise<Response> =>
+export const postEcoDraw = (address: string): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/nft/ecology/nft/draw?address=${address}`);
 
-export const getMemeMysteryboxReward = (address: string): Promise<Response> =>
+export const getMemeMysteryboxReward = (
+  address: string
+): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/meme/meme/mysterybox/reward`, {
     params: { address },
   });
@@ -572,18 +574,18 @@ export const getMemeMysteryboxReward = (address: string): Promise<Response> =>
 export const authLogin = (data: {
   address: string;
   signature: string;
-}): Promise<Response> =>
+}): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/auth/login`, {
     ...data,
   });
 
-export const getPointsDetail = (): Promise<Response> =>
+export const getPointsDetail = (): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/referrer/points/detail`);
 
-export const getMystery3Reamin = (address: string): Promise<Response> =>
+export const getMystery3Reamin = (address: string): Promise<APIResponse> =>
   http.get(`${BASE_URL_API}/nft/mystery3/remain`, { params: { address } });
 
-export const drawMystery3 = (address: string): Promise<Response> =>
+export const drawMystery3 = (address: string): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/nft/mystery3/draw?address=${address}`);
 
 export interface NovaCategoryUserPoints {
@@ -698,7 +700,7 @@ export const getTvlCategoryMilestone =
   (): Promise<TvlCategoryMilestoneResponse> =>
     http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone`);
 
-export const modifyUsername = (userName: string): Promise<Response> =>
+export const modifyUsername = (userName: string): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/invite/modify/username`, { userName });
 
 export interface CategoryListItem {
@@ -735,7 +737,7 @@ export const getCategoryList = (
     }
   );
 
-export const dailyOpen = (): Promise<Response> =>
+export const dailyOpen = (): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/invite/checkin/open`);
 
 export interface DailyCheckinHistoryData {
@@ -819,3 +821,15 @@ interface CategoryZKLResponse {
 export const getCategoryZKL = (): Promise<CategoryZKLResponse> => {
   return http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone/s2-1`);
 };
+
+export interface PortocolSpinItem {
+  project: string;
+  pairAddress: string;
+  remainSpinNum: number;
+}
+
+export const getProtocolSpin = (): Promise<APIResponse<PortocolSpinItem[]>> =>
+  http.get(`${BASE_URL_API}/invite/protocol/spin`);
+
+export const openProtocolSpin = (): Promise<APIResponse> =>
+  http.post(`${BASE_URL_API}/invite/protocol/open`);

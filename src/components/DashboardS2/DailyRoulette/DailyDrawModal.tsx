@@ -130,7 +130,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
         setMintStatus(MintStatus.Success);
         mintResultModal.onOpen();
         onDrawed(); // update remain times after mint tx
-      } catch (e) {
+      } catch (e: any) {
         console.log(e);
         setMintStatus(MintStatus.Failed);
         if (e.message) {
