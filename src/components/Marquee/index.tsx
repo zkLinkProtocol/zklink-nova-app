@@ -89,7 +89,8 @@ const Marquee = forwardRef<Ref, IProps>((props, ref) => {
   useEffect(() => {
     if (marqueeRef.current) {
       marqueeRef.current.style.transform = `translateX(${
-        Math.floor(PrizeItems.length / 2) * IMAGE_WIDTH
+        Math.floor(PrizeItems.length / 2) * IMAGE_WIDTH -
+        (targetIndex ?? 0) * IMAGE_WIDTH
       }px)`;
     }
   }, []);

@@ -3,7 +3,7 @@ import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
 import { useAccount } from "wagmi";
 import { Abi } from "viem";
 import styled from "styled-components";
-
+import { useUpdateNftBalanceStore } from "@/hooks/useUpdateNftBalanceStore";
 const Container = styled.div`
   margin-top: 20px;
   & > div:last-child {
@@ -88,7 +88,7 @@ export default function TrademarkNFT() {
   const [nftData, setNftData] = useState(ALL_NFTS);
   const { address } = useAccount();
   const { publicClient, trademarkNFT } = useNovaNFT();
-
+  const { factor } = useUpdateNftBalanceStore();
   useEffect(() => {
     (async () => {
       if (!publicClient || !address || !trademarkNFT) {
@@ -112,7 +112,7 @@ export default function TrademarkNFT() {
       }
       setNftData(nfts);
     })();
-  }, [address, publicClient, trademarkNFT]);
+  }, [address, publicClient, trademarkNFT, factor]);
 
   return (
     <Container>

@@ -738,6 +738,9 @@ export const getCategoryList = (
 export const dailyOpen = (): Promise<Response> =>
   http.post(`${BASE_URL_API}/invite/checkin/open`);
 
+export const dailySkipMint = (): Promise<Response> =>
+  http.post(`${BASE_URL_API}/invite/skip`);
+
 export interface DailyCheckinHistoryData {
   date: string;
   expired: boolean;

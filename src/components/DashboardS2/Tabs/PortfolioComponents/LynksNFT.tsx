@@ -6,15 +6,17 @@ import { useAccount } from "wagmi";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Abi } from "viem";
 import SbtUpgradeModal from "@/components/Dashboard/NovaCharacterComponents/SbtUpgradeModal";
+import { useUpdateNftBalanceStore } from "@/hooks/useUpdateNftBalanceStore";
+
 export default function SbtNFT() {
   const { address } = useAccount();
   const [lynksBalance, setLynksBalance] = useState(0);
   const { publicClient, trademarkNFT } = useNovaNFT();
   const { getLynksNFT } = useNovaNFT();
   const { nft, loading: mintLoading, fetchLoading } = useSbtNft();
-  const [update, setUpdate] = useState(0);
   const upgradeModal = useDisclosure();
   const [upgradable, setUpgradable] = useState(false);
+  const { factor, updateFactor } = useUpdateNftBalanceStore();
 
   useEffect(() => {
     (async () => {
@@ -45,7 +47,7 @@ export default function SbtNFT() {
         }
       }
     })();
-  }, [address, getLynksNFT, publicClient, trademarkNFT, update]);
+  }, [address, getLynksNFT, publicClient, trademarkNFT, factor]);
 
   useEffect(() => {
     (async () => {
@@ -61,7 +63,7 @@ export default function SbtNFT() {
         setLynksBalance(balance);
       }
     })();
-  }, [address, getLynksNFT]);
+  }, [address, getLynksNFT, factor]);
 
   const handleMintNow = useCallback(() => {
     if (fetchLoading) {
@@ -108,7 +110,9 @@ export default function SbtNFT() {
         nft={nft}
         mintLoading={mintLoading}
         upgradeModal={upgradeModal}
-        onUpgraded={() => setUpdate((v) => v + 1)}
+        onUpgraded={() => {
+          updateFactor();
+        }}
       />
     </NftContainer>
   );
