@@ -35,17 +35,18 @@ export const PrizeItems = [
     tooltip: "Equivalent to depositing 0.1 ETH into Nova for ~16 hours",
   },
   {
+    name: "Nova +3 Booster",
+    img: "/img/img-point-plus-3.png",
+    points: 3,
+    tooltip: "Equivalent to depositing 0.1 ETH into Nova for ~48 hours",
+  },
+  {
     name: "Nova +10 Booster",
     img: "/img/img-point-plus-10.png",
     points: 10,
-    tooltip: "Equivalent to depositing 1 ETH into Nova for ~16 hours",
+    tooltip: "Equivalent to depositing 0.1 ETH into Nova for ~160 hours",
   },
-  {
-    name: "Nova +50 Booster",
-    img: "/img/img-point-plus-50.png",
-    points: 50,
-    tooltip: "Equivalent to depositing 1 ETH into Nova for ~80 hours",
-  },
+
   { name: "Binary Code Metrix Cube", img: "/img/img-trademark-4.png" },
   { name: "Chess Knight", img: "/img/img-trademark-3.png" },
   { name: "Magnifying Glass", img: "/img/img-trademark-2.png" },
@@ -58,8 +59,8 @@ const PRIZE_MAP: Record<number, number> = {
   3: 4,
   4: 3,
   6: 0,
-  8: 1,
-  9: 2,
+  11: 1,
+  8: 2,
 };
 const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   const { address, chainId } = useAccount();
@@ -98,11 +99,14 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       );
       return;
     }
-    //TODO call api
+    if (!modalInstance.isOpen) {
+      modalInstance.onOpen();
+    }
+    setSpinging(true);
     const res = await dailyOpen();
     const tokenId = res.result.tokenId as number;
     const prizeId = PRIZE_MAP[tokenId];
-    setSpinging(true);
+    onDrawed(); // update remain times
     await drawRef.current?.start(prizeId);
     const prize = PrizeItems[PRIZE_MAP[tokenId]];
     setMintResult({
@@ -125,6 +129,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
         await sendTrademarkMintTx(mintParams);
         setMintStatus(MintStatus.Success);
         mintResultModal.onOpen();
+        onDrawed(); // update remain times after mint tx
       } catch (e) {
         console.log(e);
         setMintStatus(MintStatus.Failed);
@@ -144,8 +149,8 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       mintResultModal.onOpen();
       setSpinging(false);
     }
-    onDrawed();
-    if (remain === 1) {
+
+    if (!remain || remain <= 1) {
       modalInstance.onClose();
     }
   }, [
@@ -215,7 +220,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                   <SpinButton
                     onClick={handleSpin}
                     isLoading={spinging}
-                    disabled={minting || spinging}
+                    disabled={minting || spinging || !remain}
                   >
                     <img
                       src={
