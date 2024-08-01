@@ -18,6 +18,7 @@ import axios from "axios";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import Decimal from "decimal.js";
 import { epochList } from "@/constants/epoch";
+import { t } from "i18next";
 const Title = styled.div`
   background: linear-gradient(180deg, #fff 0%, #bababa 100%);
   background-clip: text;
@@ -478,7 +479,7 @@ export default function Portfolio({
     <Container>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-[16px]">
-          <Title>Your Nova Points</Title>
+          <Title>{t("dashboard.ur_nova_points")}</Title>
           <Tooltip
             classNames={{
               content: "w-[350px] rounded-lg bg-[#151923] text-white px-4 py-5",
@@ -573,25 +574,25 @@ export default function Portfolio({
                       item.category === "holding"
                         ? [
                             {
-                              name: "Earned by Holding",
+                              name: t("dashboard.earned_by_holding"),
                               points: item.userEcoPoints,
                             },
                             {
-                              name: "Earned by Referral",
+                              name: t("dashboard.earned_by_referral"),
                               points: item.userReferralPoints,
                             },
                             {
-                              name: "Earned by Other Activities",
+                              name: t("dashboard.earned_by_other"),
                               points: item.userOtherPoints,
                             },
                           ]
                         : [
                             {
-                              name: "Earned by participate",
+                              name: t("dashboard.earned_by_participate"),
                               points: item.userEcoPoints,
                             },
                             {
-                              name: "Earned by Referral",
+                              name: t("dashboard.earned_by_referral"),
                               points: item.userReferralPoints,
                             },
                           ]
@@ -615,7 +616,9 @@ export default function Portfolio({
                   width={24}
                   height={24}
                 />
-                <span className="font-[900] text-[14px]">Earn More</span>
+                <span className="font-[900] text-[14px]">
+                  {t("dashboard.earn_more")}
+                </span>
               </Button>
             </div>
           </NovaPointsBox>
@@ -623,7 +626,7 @@ export default function Portfolio({
       </div>
       <div className="divide my-12"></div>
       <div className="mb-[18px] flex items-center justify-between">
-        <Title>Your Project Points</Title>
+        <Title>{t("dashboard.ur_project_points")}</Title>
         <div className="view-more" onClick={handleViewMore}>
           <span className="mr-2 text-[#FbFbFb]/[0.6]">{`Hide Points < 0.1`}</span>
           <Checkbox

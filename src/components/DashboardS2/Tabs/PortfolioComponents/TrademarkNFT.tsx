@@ -3,6 +3,7 @@ import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
 import { useAccount } from "wagmi";
 import { Abi } from "viem";
 import styled from "styled-components";
+import { t } from "i18next";
 
 const Container = styled.div`
   margin-top: 20px;
@@ -124,8 +125,7 @@ export default function TrademarkNFT() {
               {item.name} ({item.balance})
             </p>
             <p className="desc">
-              You can earn {item.name} by participating in the daily roulette or
-              purchasing from OKX
+              {t("dashboard.eran_nft_by_participating", { name: item.name })}
             </p>
           </div>
           <div className="action flex col-2 justify-center items-center gap-[10px]">

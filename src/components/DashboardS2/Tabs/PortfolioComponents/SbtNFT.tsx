@@ -7,6 +7,7 @@ import useNovaDrawNFT from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { Button, useDisclosure } from "@nextui-org/react";
 import SbtMintModal from "@/components/Dashboard/NovaCharacterComponents/SbtMintModal";
+import { useTranslation } from "react-i18next";
 export const NftContainer = styled.div`
   flex: 1;
   border-radius: 24px;
@@ -45,6 +46,7 @@ export const NftContainer = styled.div`
 `;
 
 export default function SbtNFT() {
+  const { t } = useTranslation();
   const { nft, loading: mintLoading, fetchLoading } = useNovaNFT();
   const [lynksBalance, setLynksBalance] = useState(0);
   const [checkingTrademarkUpgradable, setCheckingTrademarkUpgradable] =
@@ -127,8 +129,7 @@ export default function SbtNFT() {
         <p className="font-bold text-lg">Nova SBT</p>
         <div className="divide my-1"></div>
         <p className="text-sm text-[#FBFBFB]/[0.6]">
-          Users who deposit a minimum amount of 0.1 ETH or equivalent can mint a
-          zkLink Nova SBT. 
+          {t("dashboard.nova_sbt_desc")}
         </p>
         {!nft && (
           <Button

@@ -494,23 +494,23 @@ export default function Dashboard() {
   const novaPointsList = useMemo(() => {
     const categorys = [
       {
-        name: "Assets Points",
+        name: t("dashboard.assets_points"),
         category: "holding",
       },
       {
-        name: "Native Boost Points",
+        name: t("dashboard.native_boost_points"),
         category: "nativeboost",
       },
       {
-        name: "Spot DEX Points",
+        name: t("dashboard.spot_dex_points"),
         category: "spotdex",
       },
       {
-        name: "Perp DEX Points",
+        name: t("dashboard.perp_dex_points"),
         category: "perpdex",
       },
       {
-        name: "Lending Points",
+        name: t("dashboard.lending_points"),
         category: "lending",
       },
       // {
@@ -518,7 +518,7 @@ export default function Dashboard() {
       //   category: "gamefi",
       // },
       {
-        name: "Others Points",
+        name: t("dashboard.other_points"),
         category: "other",
       },
     ];

@@ -6,7 +6,10 @@ import { useAccount } from "wagmi";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Abi } from "viem";
 import SbtUpgradeModal from "@/components/Dashboard/NovaCharacterComponents/SbtUpgradeModal";
+import { useTranslation } from "react-i18next";
+
 export default function SbtNFT() {
+  const { t } = useTranslation();
   const { address } = useAccount();
   const [lynksBalance, setLynksBalance] = useState(0);
   const { publicClient, trademarkNFT } = useNovaNFT();
@@ -91,8 +94,7 @@ export default function SbtNFT() {
         </p>
         <div className="divide my-1"></div>
         <p className="text-sm text-[#FBFBFB]/[0.6]">
-          Collect ONE OF EACH of the four different types of Trademark NFTs to
-          upgrade your SBT to Lynks.
+          {t("dashboard.nova_lynks_desc")}
         </p>
         <Button
           className="btn-mint mt-auto"
