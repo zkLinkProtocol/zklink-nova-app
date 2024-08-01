@@ -25,6 +25,7 @@ import {
 } from "@nextui-org/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 
@@ -93,6 +94,7 @@ export const TxResult = styled.div`
 `;
 
 const InviteBoxModal = () => {
+  const { t } = useTranslation();
   const modalInstance = useDisclosure();
 
   const trademarkMintModal = useDisclosure();
@@ -307,7 +309,7 @@ const InviteBoxModal = () => {
     <>
       <div className="invite-box" onClick={modalInstance.onOpen}>
         <img src="img/icon-check-invitebox.svg" alt="" className="mr-2" />
-        <span className="text">Check Invite Box</span>
+        <span className="text">{t("dashboard.check_invite_box")}</span>
       </div>
       <Modal
         isDismissable={false}
@@ -438,7 +440,7 @@ const InviteBoxModal = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Open Your Invite Box
+                {t("dashboard.open_ur_invite_box")}
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center">
@@ -475,7 +477,7 @@ const InviteBoxModal = () => {
                     isLoading={mintLoading || drawing}
                     onClick={handleDrawAndMint}
                   >
-                    {isInvaidChain && "Switch To Nova Network To Draw"}
+                    {isInvaidChain && t("dashboard.switch_to_nova")}
                     {!isInvaidChain &&
                       (!drawedNftId || drawedNftId === 5 || drawing) && (
                         <div className="flex items-center justify-center gap-[4px]">
@@ -496,7 +498,7 @@ const InviteBoxModal = () => {
                       eventBus.emit("openRefeffalModal");
                     }}
                   >
-                    Invite More Friends
+                    {t("dahsboard.invite_more_friends")}
                   </SecondayButton>
                 </div>
               </ModalFooter>

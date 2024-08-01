@@ -238,10 +238,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                 <div className="flex flex-col items-center">
                   <Divide />
                   <p className="text-neutral font-chakra text-[14px] mt-4 ">
-                    On a daily basis, each user has x times of opportunity to
-                    participate in a Roulette game on the campaign page. Users
-                    have the probability to win trademarks and Lynks. The
-                    minimum reward will be 1 Nova Points.
+                    {t("dashboard.daily_roulette_desc")}
                   </p>
                 </div>
                 <Marquee

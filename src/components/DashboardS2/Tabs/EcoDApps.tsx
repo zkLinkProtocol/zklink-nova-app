@@ -269,13 +269,14 @@ const EcoDApp = (props: {
   onDrawed: () => void;
 }) => {
   const { data, handleLink, onDrawed } = props;
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const modal = useDisclosure();
 
   const allocatedTooltips = useMemo(() => {
     const protocolPoints = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(data.totalPoints?.ecoPoints || 0),
       },
       {
@@ -286,7 +287,7 @@ const EcoDApp = (props: {
 
     const yourPoints = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(data.holdingPoints?.ecoPoints || 0),
       },
       {
@@ -299,7 +300,7 @@ const EcoDApp = (props: {
       protocolPoints,
       yourPoints,
     };
-  }, [data]);
+  }, [data, t]);
 
   const handleSpinModal = (e: React.MouseEvent<HTMLElement>) => {
     if (data.remainSpinNum < 1) {
@@ -574,6 +575,8 @@ export default function EcoDApps({
   holdingPoints?: NovaPointsListItem;
   novaCategoryTotalPoints?: NovaCategoryPoints;
 }) {
+  const { t } = useTranslation();
+
   const geNovaCategoryUserPointsByProject = (project: string) => {
     const obj = novaCategoryUserPoints.find((item) => item.project === project);
     return obj;
@@ -677,8 +680,7 @@ export default function EcoDApps({
                 <p>10x for other supported tokens</p>
               </div>
             ),
-            description:
-              "You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.",
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
         ],
@@ -709,8 +711,7 @@ export default function EcoDApps({
                 </div>
               </div>
             ),
-            description:
-              "You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.",
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
         ],
@@ -751,7 +752,7 @@ export default function EcoDApps({
                 <p>2x for externally bridged tokens (solvBTC.m, mBTC)</p>
               </div>
             ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
         ],
@@ -778,7 +779,7 @@ export default function EcoDApps({
                 <p>10x points for LPs providing USDT</p>
               </div>
             ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
           {
@@ -787,7 +788,7 @@ export default function EcoDApps({
                 <p>1 point / $200 volume</p>
               </div>
             ),
-            description: `For every $1000 in trading volume on LogX, you will receive 1 Nova Point.`,
+            description: t("dashboard.logx_trade_desc"),
             action: "Trade",
             actionLink: "https://app.logx.trade/",
           },
@@ -817,7 +818,7 @@ export default function EcoDApps({
                 <p>4x for other suppoted points</p>
               </div>
             ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
         ],
@@ -847,7 +848,7 @@ export default function EcoDApps({
                 </p>
               </div>
             ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
         ],
@@ -881,7 +882,7 @@ export default function EcoDApps({
                 </p>
               </div>
             ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
         ],
@@ -909,7 +910,7 @@ export default function EcoDApps({
                 <p>10x for Merged wBTC, wETH, USDT</p>
               </div>
             ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
           {
@@ -918,7 +919,7 @@ export default function EcoDApps({
                 <p>1 point / $200 volume</p>
               </div>
             ),
-            description: `For every $200 in trading volume on Wagmi, you will receive 1 Nova Point.`,
+            description: t("dashboard.wagmi_trade_desc"),
             action: "Trade",
             actionLink: "https://app.wagmi.com/trade/swap",
           },
@@ -947,7 +948,7 @@ export default function EcoDApps({
                 <p>10x for Merged ETH, USDC</p>
               </div>
             ),
-            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            description: t("dashboard.eco_dapp_desc"),
             action: "Provide Liquidity",
           },
           {
@@ -956,7 +957,7 @@ export default function EcoDApps({
                 <p>1 point / $200 volume</p>
               </div>
             ),
-            description: `For every $200 in trading volume on zkDX, you will receive 1 Nova Point.`,
+            description: t("dashboard.zkdx_trade_desc"),
             action: "Trade",
             actionLink: "https://app.zkdx.io/trade",
           },
@@ -989,7 +990,7 @@ export default function EcoDApps({
                 <p>1 points per trade</p>
               </div>
             ),
-            description: `For each transaction you make with Allspark, you can receive 0.5 Nova Points.`,
+            description: t("dashboard.allspark_desc"),
             action: "Use Protocol",
           },
         ],
@@ -1017,7 +1018,7 @@ export default function EcoDApps({
                 <p>1 point per trade</p>
               </div>
             ),
-            description: `For each transaction you make with Rubic, you can receive 1 Nova Point.`,
+            description: t("dashboard.rubic_desc"),
             action: "Use Protocol",
           },
         ],
@@ -1045,7 +1046,7 @@ export default function EcoDApps({
                 <p>10x for merged USDT and USDC</p>
               </div>
             ),
-            description: `For each block that liquidity is in a pool you earn points multiplied by the liquidity you provided`,
+            description: t("dashboard.interport_desc"),
             action: "Use Protocol",
           },
         ],
@@ -1069,7 +1070,7 @@ export default function EcoDApps({
         details: [
           {
             booster: `${orbiterBridgeNovaPoints} Nova Points`,
-            description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+            description: t("dashboard.orbiter_desc"),
             descriptionTooltip:
               "You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC+10:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.",
             action: "Bridge",
@@ -1095,7 +1096,7 @@ export default function EcoDApps({
         details: [
           {
             booster: `${symbiosisBridgeNovaPoints} Nova Points`,
-            description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+            description: t("dashboard.symbiosis_desc"),
             descriptionTooltip: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
             action: "Bridge",
           },
@@ -1120,7 +1121,7 @@ export default function EcoDApps({
         details: [
           {
             booster: `${mesonBridgeNovaPoints} Nova Points`,
-            description: `Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.`,
+            description: t("dashboard.meson_desc"),
             descriptionTooltip: `You can earn Nova Points for each transaction of bridging to Nova over 0.1 ETH/ 500USDT /500 USDC (qualified transactions). Every day beginning at UTC 0:00, users who bridge to Nova early will receive more points. You'll accumulate Nova points as follows: 5 points for the initial 200 qualified transactions, 4 points for qualified transactions 201-400, 3 points for qualified transactions 401-600, 2 points for qualified transactions 601-800, and 1 point for any qualified transactions beyond that.`,
             action: "Bridge",
           },
@@ -1148,7 +1149,7 @@ export default function EcoDApps({
                 <p>1 point / $200 volume</p>
               </div>
             ),
-            description: `For every $200 in trading volume on Eddy Finance (Nova Network), you will receive 1 Nova Point.`,
+            description: t("dashboard.eddy_desc"),
             action: "Trade",
           },
         ],
@@ -1226,6 +1227,7 @@ export default function EcoDApps({
     novaCategoryUserPoints,
     geNovaCategoryUserPointsByProject,
     tabActive,
+    t,
   ]);
 
   const warningModal = useDisclosure();
@@ -1237,8 +1239,6 @@ export default function EcoDApps({
     setLink(link);
     warningModal.onOpen();
   };
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     getSpin();
@@ -1298,11 +1298,7 @@ export default function EcoDApps({
           </ModalHeader>
           <ModalBody>
             <p className="text-[1.25rem] text-[#A0A5AD] font-[500] leading-[2rem]">
-              You are about to access a third-party website. Please do your own
-              research (DYOR) and avoid engaging in unfamiliar activities.
-              Please note that zkLink and its affiliates are not liable for any
-              losses, damages, or other consequences arising from your use of
-              third-party websites.
+              {t("dashboard.acdess_3rd_website")}
             </p>
             <div className="mt-[1.88rem] flex items-center gap-2">
               <input
@@ -1317,8 +1313,7 @@ export default function EcoDApps({
                 htmlFor="recognize"
                 className="text-[#A0A5AD] text-[0.875rem] flex-1"
               >
-                I recognize the risks and will take responsibility for actions
-                on third-party websites.
+                {t("dashboard.recognize")}
               </label>
             </div>
 
@@ -1332,7 +1327,7 @@ export default function EcoDApps({
                   window.open(link, "_blank");
                 }}
               >
-                Continue to Access
+                {t("dashboard.continute_to_access")}
               </Button>
             </div>
           </ModalBody>

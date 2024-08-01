@@ -468,7 +468,7 @@ export default function Leaderboard() {
       iconURL: "/img/icon-sector-5.svg",
     },
     { name: "GameFi", category: "gamefi" },
-    { name: t("other"), category: "other", iconURL: "/img/icon-sector-7.svg" },
+    { name: t("dashboard.other"), category: "other", iconURL: "/img/icon-sector-7.svg" },
   ];
 
   const { address } = useAccount();
