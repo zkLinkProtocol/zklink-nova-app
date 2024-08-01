@@ -97,7 +97,7 @@
       "spot_dex": "Spot DEX",
       "perp_dex": "Perp DEX",
       "lending": "Lending",
-      "ohter": "Other",
+      "other": "Other",
       "portfolio": "Portfolio",
       "zkl_allocation_for_sector": "$ZKL Allocation For {{sector}}",
       "up_to_zkl": "Up To {{num}} $ZKL",
