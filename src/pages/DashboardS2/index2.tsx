@@ -745,7 +745,7 @@ export default function Dashboard() {
                   alt=""
                   className="w-[24px] h-[24px] block"
                 />
-                <span>Portfolio</span>
+                <span>{t("dashboard.portfolio")}</span>
               </div>
             </div>
 

@@ -8,7 +8,7 @@ import { getDailyCheckinHistory } from "@/api";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const Container = styled.div`
@@ -127,6 +127,7 @@ const BoxList = [
   },
 ];
 export default function DailyRoulette() {
+  const { t } = useTranslation();
   const { address } = useAccount();
   const [update, setUpdate] = useState(0);
 
@@ -190,17 +191,13 @@ export default function DailyRoulette() {
             className="px-[16px] py-[20px] max-w-[350px] bg-[#000811] text-[#FBFBFB99]"
             content={
               <div>
-                Every day, all participants can spin the roulette to earn
-                rewards.
+                {t("dashboard.determined_by_tooltip1")}
                 <br />
                 <br />
-                Users with 100+ $ZKL in their wallet can spin the roulette up to
-                X times to win zkLink Nova Trademark NFTs and Holding Points.
-                The value of X is determined by the number of consecutive days
-                the user has logged in and spun the roulette, with a maximum of
-                7.
+                {t("dashboard.determined_by_tooltip2")}
                 <br />
-                <br />X = min(7, consecutive days of spinning)
+                <br />
+                {t("dashboard.determined_by_tooltip3")}
               </div>
             }
           >

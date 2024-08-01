@@ -94,6 +94,7 @@ export default function SectorHeader({
   const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
   const [nextTargetTvl, setNextTargetTvl] = useState(0);
   const [maxZKL, setMaxZKL] = useState(0);
+  const { t } = useTranslation();
 
   const milestoneMap: {
     [key: string]: {
@@ -235,11 +236,11 @@ export default function SectorHeader({
   const categoryPointsTooltips = useMemo(() => {
     const arr = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
       },
       {
-        label: "By Referral",
+        label: t("dashboard.by_referral"),
         value: formatNumberWithUnit(
           novaCategoryTotalPoints?.referralPoints || 0
         ),
@@ -252,16 +253,16 @@ export default function SectorHeader({
       });
     }
     return arr;
-  }, [novaCategoryTotalPoints]);
+  }, [novaCategoryTotalPoints, t]);
 
   const holdingPointsTooltips = useMemo(() => {
     const arr = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(holdingPoints?.userEcoPoints || 0),
       },
       {
-        label: "By Referral",
+        label: t("dashboard.by_referral"),
         value: formatNumberWithUnit(holdingPoints?.userReferralPoints || 0),
       },
     ];
@@ -274,7 +275,7 @@ export default function SectorHeader({
     }
 
     return arr;
-  }, [holdingPoints, tabActive]);
+  }, [holdingPoints, tabActive, t]);
 
   useEffect(() => {
     if (!tabActive) return;
@@ -330,8 +331,6 @@ export default function SectorHeader({
     }
   }, [tabActive?.category, isNoProgress, currentTvl]);
 
-  const { t } = useTranslation();
-
   return (
     <>
       <div className="flex justify-between">
@@ -350,7 +349,9 @@ export default function SectorHeader({
           </div>
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL{" "}
-            <span className="max">(Up to {formatToThounds(maxZKL)} $ZKL)</span>
+            <span className="max">
+              ( {t("dashboard.up_to_zkl", { num: formatToThounds(maxZKL) })})
+            </span>
           </div>
           {!isNoProgress ? (
             <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
@@ -361,9 +362,9 @@ export default function SectorHeader({
                   content:
                     "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
                 }}
-                content={`This sector will allocate ${formatToThounds(
-                  nextAllocationZKL
-                )} $ZKL after reaching the next milestone.`}
+                content={t("dashboard.next_zkl_allocation_lv_tooltip", {
+                  num: formatToThounds(nextAllocationZKL),
+                })}
               >
                 <img
                   src="/img/icon-info-2.svg"
@@ -388,7 +389,7 @@ export default function SectorHeader({
               content={
                 <div className="min-w-[200px]">
                   <div className="text-[#999] text-[14px] font-[500]">
-                    Sector Allocated Points
+                    {t("dashboard.sector_allocated_points")}
                   </div>
                   {categoryPointsTooltips.map((item, index) => (
                     <div
@@ -452,10 +453,7 @@ export default function SectorHeader({
       <MilestoneBox>
         <div className="mt-[36px] flex justify-between items-center">
           {isNoProgress ? (
-            <div>
-              This sector currently doesn't have a milestone, so the $ZKL
-              allocation will grow contingently.
-            </div>
+            <div>{t("dashboard.no_milestone_text")}</div>
           ) : (
             <>
               <div>

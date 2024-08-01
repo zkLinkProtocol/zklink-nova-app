@@ -24,6 +24,7 @@ import {
 } from "@nextui-org/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -151,6 +152,7 @@ export const TxResult = styled.div`
 `;
 
 export default () => {
+  const { t } = useTranslation();
   const drawModal = useDisclosure();
   const referralsModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
@@ -578,7 +580,7 @@ export default () => {
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
-              {isInvaidChain && "Switch to Nova network to draw"}
+              {isInvaidChain && t("dashboard.switch_to_nova")}
               {!isInvaidChain &&
                 (!drawedNftId || drawedNftId === 5 || drawing) &&
                 `Draw ( ${remainDrawCount} )`}

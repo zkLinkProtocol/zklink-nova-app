@@ -257,13 +257,14 @@ const EcoDApp = (props: {
   data: EcoDAppItem;
   handleLink: (link: string) => void;
 }) => {
+  const { t } = useTranslation();
   const { data, handleLink } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   const allocatedTooltips = useMemo(() => {
     const protocolPoints = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(data.totalPoints?.ecoPoints || 0),
       },
       {
@@ -274,7 +275,7 @@ const EcoDApp = (props: {
 
     const yourPoints = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(data.holdingPoints?.ecoPoints || 0),
       },
       {
@@ -287,7 +288,7 @@ const EcoDApp = (props: {
       protocolPoints,
       yourPoints,
     };
-  }, [data]);
+  }, [data, t]);
 
   return (
     <div className="row mb-[24px] overflow-hidden">
@@ -349,7 +350,7 @@ const EcoDApp = (props: {
               content={
                 <div className="min-w-[200px]">
                   <div className="text-[#999] text-[14px] font-[500]">
-                    Your Allocated Points
+                    {t("dashboard.ur_allocated_points")}
                   </div>
                   {allocatedTooltips.yourPoints.map((item, index) => (
                     <div
@@ -362,7 +363,7 @@ const EcoDApp = (props: {
                   ))}
 
                   <div className="mt-[18px] text-[#999] text-[14px] font-[500]">
-                    Protocol Allocated Points
+                    {t("dashboard.sector_allocated_points")}
                   </div>
 
                   {allocatedTooltips.protocolPoints.map((item, index) => (
@@ -1049,7 +1050,9 @@ export default function EcoDApps({
         <div className="list-header flex items-center">
           <div className="list-header-item text-left w-1/5">Protocol</div>
           <div className="row-items flex items-center w-4/5">
-            <div className="list-header-item text-center">{t('dashboard.points_booster')}</div>
+            <div className="list-header-item text-center">
+              {t("dashboard.points_booster")}
+            </div>
             <div className="list-header-item text-center">
               {t("dashboard.rewards")}
             </div>

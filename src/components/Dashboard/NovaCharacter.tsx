@@ -53,6 +53,7 @@ import SbtMintModal from "./NovaCharacterComponents/SbtMintModal";
 import SbtUpgradeModal, {
   TxResult,
 } from "./NovaCharacterComponents/SbtUpgradeModal";
+import { useTranslation } from "react-i18next";
 
 export { TxResult };
 
@@ -111,6 +112,7 @@ const getOldestFriendsDrawIndexWithPrizeTokenId = (tokenId: number) => {
 };
 
 export default function NovaCharacter() {
+  const { t } = useTranslation();
   const mintModal = useDisclosure();
   const drawModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
@@ -755,8 +757,6 @@ export default function NovaCharacter() {
     getEcoRemainCount();
   }, [address]);
 
-  
-
   return (
     <>
       <CardBox className="flex flex-col gap-[1.5rem] items-center p-[1.5rem]">
@@ -900,7 +900,7 @@ export default function NovaCharacter() {
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
-              {isInvaidChain && "Switch to Nova network to draw"}
+              {isInvaidChain && t("dashboard.switch_to_nova")}
               {!isInvaidChain &&
                 (!drawedNftId || drawedNftId === 5 || drawing) &&
                 `Draw ( ${remainDrawCount} )`}
@@ -961,7 +961,7 @@ export default function NovaCharacter() {
               isDisabled={minted}
             >
               <span>
-                {isInvaidChain && "Switch to Nova network to draw"}
+                {isInvaidChain && t("dashboard.switch_to_nova")}
                 {!isInvaidChain &&
                   (!oldestFriendsDrawedNftId || oldestFriendsDrawing) &&
                   "Draw"}
@@ -1019,7 +1019,7 @@ export default function NovaCharacter() {
                 isDisabled={ecoBoxCount === 0}
               >
                 <span>
-                  {isInvaidChain && "Switch to Nova network to draw"}
+                  {isInvaidChain && t("dashboard.switch_to_nova")}
                   {!isInvaidChain &&
                     (!ecoBoxDrawNftId || ecoBoxDrawing) &&
                     "Draw"}

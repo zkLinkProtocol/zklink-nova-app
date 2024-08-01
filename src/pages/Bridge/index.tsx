@@ -1,13 +1,7 @@
-import { ReactNode, useState } from "react";
-import classnames from "classnames";
 import "@/styles/otp-input.css";
 import BridgeComponent from "@/components/Bridge";
 import styled from "styled-components";
-import { FooterTvlText } from "@/styles/common";
-import TotalTvlCard from "@/components/TotalTvlCard";
-import ThirdPartyBridge from "@/components/ThirdPartyBridge";
 import "./index.scss";
-import { TRADEMARK_NFT_MARKET_URL } from "@/constants";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 import { useTranslation } from "react-i18next";
 
