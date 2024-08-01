@@ -341,11 +341,11 @@ export default function Dashboard() {
       name: t("dashboard.lending"),
       category: "lending",
     },
-    // {
-    //   iconURL: "/img/icon-sector-6.svg",
-    //   name: "GameFi",
-    //   category: "gamefi",
-    // },
+    {
+      iconURL: "/img/icon-sector-6.svg",
+      name: "GameFi",
+      category: "gamefi",
+    },
     {
       iconURL: "/img/icon-sector-7.svg",
       name: t("dashboard.other"),
@@ -513,10 +513,10 @@ export default function Dashboard() {
         name: "Lending Points",
         category: "lending",
       },
-      // {
-      //   name: "GameFi Points",
-      //   category: "gamefi",
-      // },
+      {
+        name: "GameFi Points",
+        category: "gamefi",
+      },
       {
         name: "Others Points",
         category: "other",

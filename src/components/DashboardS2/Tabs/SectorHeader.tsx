@@ -409,7 +409,8 @@ export default function SectorHeader({
               <span className="value">
                 {formatNumberWithUnit(
                   (novaCategoryTotalPoints?.ecoPoints || 0) +
-                    (novaCategoryTotalPoints?.referralPoints || 0)
+                    (novaCategoryTotalPoints?.referralPoints || 0) +
+                    (novaCategoryTotalPoints?.otherPoints || 0)
                 )}
               </span>
             </Tooltip>
