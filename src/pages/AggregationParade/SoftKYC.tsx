@@ -50,6 +50,9 @@ import { IS_MAINNET } from "@/constants";
 import Toast from "@/components/Toast";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
+import { useTranslation } from "react-i18next";
+import ReactHtmlParser from "react-html-parser";
+
 const verifyFromList = [
   ...fromList,
   IS_MAINNET ? NOVA_NETWORK : NOVA_GOERLI_NETWORK,
@@ -288,6 +291,7 @@ export const enum VerifyResult {
 }
 
 export default function SoftKYC() {
+  const { t } = useTranslation();
   // const web3Modal = useWeb3Modal();
   const { openConnectModal } = useConnectModal();
   const verifyDepositModal = useDisclosure();
@@ -624,6 +628,13 @@ export default function SoftKYC() {
     setIsDepositViaThirdParty(false);
   }, [address]);
 
+  const rawHtmlString = t("kyc.search_tag_on_twitter", {
+    tag: "#zkLinkNovaAggParade",
+  }).replace(
+    "#zkLinkNovaAggParade",
+    `<a href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click" class="text-[#03D498]" target="_blank">#zkLinkNovaAggParade</a>`
+  );
+
   return (
     <Container>
       <Toast />
@@ -633,11 +644,11 @@ export default function SoftKYC() {
         <div className="px-6 md:flex-col mt-[120px]">
           <div className="flex md:justify-center">
             <DefaultButton className="px-[16px] py-[14px]">
-              <span className="btn-text">You're Almost There</span>
+              <span className="btn-text">{t("kyc.youre_almost_there")}</span>
             </DefaultButton>
           </div>
           <TitleText className="mt-[18px] text-left md:text-center">
-            To join the zkLink Aggregation Parade S2
+            {t("kyc.to_join_s2")}
           </TitleText>
         </div>
 
@@ -656,17 +667,9 @@ export default function SoftKYC() {
                   className="w-[79px] h-[44px]"
                 />
                 <div>
-                  <p className="step-title">Enter Invite Code</p>
+                  <p className="step-title">{t("home.enter_invite_code")}</p>
                   <p className="step-sub-title mt-[0.25rem]">
-                    Search{" "}
-                    <a
-                      href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
-                      className="text-[#03D498] font-[500]"
-                      target="_blank"
-                    >
-                      #zkLinkNovaAggParade
-                    </a>{" "}
-                    on Twitter
+                    {ReactHtmlParser(rawHtmlString)}
                   </p>
                 </div>
               </StepItem>
@@ -725,9 +728,9 @@ export default function SoftKYC() {
                   className="w-[79px] h-[44px]"
                 />
                 <div>
-                  <p className="step-title">Connect your wallet</p>
+                  <p className="step-title">{t("kyc.connect_ur_wallet")}</p>
                   <p className="step-sub-title mt-[0.25rem]">
-                    Prove your ownership of the address
+                    {t("kyc.prove_ur_ownership")}
                   </p>
                 </div>
               </StepItem>
@@ -745,7 +748,9 @@ export default function SoftKYC() {
                   isLoading={signLoading}
                 >
                   <span className="ml-[0.5rem]">
-                    {isConnected && !signature ? "Sign" : "Connect and Verify"}
+                    {isConnected && !signature
+                      ? t("kyc.sign")
+                      : t("kyc.connect_and_verify")}
                   </span>
                   <img
                     src="/img/icon-submit-arrow-white.svg"
@@ -770,9 +775,9 @@ export default function SoftKYC() {
                   className="w-[79px] h-[44px]"
                 />
                 <div>
-                  <p className="step-title">Bridge and Earn</p>
+                  <p className="step-title">{t("kyc.bridge_and_earn")}</p>
                   <p className="step-sub-title mt-[0.25rem]">
-                    {"Minimum deposit amount ≥ 0.1 ETH or equivalent"}
+                    {t("kyc.minium_deposit")}
                   </p>
                 </div>
               </StepItem>
@@ -786,7 +791,7 @@ export default function SoftKYC() {
                   <Tooltip
                     content={`If you're new, simply click on 'bridge' to make a deposit.`}
                   >
-                    <span className="ml-[0.5rem]">Bridge</span>
+                    <span className="ml-[0.5rem]">{t("kyc.bridge")}</span>
                   </Tooltip>
                   <img
                     src="/img/icon-submit-arrow-white.svg"
@@ -802,7 +807,7 @@ export default function SoftKYC() {
                       verifyDepositModal.onOpen();
                     }}
                   >
-                    <span className="ml-[0.5rem]">Verify</span>
+                    <span className="ml-[0.5rem]">{t("kyc.verify")}</span>
                     <img
                       src="/img/icon-submit-arrow-white.svg"
                       className="w-[16px] h-[16px]"
@@ -820,7 +825,7 @@ export default function SoftKYC() {
               isDisabled={!submitStatus}
               onClick={handleSubmit}
             >
-              <p className="btn-text">Participate zkLink Aggregation Parade</p>
+              <p className="btn-text">{t("kyc.participate_zklink_agg")}</p>
               <img
                 src="/img/icon-submit-arrow-gradient.svg"
                 className="w-[32px] h-[32px]"

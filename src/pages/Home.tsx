@@ -11,6 +11,7 @@ import Loading from "@/components/Loading";
 import { GradientBox } from "@/styles/common";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 import { useTranslation } from "react-i18next";
+import ReactHtmlParser from "react-html-parser";
 
 const BgBox = styled.div`
   width: 100%;
@@ -276,6 +277,19 @@ export default function Home() {
     return !otp || otp.length !== 6;
   }, [otp]);
 
+  const rawHtmlString = t("home.join_our", {
+    link: "Discord",
+    tag: "#zkLinkNovaAggParade",
+  })
+    .replace(
+      "Discord",
+      `<a href="https://discord.com/invite/zklink" class="text-[#03D498]" target="_blank">Discord</a>`
+    )
+    .replace(
+      "#zkLinkNovaAggParade",
+      `<a href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click" class="text-[#03D498]" target="_blank">#zkLinkNovaAggParade</a>`
+    );
+
   return (
     <BgBox className="relative pt-[92px] pb-[65px]">
       {isLoading && <Loading />}
@@ -311,7 +325,7 @@ export default function Home() {
       <CardBox className="mx-auto px-[26px] w-[680px] h-[376px] rounded-[18px] flex flex-col justify-center items-center text-center">
         <TitleBox>
           <h4 className="title text-[24px] leading-[normal]">
-            {t("home.enter_iinvite_code")}
+            {t("home.enter_invite_code")}
           </h4>
           <p className="sub-title opacity-60 text-[14px] mt-[16px] leading-[normal]">
             To participate in the campaign
@@ -333,23 +347,7 @@ export default function Home() {
         </div>
 
         <div className="mt-[26px] text-[14px] leading-[normal] opacity-60">
-          Join our{" "}
-          <a
-            href="https://discord.com/invite/zklink"
-            // className="text-[#03D498]"
-            target="_blank"
-          >
-            Discord
-          </a>{" "}
-          or search{" "}
-          <a
-            href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
-            // className="text-[#03D498]"
-            target="_blank"
-          >
-            #zkLinkNovaAggParade
-          </a>{" "}
-          on twitter for invite code
+          {ReactHtmlParser(rawHtmlString)}
         </div>
 
         <div className="mt-[26px] w-full">
@@ -361,7 +359,7 @@ export default function Home() {
             onClick={enterInviteCode}
           >
             <img src="/img/s2/icon-submit.svg" alt="" width={22} height={22} />
-            <span className="btn-text">Submit</span>
+            <span className="btn-text">{t("home.submit")}</span>
           </SubmitButton>
         </div>
       </CardBox>
