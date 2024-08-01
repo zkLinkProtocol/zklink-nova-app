@@ -325,7 +325,7 @@ const EcoDApp = (props: {
                   handleLink(data.link);
                 }}
               >
-                <span>{data.name}</span>
+                <span className="whitespace-nowrap">{data.name}</span>
                 <img
                   src="/img/icon-ecolink.svg"
                   alt=""
@@ -337,7 +337,7 @@ const EcoDApp = (props: {
             </div>
           </div>
           <div
-            className="row-items flex items-center gap-[10px] w-4/5"
+            className="row-items flex items-center w-4/5"
             onClick={() => setIsOpen(!isOpen)}
           >
             <div className="col-line"></div>
