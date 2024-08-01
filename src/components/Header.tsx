@@ -563,12 +563,12 @@ export default function Header() {
                     href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
                     target="_blank"
                   >
-                    User Guide
+                    {t('header.user_guide')}
                   </a>
                 </DropdownItem>
                 <DropdownItem key="user-guide">
                   <a href="https://explorer.zklink.io/" target="_blank">
-                    Explorer
+                    {t('header.explorer')}
                   </a>
                 </DropdownItem>
               </DropdownMenu>

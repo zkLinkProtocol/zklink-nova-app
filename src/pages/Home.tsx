@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import { GradientBox } from "@/styles/common";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
+import { useTranslation } from "react-i18next";
 
 const BgBox = styled.div`
   width: 100%;
@@ -223,9 +224,12 @@ const SubmitButton = styled(Button)`
 `;
 
 export default function Home() {
+  const { t } = useTranslation();
+
   const { inviteCode, isActiveUser } = useSelector(
     (store: RootState) => store.airdrop
   );
+
   const [{ otp, numInputs, separator, placeholder, inputType }, setConfig] =
     useState({
       otp: inviteCode || "",
@@ -279,12 +283,12 @@ export default function Home() {
       <TitleBox className="text-left md:text-center">
         <div className="mt-[50px] flex justify-center">
           <GradientBox className="px-[28px] py-[12px] rounded-[48px] text-[16px] text-[#fff]">
-            Welcome To zkLink Nova
+            {t("home.welcome_to_zklink_nova")}
           </GradientBox>
         </div>
         <div className="my-[24px] flex justify-center px-6">
           <h2 className="title  text-[1.8rem] md:text-[44px]">
-            The ONLY Aggregated L3 with added yield for
+            {t("home.the_only")}
           </h2>
         </div>
         <div className="flex flexBox my-[50px]">
@@ -299,7 +303,7 @@ export default function Home() {
           </GradientBox>
         </div>
         <p className="sub-title my-[50px] pl-6 pr-6 lg:pr-8 text-[1rem] md:text-[26px] leading-[20px]">
-          Bridge to earn Mega Yield and $ZKL on zkLink Nova
+          {t("home.bridge_to_earn")}
         </p>
       </TitleBox>
 
@@ -307,7 +311,7 @@ export default function Home() {
       <CardBox className="mx-auto px-[26px] w-[680px] h-[376px] rounded-[18px] flex flex-col justify-center items-center text-center">
         <TitleBox>
           <h4 className="title text-[24px] leading-[normal]">
-            Enter Your Invite Code
+            {t("home.enter_iinvite_code")}
           </h4>
           <p className="sub-title opacity-60 text-[14px] mt-[16px] leading-[normal]">
             To participate in the campaign
