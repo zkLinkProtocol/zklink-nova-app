@@ -12,9 +12,17 @@ import {
 import { UseDisclosureReturn } from "@nextui-org/use-disclosure";
 import Marquee from "@/components/Marquee";
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { dailyOpen, openProtocolSpin } from "@/api";
+import {
+  dailyOpen,
+  openProtocolSpin,
+  dailySkipMint,
+  protocolSkipMint,
+} from "@/api";
 import { sleep } from "@/utils";
-import useNovaNFT, { MysteryboxMintParams } from "@/hooks/useNovaNFT";
+import useNovaNFT, {
+  MysteryboxMintParams,
+  TrademarkMintParams,
+} from "@/hooks/useNovaNFT";
 import {
   MintStatus,
   TRADEMARK_NFT_MARKET_URL,
@@ -22,6 +30,8 @@ import {
 } from "@/constants";
 import { TxResult } from "@/components/Dashboard/NovaCharacter";
 import { useAccount, useSwitchChain } from "wagmi";
+import { useUpdateNftBalanceStore } from "@/hooks/useUpdateNftBalanceStore";
+
 interface IProps {
   modalInstance: UseDisclosureReturn;
   onDrawed: () => void;
@@ -71,6 +81,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   const [mintStatus, setMintStatus] = useState<MintStatus | undefined>();
   const [failMessage, setFailMessage] = useState("");
   const { switchChain } = useSwitchChain();
+  const { updateFactor } = useUpdateNftBalanceStore();
 
   const { sendTrademarkMintTx } = useNovaNFT();
   const { modalInstance, onDrawed, remain, type, projectName } = props;
@@ -81,6 +92,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     points?: number;
     tooltip?: string;
   }>();
+  const [mintParams, setMintParams] = useState<TrademarkMintParams>();
   const mintResultModal = useDisclosure();
   const handleDrawEnd = () => {};
 
@@ -117,9 +129,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     setMintResult({
       ...prize,
     });
-    if ([1, 2, 3, 4].includes(tokenId)) {
-      await sleep(2000); // show nft
-      setMinting(true);
+    if (tokenId <= 4) {
       const { tokenId, nonce, signature, expiry, mintType } = res.result;
       const mintParams = {
         tokenId,
@@ -129,32 +139,12 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
         method: "safeMintCommon",
         mintType,
       };
-
-      try {
-        await sendTrademarkMintTx(mintParams);
-        setMintStatus(MintStatus.Success);
-        mintResultModal.onOpen();
-        onDrawed(); // update remain times after mint tx
-      } catch (e: any) {
-        console.log(e);
-        setMintStatus(MintStatus.Failed);
-        if (e.message) {
-          if (e.message.includes("rejected the request")) {
-            setFailMessage("User rejected the request");
-          } else {
-            setFailMessage(e.message);
-          }
-        }
-      } finally {
-        setMinting(false);
-        setSpinging(false);
-      }
+      setMintParams(mintParams);
     } else {
       setMintStatus(MintStatus.Success);
       mintResultModal.onOpen();
-      setSpinging(false);
     }
-
+    setSpinging(false);
     if (!remain || remain <= 1) {
       modalInstance.onClose();
     }
@@ -165,9 +155,50 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     modalInstance,
     onDrawed,
     remain,
-    sendTrademarkMintTx,
     switchChain,
   ]);
+
+  const handleMint = useCallback(async () => {
+    if (!mintParams) {
+      return;
+    }
+    try {
+      setMinting(true);
+      await sendTrademarkMintTx(mintParams);
+      setMintStatus(MintStatus.Success);
+      mintResultModal.onOpen();
+      onDrawed(); // update remain times after mint tx
+      setMintParams(undefined);
+      updateFactor();
+    } catch (e: any) {
+      console.log(e);
+      setMintStatus(MintStatus.Failed);
+      if (e.message) {
+        if (e.message.includes("rejected the request")) {
+          setFailMessage("User rejected the request");
+        } else {
+          setFailMessage(e.message);
+        }
+      }
+    } finally {
+      setMinting(false);
+    }
+  }, [
+    mintParams,
+    mintResultModal,
+    onDrawed,
+    sendTrademarkMintTx,
+    updateFactor,
+  ]);
+
+  const handleSkip = async () => {
+    type === "protocol" && projectName
+      ? await protocolSkipMint(projectName)
+      : await dailySkipMint();
+    setMintParams(undefined);
+    mintResultModal.onClose();
+    onDrawed(); // update remain times after skip
+  };
 
   useEffect(() => {
     if (!modalInstance.isOpen) {
@@ -215,29 +246,55 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                   ref={drawRef}
                   onDrawEnd={handleDrawEnd}
                   PrizeItems={PrizeItems}
+                  targetIndex={
+                    mintParams ? PRIZE_MAP[mintParams.tokenId] : undefined
+                  }
                 />
                 <SpinPointer>
                   <img src="/img/s2/icon-daily-spin-pointer.png" alt="" />
                 </SpinPointer>
               </ModalBody>
               <ModalFooter>
-                <div className="flex flex-col w-full">
-                  <SpinButton
-                    onClick={handleSpin}
-                    isLoading={spinging}
-                    disabled={minting || spinging || !remain}
-                  >
-                    <img
-                      src={
-                        minting
-                          ? "/img/s2/icon-daily-mint.svg"
-                          : "/img/s2/icon-spin.svg"
-                      }
-                      alt=""
-                    />
-                    <span>{btnText}</span>
-                  </SpinButton>
-                </div>
+                {!mintParams && (
+                  <div className="flex flex-col w-full">
+                    <SpinButton
+                      onClick={handleSpin}
+                      isLoading={spinging}
+                      disabled={minting || spinging || !remain}
+                    >
+                      <img
+                        src={
+                          spinging
+                            ? "/img/s2/icon-spin.svg"
+                            : "/img/s2/icon-daily-mint.svg"
+                        }
+                        alt=""
+                      />
+                      <span>{btnText}</span>
+                    </SpinButton>
+                  </div>
+                )}
+                {mintParams && (
+                  <div className="flex w-full gap-4 justify-between">
+                    <SpinButton
+                      onClick={handleSkip}
+                      isLoading={spinging}
+                      disabled={minting || spinging || !remain}
+                    >
+                      <span>Skip</span>
+                    </SpinButton>
+                    <SpinButton
+                      onClick={handleMint}
+                      isLoading={minting}
+                      disabled={minting || spinging || !remain}
+                    >
+                      {!minting && (
+                        <img src={"/img/s2/icon-daily-mint.svg"} alt="" />
+                      )}
+                      <span>Mint</span>
+                    </SpinButton>
+                  </div>
+                )}
               </ModalFooter>
             </>
           )}

@@ -11,6 +11,10 @@ import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit } from "@/utils";
 import {
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Modal,
   ModalBody,
   ModalContent,
@@ -252,6 +256,7 @@ interface EcoDAppItem {
     description: string;
     action: string;
     actionLink?: string;
+    actionLinks?: string[];
     descriptionTooltip?: string;
   }[];
   idFeatured?: boolean;
@@ -484,14 +489,45 @@ const EcoDApp = (props: {
                     )}
                   </div>
                 </div>
-                <div className="detail-item text-right  w-full">
-                  <div className="detail-label">Action</div>
+
+                <div className="detail-label">Action</div>
+                {detail.actionLinks ? (
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <div className="detail-value flex justify-end items-center gap-[4px]">
+                        <div className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer">
+                          <GradientText>{detail.action}</GradientText>
+                        </div>
+                        <img
+                          src="/img/open-in-new-s2.svg"
+                          alt=""
+                          width={20}
+                          height={20}
+                        />
+                      </div>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label="action"
+                      itemClasses={{
+                        base: "gap-4",
+                      }}
+                    >
+                      {detail.actionLinks.map((link, index) => (
+                        <DropdownItem
+                          className="whitespace-nowrap"
+                          key={index}
+                          onClick={() => handleLink(link)}
+                        >
+                          {link}
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </Dropdown>
+                ) : (
                   <div className="detail-value flex justify-end items-center gap-[4px]">
                     <div
                       className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
-                      onClick={(e) =>
-                        handleLink(detail.actionLink || data.link)
-                      }
+                      onClick={() => handleLink(detail.actionLink || data.link)}
                     >
                       <GradientText>{detail.action}</GradientText>
                     </div>
@@ -502,7 +538,7 @@ const EcoDApp = (props: {
                       height={20}
                     />
                   </div>
-                </div>
+                )}
               </div>
             ))}
           </DetailBox>
@@ -1113,6 +1149,67 @@ export default function EcoDApps({
             ),
             description: `For every $200 in trading volume on Eddy Finance (Nova Network), you will receive 1 Nova Point.`,
             action: "Trade",
+          },
+        ],
+      },
+      {
+        category: "spotdex",
+        iconURL: "/img/icon-steer.png",
+        name: "Steer",
+        link: "https://app.steer.finance/novaswap",
+        handler: "@steerprotocol",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "20x Boost",
+        holdingPoints: getHoldingPointsByProject("steer"),
+        totalPoints: getTotalPointsByProject("steer"),
+        remainSpinNum: getSpinByProject("steer").remainSpinNum,
+        projectName: "steer",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>20x for ETH, WETH, Merged WBTC, USDT, USDC</p>
+                <p>
+                  10x for canonically bridged tokens eligible to earn points
+                </p>
+              </div>
+            ),
+            description: `You earn points based on the liquidity you've supplied to the pool over a specific period, with the points multiplied accordingly.`,
+            action: "Provide Liquidity",
+          },
+        ],
+      },
+      {
+        category: "gamefi",
+        iconURL: "/img/icon-skyrangers.png",
+        name: "Sky Rangers",
+        link: "https://statics.skyrangers.io/",
+        handler: "@OfficialSkyRang",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Interaction",
+        holdingPoints: getHoldingPointsByProject("skyrangers"),
+        totalPoints: getTotalPointsByProject("skyrangers"),
+        remainSpinNum: getSpinByProject("skyrangers").remainSpinNum,
+        projectName: "skyrangers",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>Open Blindbox, NFT Level Up, ZKL Deposit, ZKL Withdraw</p>
+              </div>
+            ),
+            description: `With a total 5x of any supported actions, you can receive 1 Nova Points.`,
+            action: "Play now",
+            actionLinks: [
+              "https://statics.skyrangers.io/",
+              "https://t.me/SkyRangers_bot",
+            ],
           },
         ],
       },
