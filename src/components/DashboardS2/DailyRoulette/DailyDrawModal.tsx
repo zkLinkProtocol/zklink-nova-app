@@ -145,7 +145,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       mintResultModal.onOpen();
     }
     setSpinging(false);
-    if (!remain || remain <= 1) {
+    if (!remain && !mintParams) {
       modalInstance.onClose();
     }
   }, [
