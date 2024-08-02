@@ -456,11 +456,11 @@ const SpinButton = styled(Button)`
   box-shadow: 0px 2.306px 18.446px 0px rgba(0, 0, 0, 0.15),
     0px 0px 13.835px 0px rgba(255, 255, 255, 0.75) inset;
   height: 54px;
-  gap: 8px;
+  gap: 4px;
   color: #fff;
   text-align: center;
   font-family: Satoshi;
-  font-size: 18.446px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 900;
   line-height: normal;
@@ -480,7 +480,7 @@ const SpinPointer = styled.div`
 const ModalContainer = styled(Modal)`
   background: url("img/s2/bg-spin-container.svg") no-repeat;
   background-size: cover;
-  width: 400px;
+  width: 428px;
   .prize-text {
     color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
     font-family: Satoshi;
