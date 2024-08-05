@@ -17,6 +17,12 @@ const TvlBox = styled.div`
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+    @media screen and (max-width: 768px) {
+      font-size: 46px;
+      width: 32px;
+      height: 50px;
+    }
   }
 `;
 
@@ -55,18 +61,16 @@ export default function TotalTvlCard() {
   }, []);
 
   return (
-    <TvlBox className="flex items-center gap-[24px]">
+    <TvlBox className="flex items-center md:gap-[24px]">
       <span
-        className={`tvl-num-item dollar w-[1.625rem] h-[2rem] leading-[2rem] md:w-[66px] md:h-[77px] md:leading-[77px] text-[1.5rem] md:text-[48px]`}
+        className={`tvl-num-item dollar`}
       >
         $
       </span>
       {tvlArr.map((item, index) => (
         <span
           key={index}
-          className={`tvl-num-item w-[1.625rem] h-[2rem] leading-[2rem] md:w-[66px] md:h-[77px] md:leading-[77px] text-[1.5rem] md:text-[48px] ${
-            item === "," ? "comma" : ""
-          }`}
+          className={`tvl-num-item ${item === "," ? "comma" : ""}`}
         >
           {item}
         </span>
