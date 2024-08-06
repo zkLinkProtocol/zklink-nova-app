@@ -147,7 +147,7 @@ export default function TrademarkNFT() {
             </div>
           </div>
 
-          <div className="row-line mt-[20px] mb-[12px]"></div>
+          <div className="row-line mt-[20px] mb-[12px] md:hidden"></div>
 
           <div className="action flex col-2 justify-between md:justify-center items-center gap-[10px] w-full md:w-auto">
             <span className="action-label">Action:</span>
