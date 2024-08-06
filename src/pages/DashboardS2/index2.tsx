@@ -707,11 +707,11 @@ export default function Dashboard() {
 
         <div className="mt-[40px]">
           <TabsCard className="pb-[40px]">
-            <div className="relative flex items-center justify-between">
+            <div className="relative flex items-center justify-between gap-[8px] overflow-x-auto overflow-y-hidden">
               <div className="flex flex items-center gap-[12.15px]">
                 {tabs2.map((tab, index) => (
                   <div
-                    className={`tab-item flex justify-center items-center gap-[8px] ${
+                    className={`tab-item flex justify-center items-center gap-[8px] whitespace-nowrap ${
                       index === tabs2Active ? "active" : ""
                     }`}
                     onClick={() => setTabs2Active(index)}
@@ -750,7 +750,7 @@ export default function Dashboard() {
                 } 24px 24px`,
               }}
             >
-              <div className="tab-content px-[31px] py-[32.5px]">
+              <div className="tab-content px-[14px] md:px-[32px] py-[32px]">
                 {tabs2Active === 0 && (
                   <Assets
                     tabActive={tabs2[tabs2Active]}

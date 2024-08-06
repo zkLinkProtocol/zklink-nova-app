@@ -19,9 +19,8 @@ const Item = styled.div`
   border: 2px solid #635f5f;
   background: #151923;
   margin-bottom: 18px;
-  height: 80px;
   padding: 16px 20px;
-  & > img {
+  .icon {
     width: 56px;
     height: 56px;
     flex-shrink: 0;
@@ -76,6 +75,18 @@ const Item = styled.div`
       -webkit-text-fill-color: transparent;
     }
   }
+
+  .row-line {
+    width: 100%;
+    height: 1px;
+    opacity: 0.3;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(251, 251, 251, 0.6) 51.5%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
 `;
 
 const ALL_NFTS = [
@@ -117,18 +128,28 @@ export default function TrademarkNFT() {
   return (
     <Container>
       {nftData.map((item, index) => (
-        <Item key={index}>
-          <img src={`/img/img-${item.img}`} alt={item.name} />
-          <div className="flex flex-col">
-            <p className="name">
-              {item.name} ({item.balance})
-            </p>
-            <p className="desc">
-              You can earn {item.name} by participating in the daily roulette or
-              purchasing from OKX
-            </p>
+        <Item key={index} className="flex-col md:flex-row md:h-[80px]">
+          <div className="flex items-center">
+            <img
+              src={`/img/img-${item.img}`}
+              alt={item.name}
+              className="icon min-w--[56px] w-[56px] h-[56px]"
+            />
+
+            <div className="flex flex-col">
+              <p className="name">
+                {item.name} ({item.balance})
+              </p>
+              <p className="desc">
+                You can earn {item.name} by participating in the daily roulette
+                or purchasing from OKX
+              </p>
+            </div>
           </div>
-          <div className="action flex col-2 justify-center items-center gap-[10px]">
+
+          <div className="row-line mt-[20px] mb-[12px]"></div>
+
+          <div className="action flex col-2 justify-between md:justify-center items-center gap-[10px] w-full md:w-auto">
             <span className="action-label">Action:</span>
             <a
               href="https://www.okx.com/web3/marketplace/nft/collection/zklinknova/nova-trademark-nfts"

@@ -207,7 +207,9 @@ export default function DailyRoulette() {
             </div>
           </Tooltip>
         </div>
-        <InviteBoxModal />
+        <div className="hidden md:block">
+          <InviteBoxModal />
+        </div>
       </div>
       <div className="flex items-center justify-between mt-[30px] overflow-auto gap-[10px] md:gap-[0]">
         {dailyData.map((item, index) => (
@@ -218,6 +220,10 @@ export default function DailyRoulette() {
             onDrawed={handleDrawed}
           />
         ))}
+      </div>
+
+      <div className="mt-[30px] md:hidden block">
+        <InviteBoxModal />
       </div>
     </Container>
   );
