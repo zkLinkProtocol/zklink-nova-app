@@ -787,13 +787,13 @@ export default function Header() {
             </NavLink>
           </NavbarMenuItem>
 
-          <NavbarMenuItem isActive={location.pathname === "/about"}>
+          <NavbarMenuItem>
             <a
               href="https://zk.link/governance"
               target="_blank"
               className="block"
             >
-              About
+              Governance
             </a>
           </NavbarMenuItem>
 

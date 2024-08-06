@@ -609,7 +609,7 @@ export default function Leaderboard() {
 
         <ContentBox className="mt-[50px]">
           <div className="tab-bar max-w-[100%]">
-            <div className="w-full flex justify-between items-start overflow-auto">
+            <div className="w-full flex justify-between items-start overflow-x-auto overflow-y-hidden">
               <div className="flex items-end gap-[24px]">
                 {tabs.map((tab, index) => (
                   <div
@@ -721,6 +721,39 @@ export default function Leaderboard() {
             </div>
           </div>
         </ContentBox>
+
+        <GradientBox className="mt-[30px] px-[28px] h-[52px] rounded-[76px] md:hidden flex items-center gap-[12px]">
+          <span className="text-[#fff] text-[14px] font-[500] opacity-80">
+            Invite To Earn More
+          </span>
+          <ColLine className="h-[28px]" />
+          <span className="font-[900] text-[30px] text-[#fff]">
+            {invite?.code}
+          </span>
+          <img
+            src="/img/icon-invite-copy.svg"
+            alt=""
+            width={20}
+            height={20}
+            className="cursor-pointer"
+            onClick={handleCopy}
+          />
+          <img
+            src="/img/icon-invite-twitter.svg"
+            alt=""
+            width={20}
+            height={20}
+            className="cursor-pointer"
+            onClick={() =>
+              window.open(
+                `https://twitter.com/intent/tweet?text=${getTweetShareTextForMysteryBox(
+                  invite?.code ?? ""
+                )}`,
+                "_blank"
+              )
+            }
+          />
+        </GradientBox>
       </div>
 
       <NovaNetworkTVL />
