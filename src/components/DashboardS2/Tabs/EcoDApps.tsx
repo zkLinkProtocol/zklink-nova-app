@@ -420,29 +420,32 @@ const EcoDApp = (props: {
             <div className="col-line"></div>
 
             <div className="list-content-item flex justify-center items-center">
-              {data.remainSpinNum === 0 &&
-              data.projectName !== "orbiter" &&
+              {data.projectName !== "orbiter" &&
               data.projectName !== "symbiosis" &&
               data.projectName !== "meson" ? (
-                <GradientText>Spined</GradientText>
+                data.remainSpinNum === 0 ? (
+                  <GradientText>Spined</GradientText>
+                ) : (
+                  <div
+                    className={`px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px] ${
+                      !data.remainSpinNum
+                        ? "cursor-not-allowed opacity-50"
+                        : "cursor-pointer"
+                    }`}
+                    onClick={handleSpinModal}
+                  >
+                    <img
+                      src="/img/s2/icon-spin-gradient.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="min-w-[24px]"
+                    />
+                    <GradientText>Spin</GradientText>
+                  </div>
+                )
               ) : (
-                <div
-                  className={`px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px] ${
-                    !data.remainSpinNum
-                      ? "cursor-not-allowed opacity-50"
-                      : "cursor-pointer"
-                  }`}
-                  onClick={handleSpinModal}
-                >
-                  <img
-                    src="/img/s2/icon-spin-gradient.svg"
-                    alt=""
-                    width={24}
-                    height={24}
-                    className="min-w-[24px]"
-                  />
-                  <GradientText>Spin</GradientText>
-                </div>
+                ""
               )}
             </div>
 
