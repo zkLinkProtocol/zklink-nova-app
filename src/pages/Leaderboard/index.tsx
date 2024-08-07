@@ -333,7 +333,6 @@ const ContentBox = styled.div`
 
     .tab-content {
       position: relative;
-      min-width: 1240px;
       z-index: 2;
 
       .th-item {
@@ -343,6 +342,7 @@ const ContentBox = styled.div`
         font-style: normal;
         font-weight: 500;
         line-height: normal;
+        white-space: nowrap;
       }
 
       .item-rank {
@@ -416,15 +416,15 @@ const ContentBox = styled.div`
       }
 
       @media screen and (max-width: 768px) {
-        .tr-item {
-          width: 360px;
-        }
+        /* .tr-item {
+          max-width: 800px;
+        } */
         .item-rank {
           width: 100px;
         }
         .item-user {
           padding: 0 15px;
-          width: 160px;
+          width: 200px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -432,7 +432,7 @@ const ContentBox = styled.div`
         .item-points {
           /* margin-right: 24px; */
           padding: 0 15px;
-          width: 100px;
+          width: 150px;
           text-align: right;
         }
         .self-tag {
@@ -455,6 +455,7 @@ const RowLine = styled.div`
   );
 `;
 const ColLine = styled.div`
+  min-width: 1px;
   width: 1px;
   /* opacity: 0.3; */
   background: linear-gradient(
@@ -670,54 +671,56 @@ export default function Leaderboard() {
               } 24px 24px`,
             }}
           >
-            <div className="tab-content px-[12px] md:px-[42px] py-[16px] md:py-[32px]">
-              <div className="tr-item flex items-center justify-between">
-                <span className="th-item item-rank">Rank</span>
-                <span className="th-item item-user">User</span>
-                <span className="th-item item-points">
-                  {tabs[tabActive].name} Points
-                </span>
-              </div>
-
-              <RowLine className="my-[30px]" />
-
-              {selfData && (
-                <GradientBox className="tr-item mt-[16px] py-[22px] rounded-[24px] flex items-center justify-between">
-                  <div className="td-item item-rank text-[18px] md:text-[32px] flex justify-center">
-                    <GradientBox className="md:px-[24px] px-[8px] py-[8px] rounded-[100px]">
-                      {selfData.rank || "-"}
-                    </GradientBox>
-                  </div>
-                  <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-user text-[12px] md:text-[24px] flex items-center gap-[4px] md:gap-[16px]">
-                    {selfData.username}
-                    <span className="self-tag">You</span>
-                  </span>
-                  <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-points text-[16px] md:text-[26px]">
-                    {formatNumberWithUnit(selfData.totalPoints)}
-                  </span>
-                </GradientBox>
-              )}
-
-              {categoryList.map((item, index) => (
-                <div
-                  className="tr-item item-box flex items-center justify-between"
-                  key={index}
-                >
-                  <span className="td-item item-rank text-[18px] md:text-[32px]">
-                    {item.rank}
-                  </span>
-                  <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-user text-[12px] md:text-[24px]">
-                    {item.username}
-                  </span>
-                  <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-points text-[16px] md:text-[26px]">
-                    {formatNumberWithUnit(item.totalPoints)}
+            <div className="overflow-x-auto">
+              <div className="tab-content px-[12px] md:px-[42px] py-[16px] md:py-[32px] md:min-w-[1240px] min-w-[600px]">
+                <div className="tr-item flex items-center justify-between">
+                  <span className="th-item item-rank">Rank</span>
+                  <span className="th-item item-user">User</span>
+                  <span className="th-item item-points">
+                    {tabs[tabActive].name} Points
                   </span>
                 </div>
-              ))}
+
+                <RowLine className="my-[30px]" />
+
+                {selfData && (
+                  <GradientBox className="tr-item mt-[16px] py-[22px] rounded-[24px] flex items-center justify-between">
+                    <div className="td-item item-rank text-[18px] md:text-[32px] flex justify-center">
+                      <GradientBox className="md:px-[24px] px-[8px] py-[8px] rounded-[100px]">
+                        {selfData.rank || "-"}
+                      </GradientBox>
+                    </div>
+                    <ColLine className="h-[44px] opacity-40" />
+                    <span className="td-item item-user text-[12px] md:text-[24px] flex items-center gap-[4px] md:gap-[16px]">
+                      {selfData.username}
+                      <span className="self-tag">You</span>
+                    </span>
+                    <ColLine className="h-[44px] opacity-40" />
+                    <span className="td-item item-points text-[16px] md:text-[26px]">
+                      {formatNumberWithUnit(selfData.totalPoints)}
+                    </span>
+                  </GradientBox>
+                )}
+
+                {categoryList.map((item, index) => (
+                  <div
+                    className="tr-item item-box flex items-center justify-between"
+                    key={index}
+                  >
+                    <span className="td-item item-rank text-[18px] md:text-[32px]">
+                      {item.rank}
+                    </span>
+                    <ColLine className="h-[44px] opacity-40" />
+                    <span className="td-item item-user text-[12px] md:text-[24px]">
+                      {item.username}
+                    </span>
+                    <ColLine className="h-[44px] opacity-40" />
+                    <span className="td-item item-points text-[16px] md:text-[26px]">
+                      {formatNumberWithUnit(item.totalPoints)}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </ContentBox>

@@ -26,7 +26,6 @@ const Title = styled.h1`
 `;
 
 const CardBox = styled.div`
-  padding: 24px 30px;
   border-radius: 24px;
   border: 2px solid #635f5f;
   background: #151923;
@@ -167,7 +166,7 @@ const CollapseCard = ({
 
   return (
     <CardBox
-      className={`flex flex-col gap-[30px] ${
+      className={`px-[24px] py-[32px] md:px-[30px] md:py-[24px] flex flex-col gap-[30px] ${
         isGradientBorder ? "gradient-border" : ""
       }`}
     >
@@ -402,7 +401,7 @@ export default function About() {
 
   return (
     <Container>
-      <div className="px-[30px] md:px-[104px]">
+      <div className="px-[15px] md:px-[104px]">
         <Title className="md:mt-[80px] text-[32px] md:text-[56px]">
           About zkLink Nova Aggregation Parade
         </Title>
