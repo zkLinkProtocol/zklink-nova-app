@@ -609,7 +609,7 @@ export default function Dashboard() {
 
   return (
     <Container>
-      <div className="side fixed right-[32px] top-[120px] z-[9] max-w-[392px] w-[392px]">
+      <div className="side fixed right-[8px] md:right-[32px] top-[120px] z-[9] max-w-[350px] md:max-w-[392px] w-full md:w-[392px]">
         <ZKLClaimAd />
         <MysteryBoxIII />
         {/* <GoogleRecaptcha /> */}

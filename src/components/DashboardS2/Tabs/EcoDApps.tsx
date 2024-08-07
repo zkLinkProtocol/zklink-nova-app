@@ -467,11 +467,11 @@ const EcoDApp = (props: {
                 }`}
                 key={index}
               >
-                <div className="detail-item min-w-[440px] w-[440px]">
+                <div className="detail-item min-w-[440px] max-w-[440px]">
                   <div className="detail-label">Booster</div>
                   <div className="detail-value">{detail.booster}</div>
                 </div>
-                <div className="detail-item min-w-[480px] w-[480px]">
+                <div className="detail-item min-w-[480px] max-w-[480px]">
                   <div className="detail-label">Description</div>
                   <div className="detail-value">
                     {detail.description}
@@ -493,56 +493,59 @@ const EcoDApp = (props: {
                     )}
                   </div>
                 </div>
-
-                <div className="detail-label">Action</div>
-                {detail.actionLinks ? (
-                  <Dropdown>
-                    <DropdownTrigger>
-                      <div className="detail-value flex justify-end items-center gap-[4px]">
-                        <div className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer">
-                          <GradientText>{detail.action}</GradientText>
+                <div className="detail-item text-right w-full">
+                  <div className="detail-label">Action</div>
+                  {detail.actionLinks ? (
+                    <Dropdown>
+                      <DropdownTrigger>
+                        <div className="detail-value flex justify-end items-center gap-[4px]">
+                          <div className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer">
+                            <GradientText>{detail.action}</GradientText>
+                          </div>
+                          <img
+                            src="/img/open-in-new-s2.svg"
+                            alt=""
+                            width={20}
+                            height={20}
+                          />
                         </div>
-                        <img
-                          src="/img/open-in-new-s2.svg"
-                          alt=""
-                          width={20}
-                          height={20}
-                        />
+                      </DropdownTrigger>
+                      <DropdownMenu
+                        aria-label="action"
+                        itemClasses={{
+                          base: "gap-4",
+                        }}
+                      >
+                        {detail.actionLinks.map((link, index) => (
+                          <DropdownItem
+                            className="whitespace-nowrap"
+                            key={index}
+                            onClick={() => handleLink(link)}
+                          >
+                            {link}
+                          </DropdownItem>
+                        ))}
+                      </DropdownMenu>
+                    </Dropdown>
+                  ) : (
+                    <div className="detail-value flex justify-end items-center gap-[4px]">
+                      <div
+                        className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
+                        onClick={() =>
+                          handleLink(detail.actionLink || data.link)
+                        }
+                      >
+                        <GradientText>{detail.action}</GradientText>
                       </div>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      aria-label="action"
-                      itemClasses={{
-                        base: "gap-4",
-                      }}
-                    >
-                      {detail.actionLinks.map((link, index) => (
-                        <DropdownItem
-                          className="whitespace-nowrap"
-                          key={index}
-                          onClick={() => handleLink(link)}
-                        >
-                          {link}
-                        </DropdownItem>
-                      ))}
-                    </DropdownMenu>
-                  </Dropdown>
-                ) : (
-                  <div className="detail-value flex justify-end items-center gap-[4px]">
-                    <div
-                      className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
-                      onClick={() => handleLink(detail.actionLink || data.link)}
-                    >
-                      <GradientText>{detail.action}</GradientText>
+                      <img
+                        src="/img/open-in-new-s2.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                      />
                     </div>
-                    <img
-                      src="/img/open-in-new-s2.svg"
-                      alt=""
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             ))}
           </DetailBox>
@@ -1256,7 +1259,7 @@ export default function EcoDApps({
       />
 
       <div className="overflow-x-auto">
-        <List className="min-w-[1000px]">
+        <List className="min-w-[1178px]">
           <div className="list-header flex items-center">
             <div className="list-header-item text-left w-1/5">Protocol</div>
             <div className="row-items flex items-center w-4/5">
@@ -1296,7 +1299,7 @@ export default function EcoDApps({
         isOpen={warningModal.isOpen}
         onOpenChange={warningModal.onOpenChange}
       >
-        <ModalContent className="p-2 mb-20 md:mb-0">
+        <ModalContent className="p-2">
           <ModalHeader>
             <div className="text-center w-full flex justify-center items-center gap-1">
               <img src="/img/icon-warning.svg" className="w-[2rem] h-[2rem]" />
@@ -1304,10 +1307,10 @@ export default function EcoDApps({
             </div>
           </ModalHeader>
           <ModalBody>
-            <p className="text-[1.25rem] text-[#A0A5AD] font-[500] leading-[2rem]">
+            <p className="text-[16px] md:text-[1.25rem] text-[#A0A5AD] font-[500] leading-[2rem]">
               {t("dashboard.acdess_3rd_website")}
             </p>
-            <div className="mt-[1.88rem] flex items-center gap-2">
+            <div className="mt-[16px] md:mt-[1.88rem] flex items-center gap-2">
               <input
                 type="checkbox"
                 id="recognize"

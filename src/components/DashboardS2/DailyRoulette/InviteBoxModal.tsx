@@ -436,13 +436,13 @@ const InviteBoxModal = () => {
         isOpen={modalInstance.isOpen}
         onOpenChange={modalInstance.onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="md:mb-[5.75rem]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 {t("dashboard.open_ur_invite_box")}
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="px-2">
                 <div className="flex flex-col items-center">
                   <DrawAnimation
                     type="Trademark"
@@ -498,7 +498,7 @@ const InviteBoxModal = () => {
                       eventBus.emit("openRefeffalModal");
                     }}
                   >
-                    {t("dahsboard.invite_more_friends")}
+                    {t("dashboard.invite_more_friends")}
                   </SecondayButton>
                 </div>
               </ModalFooter>

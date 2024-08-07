@@ -209,7 +209,7 @@ export default function DailyRoulette() {
           <InviteBoxModal />
         </div>
       </div>
-      <div className="flex items-center justify-between mt-[30px] overflow-auto gap-[10px] md:gap-[0]">
+      <div className="flex items-center justify-center md:justify-between mt-[30px] overflow-auto gap-[10px] md:gap-[0]">
         {dailyData.map((item, index) => (
           <DailyBox
             {...item}
