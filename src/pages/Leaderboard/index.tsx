@@ -27,7 +27,6 @@ const Container = styled.div`
 
 const Title = styled.div`
   font-family: Satoshi;
-  font-size: 48px;
   font-style: normal;
   font-weight: 900;
   line-height: normal;
@@ -232,6 +231,10 @@ const ContentBox = styled.div`
     );
     cursor: pointer;
     white-space: nowrap;
+    @media screen and (max-width: 768px) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
 
     &.active {
       position: relative;
@@ -384,7 +387,6 @@ const ContentBox = styled.div`
         &.item-rank {
           color: var(--Neutral-1, #fff);
           font-family: Satoshi;
-          font-size: 32px;
           font-style: normal;
           font-weight: 900;
           line-height: normal;
@@ -392,14 +394,12 @@ const ContentBox = styled.div`
         &.item-user {
           color: var(--Neutral-1, #fff);
           font-family: Satoshi;
-          font-size: 24px;
           font-style: normal;
           font-weight: 900;
           line-height: normal;
         }
         &.item-points {
           font-family: Satoshi;
-          font-size: 26px;
           font-style: normal;
           font-weight: 700;
           line-height: normal;
@@ -412,6 +412,32 @@ const ContentBox = styled.div`
           background-clip: text;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .tr-item {
+          width: 360px;
+        }
+        .item-rank {
+          width: 100px;
+        }
+        .item-user {
+          padding: 0 15px;
+          width: 160px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .item-points {
+          /* margin-right: 24px; */
+          padding: 0 15px;
+          width: 100px;
+          text-align: right;
+        }
+        .self-tag {
+          padding: 4px 8px;
+          font-size: 12px;
         }
       }
     }
@@ -532,16 +558,18 @@ export default function Leaderboard() {
 
   return (
     <Container>
-      <div className="mt-[80px] px-[16px] md:px-[70px] relative z-1">
+      <div className="md:mt-[80px] px-[16px] md:px-[70px] relative z-1">
         <div className="flex items-end flex-col md:flex-row gap-[46px]">
           <div>
-            <div className="flex">
+            <div className="flex justify-center md:justify-start">
               <div className="px-[16px] py-[10px] rounded-[48px] bg-[#28282899]">
                 <GradientText>Leaderboard</GradientText>
               </div>
             </div>
-            <Title className="mt-[20px]">Points Leaderboard</Title>
-            <Description className="mt-[30px]">
+            <Title className="mt-[20px] md:text-[48px] text-[32px] text-center md:text-left">
+              Points Leaderboard
+            </Title>
+            <Description className="mt-[30px] text-center md:text-left">
               The leaderboard is organized by sectors. In Season II, Nova Points
               will measure users' contributions to each sector. These points
               will determine the distribution of $ZKL rewards from each sector's
@@ -549,8 +577,8 @@ export default function Leaderboard() {
             </Description>
           </div>
 
-          <EpochBox className="flex flex-col items-center">
-            <GradientBox className="max-w-[224px] rounded-[100px] overflow-hidden flex items-center justify-center whitespace-nowrap">
+          <EpochBox className="flex flex-col items-center w-full">
+            <GradientBox className="md:max-w-[224px] w-full rounded-[100px] overflow-hidden flex items-center justify-center whitespace-nowrap">
               <div
                 className={`epoch-btn left flex items-center justify-center ${
                   epochPrevDisabled ? "disabled" : ""
@@ -579,9 +607,9 @@ export default function Leaderboard() {
           </EpochBox>
         </div>
 
-        <ContentBox>
-          <div className="tab-bar mt-[50px] max-w-[100%]">
-            <div className="w-full flex justify-between items-start">
+        <ContentBox className="mt-[50px]">
+          <div className="tab-bar max-w-[100%]">
+            <div className="w-full flex justify-between items-start overflow-x-auto overflow-y-hidden">
               <div className="flex items-end gap-[24px]">
                 {tabs.map((tab, index) => (
                   <div
@@ -600,7 +628,7 @@ export default function Leaderboard() {
                   </div>
                 ))}
               </div>
-              <GradientBox className="px-[28px] h-[52px] rounded-[76px] flex items-center gap-[12px]">
+              <GradientBox className="px-[28px] h-[52px] rounded-[76px] md:flex items-center gap-[12px] hidden">
                 <span className="text-[#fff] text-[14px] font-[500] opacity-80">
                   Invite To Earn More
                 </span>
@@ -642,8 +670,8 @@ export default function Leaderboard() {
               } 24px 24px`,
             }}
           >
-            <div className="tab-content px-[42px] py-[32px]">
-              <div className="flex items-center justify-between">
+            <div className="tab-content px-[12px] md:px-[42px] py-[16px] md:py-[32px]">
+              <div className="tr-item flex items-center justify-between">
                 <span className="th-item item-rank">Rank</span>
                 <span className="th-item item-user">User</span>
                 <span className="th-item item-points">
@@ -654,19 +682,19 @@ export default function Leaderboard() {
               <RowLine className="my-[30px]" />
 
               {selfData && (
-                <GradientBox className="mt-[16px] py-[22px] rounded-[24px] flex items-center justify-between">
-                  <div className="td-item item-rank flex justify-center">
-                    <GradientBox className="px-[24px] py-[8px] rounded-[100px]">
+                <GradientBox className="tr-item mt-[16px] py-[22px] rounded-[24px] flex items-center justify-between">
+                  <div className="td-item item-rank text-[18px] md:text-[32px] flex justify-center">
+                    <GradientBox className="md:px-[24px] px-[8px] py-[8px] rounded-[100px]">
                       {selfData.rank || "-"}
                     </GradientBox>
                   </div>
                   <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-user flex items-center gap-[16px]">
+                  <span className="td-item item-user text-[12px] md:text-[24px] flex items-center gap-[4px] md:gap-[16px]">
                     {selfData.username}
                     <span className="self-tag">You</span>
                   </span>
                   <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-points">
+                  <span className="td-item item-points text-[16px] md:text-[26px]">
                     {formatNumberWithUnit(selfData.totalPoints)}
                   </span>
                 </GradientBox>
@@ -674,14 +702,18 @@ export default function Leaderboard() {
 
               {categoryList.map((item, index) => (
                 <div
-                  className="item-box flex items-center justify-between"
+                  className="tr-item item-box flex items-center justify-between"
                   key={index}
                 >
-                  <span className="td-item item-rank">{item.rank}</span>
+                  <span className="td-item item-rank text-[18px] md:text-[32px]">
+                    {item.rank}
+                  </span>
                   <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-user">{item.username}</span>
+                  <span className="td-item item-user text-[12px] md:text-[24px]">
+                    {item.username}
+                  </span>
                   <ColLine className="h-[44px] opacity-40" />
-                  <span className="td-item item-points">
+                  <span className="td-item item-points text-[16px] md:text-[26px]">
                     {formatNumberWithUnit(item.totalPoints)}
                   </span>
                 </div>
@@ -689,6 +721,39 @@ export default function Leaderboard() {
             </div>
           </div>
         </ContentBox>
+
+        <GradientBox className="mt-[30px] px-[28px] h-[52px] rounded-[76px] md:hidden flex items-center gap-[12px]">
+          <span className="text-[#fff] text-[14px] font-[500] opacity-80">
+            Invite To Earn More
+          </span>
+          <ColLine className="h-[28px]" />
+          <span className="font-[900] text-[30px] text-[#fff]">
+            {invite?.code}
+          </span>
+          <img
+            src="/img/icon-invite-copy.svg"
+            alt=""
+            width={20}
+            height={20}
+            className="cursor-pointer"
+            onClick={handleCopy}
+          />
+          <img
+            src="/img/icon-invite-twitter.svg"
+            alt=""
+            width={20}
+            height={20}
+            className="cursor-pointer"
+            onClick={() =>
+              window.open(
+                `https://twitter.com/intent/tweet?text=${getTweetShareTextForMysteryBox(
+                  invite?.code ?? ""
+                )}`,
+                "_blank"
+              )
+            }
+          />
+        </GradientBox>
       </div>
 
       <NovaNetworkTVL />

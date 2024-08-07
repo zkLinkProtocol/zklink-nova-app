@@ -26,6 +26,7 @@ import { SearchIcon } from "@/components/SearchIcon";
 import BridgeComponent from "@/components/Bridge";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import SectorHeader from "./SectorHeader";
+import AllocatedPoints from "./AllocatedPoints";
 
 const Container = styled.div`
   .holding-title {
@@ -92,7 +93,6 @@ const List = styled.div`
   }
 
   .list-content-item {
-    padding: 16px 28px;
     color: var(--Neutral-1, #fff);
     font-family: Satoshi;
     font-size: 14px;
@@ -154,6 +154,7 @@ const List = styled.div`
   }
 
   .col-line {
+    min-width: 1px;
     width: 1px;
     height: 44px;
     opacity: 0.3;
@@ -453,184 +454,231 @@ export default function Assets(props: IAssetsTableProps) {
           totalTvl={currentTvl}
         />
 
-        <List>
-          <div className="list-header flex items-center">
-            <div className="list-header-item text-left">Token</div>
-            <div className="list-header-item text-center">Points Booster</div>
-            <div className="list-header-item text-center">Nova TVL</div>
-            <div className="list-header-item text-center">Your Holding</div>
-            <div className="list-header-item">
-              <Input
-                data-hover={false}
-                isClearable
-                placeholder="Enter Token Symbol To Search"
-                className="search-input"
-                classNames={{
-                  base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
-                  mainWrapper: ["bg-transparent", "hover:bg-transparent"],
-                  inputWrapper: ["bg-transparent", "hover:bg-transparent"],
-                  input: ["bg-transparent", "hover:bg-transparent"],
-                }}
-                startContent={
-                  <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
-                }
-                onClear={() => {
-                  setSearchValue("");
-                }}
-                onValueChange={setSearchValue}
-              />
+        <div className="mt-[24px] md:hidden block">
+          <Input
+            data-hover={false}
+            isClearable
+            placeholder="Enter Token Symbol To Search"
+            className="search-input"
+            classNames={{
+              base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
+              mainWrapper: ["bg-transparent", "hover:bg-transparent"],
+              inputWrapper: ["bg-transparent", "hover:bg-transparent"],
+              input: ["bg-transparent", "hover:bg-transparent"],
+            }}
+            startContent={
+              <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+            }
+            onClear={() => {
+              setSearchValue("");
+            }}
+            onValueChange={setSearchValue}
+          />
+        </div>
+
+        <div className="overflow-x-auto">
+          <List className="min-w-[900px]">
+            <div className="list-header flex items-center">
+              <div className="list-header-item text-left">Token</div>
+              <div className="list-header-item text-center">Points Booster</div>
+              <div className="list-header-item text-center">Nova TVL</div>
+              <div className="list-header-item text-center">Your Holding</div>
+              <div className="list-header-item">
+                <Input
+                  data-hover={false}
+                  isClearable
+                  placeholder="Enter Token Symbol To Search"
+                  className="search-input md:block hidden"
+                  classNames={{
+                    base: ["bg-[rgba(0,0,0,.4)]", "bg-[rgba(0,0,0,.4)]"],
+                    mainWrapper: ["bg-transparent", "hover:bg-transparent"],
+                    inputWrapper: ["bg-transparent", "hover:bg-transparent"],
+                    input: ["bg-transparent", "hover:bg-transparent"],
+                  }}
+                  startContent={
+                    <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+                  }
+                  onClear={() => {
+                    setSearchValue("");
+                  }}
+                  onValueChange={setSearchValue}
+                />
+              </div>
             </div>
-          </div>
-          <div className="list-content">
-            {filterTableList.map((item, index) => (
-              <div className="row mb-[24px] flex items-center" key={index}>
-                <div className="list-content-item flex items-center gap-[10px]">
-                  {item?.iconURL && (
-                    <img
-                      src={item?.iconURL}
-                      alt=""
-                      className="w-[55px] h-[56px] rounded-full block"
-                    />
-                  )}
-                  <div>
-                    <div className="symbol">{item?.symbol}</div>
-                    {item?.isNova && (
-                      <div className="name mt-[5px]">Merged Token</div>
+            <div className="list-content">
+              {filterTableList.map((item, index) => (
+                <div className="row mb-[24px] flex items-center" key={index}>
+                  <div className="list-content-item px-[20px] md:px-[28px] py-[16px] flex items-center gap-[10px]">
+                    {item?.iconURL && (
+                      <img
+                        src={item?.iconURL}
+                        alt=""
+                        className="min-w-[32px] w-[32px] h-[32px] md:w-[55px] md:h-[56px] rounded-full block"
+                      />
+                    )}
+                    <div>
+                      <div className="symbol">{item?.symbol}</div>
+                      {item?.isNova && (
+                        <div className="name mt-[5px]">Merged Token</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-line"></div>
+                  <div className="list-content-item px-[20px] md:px-[28px] py-[16px] flex items-center justify-center text-center">
+                    <GradientBox>
+                      {item?.multipliers && Array.isArray(item.multipliers)
+                        ? findClosestMultiplier(item?.multipliers)
+                        : 0}
+                      x Boost
+                    </GradientBox>
+                  </div>
+                  <div className="col-line"></div>
+
+                  <div className="list-content-item px-[20px] md:px-[28px] py-[16px] text-center">
+                    {item.symbol === "ZKL" ? (
+                      "-"
+                    ) : (
+                      <>
+                        {formatNumberWithUnit(item?.totalAmount)}
+                        <span className="text-gray">
+                          ({formatNumberWithUnit(item?.totalTvl, "$")})
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <div className="col-line"></div>
+
+                  <div className="list-content-item px-[20px] md:px-[28px] py-[16px] text-center">
+                    {" "}
+                    {formatNumberWithUnit(item?.amount)}
+                  </div>
+                  <div className="col-line"></div>
+
+                  <div className="list-content-item px-[20px] md:px-[28px] py-[16px] flex justify-end items-center gap-[10px]">
+                    <span className="action">Action:</span>
+                    {item.symbol === "ZKL" ? (
+                      <Dropdown className="bg-[#000811] py-[20px]">
+                        <DropdownTrigger>
+                          <span className="participate cursor-pointer">
+                            Buy Now
+                          </span>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          aria-label="ACME features"
+                          itemClasses={{
+                            base: "gap-4",
+                          }}
+                        >
+                          <DropdownItem key="bridge">
+                            <div
+                              className="flex justify-between items-center"
+                              onClick={() => {
+                                window.open(
+                                  "https://novaswap.fi/#/swap",
+                                  "_blank"
+                                );
+                              }}
+                            >
+                              Buy from Novaswap
+                              <img
+                                src="/img/icon-bridge-link-arrow.svg"
+                                alt=""
+                              />
+                            </div>
+                          </DropdownItem>
+
+                          <DropdownItem key="merge">
+                            <div
+                              className="flex justify-between items-center"
+                              onClick={() => {
+                                window.open(
+                                  "https://izumi.finance/trade/swap?chainId=810180",
+                                  "_blank"
+                                );
+                              }}
+                            >
+                              Buy from izumi
+                              <img
+                                src="/img/icon-bridge-link-arrow.svg"
+                                alt=""
+                              />
+                            </div>
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    ) : item?.isNova ? (
+                      <Dropdown className="bg-[#000811] py-[20px]">
+                        <DropdownTrigger>
+                          <span className="participate cursor-pointer">
+                            Participate
+                          </span>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          aria-label="ACME features"
+                          itemClasses={{
+                            base: "gap-4",
+                          }}
+                        >
+                          <DropdownItem key="bridge">
+                            <div
+                              className="flex justify-between items-center"
+                              onClick={() => {
+                                console.log("item: ", item);
+                                handleBridgeMore(item?.symbol);
+                              }}
+                            >
+                              Bridge Now
+                              <img
+                                src="/img/icon-bridge-link-arrow.svg"
+                                alt=""
+                              />
+                            </div>
+                          </DropdownItem>
+
+                          <DropdownItem key="merge">
+                            <div
+                              className="flex justify-between items-center"
+                              onClick={() => {
+                                window.open(
+                                  "https://zklink.io/merge",
+                                  "_blank"
+                                );
+                              }}
+                            >
+                              Merge Now
+                              <img
+                                src="/img/icon-bridge-link-arrow.svg"
+                                alt=""
+                              />
+                            </div>
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    ) : (
+                      <span
+                        className="participate cursor-pointer"
+                        onClick={() => {
+                          console.log("item: ", item);
+                          handleBridgeMore(item?.symbol);
+                        }}
+                      >
+                        Bridge Now
+                      </span>
                     )}
                   </div>
                 </div>
-                <div className="col-line"></div>
-                <div className="list-content-item flex items-center justify-center text-center">
-                  <GradientBox>
-                    {item?.multipliers && Array.isArray(item.multipliers)
-                      ? findClosestMultiplier(item?.multipliers)
-                      : 0}
-                    x Boost
-                  </GradientBox>
-                </div>
-                <div className="col-line"></div>
+              ))}
+            </div>
+          </List>
+        </div>
 
-                <div className="list-content-item  text-center">
-                  {item.symbol === "ZKL" ? (
-                    "-"
-                  ) : (
-                    <>
-                      {formatNumberWithUnit(item?.totalAmount)}
-                      <span className="text-gray">
-                        ({formatNumberWithUnit(item?.totalTvl, "$")})
-                      </span>
-                    </>
-                  )}
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  text-center">
-                  {" "}
-                  {formatNumberWithUnit(item?.amount)}
-                </div>
-                <div className="col-line"></div>
-
-                <div className="list-content-item  flex justify-end items-center gap-[10px]">
-                  <span className="action">Action:</span>
-                  {item.symbol === "ZKL" ? (
-                    <Dropdown className="bg-[#000811] py-[20px]">
-                      <DropdownTrigger>
-                        <span className="participate cursor-pointer">
-                          Buy Now
-                        </span>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        aria-label="ACME features"
-                        itemClasses={{
-                          base: "gap-4",
-                        }}
-                      >
-                        <DropdownItem key="bridge">
-                          <div
-                            className="flex justify-between items-center"
-                            onClick={() => {
-                              window.open(
-                                "https://novaswap.fi/#/swap",
-                                "_blank"
-                              );
-                            }}
-                          >
-                            Buy from Novaswap
-                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
-                          </div>
-                        </DropdownItem>
-
-                        <DropdownItem key="merge">
-                          <div
-                            className="flex justify-between items-center"
-                            onClick={() => {
-                              window.open(
-                                "https://izumi.finance/trade/swap?chainId=810180",
-                                "_blank"
-                              );
-                            }}
-                          >
-                            Buy from izumi
-                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
-                          </div>
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  ) : item?.isNova ? (
-                    <Dropdown className="bg-[#000811] py-[20px]">
-                      <DropdownTrigger>
-                        <span className="participate cursor-pointer">
-                          Participate
-                        </span>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        aria-label="ACME features"
-                        itemClasses={{
-                          base: "gap-4",
-                        }}
-                      >
-                        <DropdownItem key="bridge">
-                          <div
-                            className="flex justify-between items-center"
-                            onClick={() => {
-                              console.log("item: ", item);
-                              handleBridgeMore(item?.symbol);
-                            }}
-                          >
-                            Bridge Now
-                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
-                          </div>
-                        </DropdownItem>
-
-                        <DropdownItem key="merge">
-                          <div
-                            className="flex justify-between items-center"
-                            onClick={() => {
-                              window.open("https://zklink.io/merge", "_blank");
-                            }}
-                          >
-                            Merge Now
-                            <img src="/img/icon-bridge-link-arrow.svg" alt="" />
-                          </div>
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  ) : (
-                    <span
-                      className="participate cursor-pointer"
-                      onClick={() => {
-                        console.log("item: ", item);
-                        handleBridgeMore(item?.symbol);
-                      }}
-                    >
-                      Bridge Now
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </List>
+        <div className="md:hidden block">
+          <AllocatedPoints
+            novaCategoryTotalPoints={novaCategoryTotalPoints}
+            holdingPoints={holdingPoints}
+            tabActive={tabActive}
+          />
+        </div>
       </Container>
 
       <Modal

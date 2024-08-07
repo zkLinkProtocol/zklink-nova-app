@@ -42,7 +42,7 @@ import { SourceTokenInfo, useMergeToken } from "@/hooks/useMergeToken";
 import useOldestFriendsStatus from "@/hooks/useOldestFriendsStatus";
 import useNovaChadNftStatus from "@/hooks/useNovaChadNftStatus";
 import BridgeCompPc from "./BridgeCompPc";
-import BridgeCompMobile from "./BridgeCompMobile";
+
 import {
   ModalSelectItem,
   AssetTypes,
@@ -657,42 +657,7 @@ export default function Bridge(props: IBridgeComponentProps) {
           setIsMergeSelected,
         }}
       />
-      {/* <BridgeCompMobile
-        {...{
-          actionBtnDisabled,
-          actionBtnTooltipForMantleDisabeld,
-          amount,
-          btnText,
-          errorInputMsg,
-          fromActive,
-          fromModal,
-          handleAction,
-          isCheckWinner,
-          isConnected,
-          isFirstDeposit,
-          isMemeMysteryboxReward,
-          isMergeSelected,
-          isWhitelistWinner,
-          loading,
-          loyalPoints,
-          mergeSupported,
-          mergeTokenBooster,
-          minDepositValue,
-          mintable,
-          minted,
-          networkKey,
-          openConnectModal,
-          points,
-          showNoPointsTip,
-          tokenActive,
-          tokenFiltered,
-          tokenModal,
-          unsupportedChainWithConnector,
-          inputRef2,
-          handleInputValue,
-          setIsMergeSelected,
-        }}
-      /> */}
+
       {isFirstDeposit && address && txhashes[address]?.[0] && (
         <div>
           <Link

@@ -27,6 +27,7 @@ import styled from "styled-components";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import SectorHeader from "./SectorHeader";
 import DailyDrawModal from "../DailyRoulette/DailyDrawModal";
+import AllocatedPoints from "./AllocatedPoints";
 
 const Container = styled.div`
   .holding-title {
@@ -132,6 +133,7 @@ const List = styled.div`
   }
 
   .col-line {
+    min-width: 1px;
     width: 1px;
     height: 44px;
     opacity: 0.3;
@@ -1257,42 +1259,54 @@ export default function EcoDApps({
         tvlCategoryMilestone={tvlCategoryMilestone}
       />
 
-      <List>
-        <div className="list-header flex items-center">
-          <div className="list-header-item text-left w-1/5">Protocol</div>
-          <div className="row-items flex items-center w-4/5">
-            <div className="list-header-item text-center">Points Booster</div>
-            <div className="list-header-item text-center">Rewards</div>
-            <div className="list-header-item text-center">Allocated Points</div>
-            <div className="list-header-item text-center">
-              <div className="flex itmes-center justify-center gap-[4px]">
-                <span>Roulette</span>
-                <Tooltip
-                  className="max-w-[360px]"
-                  classNames={{
-                    content:
-                      "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-                  }}
-                  content="Interact with dApp and after receive more than 1 Nova points, you will earn a chance to do three one time roulette to win Nova Points & Trademark NFTs."
-                >
-                  <img src="/img/icon-info-2.svg" alt="" />
-                </Tooltip>
+      <div className="overflow-x-auto">
+        <List className="min-w-[1000px]">
+          <div className="list-header flex items-center">
+            <div className="list-header-item text-left w-1/5">Protocol</div>
+            <div className="row-items flex items-center w-4/5">
+              <div className="list-header-item text-center">Points Booster</div>
+              <div className="list-header-item text-center">Rewards</div>
+              <div className="list-header-item text-center">
+                Allocated Points
               </div>
+              <div className="list-header-item text-center">
+                <div className="flex itmes-center justify-center gap-[4px]">
+                  <span>Roulette</span>
+                  <Tooltip
+                    className="max-w-[360px]"
+                    classNames={{
+                      content:
+                        "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                    }}
+                    content="Interact with dApp and after receive more than 1 Nova points, you will earn a chance to do three one time roulette to win Nova Points & Trademark NFTs."
+                  >
+                    <img src="/img/icon-info-2.svg" alt="" />
+                  </Tooltip>
+                </div>
+              </div>
+              <div className="list-header-item"></div>
             </div>
-            <div className="list-header-item"></div>
           </div>
-        </div>
-        <div className="list-content">
-          {ecoDAppsList.map((item, index) => (
-            <EcoDApp
-              key={index}
-              data={item}
-              handleLink={handleLink}
-              onDrawed={getSpin}
-            />
-          ))}
-        </div>
-      </List>
+          <div className="list-content">
+            {ecoDAppsList.map((item, index) => (
+              <EcoDApp
+                key={index}
+                data={item}
+                handleLink={handleLink}
+                onDrawed={getSpin}
+              />
+            ))}
+          </div>
+        </List>
+      </div>
+
+      <div className="md:hidden block">
+        <AllocatedPoints
+          novaCategoryTotalPoints={novaCategoryTotalPoints}
+          holdingPoints={holdingPoints}
+          tabActive={tabActive}
+        />
+      </div>
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}

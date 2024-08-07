@@ -19,10 +19,9 @@ const Title = styled.h1`
   color: #fff;
   text-align: center;
   font-family: Satoshi;
-  font-size: 56px;
   font-style: normal;
   font-weight: 900;
-  line-height: 70px; /* 125% */
+  line-height: normal;
   letter-spacing: -0.168px;
 `;
 
@@ -111,6 +110,17 @@ const CardBox = styled.div`
         align-items: center;
         justify-content: center;
       }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .card-title {
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .paragraph {
+      font-size: 14px;
+      line-height: 26px;
     }
   }
 `;
@@ -391,19 +401,23 @@ export default function About() {
   ];
 
   return (
-    <Container className="px-[104px]">
-      <Title className="mt-[80px]">About zkLink Nova Aggregation Parade</Title>
+    <Container>
+      <div className="px-[30px] md:px-[104px]">
+        <Title className="md:mt-[80px] text-[32px] md:text-[56px]">
+          About zkLink Nova Aggregation Parade
+        </Title>
 
-      <div className="mt-[60px] mx-auto flex flex-col gap-[30px]">
-        {list.map((item, index) => (
-          <CollapseCard
-            key={index}
-            question={item.question}
-            answer={item.answer}
-            isOpened={item.isOpened}
-            isGradientBorder={item.isGradientBorder}
-          />
-        ))}
+        <div className="mt-[32px] md:mt-[60px] mx-auto flex flex-col gap-[30px]">
+          {list.map((item, index) => (
+            <CollapseCard
+              key={index}
+              question={item.question}
+              answer={item.answer}
+              isOpened={item.isOpened}
+              isGradientBorder={item.isGradientBorder}
+            />
+          ))}
+        </div>
       </div>
 
       <NovaNetworkTVL />

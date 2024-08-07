@@ -306,9 +306,9 @@ const BridgeCompPC = (props: IProps) => {
   };
 
   return (
-    <Container className="hidden md:block">
+    <Container>
       {/* <ContainerCover /> */}
-      <div className="tabs flex items-end justify-between gap-[16px]">
+      <div className="tabs flex items-end justify-between gap-[16px] overflow-x-auto overflow-y-hidden">
         {tabs.map((tab, index) => (
           <div
             className={`tab-item flex items-center justify-center gap-[16px] ${
@@ -342,24 +342,26 @@ const BridgeCompPC = (props: IProps) => {
           {tabActive === 0 && (
             <>
               <SelectBox className="px-6 py-6 md:px-6">
-                <div className="flex items-center gap-4">
-                  <span className="label">From</span>
-                  <GradientBox
-                    className="px-[16px] py-2 rounded-[100px] flex items-center gap-2 cursor-pointer"
-                    onClick={() => fromModal.onOpen()}
-                  >
-                    <img
-                      src={fromList[fromActive].icon}
-                      className="w-6 h-6 rounded-full"
-                    />
-                    <span>{fromList[fromActive].label}</span>
-                    <img
-                      src="/img/icon-arrow-down.svg"
-                      alt=""
-                      className={fromModal.isOpen ? "rotate-180" : ""}
-                    />
-                  </GradientBox>
-                  <div className="ml-auto flex items-center">
+                <div className="flex flex-col md:flex-row gap-[16px]">
+                  <div className="flex items-center gap-4">
+                    <span className="label">From</span>
+                    <GradientBox
+                      className="px-[16px] py-2 rounded-[100px] flex items-center gap-2 cursor-pointer"
+                      onClick={() => fromModal.onOpen()}
+                    >
+                      <img
+                        src={fromList[fromActive].icon}
+                        className="w-6 h-6 rounded-full"
+                      />
+                      <span>{fromList[fromActive].label}</span>
+                      <img
+                        src="/img/icon-arrow-down.svg"
+                        alt=""
+                        className={fromModal.isOpen ? "rotate-180" : ""}
+                      />
+                    </GradientBox>
+                  </div>
+                  <div className="md:ml-auto flex items-center">
                     <span className="label mr-2">Balance: </span>
                     <span className="balance">
                       {tokenFiltered[tokenActive]?.formatedBalance}
