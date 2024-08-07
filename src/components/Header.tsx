@@ -451,7 +451,6 @@ export default function Header() {
                 className="max-w-[150px] md:max-w-[145.431px] h-auto"
                 src="/img/NOVA.svg"
               />
-              {/* <span className='logo-text'>zk.Link</span> */}
             </LogoBox>
           </Link>
           {/* <NavNet className="hidden md:flex">
@@ -684,11 +683,7 @@ export default function Header() {
                     <img width={20} height={20} src="/img/icon-s2-wallet.svg" />
 
                     {/* <ConnectButton /> */}
-                    <ButtonText
-                      className={`${isConnected ? "ml-2 md:ml-0" : ""}`}
-                    >
-                      {showAccount(address)}
-                    </ButtonText>
+                    <ButtonText>{showAccount(address, 2, 4)}</ButtonText>
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu onAction={(key) => handleWallectAction(key)}>

@@ -434,13 +434,13 @@ const InviteBoxModal = () => {
         isOpen={modalInstance.isOpen}
         onOpenChange={modalInstance.onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="md:mb-[5.75rem]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Open Your Invite Box
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="px-2">
                 <div className="flex flex-col items-center">
                   <DrawAnimation
                     type="Trademark"
