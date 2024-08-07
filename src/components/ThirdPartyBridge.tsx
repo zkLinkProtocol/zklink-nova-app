@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 const Title = styled.div`
   color: var(--Neutral-1, #fff);
   font-family: Satoshi;
-  font-size: 24px;
   font-style: normal;
   font-weight: 900;
   line-height: normal;
@@ -17,6 +16,14 @@ const ListCard = styled.a`
   border-radius: 16px;
   border: 2.205px solid #635f5f;
   background: #151923;
+  .desc {
+    @media screen and (max-width: 768px) {
+      max-width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 `;
 
 const ColLine = styled.div`
@@ -98,16 +105,18 @@ export default function ThridPartyBridge() {
 
   return (
     <div className="mt-[16px] px-[8px]">
-      <Title>{t("bridge.earn_extra_nova_points")}</Title>
+      <Title className="text-[16px] md:text-[24px]">
+        {t("bridge.earn_extra_nova_points")}
+      </Title>
       <Line className="mt-6" />
       {bridges.map((bridge, index) => (
         <ListCard
           key={index}
-          className="bridge-bg-secondary mt-[1rem] px-[1rem] py-[0.75rem] rounded-[1rem] block flex justify-between items-center"
+          className="bridge-bg-secondary mt-[1rem] px-[1rem] py-[0.75rem] rounded-[1rem] block flex justify-between items-center gap-[8px]"
           href={bridge.link}
           target="_blank"
         >
-          <div className="flex shrink grow basis-0 items-center gap-[14px]">
+          <div className="flex shrink grow basis-0 items-center gap-[8px] md:gap-[14px]">
             <img
               src={bridge.iconURL}
               alt={bridge.name}
@@ -117,7 +126,7 @@ export default function ThridPartyBridge() {
               <div className="text-[#fff] text-[18px] font-[500]">
                 {bridge.name}
               </div>
-              <div className="w-[334px] text-[#FBFBFB99] text-[12px] leading-[18px]">
+              <div className="desc md:w-[334px] text-[#FBFBFB99] text-[12px] leading-[18px]">
                 {bridge.desc}
               </div>
             </div>
@@ -127,7 +136,9 @@ export default function ThridPartyBridge() {
           <div className="min-w-[100px] flex justify-end items-center gap-[0.5rem] whitespace-nowrap">
             {bridge.points && (
               <DefaultBtn className="block rounded-[100px] px-[16px] h-[26px]">
-                <span className="btn-text">{bridge.points}</span>
+                <span className="btn-text text-[12px] md:text-[16px]">
+                  {bridge.points}
+                </span>
               </DefaultBtn>
             )}
             <img src="/img/icon-ecolink2.svg" className="w-[20px] h-[20px]" />

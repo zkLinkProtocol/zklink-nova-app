@@ -28,6 +28,7 @@ import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import SectorHeader from "./SectorHeader";
 import { useTranslation } from "react-i18next";
 import DailyDrawModal from "../DailyRoulette/DailyDrawModal";
+import AllocatedPoints from "./AllocatedPoints";
 
 const Container = styled.div`
   .holding-title {
@@ -133,6 +134,7 @@ const List = styled.div`
   }
 
   .col-line {
+    min-width: 1px;
     width: 1px;
     height: 44px;
     opacity: 0.3;
@@ -1253,34 +1255,39 @@ export default function EcoDApps({
         tvlCategoryMilestone={tvlCategoryMilestone}
       />
 
-      <List>
-        <div className="list-header flex items-center">
-          <div className="list-header-item text-left w-1/5">Protocol</div>
-          <div className="row-items flex items-center w-4/5">
-            <div className="list-header-item text-center">
-              {t("dashboard.points_booster")}
+      <div className="overflow-x-auto">
+        <List className="min-w-[1000px]">
+          <div className="list-header flex items-center">
+            <div className="list-header-item text-left w-1/5">Protocol</div>
+            <div className="row-items flex items-center w-4/5">
+              <div className="list-header-item text-center">Points Booster</div>
+              <div className="list-header-item text-center">Rewards</div>
+              <div className="list-header-item text-center">
+                Allocated Points
+              </div>
+              <div className="list-header-item"></div>
             </div>
-            <div className="list-header-item text-center">
-              {t("dashboard.rewards")}
-            </div>
-            <div className="list-header-item text-center">
-              {t("dashboard.allocated_points")}
-            </div>
-            <div className="list-header-item text-center">Roulette</div>
-            <div className="list-header-item"></div>
           </div>
-        </div>
-        <div className="list-content">
-          {ecoDAppsList.map((item, index) => (
-            <EcoDApp
-              key={index}
-              data={item}
-              handleLink={handleLink}
-              onDrawed={getSpin}
-            />
-          ))}
-        </div>
-      </List>
+          <div className="list-content">
+            {ecoDAppsList.map((item, index) => (
+              <EcoDApp
+                key={index}
+                data={item}
+                handleLink={handleLink}
+                onDrawed={getSpin}
+              />
+            ))}
+          </div>
+        </List>
+      </div>
+
+      <div className="md:hidden block">
+        <AllocatedPoints
+          novaCategoryTotalPoints={novaCategoryTotalPoints}
+          holdingPoints={holdingPoints}
+          tabActive={tabActive}
+        />
+      </div>
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}

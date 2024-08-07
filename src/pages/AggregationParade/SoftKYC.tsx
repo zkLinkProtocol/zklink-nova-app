@@ -68,14 +68,12 @@ const Container = styled.div`
   background-size: cover;
   background-position: top;
   @media (max-width: 768px) {
-    background: linear-gradient(
-      0deg,
-      rgba(102, 154, 255, 0.56) 0%,
-      rgba(12, 14, 17, 0.56) 100%
-    );
+    background-image: url("/img/s2/bg-s2-kyc-h5.png");
+
     .carBox {
       width: 100%;
       flex-direction: column;
+      gap: 10px;
       height: auto;
       padding: 1.5rem;
       .input-wrap {
@@ -641,8 +639,8 @@ export default function SoftKYC() {
       {isLoading && <Loading />}
       <div>
         {/* Title */}
-        <div className="px-6 md:flex-col mt-[120px]">
-          <div className="flex md:justify-center">
+        <div className="px-6 md:flex-col md:mt-[120px]">
+          <div className="flex justify-center">
             <DefaultButton className="px-[16px] py-[14px]">
               <span className="btn-text">{t("kyc.youre_almost_there")}</span>
             </DefaultButton>
@@ -688,7 +686,7 @@ export default function SoftKYC() {
                 />
 
                 <GradientBtn
-                  className={`rounded-[100px] ${
+                  className={`w-full rounded-[100px] ${
                     !validInviteCode(inviteCodeValue) ? "disabled" : ""
                   }`}
                   isLoading={isInviteCodeLoading}
@@ -742,7 +740,7 @@ export default function SoftKYC() {
                 </StepItem>
 
                 <GradientBtn
-                  className="rounded-[100px]"
+                  className="w-full rounded-[100px]"
                   isDisabled={isConnected && Boolean(signature)}
                   onClick={handleConnectAndSign}
                   isLoading={signLoading}
@@ -783,7 +781,7 @@ export default function SoftKYC() {
               </StepItem>
               <div className="input-wrap flex items-center gap-[1rem] md:gap-[0.5rem]">
                 <GradientBtn
-                  className="rounded-[100px] flex items-center gap-[10px]"
+                  className="w-full rounded-[100px] flex items-center gap-[10px]"
                   onClick={() => {
                     navigate("/bridge");
                   }}
@@ -801,7 +799,7 @@ export default function SoftKYC() {
 
                 <Tooltip content="Connect your wallet and sign the message before verifying.">
                   <GradientBtn
-                    className="rounded-[100px] flex items-center gap-[10px]"
+                    className="w-full rounded-[100px] flex items-center gap-[10px]"
                     isDisabled={Boolean(depositTx) || !address || !signature}
                     onClick={() => {
                       verifyDepositModal.onOpen();

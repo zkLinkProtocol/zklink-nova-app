@@ -10,7 +10,6 @@ export const Container = styled.div`
   position: relative;
   padding-top: 100px;
   width: 100%;
-  min-width: 1440px;
   min-height: 1498px;
   background-image: url("/img/s2/bg-s2-bridge.jpg");
   background-repeat: no-repeat;
@@ -38,7 +37,6 @@ const Link = styled.span`
 
 const Title = styled.h1`
   font-family: Satoshi;
-  font-size: 44.103px;
   font-style: normal;
   font-weight: 900;
   line-height: normal;
@@ -61,7 +59,6 @@ const SubTitle = styled.p`
 const Title2 = styled.h2`
   color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
   font-family: Satoshi;
-  font-size: 32px;
   font-style: normal;
   font-weight: 700;
   line-height: 46px; /* 143.75% */
@@ -110,7 +107,7 @@ export default function Bridge() {
 
   const NftIntroduction = () => (
     <CardBox className="mt-10 p-[26px]">
-      <p className="text-[22px] font-bold leading-5 mb-6">
+      <p className="text-[16px] md:text-[22px] font-bold leading-5 mb-6">
         {t("bridge.nova_nft_intro")}
       </p>
       <div className="bridge-divide"></div>
@@ -144,7 +141,7 @@ export default function Bridge() {
 
   const SeasonTwo = () => (
     <CardBox className="mt-[45px] p-[26px]">
-      <p className="text-[24px] font-bold  mb-6">
+      <p className="text-[16px] md:text-[24px] font-bold  mb-6">
         Aggregation Parade Season II
       </p>
       <Line />
@@ -172,22 +169,32 @@ export default function Bridge() {
   );
 
   return (
-    <Container>
-      <div className="mt-[50px] flex justify-center gap-[50px]">
-        <div className="w-[622px]">
-          <Title>zk.Link Nova</Title>
-          <SubTitle className="mt-[24px]">{t("bridge.the_industrys")}</SubTitle>
+    <Container className="md:min-w-[1440px]">
+      <div className="md:mt-[50px] px-[16px] flex flex-col md:flex-row justify-center gap-[50px]">
+        <div className="w-full md:w-[622px]">
+          <Title className="text-center md:text-left text-[32px] md:text-[44px]">
+            zk.Link Nova
+          </Title>
+          <SubTitle className="mt-[24px] text-center md:text-left">
+            {t("bridge.the_industrys")}
+          </SubTitle>
           <Line className="my-[16px]" />
-          <Title2 className="w-[612px]">{t("bridge.bridge_to_nova")}</Title2>
+          <Title2 className="md:w-[612px] text-[24px] md:text-[32] text-center md:text-left">
+            {t("bridge.bridge_to_nova")}
+          </Title2>
+
+          <div className="mt-[30px] w-full block md:hidden">
+            <BridgeComponent />
+          </div>
           <SeasonTwo />
           <NftIntroduction />
         </div>
-        <div className="w-[683px] min-w-[683px]">
+        <div className="w-full md:w-[683px] md:min-w-[683px] hidden md:block">
           <BridgeComponent />
         </div>
       </div>
 
-      <div className="absolute bottom-0 w-full">
+      <div className="md:absolute bottom-0 w-full">
         <NovaNetworkTVL />
       </div>
     </Container>

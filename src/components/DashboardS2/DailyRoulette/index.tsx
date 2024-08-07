@@ -38,7 +38,6 @@ const Container = styled.div`
     border: 1px solid rgba(51, 49, 49, 0);
     background: #10131c;
     filter: blur(0.125px);
-    display: flex;
     padding: 12px 16px;
     justify-content: center;
     align-items: center;
@@ -201,12 +200,16 @@ export default function DailyRoulette() {
               </div>
             }
           >
-            <div className="title-desc">{t("dashboard.determined_by")}</div>
+            <div className="title-desc hidden md:block">
+              {t("dashboard.determined_by")}
+            </div>
           </Tooltip>
         </div>
-        <InviteBoxModal />
+        <div className="hidden md:block">
+          <InviteBoxModal />
+        </div>
       </div>
-      <div className="flex items-center justify-between mt-[30px]">
+      <div className="flex items-center justify-between mt-[30px] overflow-auto gap-[10px] md:gap-[0]">
         {dailyData.map((item, index) => (
           <DailyBox
             {...item}
@@ -215,6 +218,10 @@ export default function DailyRoulette() {
             onDrawed={handleDrawed}
           />
         ))}
+      </div>
+
+      <div className="mt-[30px] md:hidden block">
+        <InviteBoxModal />
       </div>
     </Container>
   );

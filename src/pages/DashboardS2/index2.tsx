@@ -30,6 +30,8 @@ import ZKLClaimAd from "@/components/DashboardS2/ZKLClaimAd";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
 import GoogleRecaptcha from "@/components/GoogleRecaptcha";
 import { useTranslation } from "react-i18next";
+import { GradientBox } from "@/styles/common";
+
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -56,77 +58,11 @@ const Container = styled.div`
   background: url("/img/bg-s2-dashboard.jpg") no-repeat;
   background-size: 100%;
   background-position: center top;
-`;
 
-const CardBox = styled.div`
-  padding: 23px 32px;
-  /* background: #000811; */
-  border-radius: 24px;
-  border: 2px solid transparent;
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
-  background-image: linear-gradient(to bottom, #000000, #282828),
-    linear-gradient(
-      175deg,
-      #fb2450 1%,
-      #fbc82e,
-      #6eee3f,
-      #5889f3,
-      #5095f1,
-      #b10af4
-    );
-
-  .rewards {
-    color: #fff;
-    font-family: Satoshi;
-    font-size: 19.033px;
-    font-style: normal;
-    font-weight: 900;
-    line-height: 110%; /* 20.936px */
-  }
-  .rewards-line {
-    margin: 12px 0 18px;
-    width: 438.813px;
-    height: 1.057px;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(251, 251, 251, 0.6) 51.5%,
-      rgba(255, 255, 255, 0) 100%
-    );
-  }
-  .prize {
-    color: #fff;
-    font-family: Satoshi;
-    font-size: 46.525px;
-    font-style: normal;
-    font-weight: 900;
-    line-height: 110%; /* 51.177px */
-  }
-  .zkl {
-    text-align: right;
-    font-family: Satoshi;
-    font-size: 109.968px;
-    font-style: normal;
-    font-weight: 900;
-    line-height: 110%; /* 120.964px */
-    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .zkl-num {
-    text-align: center;
-    font-family: Satoshi;
-    font-size: 160.289px;
-    font-style: normal;
-    font-weight: 900;
-    line-height: normal;
-    letter-spacing: 16px;
-    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  @media only screen and (max-width: 768px) {
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 `;
 
@@ -189,6 +125,39 @@ const CardBox2 = styled.div`
     font-weight: 700;
     line-height: 110%; /* 17.6px */
   }
+`;
+
+const PrizePoolBoxH5 = styled(GradientBox)`
+  color: var(--Neutral-1, #fff);
+  font-family: Satoshi;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 110%; /* 22px */
+
+  .num {
+    margin-top: 12px;
+    margin-bottom: 32px;
+    text-align: center;
+    font-family: Satoshi;
+    font-size: 46.085px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    background: linear-gradient(180deg, #fff 0%, #bababa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+`;
+
+const Line = styled.div`
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(251, 251, 251, 0.6) 51.5%,
+    rgba(255, 255, 255, 0) 100%
+  );
 `;
 
 const TabsCard = styled.div`
@@ -599,14 +568,54 @@ export default function Dashboard() {
     getCategoryZKLFunc();
   }, [address, season]);
 
+  const allSupportedPoints = [
+    {
+      name: "Nova Points",
+      iconURL: "/img/icon-rewards-nova.svg",
+    },
+    {
+      name: "Linea LXP-L",
+      iconURL: "/img/icon-rewards-linea.svg",
+    },
+    {
+      name: "Eigenlayer Points",
+      iconURL: "/img/icon-rewards-eigenlayer.svg",
+    },
+    {
+      name: "Puffer Points",
+      iconURL: "/img/icon-rewards-puffer.svg",
+    },
+    {
+      name: "Renzo Points",
+      iconURL: "/img/icon-rewards-renzo.svg",
+    },
+    {
+      name: "Eigenpie Points",
+      iconURL: "/img/icon-rewards-eigenpie.svg",
+    },
+    {
+      name: "KelpDAO Miles",
+      iconURL: "/img/icon-rewards-kelp.svg",
+    },
+    {
+      name: "Allspark Points",
+      iconURL: "/img/icon-rewards-allspark.svg",
+    },
+    {
+      name: "L.Points",
+      iconURL: "/img/icon-rewards-layerbank.svg",
+    },
+  ];
+
   return (
     <Container>
-      <div className="side fixed right-[32px] top-[120px] z-[999] max-w-[400px]">
+      <div className="side fixed right-[32px] top-[120px] z-[999] max-w-[392px] w-[392px]">
         <ZKLClaimAd />
         <MysteryBoxIII />
         {/* <GoogleRecaptcha /> */}
       </div>
-      <div className="mt-[29.6px] mx-auto max-w-[1246px] ">
+
+      <div className="mt-[29.6px] mx-auto max-w-[1246px] hidden md:block">
         <CardBox2 className="flex justify-between">
           <div className="px-[16px] py-[10px]">
             <div className="flex items-center gap-[10px]">
@@ -657,44 +666,7 @@ export default function Dashboard() {
             <div className="all-suported-points flex items-center justify-end gap-[10px]">
               <div>{t("dashboard.all_supported_points")}</div>
               <div className="flex items-center">
-                {[
-                  {
-                    name: "Nova Points",
-                    iconURL: "/img/icon-rewards-nova.svg",
-                  },
-                  {
-                    name: "Linea LXP-L",
-                    iconURL: "/img/icon-rewards-linea.svg",
-                  },
-                  {
-                    name: "Eigenlayer Points",
-                    iconURL: "/img/icon-rewards-eigenlayer.svg",
-                  },
-                  {
-                    name: "Puffer Points",
-                    iconURL: "/img/icon-rewards-puffer.svg",
-                  },
-                  {
-                    name: "Renzo Points",
-                    iconURL: "/img/icon-rewards-renzo.svg",
-                  },
-                  {
-                    name: "Eigenpie Points",
-                    iconURL: "/img/icon-rewards-eigenpie.svg",
-                  },
-                  {
-                    name: "KelpDAO Miles",
-                    iconURL: "/img/icon-rewards-kelp.svg",
-                  },
-                  {
-                    name: "Allspark Points",
-                    iconURL: "/img/icon-rewards-allspark.svg",
-                  },
-                  {
-                    name: "L.Points",
-                    iconURL: "/img/icon-rewards-layerbank.svg",
-                  },
-                ].map((item, index) => (
+                {allSupportedPoints.map((item, index) => (
                   <Tooltip content={item.name} key={index}>
                     <img
                       src={item.iconURL}
@@ -709,16 +681,41 @@ export default function Dashboard() {
         </CardBox2>
       </div>
 
+      <div className="block md:hidden">
+        <PrizePoolBoxH5 className="rounded-[8px] px-[16px] py-[20px]">
+          <div className="flex justify-between text-[20px]">
+            <span>Prize Pool</span>
+            <span>$ZKL</span>
+          </div>
+          <div className="num">30,000,000</div>
+          <div className="text-[16px]">
+            Rewards gathered so far from there companies
+          </div>
+          <Line className="mt-[12px]" />
+          <div className="flex justify-center items-center">
+            {allSupportedPoints.map((item, index) => (
+              <Tooltip content={item.name} key={index}>
+                <img
+                  src={item.iconURL}
+                  alt=""
+                  className="mt-[10px] min-w-[40px] w-[40px] block"
+                />
+              </Tooltip>
+            ))}
+          </div>
+        </PrizePoolBoxH5>
+      </div>
+
       <div className="mx-auto max-w-[1246px]">
         <DailyRoulette />
 
         <div className="mt-[40px]">
           <TabsCard className="pb-[40px]">
-            <div className="relative flex items-center justify-between">
+            <div className="relative flex items-center justify-between gap-[8px] overflow-x-auto overflow-y-hidden">
               <div className="flex flex items-center gap-[12.15px]">
                 {tabs2.map((tab, index) => (
                   <div
-                    className={`tab-item flex justify-center items-center gap-[8px] ${
+                    className={`tab-item flex justify-center items-center gap-[8px] whitespace-nowrap ${
                       index === tabs2Active ? "active" : ""
                     }`}
                     onClick={() => setTabs2Active(index)}
@@ -757,7 +754,7 @@ export default function Dashboard() {
                 } 24px 24px`,
               }}
             >
-              <div className="tab-content px-[31px] py-[32.5px]">
+              <div className="tab-content px-[14px] md:px-[32px] py-[32px]">
                 {tabs2Active === 0 && (
                   <Assets
                     tabActive={tabs2[tabs2Active]}

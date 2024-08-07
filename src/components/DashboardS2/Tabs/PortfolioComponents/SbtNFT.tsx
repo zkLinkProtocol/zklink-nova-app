@@ -13,8 +13,6 @@ export const NftContainer = styled.div`
   border-radius: 24px;
   border: 2px solid #635f5f;
   background: var(--Background, #000811);
-  height: 180px;
-  display: flex;
   padding: 14px 16px;
   align-items: center;
   justify-content: space-between;
@@ -88,7 +86,7 @@ export default function SbtNFT() {
   }, [mintModal, nft, fetchLoading]);
 
   return (
-    <NftContainer>
+    <NftContainer className="flex flex-col md:flex-row md:h-[180px]">
       <div className="nft-image">
         <img src={nftImage} alt="" />
       </div>

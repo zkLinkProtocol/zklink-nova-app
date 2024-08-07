@@ -101,7 +101,7 @@ const ReferralModal = () => {
 
   return (
     <>
-      <ReferralButton onClick={modal.onOpen}>
+      <ReferralButton onClick={modal.onOpen} className="hidden md:block">
         <img
           src="/img/icon-invite-btn.png"
           alt=""
