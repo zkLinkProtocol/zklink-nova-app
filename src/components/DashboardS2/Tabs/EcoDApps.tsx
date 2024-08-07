@@ -2,8 +2,10 @@ import {
   NovaCategoryPoints,
   NovaCategoryUserPoints,
   NovaProjectTotalPoints,
+  PortocolSpinItem,
   TvlCategoryMilestone,
   getNovaProjectTotalPoints,
+  getProtocolSpin,
 } from "@/api";
 import useNovaPoints from "@/hooks/useNovaPoints";
 import { formatNumberWithUnit } from "@/utils";
@@ -24,6 +26,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import SectorHeader from "./SectorHeader";
+import DailyDrawModal from "../DailyRoulette/DailyDrawModal";
 
 const Container = styled.div`
   .holding-title {
@@ -245,6 +248,8 @@ interface EcoDAppItem {
     iconURL: string;
   }[];
   holdingPoints: NovaProjectTotalPoints;
+  remainSpinNum?: number;
+  projectName: string;
   totalPoints?: NovaProjectTotalPoints;
   details: {
     booster: string | ReactNode;
@@ -260,9 +265,11 @@ interface EcoDAppItem {
 const EcoDApp = (props: {
   data: EcoDAppItem;
   handleLink: (link: string) => void;
+  onDrawed: () => void;
 }) => {
-  const { data, handleLink } = props;
+  const { data, handleLink, onDrawed } = props;
   const [isOpen, setIsOpen] = useState(false);
+  const modal = useDisclosure();
 
   const allocatedTooltips = useMemo(() => {
     const protocolPoints = [
@@ -293,157 +300,206 @@ const EcoDApp = (props: {
     };
   }, [data]);
 
+  const handleSpinModal = (e: React.MouseEvent<HTMLElement>) => {
+    if (!data.remainSpinNum) {
+      return;
+    }
+    e.stopPropagation();
+    modal.onOpen();
+  };
+
   return (
-    <div className="row mb-[24px] overflow-hidden">
-      <div className="flex items-center cursor-pointer">
-        <div className="list-content-item flex items-center gap-[10px] w-1/5">
-          <img
-            src={data.iconURL}
-            alt=""
-            className="w-[55px] h-[56px] rounded-full block"
-          />
-          <div>
-            <div
-              className="symbol flex items-center gap-[4px]"
-              onClick={(e) => {
-                handleLink(data.link);
-              }}
-            >
-              <span className="whitespace-nowrap">{data.name}</span>
-              <img src="/img/icon-ecolink.svg" alt="" width={16} height={16} />
-            </div>
-            <div className="name mt-[5px]">{data.handler}</div>
-          </div>
-        </div>
-        <div
-          className="row-items flex items-center gap-[10px] w-4/5"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <div className="col-line"></div>
-          <div className="list-content-item text-center flex items-center justify-center">
-            <Tooltip
-              classNames={{
-                content:
-                  "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-              }}
-              content={data.details[0].booster}
-            >
-              <GradientBox>{data.rewards}</GradientBox>
-            </Tooltip>
-          </div>
-          <div className="col-line"></div>
-
-          <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
-            {data?.rewardsIcon?.map((item, index) => (
-              <Tooltip content={item.name} key={index}>
+    <>
+      <div className="row mb-[24px] overflow-hidden">
+        <div className="flex items-center cursor-pointer">
+          <div className="list-content-item flex items-center gap-[10px] w-1/5">
+            <img
+              src={data.iconURL}
+              alt=""
+              className="w-[55px] h-[56px] rounded-full block"
+            />
+            <div>
+              <div
+                className="symbol flex items-center gap-[4px]"
+                onClick={(e) => {
+                  handleLink(data.link);
+                }}
+              >
+                <span className="whitespace-nowrap">{data.name}</span>
                 <img
-                  src={item.iconURL}
-                  className="min-w-[32px] w-[32px] rounded-full"
+                  src="/img/icon-ecolink.svg"
+                  alt=""
+                  width={16}
+                  height={16}
                 />
-              </Tooltip>
-            ))}
-          </div>
-          <div className="col-line"></div>
-
-          <div className="list-content-item text-center">
-            <Tooltip
-              classNames={{
-                content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
-              }}
-              content={
-                <div className="min-w-[200px]">
-                  <div className="text-[#999] text-[14px] font-[500]">
-                    Your Allocated Points
-                  </div>
-                  {allocatedTooltips.yourPoints.map((item, index) => (
-                    <div
-                      className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
-                      key={index}
-                    >
-                      <span>{item.label}</span>
-                      <span>{item.value}</span>
-                    </div>
-                  ))}
-
-                  <div className="mt-[18px] text-[#999] text-[14px] font-[500]">
-                    Protocol Allocated Points
-                  </div>
-
-                  {allocatedTooltips.protocolPoints.map((item, index) => (
-                    <div
-                      className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
-                      key={index}
-                    >
-                      <span>{item.label}</span>
-                      <span>{item.value}</span>
-                    </div>
-                  ))}
-                </div>
-              }
-            >
-              <div>
-                {formatNumberWithUnit(
-                  data.holdingPoints.ecoPoints +
-                    data.holdingPoints.referralPoints
-                )}
-                /
-                <span className="opacity-40">
-                  {formatNumberWithUnit(
-                    (data.totalPoints?.ecoPoints || 0) +
-                      (data.totalPoints?.referralPoints || 0)
-                  )}
-                </span>
               </div>
-            </Tooltip>
+              <div className="name mt-[5px]">{data.handler}</div>
+            </div>
           </div>
-          <div className="col-line"></div>
+          <div
+            className="row-items flex items-center w-4/5"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <div className="col-line"></div>
+            <div className="list-content-item text-center flex items-center justify-center">
+              <Tooltip
+                classNames={{
+                  content:
+                    "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                }}
+                content={data.details[0].booster}
+              >
+                <GradientBox>{data.rewards}</GradientBox>
+              </Tooltip>
+            </div>
+            <div className="col-line"></div>
 
-          <div className="list-content-item  flex justify-end items-center gap-[10px]">
-            {/* <span className="action">Action:</span> */}
-            <div className="flex items-center gap-[4px] cursor-pointer select-none">
-              <GradientText className="participate">How to earn</GradientText>
-              <img src="/img/icon-ecolink2.svg" alt="" width={16} height={16} />
+            <div className="list-content-item text-center flex items-center justify-center gap-[4px]">
+              {data?.rewardsIcon?.map((item, index) => (
+                <Tooltip content={item.name} key={index}>
+                  <img
+                    src={item.iconURL}
+                    className="min-w-[32px] w-[32px] rounded-full"
+                  />
+                </Tooltip>
+              ))}
+            </div>
+            <div className="col-line"></div>
+
+            <div className="list-content-item text-center">
+              <Tooltip
+                classNames={{
+                  content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
+                }}
+                content={
+                  <div className="min-w-[200px]">
+                    <div className="text-[#999] text-[14px] font-[500]">
+                      Your Allocated Points
+                    </div>
+                    {allocatedTooltips.yourPoints.map((item, index) => (
+                      <div
+                        className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
+                        key={index}
+                      >
+                        <span>{item.label}</span>
+                        <span>{item.value}</span>
+                      </div>
+                    ))}
+
+                    <div className="mt-[18px] text-[#999] text-[14px] font-[500]">
+                      Protocol Allocated Points
+                    </div>
+
+                    {allocatedTooltips.protocolPoints.map((item, index) => (
+                      <div
+                        className="flex items-center justify-between text-[#fff] text-[14px] font-[500]"
+                        key={index}
+                      >
+                        <span>{item.label}</span>
+                        <span>{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <div>
+                  {formatNumberWithUnit(
+                    data.holdingPoints.ecoPoints +
+                      data.holdingPoints.referralPoints
+                  )}
+                  /
+                  <span className="opacity-40">
+                    {formatNumberWithUnit(
+                      (data.totalPoints?.ecoPoints || 0) +
+                        (data.totalPoints?.referralPoints || 0)
+                    )}
+                  </span>
+                </div>
+              </Tooltip>
+            </div>
+            <div className="col-line"></div>
+
+            <div className="list-content-item flex justify-center items-center">
+              {data.projectName !== "orbiter" &&
+              data.projectName !== "symbiosis" &&
+              data.projectName !== "meson" ? (
+                data.remainSpinNum === 0 ? (
+                  <GradientText>Spined</GradientText>
+                ) : (
+                  <div
+                    className={`px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px] ${
+                      !data.remainSpinNum
+                        ? "cursor-not-allowed opacity-50"
+                        : "cursor-pointer"
+                    }`}
+                    onClick={handleSpinModal}
+                  >
+                    <img
+                      src="/img/s2/icon-spin-gradient.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="min-w-[24px]"
+                    />
+                    <GradientText>Spin</GradientText>
+                  </div>
+                )
+              ) : (
+                ""
+              )}
+            </div>
+
+            <div className="list-content-item  flex justify-end items-center">
+              {/* <span className="action">Action:</span> */}
+              <div className="flex items-center gap-[4px] cursor-pointer select-none">
+                <GradientText className="participate">How to earn</GradientText>
+                <img
+                  src="/img/icon-ecolink2.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {/* <div className="row-line"></div> */}
-      {isOpen && (
-        <DetailBox className="w-full mt-[4px] px-[7px]">
-          {data.details.map((detail, index) => (
-            <div
-              className={`detail-row mb-[8px] flex justify-between ${
-                index === data.details.length - 1 ? "rounded-bottom" : ""
-              }`}
-              key={index}
-            >
-              <div className="detail-item min-w-[440px] w-[440px]">
-                <div className="detail-label">Booster</div>
-                <div className="detail-value">{detail.booster}</div>
-              </div>
-              <div className="detail-item min-w-[480px] w-[480px]">
-                <div className="detail-label">Description</div>
-                <div className="detail-value">
-                  {detail.description}
-
-                  {detail?.descriptionTooltip && (
-                    <Tooltip
-                      content={detail.descriptionTooltip}
-                      classNames={{
-                        content:
-                          "max-w-[600px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-                      }}
-                    >
-                      <img
-                        src="/img/icon-info-2.svg"
-                        alt=""
-                        className="w-[20px] h-[20px] inline-block"
-                      />
-                    </Tooltip>
-                  )}
+        {/* <div className="row-line"></div> */}
+        {isOpen && (
+          <DetailBox className="w-full mt-[4px] px-[7px]">
+            {data.details.map((detail, index) => (
+              <div
+                className={`detail-row mb-[8px] flex justify-between ${
+                  index === data.details.length - 1 ? "rounded-bottom" : ""
+                }`}
+                key={index}
+              >
+                <div className="detail-item min-w-[440px] w-[440px]">
+                  <div className="detail-label">Booster</div>
+                  <div className="detail-value">{detail.booster}</div>
                 </div>
-              </div>
-              <div className="detail-item text-right  w-full">
+                <div className="detail-item min-w-[480px] w-[480px]">
+                  <div className="detail-label">Description</div>
+                  <div className="detail-value">
+                    {detail.description}
+
+                    {detail?.descriptionTooltip && (
+                      <Tooltip
+                        content={detail.descriptionTooltip}
+                        classNames={{
+                          content:
+                            "max-w-[600px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                        }}
+                      >
+                        <img
+                          src="/img/icon-info-2.svg"
+                          alt=""
+                          className="w-[20px] h-[20px] inline-block"
+                        />
+                      </Tooltip>
+                    )}
+                  </div>
+                </div>
+
                 <div className="detail-label">Action</div>
                 {detail.actionLinks ? (
                   <Dropdown>
@@ -494,11 +550,19 @@ const EcoDApp = (props: {
                   </div>
                 )}
               </div>
-            </div>
-          ))}
-        </DetailBox>
-      )}
-    </div>
+            ))}
+          </DetailBox>
+        )}
+      </div>
+      <DailyDrawModal
+        key={data.name}
+        modalInstance={modal}
+        onDrawed={onDrawed}
+        remain={data.remainSpinNum}
+        type="protocol"
+        projectName={data.projectName}
+      />
+    </>
   );
 };
 
@@ -561,6 +625,25 @@ export default function EcoDApps({
       referralPoints: data?.refPoints || 0,
     };
   };
+
+  const [spinList, setSpinList] = useState<PortocolSpinItem[]>([]);
+
+  const getSpin = async () => {
+    const { result } = await getProtocolSpin();
+    console.log("getProtocolSpin", result);
+    if (result) {
+      setSpinList(result);
+    }
+  };
+
+  const getSpinByProject = (project: string) => {
+    const data = spinList.find((item) => item.projectName === project);
+    return {
+      project,
+      remainSpinNum: data?.remainSpinNum,
+    };
+  };
+
   const ecoDAppsList = useMemo(() => {
     // const novaswap = geNovaCategoryUserPointsByProject("novaswap");
     const izumi = geNovaCategoryUserPointsByProject("izumi");
@@ -593,6 +676,8 @@ export default function EcoDApps({
         ],
         holdingPoints: getHoldingPointsByProject("nowaswap"),
         totalPoints: getTotalPointsByProject("novaswap"),
+        remainSpinNum: getSpinByProject("novaswap").remainSpinNum,
+        projectName: "novaswap",
         details: [
           {
             booster: (
@@ -621,6 +706,8 @@ export default function EcoDApps({
         ],
         holdingPoints: getHoldingPointsByProject("nowaswap"),
         totalPoints: getTotalPointsByProject("novaswap"),
+        remainSpinNum: getSpinByProject("novaswap").remainSpinNum,
+        projectName: "novaswap",
         details: [
           {
             booster: (
@@ -657,9 +744,10 @@ export default function EcoDApps({
             iconURL: "/img/icon-rewards-layerbank.svg",
           },
         ],
-
         holdingPoints: getHoldingPointsByProject("layerbank"),
         totalPoints: getTotalPointsByProject("layerbank"),
+        remainSpinNum: getSpinByProject("layerbank").remainSpinNum,
+        projectName: "layerbank",
         details: [
           {
             booster: (
@@ -690,6 +778,8 @@ export default function EcoDApps({
         ],
         holdingPoints: getHoldingPointsByProject("logx"),
         totalPoints: getTotalPointsByProject("logx"),
+        remainSpinNum: getSpinByProject("logx").remainSpinNum,
+        projectName: "logx",
         details: [
           {
             booster: (
@@ -726,6 +816,8 @@ export default function EcoDApps({
         rewards: "Up to 10x",
         holdingPoints: getHoldingPointsByProject("shoebill"),
         totalPoints: getTotalPointsByProject("shoebill"),
+        remainSpinNum: getSpinByProject("shoebill").remainSpinNum,
+        projectName: "shoebill",
         details: [
           {
             booster: (
@@ -752,6 +844,8 @@ export default function EcoDApps({
         rewards: "Up to 10x",
         holdingPoints: getHoldingPointsByProject("aqua"),
         totalPoints: getTotalPointsByProject("aqua"),
+        remainSpinNum: getSpinByProject("aqua").remainSpinNum,
+        projectName: "aqua",
         details: [
           {
             booster: (
@@ -781,6 +875,8 @@ export default function EcoDApps({
         rewards: "Up to 10x",
         holdingPoints: getHoldingPointsByProject("izumi"),
         totalPoints: getTotalPointsByProject("izumi"),
+        remainSpinNum: getSpinByProject("izumi").remainSpinNum,
+        projectName: "izumi",
         details: [
           {
             booster: (
@@ -813,6 +909,8 @@ export default function EcoDApps({
         rewards: "Up to 10x / Trading",
         holdingPoints: getHoldingPointsByProject("wagmi"),
         totalPoints: getTotalPointsByProject("wagmi"),
+        remainSpinNum: getSpinByProject("wagmi").remainSpinNum,
+        projectName: "wagmi",
         details: [
           {
             booster: (
@@ -837,8 +935,8 @@ export default function EcoDApps({
       },
 
       {
-        category: zkdx?.category,
-        iconURL: "/img/icon-zkdx.svg" || "perpdex",
+        category: zkdx?.category || "perpdex",
+        iconURL: "/img/icon-zkdx.svg",
         name: "zkDX",
         link: "https://app.zkdx.io/stakingliquidity",
         handler: "@zkDXio",
@@ -849,6 +947,8 @@ export default function EcoDApps({
         rewards: "Up to 10x / Trading",
         holdingPoints: getHoldingPointsByProject("zkdx"),
         totalPoints: getTotalPointsByProject("zkdx"),
+        remainSpinNum: getSpinByProject("zkdx").remainSpinNum,
+        projectName: "zkdx",
         details: [
           {
             booster: (
@@ -889,6 +989,8 @@ export default function EcoDApps({
         rewards: "Interaction",
         holdingPoints: getHoldingPointsByProject("allspark"),
         totalPoints: getTotalPointsByProject("allspark"),
+        remainSpinNum: getSpinByProject("allspark").remainSpinNum,
+        projectName: "allspark",
         details: [
           {
             booster: (
@@ -915,6 +1017,8 @@ export default function EcoDApps({
         rewards: "Bridge",
         holdingPoints: getHoldingPointsByProject("rubic"),
         totalPoints: getTotalPointsByProject("rubic"),
+        remainSpinNum: getSpinByProject("rubic").remainSpinNum,
+        projectName: "rubic",
         details: [
           {
             booster: (
@@ -941,6 +1045,8 @@ export default function EcoDApps({
         rewards: "Up to 10x",
         holdingPoints: getHoldingPointsByProject("interport"),
         totalPoints: getTotalPointsByProject("interport"),
+        remainSpinNum: getSpinByProject("interport").remainSpinNum,
+        projectName: "interport",
         details: [
           {
             booster: (
@@ -967,6 +1073,8 @@ export default function EcoDApps({
         rewards: "Bridge",
         holdingPoints: getHoldingPointsByProject("orbiter"),
         totalPoints: getTotalPointsByProject("orbiter"),
+        remainSpinNum: getSpinByProject("orbiter").remainSpinNum,
+        projectName: "orbiter",
         details: [
           {
             booster: `${orbiterBridgeNovaPoints} Nova Points`,
@@ -991,6 +1099,8 @@ export default function EcoDApps({
         rewards: "Bridge",
         holdingPoints: getHoldingPointsByProject("symbiosis"),
         totalPoints: getTotalPointsByProject("symbiosis"),
+        remainSpinNum: getSpinByProject("symbiosis").remainSpinNum,
+        projectName: "symbiosis",
         details: [
           {
             booster: `${symbiosisBridgeNovaPoints} Nova Points`,
@@ -1014,6 +1124,8 @@ export default function EcoDApps({
         rewards: "Bridge",
         holdingPoints: getHoldingPointsByProject("meson"),
         totalPoints: getTotalPointsByProject("meson"),
+        remainSpinNum: getSpinByProject("meson").remainSpinNum,
+        projectName: "meson",
         details: [
           {
             booster: `${mesonBridgeNovaPoints} Nova Points`,
@@ -1036,6 +1148,8 @@ export default function EcoDApps({
         rewards: "Trading",
         holdingPoints: getHoldingPointsByProject("eddy"),
         totalPoints: getTotalPointsByProject("eddy"),
+        remainSpinNum: getSpinByProject("eddy").remainSpinNum,
+        projectName: "eddy",
         details: [
           {
             booster: (
@@ -1061,6 +1175,8 @@ export default function EcoDApps({
         rewards: "20x Boost",
         holdingPoints: getHoldingPointsByProject("steer"),
         totalPoints: getTotalPointsByProject("steer"),
+        remainSpinNum: getSpinByProject("steer").remainSpinNum,
+        projectName: "steer",
         details: [
           {
             booster: (
@@ -1089,6 +1205,8 @@ export default function EcoDApps({
         rewards: "Interaction",
         holdingPoints: getHoldingPointsByProject("skyrangers"),
         totalPoints: getTotalPointsByProject("skyrangers"),
+        remainSpinNum: getSpinByProject("skyrangers").remainSpinNum,
+        projectName: "skyrangers",
         details: [
           {
             booster: (
@@ -1129,6 +1247,10 @@ export default function EcoDApps({
     warningModal.onOpen();
   };
 
+  useEffect(() => {
+    getSpin();
+  }, []);
+
   return (
     <Container>
       <SectorHeader
@@ -1145,12 +1267,32 @@ export default function EcoDApps({
             <div className="list-header-item text-center">Points Booster</div>
             <div className="list-header-item text-center">Rewards</div>
             <div className="list-header-item text-center">Allocated Points</div>
+            <div className="list-header-item text-center">
+              <div className="flex itmes-center justify-center gap-[4px]">
+                <span>Roulette</span>
+                <Tooltip
+                  className="max-w-[360px]"
+                  classNames={{
+                    content:
+                      "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                  }}
+                  content="Interact with the dApp and once you earn more than 1 Nova Point, you'll get a chance to spin the roulette three times to win more Nova Points and Trademark NFTs."
+                >
+                  <img src="/img/icon-info-2.svg" alt="" />
+                </Tooltip>
+              </div>
+            </div>
             <div className="list-header-item"></div>
           </div>
         </div>
         <div className="list-content">
           {ecoDAppsList.map((item, index) => (
-            <EcoDApp key={index} data={item} handleLink={handleLink} />
+            <EcoDApp
+              key={index}
+              data={item}
+              handleLink={handleLink}
+              onDrawed={getSpin}
+            />
           ))}
         </div>
       </List>
