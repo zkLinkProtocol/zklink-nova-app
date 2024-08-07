@@ -1281,7 +1281,7 @@ export default function EcoDApps({
                       content:
                         "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
                     }}
-                    content="Interact with dApp and after receive more than 1 Nova points, you will earn a chance to do three one time roulette to win Nova Points & Trademark NFTs."
+                    content="Interact with the dApp and once you earn more than 1 Nova Point, you'll get a chance to spin the roulette three times to win more Nova Points and Trademark NFTs."
                   >
                     <img src="/img/icon-info-2.svg" alt="" />
                   </Tooltip>
