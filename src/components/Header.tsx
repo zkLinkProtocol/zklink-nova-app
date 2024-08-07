@@ -563,12 +563,12 @@ export default function Header() {
                     href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
                     target="_blank"
                   >
-                    {t('header.user_guide')}
+                    {t("header.user_guide")}
                   </a>
                 </DropdownItem>
                 <DropdownItem key="user-guide">
                   <a href="https://explorer.zklink.io/" target="_blank">
-                    {t('header.explorer')}
+                    {t("header.explorer")}
                   </a>
                 </DropdownItem>
               </DropdownMenu>
@@ -619,7 +619,7 @@ export default function Header() {
           <NavbarItem className="hidden flex items-center gap-[1rem]">
             <Dropdown disableAnimation>
               <DropdownTrigger>
-                <div className="w-[40px] h-[40px] rounded-full border-1 border-[#282828] bg-[#10131C] flex justify-center itmes-center">
+                <div className="w-[40px] h-[40px] rounded-full border-1 border-[#282828] bg-[#10131C] hidden md:flex justify-center itmes-center">
                   <img
                     src="/img/icon-language.svg"
                     alt=""
