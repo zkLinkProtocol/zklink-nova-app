@@ -248,7 +248,7 @@ interface EcoDAppItem {
     iconURL: string;
   }[];
   holdingPoints: NovaProjectTotalPoints;
-  remainSpinNum: number;
+  remainSpinNum?: number;
   projectName: string;
   totalPoints?: NovaProjectTotalPoints;
   details: {
@@ -301,7 +301,7 @@ const EcoDApp = (props: {
   }, [data]);
 
   const handleSpinModal = (e: React.MouseEvent<HTMLElement>) => {
-    if (data.remainSpinNum < 1) {
+    if (!data.remainSpinNum) {
       return;
     }
     e.stopPropagation();
@@ -420,23 +420,30 @@ const EcoDApp = (props: {
             <div className="col-line"></div>
 
             <div className="list-content-item flex justify-center items-center">
-              <div
-                className={`px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px] ${
-                  data.remainSpinNum < 1
-                    ? "cursor-not-allowed opacity-50"
-                    : "cursor-pointer"
-                }`}
-                onClick={handleSpinModal}
-              >
-                <img
-                  src="/img/s2/icon-spin-gradient.svg"
-                  alt=""
-                  width={24}
-                  height={24}
-                  className="min-w-[24px]"
-                />
-                <GradientText>Spin</GradientText>
-              </div>
+              {data.remainSpinNum === 0 &&
+              data.projectName !== "orbiter" &&
+              data.projectName !== "symbiosis" &&
+              data.projectName !== "meson" ? (
+                <GradientText>Spined</GradientText>
+              ) : (
+                <div
+                  className={`px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px] ${
+                    !data.remainSpinNum
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer"
+                  }`}
+                  onClick={handleSpinModal}
+                >
+                  <img
+                    src="/img/s2/icon-spin-gradient.svg"
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="min-w-[24px]"
+                  />
+                  <GradientText>Spin</GradientText>
+                </div>
+              )}
             </div>
 
             <div className="list-content-item  flex justify-end items-center">
@@ -630,7 +637,7 @@ export default function EcoDApps({
     const data = spinList.find((item) => item.projectName === project);
     return {
       project,
-      remainSpinNum: data?.remainSpinNum || 0,
+      remainSpinNum: data?.remainSpinNum,
     };
   };
 
@@ -1257,7 +1264,21 @@ export default function EcoDApps({
             <div className="list-header-item text-center">Points Booster</div>
             <div className="list-header-item text-center">Rewards</div>
             <div className="list-header-item text-center">Allocated Points</div>
-            <div className="list-header-item text-center">Roulette</div>
+            <div className="list-header-item text-center">
+              <div className="flex itmes-center justify-center gap-[4px]">
+                <span>Roulette</span>
+                <Tooltip
+                  className="max-w-[360px]"
+                  classNames={{
+                    content:
+                      "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                  }}
+                  content="Interact with dApp and after receive more than 1 Nova points, you will earn a chance to do three one time roulette to win Nova Points & Trademark NFTs."
+                >
+                  <img src="/img/icon-info-2.svg" alt="" />
+                </Tooltip>
+              </div>
+            </div>
             <div className="list-header-item"></div>
           </div>
         </div>
