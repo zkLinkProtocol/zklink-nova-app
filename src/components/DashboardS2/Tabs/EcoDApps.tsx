@@ -227,12 +227,13 @@ const DetailBox = styled.div`
   }
 
   .detail-row {
+    padding: 0 24px;
     &.rounded-bottom {
       border-radius: 0 0 16px 16px;
     }
     background: #0d0f14;
     .detail-item {
-      padding: 24px;
+      padding: 24px 0;
     }
   }
 `;
@@ -470,16 +471,16 @@ const EcoDApp = (props: {
           <DetailBox className="w-full mt-[4px] px-[7px]">
             {data.details.map((detail, index) => (
               <div
-                className={`detail-row mb-[8px] flex justify-between ${
+                className={`detail-row mb-[8px] flex justify-between gap-[16px] ${
                   index === data.details.length - 1 ? "rounded-bottom" : ""
                 }`}
                 key={index}
               >
-                <div className="detail-item min-w-[440px] w-[440px]">
+                <div className="detail-item min-w-[380px] w-[380px]">
                   <div className="detail-label">Booster</div>
                   <div className="detail-value">{detail.booster}</div>
                 </div>
-                <div className="detail-item min-w-[480px] w-[480px]">
+                <div className="detail-item min-w-[360px] w-[360px]">
                   <div className="detail-label">Description</div>
                   <div className="detail-value">
                     {detail.description}
