@@ -1,28 +1,23 @@
-import { useTranslation } from "react-i18next";
 import { Tooltip } from "react-tooltip";
 
 export function getPointsRewardsTooltips(points: number) {
-  const { t } = useTranslation();
   const pointsMap: {
     [key: number]: string;
   } = {
-    1: `4 ${t("dashboard.hours")}`,
-    5: `20 ${t("dashboard.hours")}`,
-    10: `~1 ${t("dashboard.day")}`,
-    50: `~3 ${t("dashboard.days")}`,
-    100: `~17 ${t("dashboard.days")}`,
-    200: `~33 ${t("dashboard.days")}`,
-    500: `~83 ${t("dashboard.days")}`,
-    1000: `~167 ${t("dashboard.days")}`,
+    1: `4 hours`,
+    5: `20 hours`,
+    10: `~1 day`,
+    50: `~3 days`,
+    100: `~17 days`,
+    200: `~33 days`,
+    500: `~83 days`,
+    1000: `~167 days`,
   };
 
   return (
-    <p>
-      {t("dashboard.invite_box_points_tooltip", {
-        num: pointsMap[Number(points)],
-      })}
-      .
-    </p>
+    <>
+      Equivalent to depositing 1 ETH into Nova for {pointsMap[Number(points)]}.
+    </>
   );
 }
 
