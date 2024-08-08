@@ -12,7 +12,12 @@ import {
 import { UseDisclosureReturn } from "@nextui-org/use-disclosure";
 import Marquee from "@/components/Marquee";
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { dailyOpen, dailySkipMint } from "@/api";
+import {
+  dailyOpen,
+  openProtocolSpin,
+  dailySkipMint,
+  protocolSkipMint,
+} from "@/api";
 import { sleep } from "@/utils";
 import useNovaNFT, {
   MysteryboxMintParams,
@@ -31,6 +36,8 @@ interface IProps {
   modalInstance: UseDisclosureReturn;
   onDrawed: () => void;
   remain?: number;
+  type?: "daily" | "protocol";
+  projectName?: string;
 }
 export const PrizeItems = [
   {
@@ -77,7 +84,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   const { updateFactor } = useUpdateNftBalanceStore();
 
   const { sendTrademarkMintTx } = useNovaNFT();
-  const { modalInstance, onDrawed, remain } = props;
+  const { modalInstance, onDrawed, remain, type, projectName } = props;
   const drawRef = useRef<{ start: (target: number) => void }>();
   const [mintResult, setMintResult] = useState<{
     name: string;
@@ -110,7 +117,10 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       modalInstance.onOpen();
     }
     setSpinging(true);
-    const res = await dailyOpen();
+    const res =
+      type === "protocol" && projectName
+        ? await openProtocolSpin(projectName)
+        : await dailyOpen();
     const tokenId = res.result.tokenId as number;
     const prizeId = PRIZE_MAP[tokenId];
     onDrawed(); // update remain times
@@ -135,7 +145,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       mintResultModal.onOpen();
     }
     setSpinging(false);
-    if (!remain || remain <= 1) {
+    if (!remain && !mintParams) {
       modalInstance.onClose();
     }
   }, [
@@ -160,7 +170,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
       onDrawed(); // update remain times after mint tx
       setMintParams(undefined);
       updateFactor();
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
       setMintStatus(MintStatus.Failed);
       if (e.message) {
@@ -182,7 +192,9 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
   ]);
 
   const handleSkip = async () => {
-    await dailySkipMint();
+    type === "protocol" && projectName
+      ? await protocolSkipMint(projectName)
+      : await dailySkipMint();
     setMintParams(undefined);
     mintResultModal.onClose();
     onDrawed(); // update remain times after skip
@@ -201,9 +213,11 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
     } else if (minting) {
       return "Start Minting";
     } else {
-      return `Spin Your Daily Roulette (${remain})`;
+      return `Spin Your ${
+        type === "protocol" ? "Protocol" : "Daily"
+      } Roulette (${remain})`;
     }
-  }, [isInvaidChain, minting, remain]);
+  }, [isInvaidChain, minting, remain, type]);
 
   return (
     <>
@@ -218,16 +232,15 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Daily Roulette
+                {type === "protocol" ? "Protocol Roulette" : "Daily Roulette"}
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center">
                   <Divide />
                   <p className="text-neutral font-chakra text-[14px] mt-4 ">
-                    On a daily basis, each user has x times of opportunity to
-                    participate in a Roulette game on the campaign page. Users
-                    have the probability to win trademarks and Lynks. The
-                    minimum reward will be 1 Nova Points.
+                    {type === "protocol"
+                      ? "Congratulations! You now have the chance to spin the roulette and win rewards!"
+                      : "On a daily basis, each user has x times of opportunity to participate in a Roulette game on the campaign page. Users have the probability to win trademarks and Lynks. The minimum reward will be 1 Nova Points."}
                   </p>
                 </div>
                 <Marquee
@@ -439,11 +452,11 @@ const SpinButton = styled(Button)`
   box-shadow: 0px 2.306px 18.446px 0px rgba(0, 0, 0, 0.15),
     0px 0px 13.835px 0px rgba(255, 255, 255, 0.75) inset;
   height: 54px;
-  gap: 8px;
+  gap: 4px;
   color: #fff;
   text-align: center;
   font-family: Satoshi;
-  font-size: 18.446px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 900;
   line-height: normal;
@@ -463,7 +476,7 @@ const SpinPointer = styled.div`
 const ModalContainer = styled(Modal)`
   background: url("img/s2/bg-spin-container.svg") no-repeat;
   background-size: cover;
-  width: 400px;
+  width: 428px;
   .prize-text {
     color: var(--Neutral-2, rgba(251, 251, 251, 0.6));
     font-family: Satoshi;

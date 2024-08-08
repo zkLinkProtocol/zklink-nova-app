@@ -25,11 +25,10 @@ import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
 import { Tooltip } from "@nextui-org/react";
 import { epochList } from "@/constants/epoch";
-import PremiusAd from "@/components/DashboardS2/PremiusAd";
 import ZKLClaimAd from "@/components/DashboardS2/ZKLClaimAd";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
-import GoogleRecaptcha from "@/components/GoogleRecaptcha";
 import { GradientBox } from "@/styles/common";
+
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
