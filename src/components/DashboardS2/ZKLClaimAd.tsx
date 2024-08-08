@@ -106,7 +106,7 @@ export default function ZKLClaimAd() {
   return (
     <Container className={`${isOpen ? "block" : "hidden"}`}>
       <GradientBox
-        className={`rounded-[16px] px-[20px] pt-[16px] pb-[20px] w-[392px] overflow-hidden relative`}
+        className={`rounded-[16px] px-[20px] pt-[16px] pb-[20px] w-full md:w-[392px] overflow-hidden relative`}
       >
         <div>
           <img
@@ -124,7 +124,7 @@ export default function ZKLClaimAd() {
             alt=""
             width={352}
             height={192}
-            className="min-w-[352px] mx-auto"
+            className="md:min-w-[352px] mx-auto"
             onClick={handleJump}
           />
         </div>

@@ -294,7 +294,7 @@ export default function MysteryBoxIII() {
         isOpen={drawModal.isOpen}
         onOpenChange={drawModal.onOpenChange}
       >
-        <ModalContent className="mt-[2rem] py-4 md:px-4 h-[100vh] overflow-auto md:h-auto">
+        <ModalContent className="mt-[2rem] py-4 px-4 h-[100vh] overflow-auto h-auto">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal">
             Open the Mystery box
           </ModalHeader>

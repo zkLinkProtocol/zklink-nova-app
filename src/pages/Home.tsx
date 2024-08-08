@@ -275,92 +275,99 @@ export default function Home() {
   return (
     <BgBox className="relative pt-[92px] pb-[65px]">
       {isLoading && <Loading />}
-      {/* Title */}
-      <TitleBox className="text-left md:text-center">
-        <div className="mt-[50px] flex justify-center">
-          <GradientBox className="px-[28px] py-[12px] rounded-[48px] text-[16px] text-[#fff]">
-            Welcome To zkLink Nova
-          </GradientBox>
-        </div>
-        <div className="my-[24px] flex justify-center px-6">
-          <h2 className="title  text-[1.8rem] md:text-[44px]">
-            The ONLY Aggregated L3 with added yield for
-          </h2>
-        </div>
-        <div className="flex flexBox my-[50px]">
-          <GradientBox className="box mr-0 rounded-[14px]">
-            <div className="move">
-              <div className="inner">ETH</div>
-              <div className="inner">Stablecoins</div>
-              <div className="inner">LSTs</div>
-              <div className="inner">LRTs</div>
-              <div className="inner">L2 Native Assets</div>
-            </div>
-          </GradientBox>
-        </div>
-        <p className="sub-title my-[50px] pl-6 pr-6 lg:pr-8 text-[1rem] md:text-[26px] leading-[20px]">
-          Bridge to earn Mega Yield and $ZKL on zkLink Nova
-        </p>
-      </TitleBox>
-
-      {/* Form: Invite code */}
-      <CardBox className="mx-auto px-[26px] w-[680px] h-[376px] rounded-[18px] flex flex-col justify-center items-center text-center">
-        <TitleBox>
-          <h4 className="title text-[24px] leading-[normal]">
-            Enter Your Invite Code
-          </h4>
-          <p className="sub-title opacity-60 text-[14px] mt-[16px] leading-[normal]">
-            To participate in the campaign
+      <div className="px-[16px]">
+        {/* Title */}
+        <TitleBox className="text-left md:text-center">
+          <div className="mt-[50px] flex justify-center">
+            <GradientBox className="px-[28px] py-[12px] rounded-[48px] text-[16px] text-[#fff]">
+              Welcome To zkLink Nova
+            </GradientBox>
+          </div>
+          <div className="my-[24px] flex justify-center px-6">
+            <h2 className="title  text-[1.8rem] md:text-[44px]">
+              The ONLY Aggregated L3 with added yield for
+            </h2>
+          </div>
+          <div className="flex flexBox my-[50px]">
+            <GradientBox className="box mr-0 rounded-[14px]">
+              <div className="move">
+                <div className="inner">ETH</div>
+                <div className="inner">Stablecoins</div>
+                <div className="inner">LSTs</div>
+                <div className="inner">LRTs</div>
+                <div className="inner">L2 Native Assets</div>
+              </div>
+            </GradientBox>
+          </div>
+          <p className="sub-title my-[50px] pl-6 pr-6 lg:pr-8 text-[1rem] md:text-[26px] leading-[20px]">
+            Bridge to earn Mega Yield and $ZKL on zkLink Nova
           </p>
         </TitleBox>
 
-        <div className="mt-[26px]">
-          <OTPInput
-            inputStyle="inputStyle"
-            numInputs={numInputs}
-            onChange={handleOTPChange}
-            renderSeparator={<span>{separator}</span>}
-            value={otp}
-            placeholder={placeholder}
-            inputType={inputType}
-            renderInput={(props) => <input {...props} />}
-            shouldAutoFocus
-          />
-        </div>
+        {/* Form: Invite code */}
+        <CardBox className="mx-auto px-[26px] w-[360px] md:w-[680px] h-[376px] rounded-[18px] flex flex-col justify-center items-center text-center">
+          <TitleBox>
+            <h4 className="title text-[24px] leading-[normal]">
+              Enter Your Invite Code
+            </h4>
+            <p className="sub-title opacity-60 text-[14px] mt-[16px] leading-[normal]">
+              To participate in the campaign
+            </p>
+          </TitleBox>
 
-        <div className="mt-[26px] text-[14px] leading-[normal] opacity-60">
-          Join our{" "}
-          <a
-            href="https://discord.com/invite/zklink"
-            // className="text-[#03D498]"
-            target="_blank"
-          >
-            Discord
-          </a>{" "}
-          or search{" "}
-          <a
-            href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
-            // className="text-[#03D498]"
-            target="_blank"
-          >
-            #zkLinkNovaAggParade
-          </a>{" "}
-          on twitter for invite code
-        </div>
+          <div className="mt-[26px]">
+            <OTPInput
+              inputStyle="inputStyle"
+              numInputs={numInputs}
+              onChange={handleOTPChange}
+              renderSeparator={<span>{separator}</span>}
+              value={otp}
+              placeholder={placeholder}
+              inputType={inputType}
+              renderInput={(props) => <input {...props} />}
+              shouldAutoFocus
+            />
+          </div>
 
-        <div className="mt-[26px] w-full">
-          <SubmitButton
-            className={`w-full h-[56px] flex items-center justify-center gap-[13px] text-center ${
-              isSubmitDisabled ? "opacity-50" : ""
-            }`}
-            isDisabled={isSubmitDisabled}
-            onClick={enterInviteCode}
-          >
-            <img src="/img/s2/icon-submit.svg" alt="" width={22} height={22} />
-            <span className="btn-text">Submit</span>
-          </SubmitButton>
-        </div>
-      </CardBox>
+          <div className="mt-[26px] text-[14px] leading-[normal] opacity-60">
+            Join our{" "}
+            <a
+              href="https://discord.com/invite/zklink"
+              // className="text-[#03D498]"
+              target="_blank"
+            >
+              Discord
+            </a>{" "}
+            or search{" "}
+            <a
+              href="https://twitter.com/search?q=%23zkLinkNovaAggParade&src=typeahead_click"
+              // className="text-[#03D498]"
+              target="_blank"
+            >
+              #zkLinkNovaAggParade
+            </a>{" "}
+            on twitter for invite code
+          </div>
+
+          <div className="mt-[26px] w-full">
+            <SubmitButton
+              className={`w-full h-[56px] flex items-center justify-center gap-[13px] text-center ${
+                isSubmitDisabled ? "opacity-50" : ""
+              }`}
+              isDisabled={isSubmitDisabled}
+              onClick={enterInviteCode}
+            >
+              <img
+                src="/img/s2/icon-submit.svg"
+                alt=""
+                width={22}
+                height={22}
+              />
+              <span className="btn-text">Submit</span>
+            </SubmitButton>
+          </div>
+        </CardBox>
+      </div>
 
       <NovaNetworkTVL />
     </BgBox>

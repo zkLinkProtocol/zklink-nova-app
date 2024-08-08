@@ -83,7 +83,7 @@ export default function SbtNFT() {
   }, [lynksBalance, nft]);
 
   return (
-    <NftContainer>
+    <NftContainer className="flex flex-col md:flex-row md:h-[180px]">
       <div className="nft-image">
         <img src={nftImage} alt="" />
       </div>

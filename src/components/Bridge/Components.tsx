@@ -292,7 +292,6 @@ export const DefaultBtn = styled(Button)`
   .btn-text {
     text-align: center;
     font-family: Satoshi;
-    font-size: 16px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;

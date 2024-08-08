@@ -48,9 +48,9 @@ export async function postData(url = "", data = {}) {
  * @param acc
  * @returns
  */
-export const showAccount = (acc: any) => {
+export const showAccount = (acc: any, start = 6, end = 4) => {
   if (!acc) return;
-  return `${acc.substr(0, 6)}...${acc.substr(-4)}`;
+  return `${acc.substr(0, start)}...${acc.substr(-end)}`;
 };
 export type Deferrable<T> = {
   [K in keyof T]: T[K] | Promise<T[K]>;

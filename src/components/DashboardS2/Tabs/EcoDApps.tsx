@@ -26,6 +26,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import SectorHeader from "./SectorHeader";
+import AllocatedPoints from "./AllocatedPoints";
 import DailyDrawModal from "../DailyRoulette/DailyDrawModal";
 
 const Container = styled.div`
@@ -132,6 +133,7 @@ const List = styled.div`
   }
 
   .col-line {
+    min-width: 1px;
     width: 1px;
     height: 44px;
     opacity: 0.3;
@@ -225,12 +227,13 @@ const DetailBox = styled.div`
   }
 
   .detail-row {
+    padding: 0 24px;
     &.rounded-bottom {
       border-radius: 0 0 16px 16px;
     }
     background: #0d0f14;
     .detail-item {
-      padding: 24px;
+      padding: 24px 0;
     }
   }
 `;
@@ -468,16 +471,16 @@ const EcoDApp = (props: {
           <DetailBox className="w-full mt-[4px] px-[7px]">
             {data.details.map((detail, index) => (
               <div
-                className={`detail-row mb-[8px] flex justify-between ${
+                className={`detail-row mb-[8px] flex justify-between gap-[16px] ${
                   index === data.details.length - 1 ? "rounded-bottom" : ""
                 }`}
                 key={index}
               >
-                <div className="detail-item min-w-[440px] w-[440px]">
+                <div className="detail-item min-w-[380px] w-[380px]">
                   <div className="detail-label">Booster</div>
                   <div className="detail-value">{detail.booster}</div>
                 </div>
-                <div className="detail-item min-w-[480px] w-[480px]">
+                <div className="detail-item min-w-[360px] w-[360px]">
                   <div className="detail-label">Description</div>
                   <div className="detail-value">
                     {detail.description}
@@ -500,55 +503,59 @@ const EcoDApp = (props: {
                   </div>
                 </div>
 
-                <div className="detail-label">Action</div>
-                {detail.actionLinks ? (
-                  <Dropdown>
-                    <DropdownTrigger>
-                      <div className="detail-value flex justify-end items-center gap-[4px]">
-                        <div className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer">
-                          <GradientText>{detail.action}</GradientText>
+                <div className="detail-item text-right w-full">
+                  <div className="detail-label">Action</div>
+                  {detail.actionLinks ? (
+                    <Dropdown>
+                      <DropdownTrigger>
+                        <div className="detail-value flex justify-end items-center gap-[4px]">
+                          <div className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer">
+                            <GradientText>{detail.action}</GradientText>
+                          </div>
+                          <img
+                            src="/img/open-in-new-s2.svg"
+                            alt=""
+                            width={20}
+                            height={20}
+                          />
                         </div>
-                        <img
-                          src="/img/open-in-new-s2.svg"
-                          alt=""
-                          width={20}
-                          height={20}
-                        />
+                      </DropdownTrigger>
+                      <DropdownMenu
+                        aria-label="action"
+                        itemClasses={{
+                          base: "gap-4",
+                        }}
+                      >
+                        {detail.actionLinks.map((link, index) => (
+                          <DropdownItem
+                            className="whitespace-nowrap"
+                            key={index}
+                            onClick={() => handleLink(link)}
+                          >
+                            {link}
+                          </DropdownItem>
+                        ))}
+                      </DropdownMenu>
+                    </Dropdown>
+                  ) : (
+                    <div className="detail-value flex justify-end items-center gap-[4px]">
+                      <div
+                        className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
+                        onClick={() =>
+                          handleLink(detail.actionLink || data.link)
+                        }
+                      >
+                        <GradientText>{detail.action}</GradientText>
                       </div>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      aria-label="action"
-                      itemClasses={{
-                        base: "gap-4",
-                      }}
-                    >
-                      {detail.actionLinks.map((link, index) => (
-                        <DropdownItem
-                          className="whitespace-nowrap"
-                          key={index}
-                          onClick={() => handleLink(link)}
-                        >
-                          {link}
-                        </DropdownItem>
-                      ))}
-                    </DropdownMenu>
-                  </Dropdown>
-                ) : (
-                  <div className="detail-value flex justify-end items-center gap-[4px]">
-                    <div
-                      className="text-right whitespace-nowrap text-[#0BC48F] cursor-pointer"
-                      onClick={() => handleLink(detail.actionLink || data.link)}
-                    >
-                      <GradientText>{detail.action}</GradientText>
+                      <img
+                        src="/img/open-in-new-s2.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                      />
                     </div>
-                    <img
-                      src="/img/open-in-new-s2.svg"
-                      alt=""
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             ))}
           </DetailBox>
@@ -1260,42 +1267,54 @@ export default function EcoDApps({
         tvlCategoryMilestone={tvlCategoryMilestone}
       />
 
-      <List>
-        <div className="list-header flex items-center">
-          <div className="list-header-item text-left w-1/5">Protocol</div>
-          <div className="row-items flex items-center w-4/5">
-            <div className="list-header-item text-center">Points Booster</div>
-            <div className="list-header-item text-center">Rewards</div>
-            <div className="list-header-item text-center">Allocated Points</div>
-            <div className="list-header-item text-center">
-              <div className="flex itmes-center justify-center gap-[4px]">
-                <span>Roulette</span>
-                <Tooltip
-                  className="max-w-[360px]"
-                  classNames={{
-                    content:
-                      "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
-                  }}
-                  content="Interact with the dApp and once you earn more than 1 Nova Point, you'll get a chance to spin the roulette three times to win more Nova Points and Trademark NFTs."
-                >
-                  <img src="/img/icon-info-2.svg" alt="" />
-                </Tooltip>
+      <div className="overflow-x-auto">
+        <List className="min-w-[1178px]">
+          <div className="list-header flex items-center">
+            <div className="list-header-item text-left w-1/5">Protocol</div>
+            <div className="row-items flex items-center w-4/5">
+              <div className="list-header-item text-center">Points Booster</div>
+              <div className="list-header-item text-center">Rewards</div>
+              <div className="list-header-item text-center">
+                Allocated Points
               </div>
+              <div className="list-header-item text-center">
+                <div className="flex itmes-center justify-center gap-[4px]">
+                  <span>Roulette</span>
+                  <Tooltip
+                    className="max-w-[360px]"
+                    classNames={{
+                      content:
+                        "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                    }}
+                    content="Interact with the dApp and once you earn more than 1 Nova Point, you'll get a chance to spin the roulette three times to win more Nova Points and Trademark NFTs."
+                  >
+                    <img src="/img/icon-info-2.svg" alt="" />
+                  </Tooltip>
+                </div>
+              </div>
+              <div className="list-header-item"></div>
             </div>
-            <div className="list-header-item"></div>
           </div>
-        </div>
-        <div className="list-content">
-          {ecoDAppsList.map((item, index) => (
-            <EcoDApp
-              key={index}
-              data={item}
-              handleLink={handleLink}
-              onDrawed={getSpin}
-            />
-          ))}
-        </div>
-      </List>
+          <div className="list-content">
+            {ecoDAppsList.map((item, index) => (
+              <EcoDApp
+                key={index}
+                data={item}
+                handleLink={handleLink}
+                onDrawed={getSpin}
+              />
+            ))}
+          </div>
+        </List>
+      </div>
+
+      <div className="md:hidden block">
+        <AllocatedPoints
+          novaCategoryTotalPoints={novaCategoryTotalPoints}
+          holdingPoints={holdingPoints}
+          tabActive={tabActive}
+        />
+      </div>
 
       <Modal
         classNames={{ closeButton: "text-[1.5rem]" }}
@@ -1304,7 +1323,7 @@ export default function EcoDApps({
         isOpen={warningModal.isOpen}
         onOpenChange={warningModal.onOpenChange}
       >
-        <ModalContent className="p-2 mb-20 md:mb-0">
+        <ModalContent className="p-2">
           <ModalHeader>
             <div className="text-center w-full flex justify-center items-center gap-1">
               <img src="/img/icon-warning.svg" className="w-[2rem] h-[2rem]" />
@@ -1312,14 +1331,14 @@ export default function EcoDApps({
             </div>
           </ModalHeader>
           <ModalBody>
-            <p className="text-[1.25rem] text-[#A0A5AD] font-[500] leading-[2rem]">
+            <p className="text-[16px] md:text-[1.25rem] text-[#A0A5AD] font-[500] leading-[2rem]">
               You are about to access a third-party website. Please do your own
               research (DYOR) and avoid engaging in unfamiliar activities.
               Please note that zkLink and its affiliates are not liable for any
               losses, damages, or other consequences arising from your use of
               third-party websites.
             </p>
-            <div className="mt-[1.88rem] flex items-center gap-2">
+            <div className="mt-[16px] md:mt-[1.88rem] flex items-center gap-2">
               <input
                 type="checkbox"
                 id="recognize"
