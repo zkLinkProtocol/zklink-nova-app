@@ -626,7 +626,7 @@ export default function Dashboard() {
               <span className="total-prize-pool">Total Prize Pool</span>
             </div>
 
-            <div className="desc">
+            <div className="desc whitespace-nowrap">
               <div className="mt-[12px]">
                 The 30 million $ZKL will be distributed over at least Three
                 Epochs.
