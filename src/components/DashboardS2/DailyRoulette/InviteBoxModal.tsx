@@ -312,7 +312,7 @@ const InviteBoxModal = () => {
       <Modal
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
-        style={{ minHeight: "300px", backgroundColor: "rgb(0, 0, 0)" }}
+        style={{ minHeight: "300px" }}
         isOpen={trademarkMintModal.isOpen}
         onOpenChange={trademarkMintModal.onOpenChange}
         className="trans"
