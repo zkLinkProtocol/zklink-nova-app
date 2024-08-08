@@ -683,7 +683,12 @@ export default function Header() {
                     <img width={20} height={20} src="/img/icon-s2-wallet.svg" />
 
                     {/* <ConnectButton /> */}
-                    <ButtonText>{showAccount(address, 2, 4)}</ButtonText>
+                    <ButtonText className="md:hidden">
+                      {showAccount(address, 2, 4)}
+                    </ButtonText>
+                    <ButtonText className="hidden md:block">
+                      {showAccount(address)}
+                    </ButtonText>
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu onAction={(key) => handleWallectAction(key)}>
