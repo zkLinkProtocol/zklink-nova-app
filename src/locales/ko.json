@@ -11,6 +11,7 @@
       "novadrop": "NovaDrop",
       "leaderboard": "리더보드",
       "bridge": "브릿지",
+      "governance": "Governance",
       "about": "소개",
       "useful_tools": "유용한 도구",
       "merge_token": "Merge Token",
@@ -60,6 +61,7 @@
       "total_prize_pool": "총 상금 풀",
       "the_30_million_$zkl": "3천만 $ZKL은 최소 3번의 Epoch 동안 배포됩니다",
       "epoch_one_form": "Epoch 1 (5월 30일 부터 7월 15일까지)",
+      "epoch_two_form": "Epoch 2 (7월 16일 부터 8월 31일까지)",
       "all_supported_points": "지원되는 모든 포인트",
       "nova_points": "Nova Points",
       "linea_lxp_l": "Linea LXP-L",
@@ -102,6 +104,7 @@
       "spot_dex": "현물 DEX",
       "perp_dex": "선물 DEX",
       "lending": "대출",
+      "gamefi": "GameFi",
       "other": "기타",
       "portfolio": "Portfolio",
       "zkl_allocation_for_sector": "자산에 대한 $ZKL 할당",
@@ -248,7 +251,8 @@
       "meson_finance": "Meson Finance",
       "meson_finance_desc": "0.1 ETH/500USDT/500 USDC 이상의 토큰을 Nova 메인넷에 브릿지하고 Nova 포인트를 적립하세요",
       "symbiosis": "Symbiosis",
-      "symbiosis_desc": "0.1 ETH/500USDT/500 USDC 이상의 토큰을 Nova 메인넷에 브릿지하고 Nova 포인트를 적립하세요"
+      "symbiosis_desc": "0.1 ETH/500USDT/500 USDC 이상의 토큰을 Nova 메인넷에 브릿지하고 Nova 포인트를 적립하세요",
+      "third_party_bridge": "Third Party Bridge"
     },
     "about": {
       "about_zklink_nova_agg": "About zkLink Nova Aggregation Parade",

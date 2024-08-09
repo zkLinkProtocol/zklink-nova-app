@@ -520,7 +520,7 @@ export default function Header() {
                 target="_blank"
                 className={"nav-link"}
               >
-                Governance
+                {t("header.governance")}
               </a>
             </NavbarItem>
             <NavbarItem>
@@ -830,7 +830,7 @@ export default function Header() {
               target="_blank"
               className="block"
             >
-              Governance
+              {t("header.governance")}
             </a>
           </NavbarMenuItem>
 

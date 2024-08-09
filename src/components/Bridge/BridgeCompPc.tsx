@@ -294,7 +294,7 @@ const BridgeCompPC = (props: IProps) => {
       iconURL: "/img/icon-bridge-withdraw.svg",
     },
     {
-      name: "Third Party Bridge",
+      name: t("bridge.third_party_bridge"),
       iconURL: "/img/icon-bridge-3rd.svg",
     },
   ];

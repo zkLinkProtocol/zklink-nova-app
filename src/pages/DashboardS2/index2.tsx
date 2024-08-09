@@ -312,7 +312,7 @@ export default function Dashboard() {
     },
     {
       iconURL: "/img/icon-sector-6.svg",
-      name: "GameFi",
+      name: t("dashboard.gamefi"),
       category: "gamefi",
     },
     {
@@ -639,7 +639,7 @@ export default function Dashboard() {
                 {t("dashboard.epoch_one_form")}
               </div>
               <div className="mt-[12px] before text-[#fff]">
-                Epoch Two (From July 16th to Aug 31th)
+                {t("dashboard.epoch_two_form")}
               </div>
             </div>
           </div>

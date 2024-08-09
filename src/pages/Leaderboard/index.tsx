@@ -494,7 +494,7 @@ export default function Leaderboard() {
       category: "lending",
       iconURL: "/img/icon-sector-5.svg",
     },
-    { name: "GameFi", category: "gamefi" },
+    { name: t("dashboard.gamefi"), category: "gamefi" },
     {
       name: t("dashboard.other"),
       category: "other",

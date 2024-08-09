@@ -148,7 +148,7 @@ const ReferralModal = () => {
                     t("dashboard.spot_dex"),
                     t("dashboard.perp_dex"),
                     t("dashboard.lending"),
-                    "GameFi",
+                    t("dashboard.gamefi"),
                     t("dashboard.other"),
                   ].map((item) => (
                     <div key={item}>{item}</div>
