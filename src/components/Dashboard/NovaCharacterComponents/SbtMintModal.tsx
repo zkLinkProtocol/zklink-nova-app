@@ -25,10 +25,11 @@ import toast from "react-hot-toast";
 
 interface IProps {
   mintModal: UseDisclosureReturn;
+  onMinted?: () => void;
 }
 const SbtMintModal = (props: IProps) => {
   const { address, chainId } = useAccount();
-  const { mintModal } = props;
+  const { mintModal, onMinted } = props;
   const [mintType, setMintType] = useState<NOVA_NFT_TYPE>("ISTP");
   const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
   const { switchChain } = useSwitchChain();
@@ -73,6 +74,7 @@ const SbtMintModal = (props: IProps) => {
       await sendMintTx(address, mintType);
       mintModal.onClose();
       toast.success("Successfully minted SBT!");
+      onMinted?.();
     } catch (e: any) {
       console.log(e);
       if (e.message) {
@@ -95,6 +97,7 @@ const SbtMintModal = (props: IProps) => {
     sendMintTx,
     mintType,
     mintModal,
+    onMinted,
   ]);
   return (
     <Modal

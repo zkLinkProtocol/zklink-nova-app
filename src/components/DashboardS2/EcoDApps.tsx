@@ -9,6 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import { t } from "i18next";
 import { ReactNode, useMemo, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import styled from "styled-components";
@@ -207,7 +208,7 @@ export const EcoDApp = (props: {
             className="flex items-center gap-[2px] whitespace-nowrap"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <span>How To Earn</span>
+            <span>{t("how_to_earn")}</span>
             {isOpen ? <AiFillCaretUp /> : <AiFillCaretDown />}
           </EarnButton>
         </td>
@@ -278,7 +279,7 @@ export default ({
   };
 
   const geNovaCategoryPointsByProject = (project: string) => {
-    console.log('novaCategoryPoints', novaCategoryPoints)
+    console.log("novaCategoryPoints", novaCategoryPoints);
     const obj = novaCategoryPoints.find((item) => item.project === project);
     // const obj = {
     //   ...findObj,

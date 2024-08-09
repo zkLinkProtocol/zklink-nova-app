@@ -27,6 +27,7 @@ import { Tooltip } from "@nextui-org/react";
 import { epochList } from "@/constants/epoch";
 import ZKLClaimAd from "@/components/DashboardS2/ZKLClaimAd";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
+import { useTranslation } from "react-i18next";
 import { GradientBox } from "@/styles/common";
 
 export type TotalTvlItem = {
@@ -278,42 +279,43 @@ export interface NovaPointsListItem {
 
 export default function Dashboard() {
   const { address } = useAccount();
+  const { t } = useTranslation();
   // const { invite } = useSelector((store: RootState) => store.airdrop);
 
   const tabs2 = [
     {
       iconURL: "/img/icon-sector-1.svg",
-      name: "Assets",
+      name: t("dashboard.assets"),
       category: "holding",
     },
     {
       iconURL: "/img/icon-sector-2.svg",
-      name: "Boosted",
+      name: t("dashboard.boosted"),
       category: "nativeboost",
     },
     {
       iconURL: "/img/icon-sector-3.svg",
-      name: "Spot DEX",
+      name: t("dashboard.spot_dex"),
       category: "spotdex",
     },
     {
       iconURL: "/img/icon-sector-4.svg",
-      name: "Perp DEX",
+      name: t("dashboard.perp_dex"),
       category: "perpdex",
     },
     {
       iconURL: "/img/icon-sector-5.svg",
-      name: "Lending",
+      name: t("dashboard.lending"),
       category: "lending",
     },
     {
       iconURL: "/img/icon-sector-6.svg",
-      name: "GameFi",
+      name: t("dashboard.gamefi"),
       category: "gamefi",
     },
     {
       iconURL: "/img/icon-sector-7.svg",
-      name: "Others",
+      name: t("dashboard.other"),
       category: "other",
     },
   ];
@@ -459,23 +461,23 @@ export default function Dashboard() {
   const novaPointsList = useMemo(() => {
     const categorys = [
       {
-        name: "Assets Points",
+        name: t("dashboard.assets_points"),
         category: "holding",
       },
       {
-        name: "Native Boost Points",
+        name: t("dashboard.native_boost_points"),
         category: "nativeboost",
       },
       {
-        name: "Spot DEX Points",
+        name: t("dashboard.spot_dex_points"),
         category: "spotdex",
       },
       {
-        name: "Perp DEX Points",
+        name: t("dashboard.perp_dex_points"),
         category: "perpdex",
       },
       {
-        name: "Lending Points",
+        name: t("dashboard.lending_points"),
         category: "lending",
       },
       {
@@ -483,7 +485,7 @@ export default function Dashboard() {
         category: "gamefi",
       },
       {
-        name: "Others Points",
+        name: t("dashboard.other_points"),
         category: "other",
       },
     ];
@@ -622,19 +624,20 @@ export default function Dashboard() {
                 height={32}
                 className="min-w-[32px]"
               />
-              <span className="total-prize-pool">Total Prize Pool</span>
+              <span className="total-prize-pool">
+                {t("dashboard.total_prize_pool")}
+              </span>
             </div>
 
             <div className="desc whitespace-nowrap">
               <div className="mt-[12px]">
-                The 30 million $ZKL will be distributed over at least Three
-                Epochs.
+                {t("dashboard.the_30_million_$zkl")}
               </div>
               <div className="mt-[12px] before">
-                Epoch One (From May 30th to July 15th)
+                {t("dashboard.epoch_one_form")}
               </div>
               <div className="mt-[12px] before text-[#fff]">
-                Epoch Two (From July 16th to Aug 31st)
+                {t("dashboard.epoch_two_form")}
               </div>
             </div>
           </div>
@@ -659,7 +662,7 @@ export default function Dashboard() {
               <span>$ZKL</span>
             </div>
             <div className="all-suported-points flex items-center justify-end gap-[10px]">
-              <div>All Supported Points</div>
+              <div>{t("dashboard.all_supported_points")}</div>
               <div className="flex items-center">
                 {allSupportedPoints.map((item, index) => (
                   <Tooltip content={item.name} key={index}>
@@ -737,7 +740,7 @@ export default function Dashboard() {
                   alt=""
                   className="w-[24px] h-[24px] block"
                 />
-                <span>Portfolio</span>
+                <span>{t("dashboard.portfolio")}</span>
               </div>
             </div>
 

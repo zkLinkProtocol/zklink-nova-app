@@ -8,6 +8,7 @@ import { useDisclosure } from "@nextui-org/react";
 import { dailyOpen } from "@/api";
 import { useReCaptchaStore } from "@/hooks/useReCaptchaStore";
 import GoogleRecaptcha from "@/components/GoogleRecaptcha";
+import { useTranslation } from "react-i18next";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export enum BoxType {
@@ -35,6 +36,7 @@ const RecaptchaContainer = styled.div`
 `;
 
 const DailyBox = (props: DailyBoxProps) => {
+  const { t } = useTranslation();
   const modal = useDisclosure();
   const { type, weekday, date, amount, index, remain, onDrawed } = props;
   const btnText = useMemo(() => {
@@ -43,9 +45,9 @@ const DailyBox = (props: DailyBoxProps) => {
     } else if (type === BoxType.Expired) {
       return "Expired";
     } else if (type === BoxType.Active) {
-      return "Claim Reward";
+      return t("dashboard.claim_reward");
     }
-  }, [type]);
+  }, [type, t]);
   const pendingTime = useMemo(() => {
     if (index > 4) {
       const now = dayjs();

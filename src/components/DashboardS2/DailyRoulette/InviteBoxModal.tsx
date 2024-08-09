@@ -22,6 +22,7 @@ import {
   ModalFooter,
 } from "@nextui-org/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 
@@ -90,6 +91,7 @@ export const TxResult = styled.div`
 `;
 
 const InviteBoxModal = () => {
+  const { t } = useTranslation();
   const modalInstance = useDisclosure();
 
   const trademarkMintModal = useDisclosure();
@@ -227,7 +229,7 @@ const InviteBoxModal = () => {
     <>
       <div className="invite-box" onClick={modalInstance.onOpen}>
         <img src="img/icon-check-invitebox.svg" alt="" className="mr-2" />
-        <span className="text">Check Invite Box</span>
+        <span className="text">{t("dashboard.check_invite_box")}</span>
       </div>
       <Modal
         isDismissable={false}
@@ -345,7 +347,7 @@ const InviteBoxModal = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Open Your Invite Box
+                {t("dashboard.open_ur_invite_box")}
               </ModalHeader>
               <ModalBody className="px-2">
                 <div className="flex flex-col items-center">
@@ -364,10 +366,7 @@ const InviteBoxModal = () => {
                   />
 
                   <p className="text-[#FBFBFB99] font-chakra text-[14px] mt-4 text-center">
-                    With each referral, users have a chance to randomly draw one
-                    of the invite rewards. Invite reward boxes are Nova Points
-                    that will be directly added to your Holdings. Please note
-                    that Holding points are not NFTs.
+                    {t("dashboard.invite_box_desc")}
                   </p>
                 </div>
               </ModalBody>
@@ -380,7 +379,7 @@ const InviteBoxModal = () => {
                     onClick={handleDrawAndMint}
                   >
                     {isInvaidChain ? (
-                      "Switch To Nova Network To Draw"
+                      t("dashboard.switch_to_nova")
                     ) : (
                       <div className="flex items-center justify-center gap-[4px]">
                         <img src="/img/icon-draw-btn.svg" alt="" />
@@ -395,7 +394,7 @@ const InviteBoxModal = () => {
                       eventBus.emit("openRefeffalModal");
                     }}
                   >
-                    Invite More Friends
+                    {t("dashboard.invite_more_friends")}
                   </SecondayButton>
                 </div>
               </ModalFooter>

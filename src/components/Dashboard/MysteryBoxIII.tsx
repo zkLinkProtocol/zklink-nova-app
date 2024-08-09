@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { TxResult } from "./NovaCharacter";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   border: 1px solid transparent;
@@ -94,6 +95,7 @@ const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
 };
 
 export default function MysteryBoxIII() {
+  const { t } = useTranslation();
   const { address, chainId } = useAccount();
   const drawModal = useDisclosure();
   const trademarkMintModal = useDisclosure();
@@ -327,7 +329,7 @@ export default function MysteryBoxIII() {
             className="gradient-btn w-full h-[48px] py-[0.5rem] flex justify-center items-center gap-[0.38rem] text-[1.25rem]  mb-4"
           >
             <span>
-              {isInvaidChain && "Switch to Nova network to draw"}
+              {isInvaidChain && t("dashboard.switch_to_nova")}
               {!isInvaidChain &&
                 (!drawedNftId || drawedNftId === 5 || drawing) &&
                 `Draw ( ${remainDrawCount} )`}

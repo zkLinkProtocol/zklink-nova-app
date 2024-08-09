@@ -7,6 +7,7 @@ import useNovaDrawNFT from "@/hooks/useNovaNFT";
 import { useMintStatus } from "@/hooks/useMintStatus";
 import { Button, useDisclosure } from "@nextui-org/react";
 import SbtMintModal from "@/components/Dashboard/NovaCharacterComponents/SbtMintModal";
+import { useTranslation } from "react-i18next";
 export const NftContainer = styled.div`
   flex: 1;
   border-radius: 24px;
@@ -43,58 +44,26 @@ export const NftContainer = styled.div`
 `;
 
 export default function SbtNFT() {
-  const { nft, loading: mintLoading, fetchLoading } = useNovaNFT();
+  const { nft, loading: mintLoading, fetchLoading, getNFT } = useNovaNFT();
+  const { t } = useTranslation();
   const [lynksBalance, setLynksBalance] = useState(0);
-  const [checkingTrademarkUpgradable, setCheckingTrademarkUpgradable] =
-    useState(false);
-  const [upgradable, setUpgradable] = useState(false);
+
   const [update, setUpdate] = useState(0);
-  const { refreshBalanceId } = useMintStatus();
   const mintModal = useDisclosure();
   const { address, chainId } = useAccount();
-  const { trademarkNFT, lynksNFT, publicClient } = useNovaDrawNFT();
+  const { lynksNFT } = useNovaDrawNFT();
 
   useEffect(() => {
     (async () => {
-      if (address && trademarkNFT && lynksNFT) {
+      if (address && lynksNFT) {
         const lynksBalance = (await lynksNFT.read.balanceOf([
           address,
         ])) as bigint;
         setLynksBalance(Number(lynksBalance));
-        // const trademarkBalances = (await Promise.all(
-        //   [1, 2, 3, 4].map((item) =>
-        //     trademarkNFT.read.balanceOf([address, item])
-        //   )
-        // )) as bigint[];
-        setCheckingTrademarkUpgradable(true);
-        const trademarkBalancesCall = await publicClient?.multicall({
-          contracts: [1, 2, 3, 4].map((item) => ({
-            address: trademarkNFT.address,
-            abi: trademarkNFT.abi as Abi,
-            functionName: "balanceOf",
-            args: [address, item],
-          })),
-        });
-        const trademarkBalances =
-          trademarkBalancesCall?.map(
-            (item) => Number(item.result?.toString()) ?? 0
-          ) ?? [];
-        console.log("trademarkBalances: ", trademarkBalances);
-        if (
-          // Number(lynksBalance) === 0 &&
-          trademarkBalances[0] > 0 &&
-          trademarkBalances[1] > 0 &&
-          trademarkBalances[2] > 0 &&
-          trademarkBalances[3] > 0
-        ) {
-          setUpgradable(true);
-        } else {
-          setUpgradable(false);
-        }
-        setCheckingTrademarkUpgradable(false);
+        getNFT(address);
       }
     })();
-  }, [address, trademarkNFT, lynksNFT, update, publicClient, refreshBalanceId]);
+  }, [address, getNFT, lynksNFT, update]);
 
   const nftImage = useMemo(() => {
     if (!nft) {
@@ -125,16 +94,13 @@ export default function SbtNFT() {
         <p className="font-bold text-lg">Nova SBT</p>
         <div className="divide my-1"></div>
         <p className="text-sm text-[#FBFBFB]/[0.6]">
-          Users who deposit a minimum amount of 0.1 ETH or equivalent can mint a
-          zkLink Nova SBT. 
+          {t("dashboard.nova_sbt_desc")}
         </p>
         {!nft && (
           <Button
             className="btn-mint mt-auto"
-            isDisabled={!!nft && !upgradable}
-            isLoading={
-              fetchLoading || mintLoading || checkingTrademarkUpgradable
-            }
+            isDisabled={!!nft}
+            isLoading={fetchLoading || mintLoading}
             onClick={handleMintNow}
           >
             <img src="img/icon-wallet-white-2.svg" alt="" />
@@ -142,7 +108,10 @@ export default function SbtNFT() {
           </Button>
         )}
       </div>
-      <SbtMintModal mintModal={mintModal} />
+      <SbtMintModal
+        mintModal={mintModal}
+        onMinted={() => setUpdate((v) => v + 1)}
+      />
     </NftContainer>
   );
 }

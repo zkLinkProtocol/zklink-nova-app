@@ -48,6 +48,8 @@ import { eventBus } from "@/utils/event-bus";
 import { AiOutlineDown } from "react-icons/ai";
 import useSignature from "@/hooks/useSignature";
 import ReferralModal from "./ReferralModal";
+import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "@/hooks/useLanguageStore";
 const Container = styled.div`
   .navbar {
     /* height: 92px; */
@@ -419,6 +421,22 @@ export default function Header() {
     }
   }, [location.pathname]);
 
+  const langs = [
+    { name: "English", key: "en" },
+    { name: "한국어", key: "ko" },
+    { name: "简体中文", key: "zh_CN" },
+  ];
+
+  // const [selectedLang, setLanguage] = useState("en");
+
+  const { t, i18n } = useTranslation();
+  const { language, setLanguage } = useLanguageStore();
+
+  const handleLanguage = (key: string | number) => {
+    setLanguage(key as string);
+    i18n.changeLanguage(key as string);
+  };
+
   return (
     <Container>
       <Navbar
@@ -488,12 +506,12 @@ export default function Header() {
             </NavbarItem>
             <NavbarItem>
               <NavLink to="/leaderboard" className={"nav-link"}>
-                Leaderboard
+                {t("header.leaderboard")}
               </NavLink>
             </NavbarItem>
             <NavbarItem>
               <NavLink to="/bridge" className={"nav-link"}>
-                Bridge
+                {t("header.bridge")}
               </NavLink>
             </NavbarItem>
             <NavbarItem>
@@ -502,12 +520,12 @@ export default function Header() {
                 target="_blank"
                 className={"nav-link"}
               >
-                Governance
+                {t("header.governance")}
               </a>
             </NavbarItem>
             <NavbarItem>
               <NavLink to="/about" className={"nav-link"}>
-                About
+                {t("header.about")}
               </NavLink>
             </NavbarItem>
 
@@ -520,7 +538,7 @@ export default function Header() {
                     radius="sm"
                     variant="light"
                   >
-                    Useful Tools <AiOutlineDown />
+                    {t("header.useful_tools")} <AiOutlineDown />
                   </Button>
                 </DropdownTrigger>
               </NavbarItem>
@@ -544,12 +562,12 @@ export default function Header() {
                     href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
                     target="_blank"
                   >
-                    User Guide
+                    {t("header.user_guide")}
                   </a>
                 </DropdownItem>
                 <DropdownItem key="user-guide">
                   <a href="https://explorer.zklink.io/" target="_blank">
-                    Explorer
+                    {t("header.explorer")}
                   </a>
                 </DropdownItem>
               </DropdownMenu>
@@ -598,19 +616,38 @@ export default function Header() {
 
         <NavbarContent justify="end">
           <NavbarItem className="hidden flex items-center gap-[1rem]">
-            {/* if the user has completed the invitation */}
-            {false && (
-              <div className="flex items-center gap-[0.5rem]">
-                <div className="text-right">
-                  <div className="text-[1rem] text-[#7E7E7E]">YOUR POINTS</div>
-                  <div className="text-[1rem] text-[#fff]">2000</div>
+            <Dropdown disableAnimation>
+              <DropdownTrigger>
+                <div className="w-[40px] h-[40px] rounded-full border-1 border-[#282828] bg-[#10131C] hidden md:flex justify-center itmes-center">
+                  <img
+                    src="/img/icon-language.svg"
+                    alt=""
+                    width={24}
+                    height={24}
+                  />
                 </div>
-                <Avatar
-                  className="w-[2.5625rem] h-[2.5625rem]"
-                  src="/img/icon-avatar.svg"
-                />
-              </div>
-            )}
+              </DropdownTrigger>
+              <DropdownMenu onAction={(key) => handleLanguage(key)}>
+                {langs.map((lang) => (
+                  <DropdownItem key={lang.key}>
+                    {
+                      <div className="flex justify-between items-center">
+                        <span>{lang.name}</span>
+                        {lang.key === language && (
+                          <img
+                            src="/img/icon-right-gradient.svg"
+                            alt=""
+                            width={18}
+                            height={18}
+                          />
+                        )}
+                      </div>
+                    }
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+
             {address && depositStatus && (
               <>
                 {depositStatus === "pending" && (
@@ -693,15 +730,17 @@ export default function Header() {
                 </DropdownTrigger>
                 <DropdownMenu onAction={(key) => handleWallectAction(key)}>
                   <DropdownItem key="copy">
-                    <span>Copy</span>
+                    <span>{t("header.copy")}</span>
                   </DropdownItem>
-                  <DropdownItem key="explorer">Explorer</DropdownItem>
+                  <DropdownItem key="explorer">
+                    {t("header.explorer")}
+                  </DropdownItem>
                   <DropdownItem
                     key="disconnect"
                     className="text-danger"
                     color="danger"
                   >
-                    Disconnect
+                    {t("header.disconnect")}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -793,7 +832,7 @@ export default function Header() {
               target="_blank"
               className="block"
             >
-              Governance
+              {t("header.governance")}
             </a>
           </NavbarMenuItem>
 

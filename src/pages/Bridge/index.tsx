@@ -1,14 +1,9 @@
-import { ReactNode, useState } from "react";
-import classnames from "classnames";
 import "@/styles/otp-input.css";
 import BridgeComponent from "@/components/Bridge";
 import styled from "styled-components";
-import { FooterTvlText } from "@/styles/common";
-import TotalTvlCard from "@/components/TotalTvlCard";
-import ThirdPartyBridge from "@/components/ThirdPartyBridge";
 import "./index.scss";
-import { TRADEMARK_NFT_MARKET_URL } from "@/constants";
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
+import { useTranslation } from "react-i18next";
 
 <NovaNetworkTVL />;
 export const Container = styled.div`
@@ -102,22 +97,22 @@ const CardBox = styled.div`
 `;
 
 export default function Bridge() {
+  const { t } = useTranslation();
   const SeasonTwoItems = [
-    "Total Prize Pool: 30M $ZKL (3% of total supply)",
-    "$ZKL will be distributed based on the Nova Points users gained within each Epoch.",
-    "Earn Nova Points by actively performing holding assets, transactions, referring friends, and staking assets in DApps.",
-    "Nova Lynks NFT holders in Season I & II share a separate 10M $ZKL prize pool",
+    t("bridge.agg_s2_desc1"),
+    t("bridge.agg_s2_desc2"),
+    t("bridge.agg_s2_desc3"),
+    t("bridge.agg_s2_desc4"),
   ];
 
   const NftIntroduction = () => (
     <CardBox className="mt-10 p-[26px]">
       <p className="text-[16px] md:text-[22px] font-bold leading-5 mb-6">
-        Nova NFT Introduction
+        {t("bridge.nova_nft_intro")}
       </p>
       <div className="bridge-divide"></div>
       <p className="text-[#FBFBFB99] text-[16px] font-[700] leading-6 my-6">
-        You will be able to mint one of the four Nova SBT once you bridge a
-        minimal worth of 0.1 ETH.
+        {t("bridge.nova_nft_intro_desc")}
       </p>
       <div className="flex items-center justify-between md:justify-start">
         <img
@@ -181,12 +176,11 @@ export default function Bridge() {
             zk.Link Nova
           </Title>
           <SubTitle className="mt-[24px] text-center md:text-left">
-            The Industry's Leading L3 Aggregating Fragmented Liquidity Across
-            Ethereum
+            {t("bridge.the_industrys")}
           </SubTitle>
           <Line className="my-[16px]" />
           <Title2 className="md:w-[612px] text-[24px] md:text-[32] text-center md:text-left">
-            Bridge to zkLink Nova to Earn Nova Points & $ZKL
+            {t("bridge.bridge_to_nova")}
           </Title2>
 
           <div className="mt-[30px] w-full block md:hidden">

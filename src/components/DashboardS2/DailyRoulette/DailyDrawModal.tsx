@@ -32,6 +32,7 @@ import { TxResult } from "@/components/Dashboard/NovaCharacter";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useUpdateNftBalanceStore } from "@/hooks/useUpdateNftBalanceStore";
 
+import { useTranslation } from "react-i18next";
 interface IProps {
   modalInstance: UseDisclosureReturn;
   onDrawed: () => void;
@@ -75,6 +76,7 @@ const PRIZE_MAP: Record<number, number> = {
   8: 2,
 };
 const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
+  const { t } = useTranslation();
   const { address, chainId } = useAccount();
   const [spinging, setSpinging] = useState(false);
   const [minting, setMinting] = useState(false);
@@ -209,7 +211,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
 
   const btnText = useMemo(() => {
     if (isInvaidChain) {
-      return "Switch Network";
+      return t("common.switch_network");
     } else if (minting) {
       return "Start Minting";
     } else {
@@ -232,7 +234,9 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                {type === "protocol" ? "Protocol Roulette" : "Daily Roulette"}
+                {type === "protocol"
+                  ? "Protocol Roulette"
+                  : t("dashboard.daily_roulette")}
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center">
@@ -240,7 +244,7 @@ const DailyDrawModal: React.FC<IProps> = (props: IProps) => {
                   <p className="text-neutral font-chakra text-[14px] mt-4 ">
                     {type === "protocol"
                       ? "Congratulations! You now have the chance to spin the roulette and win rewards!"
-                      : "On a daily basis, each user has x times of opportunity to participate in a Roulette game on the campaign page. Users have the probability to win trademarks and Lynks. The minimum reward will be 1 Nova Points."}
+                      : t("dashboard.daily_roulette_desc")}
                   </p>
                 </div>
                 <Marquee

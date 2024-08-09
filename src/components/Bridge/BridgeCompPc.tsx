@@ -19,6 +19,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import ThirdPartyBridge from "../ThirdPartyBridge";
 import { GradientBox } from "@/styles/common";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   .tab-item {
@@ -280,18 +281,20 @@ const BridgeCompPC = (props: IProps) => {
     setIsMergeSelected,
   } = props;
 
+  const { t } = useTranslation();
+
   const tabs = [
     {
-      name: "Deposit",
+      name: t("bridge.deposit"),
       iconURL: "/img/icon-bridge-deposit.svg",
     },
     {
-      name: "Withdraw",
+      name: t("bridge.withdraw"),
       link: "https://portal.zklink.io/withdraw",
       iconURL: "/img/icon-bridge-withdraw.svg",
     },
     {
-      name: "Third Party Bridge",
+      name: t("bridge.third_party_bridge"),
       iconURL: "/img/icon-bridge-3rd.svg",
     },
   ];
@@ -471,7 +474,7 @@ const BridgeCompPC = (props: IProps) => {
 
                 {networkKey && NexusEstimateArrivalTimes[networkKey] && (
                   <div className="flex items-center justify-between points-box">
-                    <span>Estimated Time Of Arrival</span>
+                    <span>{t("bridge.estimated_time_of_arrival")}</span>
 
                     <EstimateArrivalTime
                       minutes={NexusEstimateArrivalTimes[networkKey]}

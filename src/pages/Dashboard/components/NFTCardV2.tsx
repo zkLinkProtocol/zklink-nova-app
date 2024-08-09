@@ -35,6 +35,7 @@ import classNames from "classnames";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Abi } from "viem";
+import { useTranslation } from "react-i18next";
 
 const NftBox = styled.div`
   .nft-left {
@@ -173,6 +174,7 @@ interface NFTCardV2Props {
   switchPhase: (version: number) => void;
 }
 export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
+  const { t } = useTranslation();
   const openBoxModal = useDisclosure();
   const mintBoxModal = useDisclosure();
   const mintResultModal = useDisclosure();
@@ -783,7 +785,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                         !isInvaidChain && (boxCount === 0 || mintableCount > 0)
                       }
                     >
-                      {isInvaidChain && "Switch Network"}
+                      {isInvaidChain && t("common.switch_network")}
                       {!isInvaidChain && opening && "Opening"}
                       {!isInvaidChain && !opening && `Open Box (${boxCount})`}
                     </Button>
@@ -793,7 +795,7 @@ export default function NFTCardV2({ switchPhase }: NFTCardV2Props) {
                       isLoading={drawing || mintableCountLoading}
                       isDisabled={!isInvaidChain && mintableCount === 0}
                     >
-                      {isInvaidChain && "Switch Network"}
+                      {isInvaidChain && t("common.switch_network")}
                       {!isInvaidChain && drawing && "Minting"}
                       {!isInvaidChain && !drawing && "Mint Booster"}
                     </Button>

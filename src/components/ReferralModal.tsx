@@ -18,6 +18,7 @@ import { ReferralPointsListItem, getReferralPointsList } from "@/api";
 import { useAccount } from "wagmi";
 import { formatNumberWithUnit, getTweetShareText } from "@/utils";
 import { eventBus } from "@/utils/event-bus";
+import { t } from "i18next";
 type ReferacData = {
   username: string;
   address: string;
@@ -106,7 +107,9 @@ const ReferralModal = () => {
           alt=""
           className="absolute bottom-0 right-[48px] w-[37px]"
         />
-        <span className="relative z-1">Your Invite Code: {invite?.code}</span>
+        <span className="relative z-1">
+          {t("header.ur_invite_code")}: {invite?.code}
+        </span>
       </ReferralButton>
       <ModalContainer
         classNames={{ closeButton: "hidden" }}
@@ -119,9 +122,11 @@ const ReferralModal = () => {
             <>
               <ModalHeader className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <div className="flex">Your Referrals ({data.length}/999)</div>
+                  <div className="flex">
+                    {t("header.ur_referrals")} ({data.length}/999)
+                  </div>
                   <div className="flex items-center gap-2">
-                    <span>Your Invite Code</span>
+                    <span>{t("header.ur_invite_code")}</span>
                     <InviteCode>
                       <span>{invite?.code}</span>
                       <img
@@ -138,13 +143,13 @@ const ReferralModal = () => {
                 <Divide />
                 <TableHead>
                   {[
-                    "Users",
-                    "Holding",
-                    "Spot DEX",
-                    "Perp DEX",
-                    "Lending",
-                    "GameFi",
-                    "Other",
+                    t("header.users"),
+                    t("dashboard.holding"),
+                    t("dashboard.spot_dex"),
+                    t("dashboard.perp_dex"),
+                    t("dashboard.lending"),
+                    t("dashboard.gamefi"),
+                    t("dashboard.other"),
                   ].map((item) => (
                     <div key={item}>{item}</div>
                   ))}

@@ -2,6 +2,7 @@ import useNovaPoints from "@/hooks/useNovaPoints";
 import { useMemo } from "react";
 import styled from "styled-components";
 import { DefaultBtn, Line } from "./Bridge/Components";
+import { useTranslation } from "react-i18next";
 
 const Title = styled.div`
   color: var(--Neutral-1, #fff);
@@ -37,6 +38,7 @@ const ColLine = styled.div`
 `;
 
 export default function ThridPartyBridge() {
+  const { t } = useTranslation();
   const {
     mesonBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
@@ -48,7 +50,7 @@ export default function ThridPartyBridge() {
       {
         iconURL: "/img/icon-free.svg",
         name: "Free",
-        desc: "Bridge Bitcoin assets to earn Nova Points.",
+        desc: t("bridge.free_desc"),
         tooltip: "",
         points: "",
         link: "https://free.tech/",
@@ -56,7 +58,7 @@ export default function ThridPartyBridge() {
       {
         iconURL: "/img/icon-orbiter.svg",
         name: "Orbiter Finance",
-        desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
+        desc: t("bridge.orbiter_finance_desc"),
         tooltip: "",
         points: `${orbiterBridgeNovaPoints} ${
           orbiterBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
@@ -66,7 +68,7 @@ export default function ThridPartyBridge() {
       {
         iconURL: "/img/icon-meson.svg",
         name: "Meson Finance",
-        desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
+        desc: t("bridge.meson_finance_desc"),
         tooltip: "",
         points: `${mesonBridgeNovaPoints} ${
           mesonBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
@@ -86,7 +88,7 @@ export default function ThridPartyBridge() {
       {
         iconURL: "/img/icon-symbiosis.svg",
         name: "Symbiosis",
-        desc: "Bridge more than 0.1 ETH/ 500USDT /500 USDC to Nova to earn Nova Points.",
+        desc: t("bridge.symbiosis_desc"),
         tooltip: "",
         points: `${symbiosisBridgeNovaPoints} ${
           symbiosisBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
@@ -98,12 +100,13 @@ export default function ThridPartyBridge() {
     mesonBridgeNovaPoints,
     orbiterBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
+    t,
   ]);
 
   return (
     <div className="mt-[16px] px-[8px]">
       <Title className="text-[16px] md:text-[24px]">
-        Earn Extra Nova Points by deposit from third-party bridges!
+        {t("bridge.earn_extra_nova_points")}
       </Title>
       <Line className="mt-6" />
       {bridges.map((bridge, index) => (

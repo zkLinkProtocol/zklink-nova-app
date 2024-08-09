@@ -5,6 +5,8 @@ import { Tooltip } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import MilestoneProgress from "../MilestoneProgress";
+import { useTranslation } from "react-i18next";
+
 import AllocatedPoints from "./AllocatedPoints";
 
 const MilestoneBox = styled.div`
@@ -39,6 +41,7 @@ export default function SectorHeader({
   const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
   const [nextTargetTvl, setNextTargetTvl] = useState(0);
   const [maxZKL, setMaxZKL] = useState(0);
+  const { t } = useTranslation();
 
   const milestoneMap: {
     [key: string]: {
@@ -241,25 +244,31 @@ export default function SectorHeader({
               alt=""
               className="w-[16px] h-[16px]"
             />
-            <span>$ZKL Allocation for {tabActive?.name}</span>
+            <span>
+              {t("dashboard.zkl_allocation_for_sector", {
+                sector: tabActive?.name,
+              })}
+            </span>
           </div>
           <div className="holding-value mt-[16px]">
             {formatToThounds(currentAllocationZKL)} $ZKL{" "}
             <br className="md:hidden" />
-            <span className="max">(Up to {formatToThounds(maxZKL)} $ZKL)</span>
+            <span className="max">
+              ({t("dashboard.up_to_zkl", { num: formatToThounds(maxZKL) })})
+            </span>
           </div>
           {!isNoProgress ? (
             <div className="holding-desc mt-[25px] flex items-center gap-[4px]">
-              Next $ZKL Allocation Level: {formatToThounds(nextAllocationZKL)}{" "}
-              $ZKL
+              {t("dashboard.next_zkl_allocation_lv")}:{" "}
+              {formatToThounds(nextAllocationZKL)} $ZKL
               <Tooltip
                 classNames={{
                   content:
                     "max-w-[300px] py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
                 }}
-                content={`This sector will allocate ${formatToThounds(
-                  nextAllocationZKL
-                )} $ZKL after reaching the next milestone.`}
+                content={t("dashboard.next_zkl_allocation_lv_tooltip", {
+                  num: formatToThounds(nextAllocationZKL),
+                })}
               >
                 <img
                   src="/img/icon-info-2.svg"
@@ -283,17 +292,13 @@ export default function SectorHeader({
       <MilestoneBox>
         <div className="mt-[36px] flex justify-between items-center">
           {isNoProgress ? (
-            <div>
-              This sector currently doesn't have a milestone, so the $ZKL
-              allocation will grow contingently.
-            </div>
+            <div>{t("dashboard.no_milestone_text")}</div>
           ) : (
             <>
               <div>
-                Current{" "}
                 {tabActive?.category === "perpdex"
-                  ? "Trading Volume: "
-                  : "TVL: "}
+                  ? `${t("dashboard.current_trading_volume")}: `
+                  : `${t("dashboard.current_tvl")}: `}
                 ${formatToThounds(currentTvl)}
               </div>
               <div className="text-right">
@@ -301,10 +306,9 @@ export default function SectorHeader({
                   <span className="text-green">Max</span>
                 ) : (
                   <>
-                    Next{" "}
                     {tabActive?.category === "perpdex"
-                      ? "Trading Volume Milestone: "
-                      : "TVL Milestone: "}
+                      ? `${t("dashboard.next_trading_volume_milestone")}: `
+                      : `${t("dashboard.next_tvl_milestone")}: `}
                     ${formatToThounds(nextTargetTvl)}
                   </>
                 )}

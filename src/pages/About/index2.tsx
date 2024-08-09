@@ -1,7 +1,8 @@
 import NovaNetworkTVL from "@/components/NovaNetworkTVL";
 import { useState } from "react";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import ReactHtmlParser from "react-html-parser";
 
 const Container = styled.div`
   position: relative;
@@ -163,6 +164,7 @@ const CollapseCard = ({
   isGradientBorder?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState<Boolean>(Boolean(isOpened) || false);
+  const { t } = useTranslation();
 
   return (
     <CardBox
@@ -200,56 +202,35 @@ const CollapseCard = ({
 };
 
 export default function About() {
+  const { t } = useTranslation();
+  const rawHtmlString = t("about.intro_desc7", {
+    campaign_portal: "campaign portal",
+  }).replace(
+    "campaign portal",
+    `<a href="https://app.zklink.io/" class="text-green" target="_blank">${t(
+      "about.campaign_portal"
+    )}</a>`
+  );
+
   const list = [
     {
-      question: "Introduction To The zkLink Nova Aggregation Parade",
+      question: t("about.intro"),
       answer: (
         <>
-          <div className="paragraph">
-            zkLink Nova is the first Aggregated Layer 3 ZK Rollup Network with
-            EVM compatibility that’s built on top of Ethereum and multiple
-            Ethereum Layer 2 Rollups.
-          </div>
+          <div className="paragraph">{t("about.intro_desc1")}</div>
 
+          <div className="paragraph">{t("about.intro_desc2")}</div>
           <div className="paragraph">
-            The Aggregation Parade is a flagship campaign created to introduce
-            users to the zkLink Nova platform and ecosystem, rewarding users
-            with Nova Points, NFT rewards, and a share of $ZKL prize pools.
-            Campaign participants earn Nova Points by interacting with zkLink
-            Nova’s Layer 3 platform by bridging assets, engaging with zkLink
-            Nova ecosystem DApps, referring friends, and contributing to the
-            network’s TVL.
-          </div>
-          <div className="paragraph">
-            <p className="title">
-              The Aggregation Parade has reached its second “Season.”
-            </p>
+            <p className="title">{t("about.intro_desc3")}</p>
             <div>
               <ul>
-                <li className="before">
-                  Season I of the Aggregation Parade concluded on May 30, 2024,
-                  12 AM UTC – in which a snapshot of user Nova Points was taken
-                  and subsequent $ZKL was distributed.
-                </li>
-                <li className="before">
-                  Season II of the Aggregation Parade began on May 30, 2024, and
-                  will operate under an Epoch timeline, in which there will be
-                  at least Three Epochs.
-                </li>
+                <li className="before">{t("about.intro_desc4")}</li>
+                <li className="before">{t("about.intro_desc5")}</li>
               </ul>
             </div>
           </div>
-          <div className="paragraph">
-            The total prize pool for Aggregation Parade Season II will be 30
-            million $ZKL.
-          </div>
-          <div className="paragraph">
-            To participate in our Aggregation Parade Season II, head over to our{" "}
-            <a href="https://app.zklink.io/" className="text-green">
-              campaign portal
-            </a>
-            .
-          </div>
+          <div className="paragraph">{t("about.intro_desc6")}</div>
+          <div className="paragraph">{ReactHtmlParser(rawHtmlString)}</div>
 
           <div>
             <img src="/img/about-1.png" alt="" className="block w-full" />
@@ -260,140 +241,91 @@ export default function About() {
       isGradientBorder: true,
     },
     {
-      question: "What is the Aggregation Parade Season 2?",
+      question: t("about.q1"),
       answer: (
         <>
-          <div className="paragraph">
-            Aggregation Parade Season 2 is a campaign by zkLink designed to
-            incentivize participation within the zkLink ecosystem. Participants
-            can earn Nova Points and NFTs (Lynks), which contribute to potential
-            $ZKL token rewards.
-          </div>
+          <div className="paragraph">{t("about.a1")}</div>
         </>
       ),
     },
     {
-      question: "When did Aggregation Parade Season 2 start?",
+      question: t("about.q2"),
       answer: (
         <>
-          <div className="paragraph">
-            The second season of the Aggregation Parade started on May 30, 2024,
-            at 10:00 AM UTC.
-          </div>
+          <div className="paragraph">{t("about.a2")}</div>
         </>
       ),
     },
     {
-      question:
-        "How can I earn Nova Points during Aggregation Parade Season 2?",
+      question: t("about.q3"),
       answer: (
         <>
-          <div className="paragraph">
-            You can earn Nova Points by actively performing transactions,
-            holding assets, referring friends, and staking assets in DApps.
-          </div>
+          <div className="paragraph">{t("about.a3")}</div>
         </>
       ),
     },
     {
-      question: "What are Nova Points and how do they benefit me?",
+      question: t("about.q4"),
       answer: (
         <>
-          <div className="paragraph">
-            Nova Points are rewards that participants earn for engaging with the
-            zkLink ecosystem. Accumulating these points eables you to share the
-            ZKL prize pools.
-          </div>
+          <div className="paragraph">{t("about.a4")}</div>
         </>
       ),
     },
     {
-      question:
-        "Is there a specific amount of ZKL tokens allocated for Aggregation Parade Season 2?",
+      question: t("about.q5"),
       answer: (
         <>
-          <div className="paragraph">
-            3% of the total ZKL supply will be allocated to participants of
-            Aggregation Parade Season 2.
-          </div>
+          <div className="paragraph">{t("about.a5")}</div>
         </>
       ),
     },
     {
-      question:
-        "What are the key improvements or new features introduced in Aggregation-Parade Season 2 compared to the first season?",
+      question: t("about.q6"),
       answer: (
         <>
-          <div className="paragraph">
-            The key improvements and features introduced in our Aggregation
-            Parade Season II that are distinct from Season I include a newly
-            designed and revamped dashboard, where users can view their Nova
-            Points accumulated from their platform holdings, sector/vertical
-            point rewards, DApp rewards, zkLink Nova native DApp booster rewards
-            – as well as a brand new entertainment element where users can spin
-            a daily “roulette” for surprise campaign benefits.
-          </div>
+          <div className="paragraph">{t("about.a6")}</div>
         </>
       ),
     },
     {
-      question:
-        "Can users now check how many Nova points they earn from each DApp in Season 2?",
+      question: t("about.q7"),
       answer: (
         <>
-          <div className="paragraph">
-            Yes. Users will be able to see their Nova Points accumulated from
-            each DApp and the total Nova Points accumulated in a DApp’s category
-            on the campaign dashboard. This applies across all sectors/verticals
-            seen within the dashboard, and the DApps within them.
-          </div>
+          <div className="paragraph">{t("about.a7")}</div>
         </>
       ),
     },
     {
-      question:
-        "Where can I find more information about the Aggregation Parade and how to earn Nova Points?",
+      question: t("about.q8"),
       answer: (
         <>
-          <div className="paragraph">
-            You can find more details within our blog post
-          </div>
+          <div className="paragraph">{t("about.a8")}</div>
+        </>
+      ),
+    },
+
+    {
+      question: t("about.q9"),
+      answer: (
+        <>
+          <div className="paragraph">{t("about.a9")}</div>
         </>
       ),
     },
     {
-      question:
-        "Is there any bonus that S1 participants can receive if they also participate in S2?(ex: points,booster)",
+      question: t("about.q10"),
       answer: (
         <>
-          <div className="paragraph">
-            Early participants (including S1 participants) can earn additional
-            points by loyalty booster.
-          </div>
+          <div className="paragraph">{t("about.a10")}</div>
         </>
       ),
     },
     {
-      question:
-        "I have points from Season 1, will they be transferred In Season 2? ",
+      question: t("about.q11"),
       answer: (
         <>
-          <div className="paragraph">
-            Nova Points earned from Season I do not count, continue, or transfer
-            over to Season II. Nova Points earned in Season II began on May 30,
-            2024.
-          </div>
-        </>
-      ),
-    },
-    {
-      question:
-        "Can users who have minted Lynks NFTs in S1 still mint Lynk in S2 if they collect all 4 unique trademark NFTs?",
-      answer: (
-        <>
-          <div className="paragraph">
-            Yes, you may mint additional Lynk in S2 and collect trademarks.
-          </div>
+          <div className="paragraph">{t("about.a11")}</div>
         </>
       ),
     },
@@ -403,7 +335,7 @@ export default function About() {
     <Container>
       <div className="px-[15px] md:px-[104px]">
         <Title className="md:mt-[80px] text-[32px] md:text-[56px]">
-          About zkLink Nova Aggregation Parade
+          {t("about.about_zklink_nova_agg")}
         </Title>
 
         <div className="mt-[32px] md:mt-[60px] mx-auto flex flex-col gap-[30px]">

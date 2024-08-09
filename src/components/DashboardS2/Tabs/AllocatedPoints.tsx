@@ -3,6 +3,7 @@ import { NovaPointsListItem } from "@/pages/DashboardS2/index2";
 import { formatNumberWithUnit } from "@/utils";
 import { Tooltip } from "@nextui-org/react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 const AllocatedBox = styled.div`
@@ -72,14 +73,15 @@ export default function AllocatedPoints({
   holdingPoints,
   tabActive,
 }: IProps) {
+  const { t } = useTranslation();
   const categoryPointsTooltips = useMemo(() => {
     const arr = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
       },
       {
-        label: "By Referral",
+        label: t("dashboard.by_referral"),
         value: formatNumberWithUnit(
           novaCategoryTotalPoints?.referralPoints || 0
         ),
@@ -92,16 +94,16 @@ export default function AllocatedPoints({
       });
     }
     return arr;
-  }, [novaCategoryTotalPoints]);
+  }, [novaCategoryTotalPoints, t]);
 
   const holdingPointsTooltips = useMemo(() => {
     const arr = [
       {
-        label: "By Interaction",
+        label: t("dashboard.by_interaction"),
         value: formatNumberWithUnit(holdingPoints?.userEcoPoints || 0),
       },
       {
-        label: "By Referral",
+        label: t("dashboard.by_referral"),
         value: formatNumberWithUnit(holdingPoints?.userReferralPoints || 0),
       },
     ];
@@ -114,12 +116,14 @@ export default function AllocatedPoints({
     }
 
     return arr;
-  }, [holdingPoints, tabActive]);
+  }, [holdingPoints, tabActive, t]);
 
   return (
     <AllocatedBox className="md:min-w-[419px] px-[20px] md:px-[28px] py-[16px]">
       <div className="flex items-center justify-between">
-        <span className="label">Total Sector Allocated Points</span>
+        <span className="label">
+          {t("dashboard.total_sector_allocated_points")}
+        </span>
         <Tooltip
           classNames={{
             content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
@@ -156,7 +160,7 @@ export default function AllocatedPoints({
       </div>
       <div className="line"></div>
       <div className="flex items-center justify-between">
-        <span className="label">Your Sector Points</span>
+        <span className="label">{t("dashboard.ur_sector_points")}</span>
         <Tooltip
           classNames={{
             content: "py-[20px] px-[16px] text-[14px] bg-[#000811]",
@@ -164,7 +168,7 @@ export default function AllocatedPoints({
           content={
             <div className="min-w-[200px]">
               <div className="text-[#999] text-[14px] font-[500]">
-                Your Sector Points
+                {t("dashboard.ur_sector_points")}
               </div>
               {holdingPointsTooltips.map((item, index) => (
                 <div
