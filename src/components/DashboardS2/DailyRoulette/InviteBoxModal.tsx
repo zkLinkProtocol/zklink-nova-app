@@ -9,9 +9,7 @@ import {
   TRADEMARK_NFT_MARKET_URL,
 } from "@/constants";
 import { config } from "@/constants/networks";
-import { useMintStatus } from "@/hooks/useMintStatus";
 import useNovaNFT from "@/hooks/useNFT";
-import useNovaDrawNFT, { TrademarkMintParams } from "@/hooks/useNovaNFT";
 import { formatBalance, sleep } from "@/utils";
 import { eventBus } from "@/utils/event-bus";
 import {
@@ -24,7 +22,6 @@ import {
   ModalFooter,
 } from "@nextui-org/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import toast from "react-hot-toast";
 import styled from "styled-components";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 
@@ -102,7 +99,7 @@ const InviteBoxModal = () => {
   const [update, setUpdate] = useState(0);
 
   const { address, chainId } = useAccount();
-  const { nft, loading: mintLoading, sendMintTx, fetchLoading } = useNovaNFT();
+  const { nft, loading: mintLoading } = useNovaNFT();
   const drawRef = useRef<{ start: (target: number) => void }>();
   const [drawing, setDrawing] = useState(false);
   const [trademarkMintStatus, setTrademarkMintStatus] = useState<
@@ -110,28 +107,7 @@ const InviteBoxModal = () => {
   >();
   const [mintResult, setMintResult] = useState<{ name: string; img: string }>();
 
-  const [trademarkMintParams, setTrademarkMintParams] = useState<{
-    tokenId: number;
-    nonce: number;
-    signature: string;
-    expiry: number;
-  }>();
-
-  const {
-    trademarkNFT,
-    sendTrademarkMintTx,
-    sendOldestFriendsTrademarkMintTx,
-    sendEcoBoxMintTx,
-    lynksNFT,
-    isTrademarkApproved,
-    sendTrademarkApproveTx,
-    sendUpgradeSBTTx,
-    isApproving,
-    publicClient,
-    sendMysteryOpenMintTxV2,
-  } = useNovaDrawNFT();
-  const { refreshBalanceId, updateRefreshBalanceId } = useMintStatus();
-  const [failMessage, setFailMessage] = useState("");
+  const [failMessage] = useState("");
 
   const isInvaidChain = useMemo(() => {
     return chainId !== NOVA_CHAIN_ID;
@@ -184,86 +160,33 @@ const InviteBoxModal = () => {
       return;
     }
 
-    if (novaBalance === 0) {
-      toast.error("Insuffcient gas for mint transaction.");
-      return;
-    }
-
-    // 5 - 1 = 4, 5 means no prize. Draw again
-    if (!drawedNftId || drawedNftId === 5) {
-      setDrawing(true);
-      const res = await drawTrademarkNFT(address);
-      if (res && res.result) {
-        const { tokenId, nonce, signature, expiry } = res.result;
-        setTrademarkMintParams({ tokenId, nonce, signature, expiry });
-        await drawRef?.current?.start(getDrawIndexWithPrizeTokenId(tokenId)); //do the draw animation; use index of image for active
-        // await sleep(2000);
-        if (tokenId === 5) {
-          // 5 means no prize
-          setUpdate((update) => update + 1);
-          // return;
-        } else if ([6, 7, 8, 9].includes(tokenId)) {
-          await sleep(2000);
-          setDrawedNftId(undefined);
-          //not actual nft. Just points.
-          setTrademarkMintStatus(MintStatus.Success);
-          setMintResult({
-            name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
-            img:
-              tokenId === 88
-                ? lynksNFTImg!
-                : `/img/img-trademark-${tokenId}.png`,
-          });
-          trademarkMintModal.onOpen();
-          modalInstance.onClose();
-          eventBus.emit("getInvite");
-        } else {
-          setDrawedNftId(tokenId);
-        }
+    setDrawing(true);
+    const res = await drawTrademarkNFT(address);
+    if (res && res.result) {
+      const { tokenId } = res.result;
+      await drawRef?.current?.start(getDrawIndexWithPrizeTokenId(tokenId)); //do the draw animation; use index of image for active
+      // await sleep(2000);
+      if (tokenId === 5) {
+        // 5 means no prize
+        setUpdate((update) => update + 1);
+        // return;
+      } else if ([6, 7, 8, 9].includes(tokenId)) {
+        await sleep(2000);
+        setDrawedNftId(undefined);
+        //not actual nft. Just points.
+        setTrademarkMintStatus(MintStatus.Success);
+        setMintResult({
+          name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
+          img:
+            tokenId === 88 ? lynksNFTImg! : `/img/img-trademark-${tokenId}.png`,
+        });
+        trademarkMintModal.onOpen();
+        modalInstance.onClose();
+        eventBus.emit("getInvite");
+      } else {
+        setDrawedNftId(tokenId);
       }
-      setUpdate((update) => update + 1);
-      return; // draw first and then mint as step2.
     }
-    let mintParams = { ...trademarkMintParams };
-
-    try {
-      //TODO call contract
-      trademarkMintModal.onOpen();
-      setTrademarkMintStatus(MintStatus.Minting);
-      if (!trademarkMintParams) {
-        const res = await drawTrademarkNFT(address);
-        if (res && res.result) {
-          const { tokenId, nonce, signature, expiry } = res.result;
-          setTrademarkMintParams({ tokenId, nonce, signature, expiry });
-          mintParams = { tokenId, nonce, signature, expiry };
-        }
-      }
-      await sendTrademarkMintTx(mintParams as TrademarkMintParams);
-      setTrademarkMintStatus(MintStatus.Success);
-      setMintResult({
-        name: TRADEMARK_TOKEN_ID_MAP[mintParams.tokenId!],
-        img:
-          mintParams.tokenId === 88
-            ? lynksNFTImg!
-            : `/img/img-trademark-${mintParams.tokenId}.png`,
-      });
-      updateRefreshBalanceId();
-    } catch (e: any) {
-      console.error(e);
-      setTrademarkMintStatus(MintStatus.Failed);
-      if (e.message) {
-        if (e.message.includes("rejected the request")) {
-          setFailMessage("User rejected the request");
-        } else {
-          setFailMessage(e.message);
-        }
-      }
-    } finally {
-      setDrawing(false);
-      setDrawedNftId(undefined);
-      modalInstance.onClose();
-    }
-
     setUpdate((update) => update + 1);
   }, [
     address,
@@ -273,11 +196,8 @@ const InviteBoxModal = () => {
     lynksNFTImg,
     novaBalance,
     remainDrawCount,
-    sendTrademarkMintTx,
     switchChain,
     trademarkMintModal,
-    trademarkMintParams,
-    updateRefreshBalanceId,
   ]);
 
   const mintPointsTips = useMemo(() => {
@@ -297,7 +217,7 @@ const InviteBoxModal = () => {
       getRemainDrawCount(address).then((res) => {
         console.log("remain draw count: ", res);
         const { remainNumber, tokenId } = res.result;
-        tokenId && setDrawedNftId(Number(tokenId));
+        // tokenId && setDrawedNftId(Number(tokenId));
         setRemainDrawCount(remainNumber);
       });
     }
@@ -312,19 +232,13 @@ const InviteBoxModal = () => {
       <Modal
         isDismissable={false}
         classNames={{ closeButton: "text-[1.5rem]" }}
-        style={{ minHeight: "300px", backgroundColor: "rgb(0, 0, 0)" }}
+        style={{ minHeight: "300px" }}
         isOpen={trademarkMintModal.isOpen}
         onOpenChange={trademarkMintModal.onOpenChange}
         className="trans"
       >
         <ModalContent className="mt-[2rem] py-4 px-[24px]">
           <ModalHeader className="px-0 pt-0 flex flex-col text-xl font-normal text-center">
-            {trademarkMintStatus === MintStatus.Minting && !isApproving && (
-              <span>Minting</span>
-            )}
-            {trademarkMintStatus === MintStatus.Minting && isApproving && (
-              <span>Approving</span>
-            )}
             {trademarkMintStatus === MintStatus.Success && (
               <span>Congratulations</span>
             )}
@@ -345,13 +259,6 @@ const InviteBoxModal = () => {
                   <p className="text-[#C0C0C0] font-normal text-lg">
                     Please sign the transaction in your wallet.
                   </p>
-                  {isApproving && (
-                    <p className="text-[#C0C0C0] font-normal text-lg">
-                      If you receive a warning about approving all your NFTs,
-                      please don't panic. The Lynks contract requires approval
-                      to burn your trademark NFTs in order to mint Lynks.
-                    </p>
-                  )}
                 </div>
               )}
               {trademarkMintStatus === MintStatus.Failed && (
@@ -434,13 +341,13 @@ const InviteBoxModal = () => {
         isOpen={modalInstance.isOpen}
         onOpenChange={modalInstance.onOpenChange}
       >
-        <ModalContent className="mb-[5.75rem]">
+        <ModalContent className="md:mb-[5.75rem]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Open Your Invite Box
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="px-2">
                 <div className="flex flex-col items-center">
                   <DrawAnimation
                     type="Trademark"
@@ -468,26 +375,18 @@ const InviteBoxModal = () => {
                 <div className="flex flex-col w-full">
                   <PrimaryButton
                     className="w-full gradient-btn mb-[16px]"
-                    isDisabled={
-                      !isInvaidChain &&
-                      (novaBalance === 0 || remainDrawCount === 0)
-                    }
+                    isDisabled={isInvaidChain || remainDrawCount === 0}
                     isLoading={mintLoading || drawing}
                     onClick={handleDrawAndMint}
                   >
-                    {isInvaidChain && "Switch To Nova Network To Draw"}
-                    {!isInvaidChain &&
-                      (!drawedNftId || drawedNftId === 5 || drawing) && (
-                        <div className="flex items-center justify-center gap-[4px]">
-                          <img src="/img/icon-draw-btn.svg" alt="" />
-                          Draw ({remainDrawCount})
-                        </div>
-                      )}
-                    {!isInvaidChain &&
-                      !!drawedNftId &&
-                      drawedNftId !== 5 &&
-                      !drawing &&
-                      "Mint"}
+                    {isInvaidChain ? (
+                      "Switch To Nova Network To Draw"
+                    ) : (
+                      <div className="flex items-center justify-center gap-[4px]">
+                        <img src="/img/icon-draw-btn.svg" alt="" />
+                        Draw ({remainDrawCount})
+                      </div>
+                    )}
                   </PrimaryButton>
                   <SecondayButton
                     className="w-full "

@@ -50,7 +50,7 @@ const S2PointsCard = styled.div`
     min-width: 381px;
     width: 381px;
     height: 381px;
-    display: block;
+    /* display: block; */
   }
 
   .img-bg {
@@ -62,6 +62,9 @@ const S2PointsCard = styled.div`
     /* height: 120px; */
     height: auto;
     background: #151923;
+    @media screen and (max-width: 768px) {
+      padding: 12px;
+    }
   }
   .item-name {
     width: 100%;
@@ -163,7 +166,6 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
               />
               <div className="img-bg">
                 <img
-                  className="min-w-[120px] min-h-[120px]"
                   src={index === 8 ? lynksNFTImg : `${item.img}`}
                   alt="Image 1"
                 />

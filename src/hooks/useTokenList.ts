@@ -53,7 +53,13 @@ export const useTokenBalanceList = () => {
   const { networkKey } = useBridgeNetworkStore();
   const { address: walletAddress } = useAccount();
   const [allTokens, setAllTokens] = useState<
-    { l1Address: string; iconURL: string; usdPrice: number; symbol: string }[]
+    {
+      l1Address: string;
+      iconURL: string;
+      usdPrice: number;
+      symbol: string;
+      networkKey: string;
+    }[]
   >([]);
 
   useEffect(() => {

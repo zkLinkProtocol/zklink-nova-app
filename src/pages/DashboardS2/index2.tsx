@@ -25,11 +25,10 @@ import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
 import { Tooltip } from "@nextui-org/react";
 import { epochList } from "@/constants/epoch";
-import PremiusAd from "@/components/DashboardS2/PremiusAd";
 import ZKLClaimAd from "@/components/DashboardS2/ZKLClaimAd";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
-import GoogleRecaptcha from "@/components/GoogleRecaptcha";
 import { GradientBox } from "@/styles/common";
+
 export type TotalTvlItem = {
   symbol: string;
   tokenAddress: string;
@@ -606,7 +605,7 @@ export default function Dashboard() {
 
   return (
     <Container>
-      <div className="side fixed right-[32px] top-[120px] z-[999] max-w-[400px] w-[400px]">
+      <div className="side fixed right-[8px] md:right-[32px] top-[120px] z-[9] max-w-[350px] md:max-w-[392px] w-full md:w-[392px]">
         <ZKLClaimAd />
         <MysteryBoxIII />
         {/* <GoogleRecaptcha /> */}
@@ -626,7 +625,7 @@ export default function Dashboard() {
               <span className="total-prize-pool">Total Prize Pool</span>
             </div>
 
-            <div className="desc">
+            <div className="desc whitespace-nowrap">
               <div className="mt-[12px]">
                 The 30 million $ZKL will be distributed over at least Three
                 Epochs.
@@ -635,7 +634,7 @@ export default function Dashboard() {
                 Epoch One (From May 30th to July 15th)
               </div>
               <div className="mt-[12px] before text-[#fff]">
-                Epoch Two (From July 16th to Aug 31th)
+                Epoch Two (From July 16th to Aug 31st)
               </div>
             </div>
           </div>

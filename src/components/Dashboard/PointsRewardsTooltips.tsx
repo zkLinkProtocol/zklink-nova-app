@@ -14,9 +14,9 @@ export function getPointsRewardsTooltips(points: number) {
     1000: "~167 days",
   };
   return (
-    <p>
+    <>
       Equivalent to depositing 1 ETH into Nova for {pointsMap[Number(points)]}.
-    </p>
+    </>
   );
 }
 
