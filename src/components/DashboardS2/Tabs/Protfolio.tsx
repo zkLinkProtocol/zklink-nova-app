@@ -530,7 +530,7 @@ export default function Portfolio({
           {novaPointsList.map((item, index) => (
             <NovaPointsBox
               key={index}
-              className="flex flex-col items-center min-w-[295px] w-[295px] h-[298px] bg-[#1B1D20] "
+              className="flex flex-col items-center min-w-[293px] w-[293px] h-[298px] bg-[#1B1D20] "
             >
               <p className="mt-[150px] text-white text-[16px]">{item.name}</p>
               {/* <div className="points-divide my-8"></div> */}
