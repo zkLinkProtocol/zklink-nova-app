@@ -1231,6 +1231,33 @@ export default function EcoDApps({
           },
         ],
       },
+      {
+        category: "other",
+        iconURL: "/img/icon-zns.jpg",
+        name: "ZNS",
+        link: "https://zns.bio/search?chain=810180",
+        handler: "@ZNSConnect",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Up to 10x",
+        holdingPoints: getHoldingPointsByProject("zns"),
+        totalPoints: getTotalPointsByProject("zns"),
+        remainSpinNum: getSpinByProject("zns").remainSpinNum,
+        projectName: "zns",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>1 point per domain</p>
+              </div>
+            ),
+            description: `For each domain name minted on ZNS Connect, you will receive 1 Nova point.`,
+            action: "Use Protocol",
+          },
+        ],
+      },
     ];
 
     return tabActive
