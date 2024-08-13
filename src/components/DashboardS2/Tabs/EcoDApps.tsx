@@ -1240,7 +1240,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "Up to 10x",
+        rewards: "Mint",
         holdingPoints: getHoldingPointsByProject("zns"),
         totalPoints: getTotalPointsByProject("zns"),
         remainSpinNum: getSpinByProject("zns").remainSpinNum,
