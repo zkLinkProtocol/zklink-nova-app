@@ -1258,6 +1258,62 @@ export default function EcoDApps({
           },
         ],
       },
+      {
+        category: "other",
+        iconURL: "/img/icon-sumermoney.jpg",
+        name: "Sumer.money",
+        link: "https://app.sumer.money/",
+        handler: "@SumerMoney",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Mint",
+        holdingPoints: getHoldingPointsByProject("sumermoney"),
+        totalPoints: getTotalPointsByProject("sumermoney"),
+        remainSpinNum: getSpinByProject("sumermoney").remainSpinNum,
+        projectName: "sumermoney",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>20x for ETH/wETH, merged wBTC, USDT, USDC and ZKL</p>
+                <p>4x for wBTC, mBTC, pufETH.eth, STONE.manta, MANTA.manta</p>
+              </div>
+            ),
+            description: `Cross-chain synthetic assets protocol with a unified lending & borrowing market`,
+            action: "Use Protocol",
+          },
+        ],
+      },
+      {
+        category: "other",
+        iconURL: "/img/icon-desyn.jpg",
+        name: "Desyn",
+        link: "https://app.sumer.money/",
+        handler: "@DesynLab",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Mint",
+        holdingPoints: getHoldingPointsByProject("desyn"),
+        totalPoints: getTotalPointsByProject("desyn"),
+        remainSpinNum: getSpinByProject("desyn").remainSpinNum,
+        projectName: "desyn",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>10x for ETH/wETH, merged wBTC, USDT, USDC, DAI and ZKL</p>
+                <p>2x for nETH</p>
+              </div>
+            ),
+            description: `A decentralized platform that enables users to create, manage, and invest in customizable, on-chain asset portfolios.`,
+            action: "Use Protocol",
+          },
+        ],
+      },
     ];
 
     return tabActive
