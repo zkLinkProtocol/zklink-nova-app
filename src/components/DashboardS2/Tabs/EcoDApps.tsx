@@ -338,7 +338,13 @@ const EcoDApp = (props: {
                   height={16}
                 />
               </div>
-              <div className="name mt-[5px]">{data.handler}</div>
+              <a
+                href={`https://x.com/${data.handler}`}
+                target="_blank"
+                className="name mt-[5px]"
+              >
+                {data.handler}
+              </a>
             </div>
           </div>
           <div
