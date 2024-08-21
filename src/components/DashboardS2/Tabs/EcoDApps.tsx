@@ -1265,7 +1265,7 @@ export default function EcoDApps({
         ],
       },
       {
-        category: "other",
+        category: "lending",
         iconURL: "/img/icon-sumermoney.jpg",
         name: "Sumer.money",
         link: "https://app.sumer.money/",
@@ -1274,7 +1274,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "Mint",
+        rewards: "Lending",
         holdingPoints: getHoldingPointsByProject("sumermoney"),
         totalPoints: getTotalPointsByProject("sumermoney"),
         remainSpinNum: getSpinByProject("sumermoney").remainSpinNum,
@@ -1302,7 +1302,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "Mint",
+        rewards: "Farming",
         holdingPoints: getHoldingPointsByProject("desyn"),
         totalPoints: getTotalPointsByProject("desyn"),
         remainSpinNum: getSpinByProject("desyn").remainSpinNum,
