@@ -1274,10 +1274,10 @@ export default function EcoDApps({
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
         rewards: "Lending",
-        holdingPoints: getHoldingPointsByProject("sumermoney"),
-        totalPoints: getTotalPointsByProject("sumermoney"),
-        remainSpinNum: getSpinByProject("sumermoney").remainSpinNum,
-        projectName: "sumermoney",
+        holdingPoints: getHoldingPointsByProject("sumer"),
+        totalPoints: getTotalPointsByProject("sumer"),
+        remainSpinNum: getSpinByProject("sumer").remainSpinNum,
+        projectName: "sumer",
         details: [
           {
             booster: (
