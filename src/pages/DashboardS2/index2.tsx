@@ -634,7 +634,7 @@ export default function Dashboard() {
                 Epoch One (From May 30th to July 15th)
               </div>
               <div className="mt-[12px] before text-[#fff]">
-                Epoch Two (From July 16th to Aug 31st)
+                Epoch Two (From July 16th)
               </div>
             </div>
           </div>
