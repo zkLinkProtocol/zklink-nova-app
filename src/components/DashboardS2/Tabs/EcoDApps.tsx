@@ -1273,7 +1273,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "Lending",
+        rewards: "Up to 20x",
         holdingPoints: getHoldingPointsByProject("sumer"),
         totalPoints: getTotalPointsByProject("sumer"),
         remainSpinNum: getSpinByProject("sumer").remainSpinNum,
@@ -1295,7 +1295,7 @@ export default function EcoDApps({
         category: "other",
         iconURL: "/img/icon-desyn.jpg",
         name: "Desyn",
-        link: "https://app.sumer.money/",
+        link: "https://www.desyn.io/#/",
         handler: "@DesynLab",
         type: "DEX",
         rewardsIcon: [
