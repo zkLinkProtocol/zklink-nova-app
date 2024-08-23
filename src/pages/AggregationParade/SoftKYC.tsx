@@ -347,8 +347,6 @@ export default function SoftKYC() {
   const onChangeInviteCode = (value: string) => {
     setInviteCodeValue(value);
     dispatch(setIsCheckedInviteCode(false));
-
-    dispatch(setInviteCode(""));
   };
 
   const enterInviteCode = async (code: string) => {
@@ -594,6 +592,7 @@ export default function SoftKYC() {
   }, [searchParams]);
 
   useEffect(() => {
+    console.log("invite code", inviteCode);
     if (validInviteCode(inviteCode)) {
       setInviteCodeValue(inviteCode);
     }
