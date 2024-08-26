@@ -248,15 +248,9 @@ export default function Home() {
   const enterInviteCode = async () => {
     console.log("enter invite code", otp);
     if (!otp || otp.length !== 6) return;
-    // TODO: check invite code ?
-    // const res = await checkInviteCode(otp);
-    // if (!res?.result) {
-    //   toast.error("Invalid invite code. Try another.", { duration: 3000 });
-    //   return;
-    // }
 
     dispatch(setInviteCode(otp));
-    navigator("/aggregation-parade");
+    navigator(`/aggregation-parade`);
   };
 
   const [isLoading, setIsLoading] = useState(false);

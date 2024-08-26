@@ -228,12 +228,13 @@ const DetailBox = styled.div`
   }
 
   .detail-row {
+    padding: 0 24px;
     &.rounded-bottom {
       border-radius: 0 0 16px 16px;
     }
     background: #0d0f14;
     .detail-item {
-      padding: 24px;
+      padding: 24px 0;
     }
   }
 `;
@@ -251,7 +252,7 @@ interface EcoDAppItem {
     iconURL: string;
   }[];
   holdingPoints: NovaProjectTotalPoints;
-  remainSpinNum: number;
+  remainSpinNum?: number;
   projectName: string;
   totalPoints?: NovaProjectTotalPoints;
   details: {
@@ -305,7 +306,7 @@ const EcoDApp = (props: {
   }, [data, t]);
 
   const handleSpinModal = (e: React.MouseEvent<HTMLElement>) => {
-    if (data.remainSpinNum < 1) {
+    if (!data.remainSpinNum) {
       return;
     }
     e.stopPropagation();
@@ -337,7 +338,13 @@ const EcoDApp = (props: {
                   height={16}
                 />
               </div>
-              <div className="name mt-[5px]">{data.handler}</div>
+              <a
+                href={`https://x.com/${data.handler}`}
+                target="_blank"
+                className="name mt-[5px]"
+              >
+                {data.handler}
+              </a>
             </div>
           </div>
           <div
@@ -424,23 +431,33 @@ const EcoDApp = (props: {
             <div className="col-line"></div>
 
             <div className="list-content-item flex justify-center items-center">
-              <div
-                className={`px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px] ${
-                  data.remainSpinNum < 1
-                    ? "cursor-not-allowed opacity-50"
-                    : "cursor-pointer"
-                }`}
-                onClick={handleSpinModal}
-              >
-                <img
-                  src="/img/s2/icon-spin-gradient.svg"
-                  alt=""
-                  width={24}
-                  height={24}
-                  className="min-w-[24px]"
-                />
-                <GradientText>Spin</GradientText>
-              </div>
+              {data.projectName !== "orbiter" &&
+              data.projectName !== "symbiosis" &&
+              data.projectName !== "meson" ? (
+                data.remainSpinNum === 0 ? (
+                  <GradientText>Spined</GradientText>
+                ) : (
+                  <div
+                    className={`px-[8px] py-[4px] bg-[#282828] rounded-[4px] flex justify-center items-center gap-[8px] ${
+                      !data.remainSpinNum
+                        ? "cursor-not-allowed opacity-50"
+                        : "cursor-pointer"
+                    }`}
+                    onClick={handleSpinModal}
+                  >
+                    <img
+                      src="/img/s2/icon-spin-gradient.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="min-w-[24px]"
+                    />
+                    <GradientText>Spin</GradientText>
+                  </div>
+                )
+              ) : (
+                ""
+              )}
             </div>
 
             <div className="list-content-item  flex justify-end items-center">
@@ -462,16 +479,16 @@ const EcoDApp = (props: {
           <DetailBox className="w-full mt-[4px] px-[7px]">
             {data.details.map((detail, index) => (
               <div
-                className={`detail-row mb-[8px] flex justify-between ${
+                className={`detail-row mb-[8px] flex justify-between gap-[16px] ${
                   index === data.details.length - 1 ? "rounded-bottom" : ""
                 }`}
                 key={index}
               >
-                <div className="detail-item min-w-[440px] max-w-[440px]">
+                <div className="detail-item min-w-[380px] w-[380px]">
                   <div className="detail-label">Booster</div>
                   <div className="detail-value">{detail.booster}</div>
                 </div>
-                <div className="detail-item min-w-[480px] max-w-[480px]">
+                <div className="detail-item min-w-[360px] w-[360px]">
                   <div className="detail-label">Description</div>
                   <div className="detail-value">
                     {detail.description}
@@ -639,7 +656,7 @@ export default function EcoDApps({
     const data = spinList.find((item) => item.projectName === project);
     return {
       project,
-      remainSpinNum: data?.remainSpinNum || 0,
+      remainSpinNum: data?.remainSpinNum,
     };
   };
 
@@ -1220,6 +1237,89 @@ export default function EcoDApps({
           },
         ],
       },
+      {
+        category: "other",
+        iconURL: "/img/icon-zns.jpg",
+        name: "ZNS",
+        link: "https://zns.bio/search?chain=810180",
+        handler: "@ZNSConnect",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Mint",
+        holdingPoints: getHoldingPointsByProject("zns"),
+        totalPoints: getTotalPointsByProject("zns"),
+        remainSpinNum: getSpinByProject("zns").remainSpinNum,
+        projectName: "zns",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>1 point per domain</p>
+              </div>
+            ),
+            description: `For each domain name minted on ZNS Connect, you will receive 1 Nova point.`,
+            action: "Use Protocol",
+          },
+        ],
+      },
+      {
+        category: "lending",
+        iconURL: "/img/icon-sumermoney.jpg",
+        name: "Sumer.money",
+        link: "https://app.sumer.money/",
+        handler: "@SumerMoney",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Up to 20x",
+        holdingPoints: getHoldingPointsByProject("sumer"),
+        totalPoints: getTotalPointsByProject("sumer"),
+        remainSpinNum: getSpinByProject("sumer").remainSpinNum,
+        projectName: "sumer",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>20x for ETH/wETH, merged wBTC, USDT, USDC and ZKL</p>
+                <p>4x for wBTC, mBTC, pufETH.eth, STONE.manta, MANTA.manta</p>
+              </div>
+            ),
+            description: `Cross-chain synthetic assets protocol with a unified lending & borrowing market`,
+            action: "Use Protocol",
+          },
+        ],
+      },
+      {
+        category: "other",
+        iconURL: "/img/icon-desyn.jpg",
+        name: "Desyn",
+        link: "https://www.desyn.io/#/",
+        handler: "@DesynLab",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Farming",
+        holdingPoints: getHoldingPointsByProject("desyn"),
+        totalPoints: getTotalPointsByProject("desyn"),
+        remainSpinNum: getSpinByProject("desyn").remainSpinNum,
+        projectName: "desyn",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>10x for ETH/wETH, merged wBTC, USDT, USDC, DAI and ZKL</p>
+                <p>2x for nETH</p>
+              </div>
+            ),
+            description: `A decentralized platform that enables users to create, manage, and invest in customizable, on-chain asset portfolios.`,
+            action: "Use Protocol",
+          },
+        ],
+      },
     ];
 
     return tabActive
@@ -1267,6 +1367,21 @@ export default function EcoDApps({
               <div className="list-header-item text-center">Rewards</div>
               <div className="list-header-item text-center">
                 Allocated Points
+              </div>
+              <div className="list-header-item text-center">
+                <div className="flex itmes-center justify-center gap-[4px]">
+                  <span>Roulette</span>
+                  <Tooltip
+                    className="max-w-[360px]"
+                    classNames={{
+                      content:
+                        "py-[20px] px-[16px] text-[14px] text-[#FBFBFB99] bg-[#000811]",
+                    }}
+                    content="Interact with the dApp and once you earn more than 1 Nova Point, you'll get a chance to spin the roulette three times to win more Nova Points and Trademark NFTs."
+                  >
+                    <img src="/img/icon-info-2.svg" alt="" />
+                  </Tooltip>
+                </div>
               </div>
               <div className="list-header-item"></div>
             </div>

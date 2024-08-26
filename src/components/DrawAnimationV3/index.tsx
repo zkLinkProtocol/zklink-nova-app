@@ -19,8 +19,14 @@ interface IProps {
 const TrademarkItems = [
   { name: "Oak Tree Roots", img: "img-trademark-1.png" },
   { name: "Magnifying Glass", img: "img-trademark-2.png" },
-  { name: "Chess Knight", img: "img-trademark-3.png" },
-  { name: "Binary Code Metrix Cube", img: "img-trademark-4.png" },
+  {
+    name: "+100 Nova points",
+    img: "m3box-id-10.png",
+  },
+  {
+    name: "+300 Nova points",
+    img: "m3box-id-12.png",
+  },
 ];
 
 const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
@@ -72,6 +78,7 @@ const LotteryAnimation = React.forwardRef<Ref, IProps>((props, ref) => {
   };
 
   useEffect(() => {
+    console.log("targetImageIndex", targetImageIndex);
     if (targetImageIndex !== undefined) {
       setCurrentImageIndex(targetImageIndex);
     } else {

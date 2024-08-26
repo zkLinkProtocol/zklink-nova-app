@@ -25,7 +25,6 @@ import Portfolio from "@/components/DashboardS2/Tabs/Protfolio";
 import DailyRoulette from "@/components/DashboardS2/DailyRoulette";
 import { Tooltip } from "@nextui-org/react";
 import { epochList } from "@/constants/epoch";
-import PremiusAd from "@/components/DashboardS2/PremiusAd";
 import ZKLClaimAd from "@/components/DashboardS2/ZKLClaimAd";
 import MysteryBoxIII from "@/components/Dashboard/MysteryBoxIII";
 import GoogleRecaptcha from "@/components/GoogleRecaptcha";
@@ -631,7 +630,7 @@ export default function Dashboard() {
               </span>
             </div>
 
-            <div className="desc">
+            <div className="desc whitespace-nowrap">
               <div className="mt-[12px]">
                 {t("dashboard.the_30_million_$zkl")}
               </div>
@@ -639,7 +638,7 @@ export default function Dashboard() {
                 {t("dashboard.epoch_one_form")}
               </div>
               <div className="mt-[12px] before text-[#fff]">
-                Epoch Two (From July 16th to Aug 31th)
+                Epoch Two (From July 16th to Aug 31st)
               </div>
             </div>
           </div>
