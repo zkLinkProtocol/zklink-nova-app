@@ -194,7 +194,7 @@ export default function MysteryBoxIII() {
             img: `/img/m3box-id-${tokenId}.png`,
           });
           trademarkMintModal.onOpen();
-          // drawModal.onClose();
+          drawModal.onClose();
         } else {
           // const drawPrizeId = PRIZE_ID_NFT_MAP_V2[tokenId];
           setDrawedNftId(tokenId);
