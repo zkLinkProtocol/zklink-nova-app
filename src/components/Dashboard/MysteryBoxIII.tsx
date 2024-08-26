@@ -332,12 +332,9 @@ export default function MysteryBoxIII() {
             sbtNFT={nft}
           />
           <p className="text-left text-[#C0C0C0] mt-5 mb-4">
-            With each referral, you'll have the chance to randomly draw one of
-            the invite rewards.{" "}
-            <span className="text-[#fff] font-[700]">
-              Please notice that Nova points rewards are not NFT
-            </span>
-            , they'll be added directly to your Nova Points.
+            You now have the chance o randomly draw one of the rewards. Please
+            notice that Nova points rewards will be directly add to your holding
+            points.
           </p>
           <Button
             onClick={handleDraw}
