@@ -76,15 +76,15 @@ const CustomButton = styled(GradientButton)`
 const TRADEMARK_TOKEN_ID_MAP: Record<number, string> = {
   1: "Oak Tree Roots",
   2: "Magnifying Glass",
-  3: "Chess Knight",
-  4: "Binary Code Metrix Cube",
+  10: "+100 Nova points",
+  12: "+300 Nova points",
 };
 
 const PRIZE_ID_NFT_MAP_V2: Record<number, number> = {
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 4,
+  1: 0,
+  2: 1,
+  10: 2,
+  12: 3,
 };
 
 const getDrawIndexWithPrizeTokenId = (tokenId: number) => {
@@ -172,7 +172,7 @@ export default function MysteryBoxIII() {
       return;
     }
 
-    if (!drawedNftId) {
+    if (!drawedNftId || drawedNftId === 5) {
       setDrawing(true);
       const res = await drawMystery3(address);
 
@@ -181,8 +181,22 @@ export default function MysteryBoxIII() {
         setTrademarkMintParams({ tokenId, nonce, signature, expiry, mintType });
         await drawRef?.current?.start(PRIZE_ID_NFT_MAP_V2[tokenId]);
 
-        const drawPrizeId = PRIZE_ID_NFT_MAP_V2[tokenId];
-        setDrawedNftId(drawPrizeId);
+        if (tokenId === 5) {
+          setUpdate((update) => update + 1);
+        } else if ([10, 12].includes(tokenId)) {
+          await sleep(2000);
+          setDrawedNftId(undefined);
+          setTrademarkMintStatus(MintStatus.Success);
+          setMintResult({
+            name: TRADEMARK_TOKEN_ID_MAP[tokenId!],
+            img: `/img/m3box-id-${tokenId}.png`,
+          });
+          trademarkMintModal.onOpen();
+          // drawModal.onClose();
+        } else {
+          // const drawPrizeId = PRIZE_ID_NFT_MAP_V2[tokenId];
+          setDrawedNftId(tokenId);
+        }
 
         setUpdate((update) => update + 1);
         return; // draw first and then mint as step2.
@@ -252,6 +266,11 @@ export default function MysteryBoxIII() {
 
     if (result && result?.remainMintNum) {
       setRemainDrawCount(Number(result.remainMintNum) || 0);
+    }
+
+    if (result?.unMintedRecord) {
+      const { nftId } = result.unMintedRecord;
+      setDrawedNftId(nftId);
     }
   };
 
