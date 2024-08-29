@@ -484,7 +484,7 @@ export default function Leaderboard() {
       iconURL: "/img/icon-sector-4.svg",
     },
     { name: "Lending", category: "lending", iconURL: "/img/icon-sector-5.svg" },
-    { name: "GameFi", category: "gamefi" },
+    // { name: "GameFi", category: "gamefi" },
     { name: "Other", category: "other", iconURL: "/img/icon-sector-7.svg" },
   ];
 

@@ -306,11 +306,11 @@ export default function Dashboard() {
       name: "Lending",
       category: "lending",
     },
-    {
-      iconURL: "/img/icon-sector-6.svg",
-      name: "GameFi",
-      category: "gamefi",
-    },
+    // {
+    //   iconURL: "/img/icon-sector-6.svg",
+    //   name: "GameFi",
+    //   category: "gamefi",
+    // },
     {
       iconURL: "/img/icon-sector-7.svg",
       name: "Others",
@@ -478,10 +478,10 @@ export default function Dashboard() {
         name: "Lending Points",
         category: "lending",
       },
-      {
-        name: "GameFi Points",
-        category: "gamefi",
-      },
+      // {
+      //   name: "GameFi Points",
+      //   category: "gamefi",
+      // },
       {
         name: "Others Points",
         category: "other",
@@ -633,8 +633,11 @@ export default function Dashboard() {
               <div className="mt-[12px] before">
                 Epoch One (From May 30th to July 15th)
               </div>
-              <div className="mt-[12px] before text-[#fff]">
+              <div className="mt-[12px] before">
                 Epoch Two (From July 16th to Aug 31st)
+              </div>
+              <div className="mt-[12px] before text-[#fff]">
+                Epoch Three (From Step 1)
               </div>
             </div>
           </div>

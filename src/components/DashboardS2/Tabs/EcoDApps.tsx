@@ -1206,7 +1206,7 @@ export default function EcoDApps({
         ],
       },
       {
-        category: "gamefi",
+        category: "other",
         iconURL: "/img/icon-skyrangers.png",
         name: "Sky Rangers",
         link: "https://statics.skyrangers.io/",
