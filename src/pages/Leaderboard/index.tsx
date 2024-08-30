@@ -489,17 +489,9 @@ export default function Leaderboard() {
       category: "perpdex",
       iconURL: "/img/icon-sector-4.svg",
     },
-    {
-      name: t("dashboard.lending"),
-      category: "lending",
-      iconURL: "/img/icon-sector-5.svg",
-    },
-    { name: t("dashboard.gamefi"), category: "gamefi" },
-    {
-      name: t("dashboard.other"),
-      category: "other",
-      iconURL: "/img/icon-sector-7.svg",
-    },
+    { name: "Lending", category: "lending", iconURL: "/img/icon-sector-5.svg" },
+    // { name: "GameFi", category: "gamefi" },
+    { name: "Other", category: "other", iconURL: "/img/icon-sector-7.svg" },
   ];
 
   const { address } = useAccount();

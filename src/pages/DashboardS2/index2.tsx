@@ -308,11 +308,11 @@ export default function Dashboard() {
       name: t("dashboard.lending"),
       category: "lending",
     },
-    {
-      iconURL: "/img/icon-sector-6.svg",
-      name: t("dashboard.gamefi"),
-      category: "gamefi",
-    },
+    // {
+    //   iconURL: "/img/icon-sector-6.svg",
+    //   name: "GameFi",
+    //   category: "gamefi",
+    // },
     {
       iconURL: "/img/icon-sector-7.svg",
       name: t("dashboard.other"),
@@ -427,7 +427,7 @@ export default function Dashboard() {
     console.log("getTvlCategory", res);
     setTvlCategoryMilestone(res?.data || []);
   };
-  const [epochActive, setEpochActive] = useState(1);
+  const [epochActive, setEpochActive] = useState(2);
 
   const season = useMemo(() => {
     if (tabs2Active === 99) {
@@ -480,10 +480,10 @@ export default function Dashboard() {
         name: t("dashboard.lending_points"),
         category: "lending",
       },
-      {
-        name: "GameFi Points",
-        category: "gamefi",
-      },
+      // {
+      //   name: "GameFi Points",
+      //   category: "gamefi",
+      // },
       {
         name: t("dashboard.other_points"),
         category: "other",
@@ -636,8 +636,11 @@ export default function Dashboard() {
               <div className="mt-[12px] before">
                 {t("dashboard.epoch_one_form")}
               </div>
-              <div className="mt-[12px] before text-[#fff]">
+              <div className="mt-[12px] before">
                 {t("dashboard.epoch_two_form")}
+              </div>
+              <div className="mt-[12px] before text-[#fff]">
+                Epoch Three (From Step 1)
               </div>
             </div>
           </div>

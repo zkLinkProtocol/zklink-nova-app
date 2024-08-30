@@ -1207,7 +1207,7 @@ export default function EcoDApps({
         ],
       },
       {
-        category: "gamefi",
+        category: "other",
         iconURL: "/img/icon-skyrangers.png",
         name: "Sky Rangers",
         link: "https://statics.skyrangers.io/",
@@ -1274,11 +1274,11 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "Lending",
-        holdingPoints: getHoldingPointsByProject("sumermoney"),
-        totalPoints: getTotalPointsByProject("sumermoney"),
-        remainSpinNum: getSpinByProject("sumermoney").remainSpinNum,
-        projectName: "sumermoney",
+        rewards: "Up to 20x",
+        holdingPoints: getHoldingPointsByProject("sumer"),
+        totalPoints: getTotalPointsByProject("sumer"),
+        remainSpinNum: getSpinByProject("sumer").remainSpinNum,
+        projectName: "sumer",
         details: [
           {
             booster: (
@@ -1296,7 +1296,7 @@ export default function EcoDApps({
         category: "other",
         iconURL: "/img/icon-desyn.jpg",
         name: "Desyn",
-        link: "https://app.sumer.money/",
+        link: "https://www.desyn.io/#/",
         handler: "@DesynLab",
         type: "DEX",
         rewardsIcon: [
