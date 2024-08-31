@@ -1296,7 +1296,7 @@ export default function EcoDApps({
         ],
       },
       {
-        category: "other",
+        category: "lending",
         iconURL: "/img/icon-desyn.jpg",
         name: "Desyn",
         link: "https://www.desyn.io/#/",
