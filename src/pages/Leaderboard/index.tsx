@@ -468,38 +468,82 @@ const ColLine = styled.div`
 
 export default function Leaderboard() {
   const { t } = useTranslation();
-  const tabs = [
-    {
-      name: t("dashboard.holding"),
-      category: "holding",
-      iconURL: "/img/icon-sector-1.svg",
-    },
-    {
-      name: t("dashboard.boosted"),
-      category: "nativeboost",
-      iconURL: "/img/icon-sector-2.svg",
-    },
-    {
-      name: t("dashboard.spot_dex"),
-      category: "spotdex",
-      iconURL: "/img/icon-sector-3.svg",
-    },
-    {
-      name: t("dashboard.perp_dex"),
-      category: "perpdex",
-      iconURL: "/img/icon-sector-4.svg",
-    },
-    { name: "Lending", category: "lending", iconURL: "/img/icon-sector-5.svg" },
-    // { name: "GameFi", category: "gamefi" },
-    { name: "Other", category: "other", iconURL: "/img/icon-sector-7.svg" },
-  ];
-
   const { address } = useAccount();
   const { invite } = useSelector((store: RootState) => store.airdrop);
   const [tabActive, setTabActive] = useState(0);
-  const [epochActive, setEpochActive] = useState(1);
+  const [epochActive, setEpochActive] = useState(2);
   const [selfData, setSelfData] = useState<ListItem | null>(null);
   const [categoryList, setCategoryList] = useState<ListItem[]>([]);
+
+  const tabs = useMemo(() => {
+    return epochActive === 2
+      ? [
+          {
+            name: "Holding",
+            category: "holding",
+            iconURL: "/img/icon-sector-1.svg",
+          },
+          {
+            name: "Boosted",
+            category: "nativeboost",
+            iconURL: "/img/icon-sector-2.svg",
+          },
+          {
+            name: "Spot DEX",
+            category: "spotdex",
+            iconURL: "/img/icon-sector-3.svg",
+          },
+          {
+            name: "Perp DEX",
+            category: "perpdex",
+            iconURL: "/img/icon-sector-4.svg",
+          },
+          {
+            name: "Lending",
+            category: "lending",
+            iconURL: "/img/icon-sector-5.svg",
+          },
+          // { name: "GameFi", category: "gamefi" },
+          {
+            name: "Other",
+            category: "other",
+            iconURL: "/img/icon-sector-7.svg",
+          },
+        ]
+      : [
+          {
+            name: "Holding",
+            category: "holding",
+            iconURL: "/img/icon-sector-1.svg",
+          },
+          {
+            name: "Boosted",
+            category: "nativeboost",
+            iconURL: "/img/icon-sector-2.svg",
+          },
+          {
+            name: "Spot DEX",
+            category: "spotdex",
+            iconURL: "/img/icon-sector-3.svg",
+          },
+          {
+            name: "Perp DEX",
+            category: "perpdex",
+            iconURL: "/img/icon-sector-4.svg",
+          },
+          {
+            name: "Lending",
+            category: "lending",
+            iconURL: "/img/icon-sector-5.svg",
+          },
+          { name: "GameFi", category: "gamefi" },
+          {
+            name: "Other",
+            category: "other",
+            iconURL: "/img/icon-sector-7.svg",
+          },
+        ];
+  }, [epochActive]);
 
   const getCategoryListFunc = async (category: string) => {
     try {

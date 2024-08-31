@@ -586,12 +586,14 @@ export default function EcoDApps({
   tvlCategoryMilestone,
   holdingPoints,
   novaCategoryTotalPoints,
+  season,
 }: {
   tabActive?: {
     category: string;
     name: string;
     iconURL: string;
   };
+  season: number;
   novaCategoryUserPoints: NovaCategoryUserPoints[];
   tvlCategoryMilestone: TvlCategoryMilestone[];
   holdingPoints?: NovaPointsListItem;
@@ -615,7 +617,8 @@ export default function EcoDApps({
   >([]);
 
   const getProjectTotalPoints = async () => {
-    const { data } = await getNovaProjectTotalPoints();
+    console.log("season", season);
+    const { data } = await getNovaProjectTotalPoints({ season });
     if (data) {
       setProjectTotalPoints(data);
     }
@@ -623,7 +626,7 @@ export default function EcoDApps({
 
   useEffect(() => {
     getProjectTotalPoints();
-  }, []);
+  }, [season]);
 
   const getTotalPointsByProject = useCallback(
     (project: string) => {

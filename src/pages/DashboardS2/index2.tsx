@@ -459,36 +459,68 @@ export default function Dashboard() {
   };
 
   const novaPointsList = useMemo(() => {
-    const categorys = [
-      {
-        name: t("dashboard.assets_points"),
-        category: "holding",
-      },
-      {
-        name: t("dashboard.native_boost_points"),
-        category: "nativeboost",
-      },
-      {
-        name: t("dashboard.spot_dex_points"),
-        category: "spotdex",
-      },
-      {
-        name: t("dashboard.perp_dex_points"),
-        category: "perpdex",
-      },
-      {
-        name: t("dashboard.lending_points"),
-        category: "lending",
-      },
-      // {
-      //   name: "GameFi Points",
-      //   category: "gamefi",
-      // },
-      {
-        name: t("dashboard.other_points"),
-        category: "other",
-      },
-    ];
+    const categorys =
+      epochActive === 2
+        ? [
+            {
+              name: "Assets Points",
+              category: "holding",
+            },
+            {
+              name: "Native Boost Points",
+              category: "nativeboost",
+            },
+            {
+              name: "Spot DEX Points",
+              category: "spotdex",
+            },
+            {
+              name: "Perp DEX Points",
+              category: "perpdex",
+            },
+            {
+              name: "Lending Points",
+              category: "lending",
+            },
+            // {
+            //   name: "GameFi Points",
+            //   category: "gamefi",
+            // },
+            {
+              name: "Others Points",
+              category: "other",
+            },
+          ]
+        : [
+            {
+              name: "Assets Points",
+              category: "holding",
+            },
+            {
+              name: "Native Boost Points",
+              category: "nativeboost",
+            },
+            {
+              name: "Spot DEX Points",
+              category: "spotdex",
+            },
+            {
+              name: "Perp DEX Points",
+              category: "perpdex",
+            },
+            {
+              name: "Lending Points",
+              category: "lending",
+            },
+            {
+              name: "GameFi Points",
+              category: "gamefi",
+            },
+            {
+              name: "Others Points",
+              category: "other",
+            },
+          ];
 
     const arr = categorys.map((c) => {
       const userCategoryData = novaCategoryUserPointsTotal.find(
@@ -771,6 +803,7 @@ export default function Dashboard() {
                 )}
                 {tabs2Active !== 0 && tabs2Active !== 99 && (
                   <EcoDApps
+                    season={season}
                     tabActive={tabs2[tabs2Active]}
                     novaCategoryUserPoints={novaCategoryUserPoints}
                     tvlCategoryMilestone={tvlCategoryMilestone}
