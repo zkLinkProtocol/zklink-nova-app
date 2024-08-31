@@ -807,10 +807,13 @@ interface NovaProjectTotalPointsResponse {
   data: NovaProjectTotalPoints[];
 }
 
-export const getNovaProjectTotalPoints =
-  (): Promise<NovaProjectTotalPointsResponse> => {
-    return http.get(`${BASE_URL_LRT_POINTS}/nova/project/points`);
-  };
+export const getNovaProjectTotalPoints = (params: {
+  season: number;
+}): Promise<NovaProjectTotalPointsResponse> => {
+  return http.get(`${BASE_URL_LRT_POINTS}/nova/project/points`, {
+    params,
+  });
+};
 
 export interface CategoryZKLItem {
   name: string;
