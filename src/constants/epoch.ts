@@ -5,4 +5,5 @@ export const epochList = [
     season: 2,
   },
   { name: "Epoch Two", season: 3 },
+  { name: "Epoch Three", season: 4 },
 ];

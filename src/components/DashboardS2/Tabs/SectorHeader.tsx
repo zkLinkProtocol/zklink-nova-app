@@ -49,19 +49,19 @@ export default function SectorHeader({
     holding: [
       {
         tvl: 0,
-        zkl: 500000,
+        zkl: 100000,
       },
       {
         tvl: 200000000,
-        zkl: 1000000,
+        zkl: 200000,
       },
       {
         tvl: 500000000,
-        zkl: 2000000,
+        zkl: 500000,
       },
       {
         tvl: 1000000000,
-        zkl: 3000000,
+        zkl: 1000000,
       },
     ],
     spotdex: [
@@ -71,15 +71,15 @@ export default function SectorHeader({
       },
       {
         tvl: 5000000,
-        zkl: 500000,
+        zkl: 200000,
       },
       {
         tvl: 25000000,
-        zkl: 1000000,
+        zkl: 500000,
       },
       {
         tvl: 50000000,
-        zkl: 1500000,
+        zkl: 1000000,
       },
     ],
     perpdex: [
@@ -89,15 +89,15 @@ export default function SectorHeader({
       },
       {
         tvl: 100000000,
-        zkl: 500000,
+        zkl: 200000,
       },
       {
         tvl: 500000000,
-        zkl: 1000000,
+        zkl: 500000,
       },
       {
         tvl: 2000000000,
-        zkl: 2000000,
+        zkl: 1000000,
       },
     ],
     lending: [
@@ -107,15 +107,15 @@ export default function SectorHeader({
       },
       {
         tvl: 10000000,
-        zkl: 350000,
+        zkl: 200000,
       },
       {
         tvl: 50000000,
-        zkl: 700000,
+        zkl: 500000,
       },
       {
         tvl: 200000000,
-        zkl: 1500000,
+        zkl: 1000000,
       },
     ],
   };
@@ -128,7 +128,7 @@ export default function SectorHeader({
   } = {
     gamefi: {
       zkl: 10000,
-      max: 1000000,
+      max: 500000,
     },
     other: {
       zkl: 50000,
@@ -136,7 +136,7 @@ export default function SectorHeader({
     },
     nativeboost: {
       zkl: 50000,
-      max: 500000,
+      max: 5000000,
     },
   };
 
