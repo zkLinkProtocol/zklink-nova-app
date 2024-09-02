@@ -479,66 +479,70 @@ export default function Leaderboard() {
           {
             name: "Holding",
             category: "holding",
-            iconURL: "/img/icon-sector-1.svg",
+            iconURL: "/img/icon-sector-assets.svg",
           },
           {
             name: "Boosted",
             category: "nativeboost",
-            iconURL: "/img/icon-sector-2.svg",
+            iconURL: "/img/icon-sector-boosted.svg",
           },
           {
             name: "Spot DEX",
             category: "spotdex",
-            iconURL: "/img/icon-sector-3.svg",
+            iconURL: "/img/icon-sector-spotdex.svg",
           },
           {
             name: "Perp DEX",
             category: "perpdex",
-            iconURL: "/img/icon-sector-4.svg",
+            iconURL: "/img/icon-sector-perpdex.svg",
           },
           {
             name: "Lending",
             category: "lending",
-            iconURL: "/img/icon-sector-5.svg",
+            iconURL: "/img/icon-sector-lending.svg",
           },
           // { name: "GameFi", category: "gamefi" },
           {
             name: "Other",
             category: "other",
-            iconURL: "/img/icon-sector-7.svg",
+            iconURL: "/img/icon-sector-other.svg",
           },
         ]
       : [
           {
             name: "Holding",
             category: "holding",
-            iconURL: "/img/icon-sector-1.svg",
+            iconURL: "/img/icon-sector-assets.svg",
           },
           {
             name: "Boosted",
             category: "nativeboost",
-            iconURL: "/img/icon-sector-2.svg",
+            iconURL: "/img/icon-sector-boosted.svg",
           },
           {
             name: "Spot DEX",
             category: "spotdex",
-            iconURL: "/img/icon-sector-3.svg",
+            iconURL: "/img/icon-sector-spotdex.svg",
           },
           {
             name: "Perp DEX",
             category: "perpdex",
-            iconURL: "/img/icon-sector-4.svg",
+            iconURL: "/img/icon-sector-perpdex.svg",
           },
           {
             name: "Lending",
             category: "lending",
-            iconURL: "/img/icon-sector-5.svg",
+            iconURL: "/img/icon-sector-lending.svg",
           },
-          { name: "GameFi", category: "gamefi" },
+          {
+            name: "GameFi",
+            category: "gamefi",
+            iconURL: "/img/icon-sector-gamefi.svg",
+          },
           {
             name: "Other",
             category: "other",
-            iconURL: "/img/icon-sector-7.svg",
+            iconURL: "/img/icon-sector-other.svg",
           },
         ];
   }, [epochActive]);
