@@ -303,7 +303,7 @@ export default function Dashboard() {
     },
     {
       iconURL: "/img/icon-sector-5.svg",
-      name: "Lending",
+      name: "Lending & Staking",
       category: "lending",
     },
     // {
@@ -638,9 +638,7 @@ export default function Dashboard() {
   return (
     <Container>
       <div className="side fixed right-[8px] md:right-[32px] top-[120px] z-[9] max-w-[350px] md:max-w-[392px] w-full md:w-[392px]">
-        <ZKLClaimAd />
         <MysteryBoxIII />
-        {/* <GoogleRecaptcha /> */}
       </div>
 
       <div className="mt-[29.6px] mx-auto max-w-[1246px] hidden md:block">
@@ -658,9 +656,9 @@ export default function Dashboard() {
             </div>
 
             <div className="desc whitespace-nowrap">
-              <div className="mt-[12px]">
-                The 30 million $ZKL will be distributed over at least Three
-                Epochs.
+              <div className="mt-[12px] max-w-[400px] whitespace-normal">
+                The 30 million $ZKL will be distributed by epoches, based on
+                milestone achievement.
               </div>
               <div className="mt-[12px] before">
                 Epoch One (From May 30th to July 15th)
