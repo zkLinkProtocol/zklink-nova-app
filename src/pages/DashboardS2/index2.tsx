@@ -284,38 +284,38 @@ export default function Dashboard() {
 
   const tabs2 = [
     {
-      iconURL: "/img/icon-sector-1.svg",
-      name: t("dashboard.assets"),
+      iconURL: "/img/icon-sector-assets.svg",
+      name: "Assets",
       category: "holding",
     },
     {
-      iconURL: "/img/icon-sector-2.svg",
-      name: t("dashboard.boosted"),
+      iconURL: "/img/icon-sector-boosted.svg",
+      name: "Boosted",
       category: "nativeboost",
     },
     {
-      iconURL: "/img/icon-sector-3.svg",
-      name: t("dashboard.spot_dex"),
+      iconURL: "/img/icon-sector-spotdex.svg",
+      name: "Spot DEX",
       category: "spotdex",
     },
     {
-      iconURL: "/img/icon-sector-4.svg",
-      name: t("dashboard.perp_dex"),
+      iconURL: "/img/icon-sector-perpdex.svg",
+      name: "Perp DEX",
       category: "perpdex",
     },
     {
-      iconURL: "/img/icon-sector-5.svg",
+      iconURL: "/img/icon-sector-lending.svg",
       name: "Lending & Staking",
       category: "lending",
     },
     // {
-    //   iconURL: "/img/icon-sector-6.svg",
+    //   iconURL: "/img/icon-sector-gamefi.svg",
     //   name: "GameFi",
     //   category: "gamefi",
     // },
     {
-      iconURL: "/img/icon-sector-7.svg",
-      name: t("dashboard.other"),
+      iconURL: "/img/icon-sector-other.svg",
+      name: "Others",
       category: "other",
     },
   ];
@@ -770,7 +770,7 @@ export default function Dashboard() {
                 onClick={() => setTabs2Active(99)}
               >
                 <img
-                  src={"/img/icon-sector-1.svg"}
+                  src={"/img/icon-sector-portfolio.svg"}
                   alt=""
                   className="w-[24px] h-[24px] block"
                 />
