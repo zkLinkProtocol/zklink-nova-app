@@ -546,7 +546,7 @@ export default function Portfolio({
                 }}
                 content={
                   <div>
-                    {epochActive === 0 && (
+                    {epochActive !== epochList.length - 1 && (
                       <div>
                         <>
                           <div className="mb-[16px] text-[14px] font-[700]">
