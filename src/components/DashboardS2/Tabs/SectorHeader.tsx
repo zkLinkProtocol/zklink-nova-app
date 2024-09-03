@@ -21,6 +21,8 @@ const MilestoneBox = styled.div`
 interface IProps {
   tvlCategoryMilestone: TvlCategoryMilestone[];
   novaCategoryTotalPoints?: NovaCategoryPoints;
+  gamefiTotalPoints?: NovaCategoryPoints;
+  gamefiHoldingPoints?: NovaPointsListItem;
   holdingPoints?: NovaPointsListItem;
   tabActive?: {
     category: string;
@@ -33,9 +35,10 @@ interface IProps {
 export default function SectorHeader({
   tvlCategoryMilestone,
   novaCategoryTotalPoints,
+  gamefiTotalPoints,
   holdingPoints,
+  gamefiHoldingPoints,
   tabActive,
-  totalTvl,
 }: IProps) {
   const [currentAllocationZKL, setCurrentAllocationZKL] = useState(0);
   const [nextAllocationZKL, setNextAllocationZKL] = useState(0);
@@ -162,7 +165,7 @@ export default function SectorHeader({
         ?.data || 0;
 
     console.log("tvl", tvl);
-    return tabActive?.category === "holding" ? totalTvl || 0 : tvl;
+    return tvl;
   }, [tvlCategoryMilestone, tabActive]);
 
   const [milestoneProgressList, setMilestoneProgressList] = useState<number[]>(
@@ -283,8 +286,10 @@ export default function SectorHeader({
         </div>
         <div className="md:block hidden">
           <AllocatedPoints
+            gamefiTotalPoints={gamefiTotalPoints}
             novaCategoryTotalPoints={novaCategoryTotalPoints}
             holdingPoints={holdingPoints}
+            gamefiHoldingPoints={gamefiHoldingPoints}
             tabActive={tabActive}
           />
         </div>

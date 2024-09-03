@@ -224,7 +224,9 @@ interface IAssetsTableProps {
   ethUsdPrice: number;
   currentTvl: number;
   holdingPoints?: NovaPointsListItem;
+  gamefiHoldingPoints?: NovaPointsListItem;
   novaCategoryTotalPoints?: NovaCategoryPoints;
+  gamefiTotalPoints?: NovaCategoryPoints;
   tvlCategoryMilestone: TvlCategoryMilestone[];
   tabActive?: {
     category: string;
@@ -242,6 +244,8 @@ export default function Assets(props: IAssetsTableProps) {
     currentTvl,
     holdingPoints,
     novaCategoryTotalPoints,
+    gamefiTotalPoints,
+    gamefiHoldingPoints,
     tabActive,
     tvlCategoryMilestone,
   } = props;
@@ -453,6 +457,7 @@ export default function Assets(props: IAssetsTableProps) {
           tabActive={tabActive}
           holdingPoints={holdingPoints}
           novaCategoryTotalPoints={novaCategoryTotalPoints}
+          gamefiTotalPoints={gamefiTotalPoints}
           tvlCategoryMilestone={tvlCategoryMilestone}
           totalTvl={currentTvl}
         />
@@ -686,7 +691,9 @@ export default function Assets(props: IAssetsTableProps) {
         <div className="md:hidden block">
           <AllocatedPoints
             novaCategoryTotalPoints={novaCategoryTotalPoints}
+            gamefiTotalPoints={gamefiTotalPoints}
             holdingPoints={holdingPoints}
+            gamefiHoldingPoints={gamefiHoldingPoints}
             tabActive={tabActive}
           />
         </div>

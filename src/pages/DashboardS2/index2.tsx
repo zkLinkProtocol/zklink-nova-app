@@ -423,7 +423,7 @@ export default function Dashboard() {
     TvlCategoryMilestone[]
   >([]);
   const getTvlCategoryMilestoneFunc = async () => {
-    const res = await getTvlCategoryMilestone();
+    const res = await getTvlCategoryMilestone({ season });
     console.log("getTvlCategory", res);
     setTvlCategoryMilestone(res?.data || []);
   };
@@ -460,7 +460,7 @@ export default function Dashboard() {
 
   const novaPointsList = useMemo(() => {
     const categorys =
-      epochActive === 2
+      epochActive === epochList.length - 1
         ? [
             {
               name: "Assets Points",
@@ -526,8 +526,19 @@ export default function Dashboard() {
       const userCategoryData = novaCategoryUserPointsTotal.find(
         (item) => item.category === c.category
       );
-      const userEcoPoints = Number(userCategoryData?.ecoPoints) || 0;
-      const userReferralPoints = Number(userCategoryData?.referralPoints) || 0;
+      const gamefiData = novaCategoryUserPointsTotal.find(
+        (item) => item.category === "gamefi"
+      );
+      const userEcoPoints =
+        epochActive === epochList.length - 1 && c.category === "other"
+          ? (Number(gamefiData?.ecoPoints) || 0) +
+            (Number(userCategoryData?.ecoPoints) || 0)
+          : Number(userCategoryData?.ecoPoints) || 0;
+      const userReferralPoints =
+        epochActive === epochList.length - 1 && c.category === "other"
+          ? (Number(gamefiData?.referralPoints) || 0) +
+            (Number(userCategoryData?.referralPoints) || 0)
+          : Number(userCategoryData?.referralPoints) || 0;
       const userOtherPoints = Number(userCategoryData?.otherPoints) || 0;
       const userTotalPoints =
         userEcoPoints + userReferralPoints + userOtherPoints;
@@ -564,7 +575,12 @@ export default function Dashboard() {
       return obj;
     });
     return arr;
-  }, [novaCategoryUserPointsTotal, novaCategoryPoints, categoryZKLs]);
+  }, [
+    novaCategoryUserPointsTotal,
+    novaCategoryPoints,
+    categoryZKLs,
+    epochActive,
+  ]);
 
   const userHoldingPoints = useMemo(() => {
     const category = tabs2[tabs2Active]?.category;
@@ -574,6 +590,13 @@ export default function Dashboard() {
     return categoryData;
   }, [novaPointsList, tabs2Active]);
 
+  const gamefiHoldingPoints = useMemo(() => {
+    const categoryData = novaPointsList.find(
+      (item) => item.category === "gamefi"
+    );
+    return categoryData;
+  }, [novaPointsList]);
+
   const novaCategoryTotalPoints = useMemo(() => {
     const category = tabs2[tabs2Active]?.category;
     const categoryData = novaCategoryPoints.find(
@@ -582,6 +605,14 @@ export default function Dashboard() {
 
     return categoryData;
   }, [tabs2Active, novaCategoryPoints]);
+
+  const gamefiTotalPoints = useMemo(() => {
+    const categoryData = novaCategoryPoints.find(
+      (item) => item.category === "gamefi"
+    );
+
+    return categoryData;
+  }, [novaCategoryPoints]);
 
   useEffect(() => {
     getAccountTvlFunc();
@@ -796,7 +827,9 @@ export default function Dashboard() {
                     accountTvlData={accountTvlData}
                     currentTvl={totalTvl}
                     holdingPoints={userHoldingPoints}
+                    gamefiHoldingPoints={gamefiHoldingPoints}
                     novaCategoryTotalPoints={novaCategoryTotalPoints}
+                    gamefiTotalPoints={gamefiTotalPoints}
                     tvlCategoryMilestone={tvlCategoryMilestone}
                   />
                 )}
@@ -807,6 +840,8 @@ export default function Dashboard() {
                     novaCategoryUserPoints={novaCategoryUserPoints}
                     tvlCategoryMilestone={tvlCategoryMilestone}
                     holdingPoints={userHoldingPoints}
+                    gamefiHoldingPoints={gamefiHoldingPoints}
+                    gamefiTotalPoints={gamefiTotalPoints}
                     novaCategoryTotalPoints={novaCategoryTotalPoints}
                   />
                 )}

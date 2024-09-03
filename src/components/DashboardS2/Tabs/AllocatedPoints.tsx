@@ -60,7 +60,9 @@ const AllocatedBox = styled.div`
 
 interface IProps {
   novaCategoryTotalPoints?: NovaCategoryPoints;
+  gamefiTotalPoints?: NovaCategoryPoints;
   holdingPoints?: NovaPointsListItem;
+  gamefiHoldingPoints?: NovaPointsListItem;
   tabActive?: {
     category: string;
     name: string;
@@ -69,22 +71,36 @@ interface IProps {
 }
 
 export default function AllocatedPoints({
+  gamefiTotalPoints,
   novaCategoryTotalPoints,
   holdingPoints,
+  gamefiHoldingPoints,
   tabActive,
 }: IProps) {
   const { t } = useTranslation();
   const categoryPointsTooltips = useMemo(() => {
     const arr = [
       {
-        label: t("dashboard.by_interaction"),
-        value: formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
+        label: "By Interaction",
+        value:
+          tabActive?.category === "other"
+            ? formatNumberWithUnit(
+                (novaCategoryTotalPoints?.ecoPoints || 0) +
+                  (gamefiTotalPoints?.ecoPoints || 0)
+              )
+            : formatNumberWithUnit(novaCategoryTotalPoints?.ecoPoints || 0),
       },
       {
-        label: t("dashboard.by_referral"),
-        value: formatNumberWithUnit(
-          novaCategoryTotalPoints?.referralPoints || 0
-        ),
+        label: "By Referral",
+        value:
+          tabActive?.category === "other"
+            ? formatNumberWithUnit(
+                (novaCategoryTotalPoints?.referralPoints || 0) +
+                  (gamefiTotalPoints?.referralPoints || 0)
+              )
+            : formatNumberWithUnit(
+                novaCategoryTotalPoints?.referralPoints || 0
+              ),
       },
     ];
     if (novaCategoryTotalPoints?.otherPoints) {
@@ -94,17 +110,29 @@ export default function AllocatedPoints({
       });
     }
     return arr;
-  }, [novaCategoryTotalPoints, t]);
+  }, [gamefiTotalPoints, novaCategoryTotalPoints, tabActive]);
 
   const holdingPointsTooltips = useMemo(() => {
     const arr = [
       {
-        label: t("dashboard.by_interaction"),
-        value: formatNumberWithUnit(holdingPoints?.userEcoPoints || 0),
+        label: "By Interaction",
+        value:
+          tabActive?.category === "ohter"
+            ? formatNumberWithUnit(
+                (holdingPoints?.userEcoPoints || 0) +
+                  (gamefiHoldingPoints?.userEcoPoints || 0)
+              )
+            : formatNumberWithUnit(holdingPoints?.userEcoPoints || 0),
       },
       {
-        label: t("dashboard.by_referral"),
-        value: formatNumberWithUnit(holdingPoints?.userReferralPoints || 0),
+        label: "By Referral",
+        value:
+          tabActive?.category === "ohter"
+            ? formatNumberWithUnit(
+                (holdingPoints?.userReferralPoints || 0) +
+                  (gamefiHoldingPoints?.userReferralPoints || 0)
+              )
+            : formatNumberWithUnit(holdingPoints?.userReferralPoints || 0),
       },
     ];
 
@@ -116,7 +144,7 @@ export default function AllocatedPoints({
     }
 
     return arr;
-  }, [holdingPoints, tabActive, t]);
+  }, [gamefiHoldingPoints, holdingPoints, tabActive]);
 
   return (
     <AllocatedBox className="md:min-w-[419px] px-[20px] md:px-[28px] py-[16px]">
@@ -150,11 +178,20 @@ export default function AllocatedPoints({
           }
         >
           <span className="value">
-            {formatNumberWithUnit(
-              (novaCategoryTotalPoints?.ecoPoints || 0) +
-                (novaCategoryTotalPoints?.referralPoints || 0) +
-                (novaCategoryTotalPoints?.otherPoints || 0)
-            )}
+            {tabActive?.category === "other"
+              ? formatNumberWithUnit(
+                  (novaCategoryTotalPoints?.ecoPoints || 0) +
+                    (novaCategoryTotalPoints?.referralPoints || 0) +
+                    (novaCategoryTotalPoints?.otherPoints || 0) +
+                    (gamefiTotalPoints?.ecoPoints || 0) +
+                    (gamefiTotalPoints?.referralPoints || 0) +
+                    (gamefiTotalPoints?.otherPoints || 0)
+                )
+              : formatNumberWithUnit(
+                  (novaCategoryTotalPoints?.ecoPoints || 0) +
+                    (novaCategoryTotalPoints?.referralPoints || 0) +
+                    (novaCategoryTotalPoints?.otherPoints || 0)
+                )}
           </span>
         </Tooltip>
       </div>
