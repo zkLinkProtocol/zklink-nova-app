@@ -282,37 +282,37 @@ export default function Dashboard() {
 
   const tabs2 = [
     {
-      iconURL: "/img/icon-sector-1.svg",
+      iconURL: "/img/icon-sector-assets.svg",
       name: "Assets",
       category: "holding",
     },
     {
-      iconURL: "/img/icon-sector-2.svg",
+      iconURL: "/img/icon-sector-boosted.svg",
       name: "Boosted",
       category: "nativeboost",
     },
     {
-      iconURL: "/img/icon-sector-3.svg",
+      iconURL: "/img/icon-sector-spotdex.svg",
       name: "Spot DEX",
       category: "spotdex",
     },
     {
-      iconURL: "/img/icon-sector-4.svg",
+      iconURL: "/img/icon-sector-perpdex.svg",
       name: "Perp DEX",
       category: "perpdex",
     },
     {
-      iconURL: "/img/icon-sector-5.svg",
-      name: "Lending",
+      iconURL: "/img/icon-sector-lending.svg",
+      name: "Lending & Staking",
       category: "lending",
     },
     // {
-    //   iconURL: "/img/icon-sector-6.svg",
+    //   iconURL: "/img/icon-sector-gamefi.svg",
     //   name: "GameFi",
     //   category: "gamefi",
     // },
     {
-      iconURL: "/img/icon-sector-7.svg",
+      iconURL: "/img/icon-sector-other.svg",
       name: "Others",
       category: "other",
     },
@@ -638,9 +638,7 @@ export default function Dashboard() {
   return (
     <Container>
       <div className="side fixed right-[8px] md:right-[32px] top-[120px] z-[9] max-w-[350px] md:max-w-[392px] w-full md:w-[392px]">
-        <ZKLClaimAd />
         <MysteryBoxIII />
-        {/* <GoogleRecaptcha /> */}
       </div>
 
       <div className="mt-[29.6px] mx-auto max-w-[1246px] hidden md:block">
@@ -658,9 +656,9 @@ export default function Dashboard() {
             </div>
 
             <div className="desc whitespace-nowrap">
-              <div className="mt-[12px]">
-                The 30 million $ZKL will be distributed over at least Three
-                Epochs.
+              <div className="mt-[12px] max-w-[400px] whitespace-normal">
+                The 30 million $ZKL will be distributed by epoches, based on
+                milestone achievement.
               </div>
               <div className="mt-[12px] before">
                 Epoch One (From May 30th to July 15th)
@@ -768,7 +766,7 @@ export default function Dashboard() {
                 onClick={() => setTabs2Active(99)}
               >
                 <img
-                  src={"/img/icon-sector-1.svg"}
+                  src={"/img/icon-sector-portfolio.svg"}
                   alt=""
                   className="w-[24px] h-[24px] block"
                 />
