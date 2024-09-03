@@ -696,9 +696,10 @@ interface TvlCategoryMilestoneResponse {
   data: TvlCategoryMilestone[];
 }
 
-export const getTvlCategoryMilestone =
-  (): Promise<TvlCategoryMilestoneResponse> =>
-    http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone`);
+export const getTvlCategoryMilestone = (params: {
+  season: number;
+}): Promise<TvlCategoryMilestoneResponse> =>
+  http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone/season`, { params });
 
 export const modifyUsername = (userName: string): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/invite/modify/username`, { userName });

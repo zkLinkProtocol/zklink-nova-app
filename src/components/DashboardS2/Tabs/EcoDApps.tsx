@@ -585,6 +585,8 @@ export default function EcoDApps({
   tvlCategoryMilestone,
   holdingPoints,
   novaCategoryTotalPoints,
+  gamefiTotalPoints,
+  gamefiHoldingPoints,
   season,
 }: {
   tabActive?: {
@@ -597,6 +599,8 @@ export default function EcoDApps({
   tvlCategoryMilestone: TvlCategoryMilestone[];
   holdingPoints?: NovaPointsListItem;
   novaCategoryTotalPoints?: NovaCategoryPoints;
+  gamefiTotalPoints?: NovaCategoryPoints;
+  gamefiHoldingPoints?: NovaPointsListItem;
 }) {
   const geNovaCategoryUserPointsByProject = (project: string) => {
     const obj = novaCategoryUserPoints.find((item) => item.project === project);
@@ -1357,6 +1361,7 @@ export default function EcoDApps({
         holdingPoints={holdingPoints}
         novaCategoryTotalPoints={novaCategoryTotalPoints}
         tvlCategoryMilestone={tvlCategoryMilestone}
+        gamefiTotalPoints={gamefiTotalPoints}
       />
 
       <div className="overflow-x-auto">
@@ -1402,8 +1407,10 @@ export default function EcoDApps({
 
       <div className="md:hidden block">
         <AllocatedPoints
+          gamefiTotalPoints={gamefiTotalPoints}
           novaCategoryTotalPoints={novaCategoryTotalPoints}
           holdingPoints={holdingPoints}
+          gamefiHoldingPoints={gamefiHoldingPoints}
           tabActive={tabActive}
         />
       </div>
