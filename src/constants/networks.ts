@@ -538,7 +538,14 @@ import {
   metaMaskWallet,
   injectedWallet,
   safeWallet,
+  bybitWallet,
 } from "@rainbow-me/rainbowkit/wallets";
+bybitWallet({
+  projectId,
+  walletConnectParameters: {
+    metadata,
+  },
+});
 okxWallet({
   projectId,
   walletConnectParameters: {
@@ -577,6 +584,7 @@ const connectors = connectorsForWallets(
         injectedWallet,
         // rainbowWallet,
         gateWallet, // hide gate for now
+        bybitWallet,
         okxWallet,
         BinanceWallet,
         // rabbyWallet,
