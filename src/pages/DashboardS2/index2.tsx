@@ -18,6 +18,7 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getTvlCategoryMilestone,
+  getTvlCategoryMilestoneBySeason,
 } from "@/api";
 import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
@@ -421,7 +422,7 @@ export default function Dashboard() {
     TvlCategoryMilestone[]
   >([]);
   const getTvlCategoryMilestoneFunc = async () => {
-    const res = await getTvlCategoryMilestone({ season });
+    const res = await getTvlCategoryMilestone();
     console.log("getTvlCategory", res);
     setTvlCategoryMilestone(res?.data || []);
   };
