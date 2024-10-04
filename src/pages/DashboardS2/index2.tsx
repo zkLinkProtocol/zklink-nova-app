@@ -10,6 +10,7 @@ import {
   TvlCategoryMilestone,
   getAccountTvl,
   getCategoryZKL,
+  getCategoryZKLE2,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
   getNovaCategoryUserPoints,
@@ -453,7 +454,11 @@ export default function Dashboard() {
   const [categoryZKLs, setCategoryZKLs] = useState<CategoryZKLItem[]>([]);
 
   const getCategoryZKLFunc = async () => {
-    const { data } = await getCategoryZKL();
+    console.log("epoch", epochActive);
+    const { data } =
+      epochActive === 1
+        ? await getTvlCategoryMilestone({ season: 2 })
+        : await getCategoryZKL();
     setCategoryZKLs(data || []);
   };
 
@@ -625,8 +630,11 @@ export default function Dashboard() {
     getNovaCategoryPointsFunc();
     getNovaCategoryUserPointsFunc();
     getNovaCategoryUserPointsTotalFunc();
-    getCategoryZKLFunc();
   }, [address, season]);
+
+  useEffect(() => {
+    getCategoryZKLFunc();
+  }, [address, epochActive]);
 
   const allSupportedPoints = [
     {
