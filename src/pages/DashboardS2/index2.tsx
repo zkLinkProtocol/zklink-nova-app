@@ -10,6 +10,7 @@ import {
   TvlCategoryMilestone,
   getAccountTvl,
   getCategoryZKL,
+  getCategoryZKLE2,
   getExplorerTokenTvl,
   getNovaCategoryPoints,
   getNovaCategoryUserPoints,
@@ -18,6 +19,7 @@ import {
   getTokenPrice,
   getTotalTvlByToken,
   getTvlCategoryMilestone,
+  getTvlCategoryMilestoneBySeason,
 } from "@/api";
 import { useAccount } from "wagmi";
 import EcoDApps from "@/components/DashboardS2/Tabs/EcoDApps";
@@ -423,7 +425,7 @@ export default function Dashboard() {
     TvlCategoryMilestone[]
   >([]);
   const getTvlCategoryMilestoneFunc = async () => {
-    const res = await getTvlCategoryMilestone({ season });
+    const res = await getTvlCategoryMilestone();
     console.log("getTvlCategory", res);
     setTvlCategoryMilestone(res?.data || []);
   };
@@ -454,7 +456,11 @@ export default function Dashboard() {
   const [categoryZKLs, setCategoryZKLs] = useState<CategoryZKLItem[]>([]);
 
   const getCategoryZKLFunc = async () => {
-    const { data } = await getCategoryZKL();
+    console.log("epoch", epochActive);
+    const { data } =
+      epochActive === 1
+        ? await getTvlCategoryMilestoneBySeason({ season: 2 })
+        : await getCategoryZKL();
     setCategoryZKLs(data || []);
   };
 
@@ -626,8 +632,11 @@ export default function Dashboard() {
     getNovaCategoryPointsFunc();
     getNovaCategoryUserPointsFunc();
     getNovaCategoryUserPointsTotalFunc();
-    getCategoryZKLFunc();
   }, [address, season]);
+
+  useEffect(() => {
+    getCategoryZKLFunc();
+  }, [address, epochActive]);
 
   const allSupportedPoints = [
     {

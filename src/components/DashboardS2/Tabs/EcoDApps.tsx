@@ -1309,7 +1309,7 @@ export default function EcoDApps({
         rewardsIcon: [
           { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
         ],
-        rewards: "Farming",
+        rewards: "Up to 10x",
         holdingPoints: getHoldingPointsByProject("desyn"),
         totalPoints: getTotalPointsByProject("desyn"),
         remainSpinNum: getSpinByProject("desyn").remainSpinNum,

@@ -755,6 +755,19 @@ const BridgeCompPC = (props: IProps) => {
                   </p>
                 )}
               </div>
+              <div className="mt-8  px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
+                <img
+                  src="/img/icon-no-points.png"
+                  alt=""
+                  className="w-[21px] h-[21px] mr-3"
+                />
+                <p className="text-[#C57D10] ">
+                  Please avoid using MPC wallets like the Bybit Custodial
+                  wallet, Bybit Keyless wallet, or Rainmaker, as they currently
+                  do not support zkLink Nova. Using them may prevent you from
+                  moving your funds after depositing.
+                </p>
+              </div>
               {isFirstDeposit && showNoPointsTip && (
                 <div className="mt-8 px-6 py-4 border-solid border-1 border-[#C57D10] rounded-lg flex">
                   <img

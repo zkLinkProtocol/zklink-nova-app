@@ -688,6 +688,7 @@ export interface TvlCategoryMilestone {
   name: string;
   data: string;
   type: string;
+  zkl: number
 }
 
 interface TvlCategoryMilestoneResponse {
@@ -696,10 +697,14 @@ interface TvlCategoryMilestoneResponse {
   data: TvlCategoryMilestone[];
 }
 
-export const getTvlCategoryMilestone = (params: {
+export const getTvlCategoryMilestoneBySeason = (params: {
   season: number;
 }): Promise<TvlCategoryMilestoneResponse> =>
   http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone/season`, { params });
+
+export const getTvlCategoryMilestone =
+  (): Promise<TvlCategoryMilestoneResponse> =>
+    http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone`);
 
 export const modifyUsername = (userName: string): Promise<APIResponse> =>
   http.post(`${BASE_URL_API}/invite/modify/username`, { userName });
@@ -830,6 +835,12 @@ interface CategoryZKLResponse {
 
 export const getCategoryZKL = (): Promise<CategoryZKLResponse> => {
   return http.get(`${BASE_URL_LRT_POINTS}/tvl/category/milestone/s2-1`);
+};
+
+export const getCategoryZKLE2 = (): Promise<CategoryZKLResponse> => {
+  return http.get(
+    `${BASE_URL_LRT_POINTS}/tvl/category/milestone/season?season=2`
+  );
 };
 
 export interface PortocolSpinItem {
