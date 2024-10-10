@@ -457,7 +457,7 @@ export default function Dashboard() {
     console.log("epoch", epochActive);
     const { data } =
       epochActive === 1
-        ? await getTvlCategoryMilestone({ season: 2 })
+        ? await getTvlCategoryMilestoneBySeason({ season: 2 })
         : await getCategoryZKL();
     setCategoryZKLs(data || []);
   };
