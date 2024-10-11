@@ -40,6 +40,7 @@ export default function ThridPartyBridge() {
   const {
     mesonBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
+    interportBridgeNovaPoints,
     owltoBridgeNovaPoints,
     orbiterBridgeNovaPoints,
   } = useNovaPoints();
@@ -93,11 +94,22 @@ export default function ThridPartyBridge() {
         }`,
         link: "https://app.symbiosis.finance/swap?chainIn=Ethereum&chainOut=ZkLink&tokenIn=ETH&tokenOut=ETH",
       },
+      {
+        iconURL: "/img/icon-interport.svg",
+        name: "Interport",
+        desc: "Bridge more than $200 USDC to Nova to earn Nova Points.",
+        tooltip: "",
+        points: `${interportBridgeNovaPoints} ${
+          interportBridgeNovaPoints > 1 ? "Nova Points" : "Nova Point"
+        }`,
+        link: "https://app.interport.fi/bridge/1/810180/USDT/USDT",
+      },
     ];
   }, [
     mesonBridgeNovaPoints,
     orbiterBridgeNovaPoints,
     symbiosisBridgeNovaPoints,
+    interportBridgeNovaPoints
   ]);
 
   return (

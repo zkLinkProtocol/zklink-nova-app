@@ -110,6 +110,7 @@ export default () => {
     getMesonNovaPointsFunc();
     // getOwltoNovaPointsFunc();
     getSymbiosisBridgePointsFunc();
+    getInterportBridgePointsFunc();
     getOrbiterBridgePointsFunc();
     getMesonisBridgePointsFunc();
     getOwltoBridgePointsFunc();
@@ -313,6 +314,14 @@ export default () => {
     setSymbiosisBridgeNovaPoints(Number(data) || 0);
   };
 
+  const [interportBridgeNovaPoints, setInterportBridgeNovaPoints] = useState(0);
+  const getInterportBridgePointsFunc = async () => {
+    if (!address) return;
+    const { data } = await getBridgePoints("interport");
+
+    setInterportBridgeNovaPoints(Number(data) || 0);
+  };
+
   const [orbiterBridgeNovaPoints, setOrbiterBridgeNovaPoints] = useState(0);
   const getOrbiterBridgePointsFunc = async () => {
     if (!address) return;
@@ -353,6 +362,7 @@ export default () => {
     owltoNovaPoints,
     dAppNovaPoints,
     symbiosisBridgeNovaPoints,
+    interportBridgeNovaPoints,
     mesonBridgeNovaPoints,
     owltoBridgeNovaPoints,
     orbiterBridgeNovaPoints,
