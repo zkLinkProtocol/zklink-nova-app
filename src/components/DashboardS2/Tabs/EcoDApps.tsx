@@ -1327,6 +1327,36 @@ export default function EcoDApps({
           },
         ],
       },
+      {
+        category: "other",
+        iconURL: "/img/icon-bullishs.png",
+        name: "Bullishs",
+        link: "https://www.bullishs.io",
+        handler: "@bullishs_io",
+        type: "DEX",
+        rewardsIcon: [
+          { name: "Nova Points", iconURL: "/img/icon-rewards-nova.svg" },
+        ],
+        rewards: "Interaction",
+        holdingPoints: getHoldingPointsByProject("bullishs"),
+        totalPoints: getTotalPointsByProject("bullishs"),
+        remainSpinNum: getSpinByProject("bullishs").remainSpinNum,
+        projectName: "bullishs",
+        details: [
+          {
+            booster: (
+              <div>
+                <p>
+                  1 transaction to earn 0.5 Nova points and multiple other
+                  rewards.
+                </p>
+              </div>
+            ),
+            description: `The First Omni Chains Game with Seamless Transaction Tech involved, 1 transaction to earn multiple rewards.`,
+            action: "Use Protocol",
+          },
+        ],
+      },
     ];
 
     return tabActive
