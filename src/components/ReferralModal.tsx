@@ -101,16 +101,6 @@ const ReferralModal = () => {
 
   return (
     <>
-      <ReferralButton onClick={modal.onOpen} className="hidden md:block">
-        <img
-          src="/img/icon-invite-btn.png"
-          alt=""
-          className="absolute bottom-0 right-[48px] w-[37px]"
-        />
-        <span className="relative z-1">
-          {t("header.ur_invite_code")}: {invite?.code}
-        </span>
-      </ReferralButton>
       <ModalContainer
         classNames={{ closeButton: "hidden" }}
         size="md"

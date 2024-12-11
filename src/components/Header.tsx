@@ -475,7 +475,10 @@ export default function Header() {
           {/* <NavBox> */}
           <NavbarContent className="hidden md:flex" justify="center">
             <NavbarItem>
-              <NavLink to="/aggregation-parade" className="nav-link">
+              <NavLink
+                to={isActiveUser ? "/aggregation-parade" : "/"}
+                className="nav-link"
+              >
                 Aggregation Parade
               </NavLink>
             </NavbarItem>
@@ -503,16 +506,6 @@ export default function Header() {
               </a>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/leaderboard" className={"nav-link"}>
-                {t("header.leaderboard")}
-              </NavLink>
-            </NavbarItem>
-            <NavbarItem>
-              <NavLink to="/bridge" className={"nav-link"}>
-                {t("header.bridge")}
-              </NavLink>
-            </NavbarItem>
-            <NavbarItem>
               <a
                 href="https://zk.link/governance"
                 target="_blank"
@@ -520,11 +513,6 @@ export default function Header() {
               >
                 {t("header.governance")}
               </a>
-            </NavbarItem>
-            <NavbarItem>
-              <NavLink to="/about" className={"nav-link"}>
-                {t("header.about")}
-              </NavLink>
             </NavbarItem>
 
             <Dropdown>
@@ -554,14 +542,6 @@ export default function Header() {
                 </DropdownItem>
                 <DropdownItem key="unwrap">
                   <NavLink to="/unwrap">Unwrap ETH</NavLink>
-                </DropdownItem>
-                <DropdownItem key="user-guide">
-                  <a
-                    href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
-                    target="_blank"
-                  >
-                    {t("header.user_guide")}
-                  </a>
                 </DropdownItem>
                 <DropdownItem key="user-guide">
                   <a href="https://explorer.zklink.io/" target="_blank">
@@ -795,7 +775,10 @@ export default function Header() {
           <NavbarMenuItem
             isActive={location.pathname === "/aggregation-parade"}
           >
-            <NavLink to="/aggregation-parade" className="nav-link block">
+            <NavLink
+              to={isActiveUser ? "/aggregation-parade" : "/"}
+              className="nav-link block"
+            >
               Aggregation Parade
             </NavLink>
           </NavbarMenuItem>
@@ -818,11 +801,6 @@ export default function Header() {
                   </Tooltip>
                 )}
               </NavbarMenuItem> */}
-          <NavbarMenuItem isActive={location.pathname === "/leaderboard"}>
-            <NavLink to="/leaderboard" className="block">
-              Leaderboard
-            </NavLink>
-          </NavbarMenuItem>
 
           <NavbarMenuItem>
             <a
@@ -832,18 +810,6 @@ export default function Header() {
             >
               {t("header.governance")}
             </a>
-          </NavbarMenuItem>
-
-          <NavbarMenuItem isActive={location.pathname === "/about"}>
-            <NavLink to="/about" className="block">
-              About
-            </NavLink>
-          </NavbarMenuItem>
-
-          <NavbarMenuItem isActive={location.pathname === "/bridge"}>
-            <NavLink to="/bridge" className="block">
-              Bridge
-            </NavLink>
           </NavbarMenuItem>
 
           <Dropdown>
@@ -886,17 +852,7 @@ export default function Header() {
                   </NavLink>
                 </NavbarMenuItem>
               </DropdownItem>
-              <DropdownItem key="user-guide">
-                <NavbarMenuItem>
-                  <a
-                    href="https://blog.zk.link/user-onboarding-guide-zklink-nova-aggregation-parade-07861acb48e7"
-                    target="_blank"
-                    className="block"
-                  >
-                    User Guide
-                  </a>
-                </NavbarMenuItem>
-              </DropdownItem>
+
               <DropdownItem key="user-guide">
                 <NavbarMenuItem>
                   <a
