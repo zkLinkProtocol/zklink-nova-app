@@ -1,24 +1,12 @@
 import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
-
-import Home from "./pages/Home";
+import Home from "./pages/Home/index-end";
 import Toast from "./components/Toast";
 import Countdown from "@/components/Countdown";
 import styled from "styled-components";
 import AggregationParade from "./pages/AggregationParade";
-import Bridge from "@/pages/Bridge";
-import Dashboard from "./pages/Dashboard";
-import Leaderboard from "./pages/Leaderboard";
-import About from "./pages/About/index2";
 import UnwrapETH from "@/pages/UnwrapETH";
-import DashboardS2 from "./pages/DashboardS2/index2";
-
-// const AggregationParade = lazy(() => import("@/pages/AggregationParade"));
-// const Dashboard = lazy(() => import("@/pages/AggregationParade/Dashboard"));
-// const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
-// const About = lazy(() => import("@/pages/About"));
-// const Bridge = lazy(() => import('@/pages/Bridge'))
 
 const HideBox = styled.div`
   position: absolute;
@@ -33,7 +21,6 @@ export default function App() {
         <Header />
 
         <Routes>
-          {/* <Route path="/" element={<Navigate to="/aggregation-parade" />} /> */}
           <Route
             path="/"
             element={
@@ -59,49 +46,7 @@ export default function App() {
               </Suspense>
             }
           />
-          <Route
-            path="/dashboard"
-            element={
-              <Suspense fallback="">
-                <Dashboard />
-              </Suspense>
-            }
-          />
 
-          <Route
-            path="/dashboard2"
-            element={
-              <Suspense fallback="">
-                <DashboardS2 />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path="/leaderboard"
-            element={
-              <Suspense fallback="">
-                <Leaderboard />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path="/about"
-            element={
-              <Suspense fallback="">
-                <About />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/bridge"
-            element={
-              <Suspense fallback="">
-                <Bridge />
-              </Suspense>
-            }
-          />
           <Route
             path="/unwrap"
             element={
