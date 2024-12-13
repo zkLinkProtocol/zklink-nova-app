@@ -217,7 +217,49 @@ export default function Dashboard() {
       epochActive === 1
         ? await getTvlCategoryMilestoneBySeason({ season: 2 })
         : await getCategoryZKL();
-    setCategoryZKLs(data || []);
+
+    if (epochActive === 2) {
+      setCategoryZKLs([
+        {
+          name: "holding",
+          data: "",
+          type: "",
+          zkl: 100000,
+        },
+        {
+          name: "spotdex",
+          data: "",
+          type: "",
+          zkl: 100000,
+        },
+        {
+          name: "perpdex",
+          data: "",
+          type: "",
+          zkl: 100000,
+        },
+        {
+          name: "lending",
+          data: "",
+          type: "",
+          zkl: 200000,
+        },
+        {
+          name: "nativeboost",
+          data: "",
+          type: "",
+          zkl: 50000,
+        },
+        {
+          name: "other",
+          data: "",
+          type: "",
+          zkl: 50000,
+        },
+      ]);
+    } else {
+      setCategoryZKLs(data || []);
+    }
   };
 
   const novaPointsList = useMemo(() => {
