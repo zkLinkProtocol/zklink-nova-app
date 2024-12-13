@@ -482,7 +482,7 @@ export default function Portfolio({
           <Title className="text-[24px] md:text-[32px]">
             {t("dashboard.ur_nova_points")}
           </Title>
-          <Tooltip
+          {/* <Tooltip
             classNames={{
               content: "w-[350px] rounded-lg bg-[#151923] text-white px-4 py-5",
             }}
@@ -504,7 +504,7 @@ export default function Portfolio({
             <PointsBox className="text-[14px] font-[900]">
               +{royaltyBoosterPencentage}
             </PointsBox>
-          </Tooltip>
+          </Tooltip> */}
         </div>
 
         <div className="hidden md:flex items-center gap-[12px]">

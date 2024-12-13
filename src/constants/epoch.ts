@@ -12,6 +12,6 @@ export const epochList = [
   {
     name: "Epoch Three",
     season: 4,
-    time: "Snapshot taken on December 13, 2024, at 12:00 PM UTC",
+    time: "Snapshot taken on December 13, 2024, at 10 AM UTC",
   },
 ];
