@@ -594,7 +594,7 @@ export default function Header() {
 
         <NavbarContent justify="end">
           <NavbarItem className="hidden flex items-center gap-[1rem]">
-            <Dropdown disableAnimation>
+            {/* <Dropdown disableAnimation>
               <DropdownTrigger>
                 <div className="w-[40px] h-[40px] rounded-full border-1 border-[#282828] bg-[#10131C] hidden md:flex justify-center itmes-center">
                   <img
@@ -624,7 +624,7 @@ export default function Header() {
                   </DropdownItem>
                 ))}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
 
             {address && depositStatus && (
               <>

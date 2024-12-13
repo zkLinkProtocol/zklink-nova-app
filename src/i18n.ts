@@ -11,8 +11,8 @@ i18n
   .init({
     resources: {
       en: { ...enJSON },
-      ko: { ...koJSON },
-      zh_CN: { ...zhCNJSON },
+      // ko: { ...koJSON },
+      // zh_CN: { ...zhCNJSON },
     },
     lng: "en",
   });

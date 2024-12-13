@@ -27,11 +27,14 @@ export default function App() {
   const { language } = useLanguageStore();
   const { i18n } = useTranslation();
 
+  // useEffect(() => {
+  //   if (language !== i18n.language) {
+  //     i18n.changeLanguage(language);
+  //   }
+  // }, [i18n.language, language]);
   useEffect(() => {
-    if (language !== i18n.language) {
-      i18n.changeLanguage(language);
-    }
-  }, [i18n.language, language]);
+    i18n.changeLanguage("en");
+  }, []);
 
   return (
     <main className="main dark text-foreground bg-background header lg:min-w-[1080px]">
