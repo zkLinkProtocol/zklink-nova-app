@@ -546,28 +546,24 @@ export default function Portfolio({
                 }}
                 content={
                   <div>
-                    {epochActive !== epochList.length - 1 && (
-                      <div>
-                        <>
-                          <div className="mb-[16px] text-[14px] font-[700]">
-                            Sector in {epochList[epochActive].name}
-                          </div>
-                          <PointsPopoverContent
-                            data={[
-                              {
-                                name: "Total Allocated Points",
-                                points: item.sectorTotalPoints,
-                              },
-                              {
-                                name: "Total Allocated $ZKL",
-                                points: item.zkl,
-                              },
-                            ]}
-                          />
-                          <div className="my-[24px] w-full h-[1px] bg-[#999]"></div>
-                        </>
+                    <div>
+                      <div className="mb-[16px] text-[14px] font-[700]">
+                        Sector in {epochList[epochActive].name}
                       </div>
-                    )}
+                      <PointsPopoverContent
+                        data={[
+                          {
+                            name: "Total Allocated Points",
+                            points: item.sectorTotalPoints,
+                          },
+                          {
+                            name: "Total Allocated $ZKL",
+                            points: item.zkl,
+                          },
+                        ]}
+                      />
+                      <div className="my-[24px] w-full h-[1px] bg-[#999]"></div>
+                    </div>
 
                     <div className="mb-[16px] text-[14px] font-[700]">
                       Your Sector Points in {epochList[epochActive].name}
@@ -629,7 +625,7 @@ export default function Portfolio({
         </div>
       </div>
       <div className="divide my-12"></div>
-      <div className="mb-[18px] flex items-center justify-center md:justify-between">
+      {/* <div className="mb-[18px] flex items-center justify-center md:justify-between">
         <Title className="text-[24px] md:text-[32px">Your Project Points</Title>
         <div className="view-more hidden md:flex" onClick={handleViewMore}>
           <span className="mr-2 text-[#FbFbFb]/[0.6]">{`Hide Points < 0.1`}</span>
@@ -693,7 +689,7 @@ export default function Portfolio({
           </div>
         </List>
       </div>
-      <div className="divide my-12"></div>
+      <div className="divide my-12"></div> */}
       <div className="flex items-center justify-center md:justify-between mb-5">
         <Title className="text-[24px] md:text-[32px]">Your Nova NFTs</Title>
       </div>
