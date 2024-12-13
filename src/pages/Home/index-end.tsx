@@ -322,7 +322,7 @@ export default function Home() {
             </GradientText>
             <div className="flex justify-center">
               <a
-                href="https://discord.com/channels/839458691983605832/847744873850863627/1299311519057580065"
+                href="https://discord.com/channels/839458691983605832/1104554827712827402/1314525507567485048"
                 target="_blank"
                 className="mt-[16px] flex items-center justify-center gap-[4px] opacity-50 hover:opacity-100"
               >
@@ -338,15 +338,15 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="flex flexBox my-[50px]">
+          {/* <div className="flex flexBox my-[50px]">
             <GradientBox className="box mr-0 rounded-[14px] w-[360px]">
               <div className="inner">1.2B TVL</div>
             </GradientBox>
-          </div>
+          </div> */}
         </TitleBox>
 
         {/* Form: Invite code */}
-        <CardBox className="mx-auto px-[26px] py-[32px] w-[360px] md:min-w-[552px] min-h-[226px] rounded-[18px]">
+        <CardBox className="mt-[50px] mx-auto px-[26px] py-[32px] w-[360px] md:min-w-[552px] min-h-[226px] rounded-[18px]">
           <TitleBox>
             <h4 className="title text-center text-[24px]">
               Aggregation Parade Season II
