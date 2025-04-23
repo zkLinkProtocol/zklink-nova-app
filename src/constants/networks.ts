@@ -22,6 +22,7 @@ import {
   scroll,
   optimismSepolia,
   baseSepolia,
+  blastSepolia,
 } from "viem/chains";
 
 import { defineChain } from "viem";
@@ -124,6 +125,10 @@ export const l1Networks = {
   blast: {
     ...blast,
     name: "Blast Mainnet",
+  },
+  blastSepolia: {
+    ...blastSepolia,
+    name: "Blast Sepolia Testnet",
   },
   optimism: {
     ...optimism,
@@ -458,7 +463,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     erc20BridgeL2: "0x4E5622E4A41985C29028d92e1Cc2EdF02012c82E",
     l1Gateway: "0x83d3f5Db3eea3dD7a30aAF71A32D244386d00C53",
     isEthGasToken: true,
-    l1Network: l1Networks.baseSepolia,
+    l1Network: l1Networks.blastSepolia,
   },
 ];
 
