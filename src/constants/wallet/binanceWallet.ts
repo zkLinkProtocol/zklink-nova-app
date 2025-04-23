@@ -33,7 +33,7 @@ export const BinanceWallet = ({
   const shouldUseInjected = isMobile;
   return {
     id: "binance-wallet",
-    name: "Binance Web3 Wallet",
+    name: "Binance Wallet",
     iconUrl: "/img/binance.svg",
     iconBackground: "#000",
     downloadUrls: {
