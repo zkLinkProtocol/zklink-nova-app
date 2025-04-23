@@ -20,13 +20,15 @@ import {
   optimism,
   base,
   scroll,
+  optimismSepolia,
+  baseSepolia,
+  blastSepolia,
 } from "viem/chains";
 
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { createConfig, http } from "@wagmi/core";
 import { walletConnect, safe } from "@wagmi/connectors";
-import { BinanceWallet } from "./wallet/binanceWallet";
 const sourceId = 1; // mainnet
 
 export const blast = /*#__PURE__*/ defineChain({
@@ -124,9 +126,21 @@ export const l1Networks = {
     ...blast,
     name: "Blast Mainnet",
   },
+  blastSepolia: {
+    ...blastSepolia,
+    name: "Blast Sepolia Testnet",
+  },
   optimism: {
     ...optimism,
     name: "Optimism Mainnet",
+  },
+  optimismSepolia: {
+    ...optimismSepolia,
+    name: "Optimism Sepolia Testnet",
+  },
+  baseSepolia: {
+    ...baseSepolia,
+    name: "Base Sepolia Testnet",
   },
   base: {
     ...base,
@@ -401,7 +415,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     erc20BridgeL2: "0x07476D10A8B3c614DC92a698cCeC34Aa9B844B92",
     l1Gateway: "0x2f24331ddFB2D582079C200d1c233F168901a4e1",
     isEthGasToken: true,
-    l1Network: l1Networks.optimismSepoliaTestnet,
+    l1Network: l1Networks.optimismSepolia,
   },
   {
     id: 810181,
@@ -417,7 +431,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     erc20BridgeL2: "0x7c3c5C8528D55Af0C641846fF4756200DEFDC513",
     l1Gateway: "0x4E2d5bAaF470028fE48a23bd5b680f4EC7A06f85",
     isEthGasToken: true,
-    l1Network: l1Networks.baseSepoliaTestnet,
+    l1Network: l1Networks.baseSepolia,
   },
   {
     id: 810181,
@@ -449,7 +463,7 @@ export const nexusGoerliNode: ZkSyncNetwork[] = [
     erc20BridgeL2: "0x4E5622E4A41985C29028d92e1Cc2EdF02012c82E",
     l1Gateway: "0x83d3f5Db3eea3dD7a30aAF71A32D244386d00C53",
     isEthGasToken: true,
-    l1Network: l1Networks.blastSepoliaTestnet,
+    l1Network: l1Networks.blastSepolia,
   },
 ];
 
@@ -539,6 +553,7 @@ import {
   injectedWallet,
   safeWallet,
   bybitWallet,
+  binanceWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 bybitWallet({
   projectId,
@@ -552,7 +567,7 @@ okxWallet({
     metadata,
   },
 });
-BinanceWallet({
+binanceWallet({
   projectId,
   walletConnectParameters: {
     metadata,
@@ -586,7 +601,7 @@ const connectors = connectorsForWallets(
         gateWallet, // hide gate for now
         bybitWallet,
         okxWallet,
-        BinanceWallet,
+        binanceWallet,
         // rabbyWallet,
         metaMaskWallet,
         walletConnectWallet,
